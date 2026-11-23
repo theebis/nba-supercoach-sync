@@ -22,6 +22,7 @@
       --neg: #EF4444;
       --neg-bg: rgba(239, 68, 68, 0.12);
       --warn: #F59E0B;
+      --warn-bg: rgba(245, 158, 11, 0.12);
       --neutral-bg: #1E1E24;
       --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
       --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -97,9 +98,36 @@
       letter-spacing: 0.03em;
     }
 
-    .badge-bright {
+    /* Round Snapshot Dropdown */
+    .round-select {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 26px 4px 9px;
+      border-radius: 4px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
       color: var(--text);
-      border-color: var(--border-strong);
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238E8E9A' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      transition: border-color 0.15s, background-color 0.15s;
+    }
+
+    .round-select:hover {
+      border-color: #52525E;
+      background-color: var(--surface-hover);
+    }
+
+    .round-select.historical {
+      border-color: rgba(245, 158, 11, 0.55);
+      color: var(--warn);
+      background-color: var(--warn-bg);
     }
 
     .header-controls {
@@ -131,6 +159,27 @@
       font-weight: 600;
       outline: none;
       text-align: right;
+    }
+
+    .calc-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: var(--mono);
+      transition: all 0.15s;
+    }
+
+    .calc-btn:hover, .calc-btn.active {
+      background: #27272F;
+      border-color: #636370;
     }
 
     .sync-btn {
@@ -181,6 +230,98 @@
       color: var(--text);
       border-color: var(--border-strong);
       background: var(--surface-hover);
+    }
+
+    /* Live Scratchpad Drawer / Bar */
+    .scratchpad {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-top: 12px;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .scratchpad.open {
+      display: flex;
+    }
+
+    .scratchpad-inputs {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .sp-field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .sp-field label {
+      font-size: 9.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+    }
+
+    .sp-select, .sp-num {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 12px;
+      outline: none;
+    }
+
+    .sp-select {
+      min-width: 210px;
+      font-family: var(--sans);
+    }
+
+    .sp-num {
+      width: 76px;
+      text-align: right;
+    }
+
+    .sp-select:focus, .sp-num:focus {
+      border-color: #636370;
+    }
+
+    .scratchpad-results {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .sp-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .sp-stat-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+    }
+
+    .sp-stat-val {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
     }
 
     /* Slim KPI Ticker Bar */
@@ -344,7 +485,6 @@
       font-weight: 400;
     }
 
-    /* Hide number spinners */
     .price-filter input::-webkit-outer-spin-button,
     .price-filter input::-webkit-inner-spin-button {
       -webkit-appearance: none;
@@ -436,7 +576,6 @@
       min-width: 250px;
     }
 
-    /* Non-clickable status tag */
     .trend-badge {
       font-family: var(--mono);
       font-size: 9px;
@@ -464,7 +603,6 @@
       border-color: rgba(239, 68, 68, 0.35);
     }
 
-    /* Action buttons between badge and player name */
     .row-actions {
       display: inline-flex;
       align-items: center;
@@ -532,36 +670,6 @@
     .inj-tag {
       color: var(--neg);
       font-weight: 600;
-    }
-
-    /* Click-to-edit cells */
-    .editable {
-      cursor: pointer;
-      border-radius: 3px;
-      padding: 2px 5px;
-      display: inline-block;
-      min-width: 42px;
-      text-align: right;
-      border: 1px solid transparent;
-      transition: border-color 0.12s, background 0.12s;
-    }
-
-    .editable:hover {
-      border-color: var(--border-strong);
-      background: var(--bg);
-    }
-
-    .cell-input {
-      width: 58px;
-      background: var(--bg);
-      border: 1px solid #52525E;
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 2px 5px;
-      border-radius: 3px;
-      text-align: right;
-      outline: none;
     }
 
     .pos-text { color: var(--pos); }
@@ -686,7 +794,9 @@
     <header>
       <div class="brand-group">
         <div class="logo"><span class="logo-dot"></span>SCHOOPS</div>
-        <span class="badge badge-bright" id="roundBadge">ROUND 5 · NOV 17 – NOV 23 (AEDT)</span>
+        <select class="round-select" id="roundSelect" title="Switch between live round and historical round snapshots">
+          <option value="live">ROUND 6 · NOV 24 – NOV 30 (AEDT)</option>
+        </select>
         <span class="badge" id="playerCountBadge">0 PLAYERS</span>
       </div>
 
@@ -695,6 +805,9 @@
           <span>EST. MN</span>
           <input type="number" id="magicInput" value="178000" step="1000" />
         </div>
+        <button class="calc-btn" id="toggleCalcBtn" title="Open temporary Live Score & Cash Scratchpad">
+          <span>CALC</span>
+        </button>
         <button class="sync-btn" id="syncBtn" title="Click to force-pull latest JSON from GitHub">
           <span class="sync-dot" id="syncDot"></span>
           <span id="syncText">Syncing...</span>
@@ -707,6 +820,46 @@
         </button>
       </div>
     </header>
+
+    <!-- Temporary Live Cash Scratchpad (Does not mutate table data) -->
+    <div class="scratchpad" id="scratchpadPanel">
+      <div class="scratchpad-inputs">
+        <div class="sp-field">
+          <label>Player</label>
+          <select class="sp-select" id="calcPlayerSelect">
+            <option value="">Custom / Manual BE</option>
+          </select>
+        </div>
+        <div class="sp-field">
+          <label>Breakeven</label>
+          <input type="number" class="sp-num" id="calcBeInput" value="-19" step="1" />
+        </div>
+        <div class="sp-field">
+          <label>Live Score</label>
+          <input type="number" class="sp-num" id="calcScoreInput" value="51" step="1" />
+        </div>
+        <div class="sp-field">
+          <label>Price ($M)</label>
+          <input type="number" class="sp-num" id="calcPriceInput" value="9.23" step="0.01" />
+        </div>
+      </div>
+
+      <div class="scratchpad-results">
+        <div class="sp-stat">
+          <span class="sp-stat-label">Points vs BE</span>
+          <span class="sp-stat-val pos-text" id="calcPtsDiff">+70</span>
+        </div>
+        <div class="sp-stat">
+          <span class="sp-stat-label">Est. Cash Earned</span>
+          <span class="sp-stat-val pos-text" id="calcCashEarned">+$4.15M</span>
+        </div>
+        <div class="sp-stat">
+          <span class="sp-stat-label">Est. New Price</span>
+          <span class="sp-stat-val" id="calcNewPrice">$13.38M</span>
+        </div>
+        <button class="icon-btn" id="closeCalcBtn" title="Close Scratchpad">✕</button>
+      </div>
+    </div>
 
     <!-- Slim KPI Summary Bar -->
     <div class="kpi-bar">
@@ -769,7 +922,6 @@
 
         <button class="toggle-btn" id="toggleFourGames">4-Game Only</button>
         <button class="toggle-btn" id="togglePods">PODs &lt;5%</button>
-        <button class="toggle-btn active" id="toggleAutoFill" title="Toggle between GitHub JSON past scores and blank manual inputs">Auto-Fill Scores</button>
       </div>
 
       <div class="toolbar-right">
@@ -777,7 +929,7 @@
       </div>
     </div>
 
-    <!-- Main Data Table -->
+    <!-- Main Data Table (Read-only from JSON) -->
     <div class="table-wrap">
       <table>
         <thead>
@@ -785,10 +937,10 @@
             <th data-sort="name">Player</th>
             <th class="num" data-sort="price">Price ($M)</th>
             <th class="num" data-sort="owned">Own %</th>
-            <th class="num" data-sort="r_minus_2" id="thWkMinus2">Wk 3</th>
-            <th class="num" data-sort="r_minus_1" id="thWkMinus1">Wk 4</th>
-            <th class="num" data-sort="games" id="thGms">Rd 5 Gms</th>
-            <th class="num" data-sort="proj" id="thProj">Rd 5 Proj</th>
+            <th class="num" data-sort="r_minus_2" id="thWkMinus2">Wk 4</th>
+            <th class="num" data-sort="r_minus_1" id="thWkMinus1">Wk 5</th>
+            <th class="num" data-sort="games" id="thGms">Rd 6 Gms</th>
+            <th class="num" data-sort="proj" id="thProj">Rd 6 Proj</th>
             <th class="num" data-sort="be">Breakeven</th>
             <th class="num" data-sort="avg3">3-Wk Avg</th>
             <th class="num" data-sort="avg5" title="Reads avg5 / avg_5 / five_week_avg from your JSON">5-Wk Avg</th>
@@ -843,20 +995,9 @@
         <div class="divider"></div>
 
         <div class="field-group">
-          <label>Round Controls</label>
-          <div class="btn-row" style="align-items:center;">
-            <input type="number" class="text-input" id="roundInput" style="width:90px;" min="1" max="30" />
-            <button class="btn" id="rollWeekBtn">Roll Week Forward</button>
-          </div>
-          <span class="hint">Rolling forward shifts Wk N-1 → Wk N-2, Proj → Wk N-1, and updates prices.</span>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="field-group">
           <label>Maintenance</label>
           <div class="btn-row">
-            <button class="btn btn-danger" id="clearOverridesBtn">Clear Local Edits</button>
+            <button class="btn btn-danger" id="clearSquadBtn">Reset Squad &amp; Watchlist</button>
           </div>
           <span class="hint" id="syncMetaHint">Last synced: —</span>
         </div>
@@ -866,43 +1007,46 @@
 
   <script>
     const DEFAULT_GITHUB_URL = "https://raw.githubusercontent.com/theebis/nba-supercoach-sync/main/supercoach_data.json";
-    const STORAGE_KEY = "schoops_terminal_v2";
+    const STORAGE_KEY = "schoops_terminal_v3";
 
-    // Thresholds for auto-classification of Cows vs Bleeding
     const COW_THRESHOLD = 350000;
     const BLEED_THRESHOLD = -350000;
 
     const state = {
       githubUrl: DEFAULT_GITHUB_URL,
-      round: 5,
+      liveRound: 6,
+      round: 6,
+      availableRounds: [],
+      isHistorical: false,
       magicNumber: 178000,
       lastUpdated: null,
       players: [],
-      overrides: {},      // { [id]: { price, r_minus_2, r_minus_1, proj } }
-      squadIds: {},       // { [id]: true }
-      watchlistIds: {},   // { [id]: true }
-      activeTab: "all",   // all | squad | cows | bleeding | watchlist
+      computedById: {},
+      squadIds: {},
+      watchlistIds: {},
+      activeTab: "all",
       filterPos: "ALL",
-      maxPriceM: null,    // e.g. 6.0 means <= $6,000,000
+      maxPriceM: null,
       fourGamesOnly: false,
       podsOnly: false,
-      autoFillScores: true,
       search: "",
       sortKey: "priceChange",
       sortDir: "desc",
-      showAll: false,
-      editingCell: null   // { id, field }
+      showAll: false
     };
 
-    // 2026-27 NBA SuperCoach Round Dates in AEDT
-    // Round 5 (NBA Week 5: Nov 16-22 US) = Tue Nov 17 – Mon Nov 23, 2026 AEDT
     function getRoundDateRangeAEDT(roundNum) {
       const r = Number(roundNum) || 5;
-      const anchorStart = new Date(Date.UTC(2026, 10, 17));
+      const anchorStart = new Date(Date.UTC(2026, 10, 17)); // Round 5 starts Tue Nov 17, 2026 AEDT
       const start = new Date(anchorStart.getTime() + (r - 5) * 7 * 86400000);
       const end = new Date(start.getTime() + 6 * 86400000);
       const fmt = (d) => d.toLocaleDateString("en-AU", { month: "short", day: "numeric", timeZone: "UTC" }).toUpperCase();
       return `${fmt(start)} – ${fmt(end)} (AEDT)`;
+    }
+
+    function getHistoryUrl(roundNum) {
+      const base = state.githubUrl.replace(/\/[^\/]+$/, "");
+      return `${base}/history/round_${roundNum}.json`;
     }
 
     function loadSavedPrefs() {
@@ -912,7 +1056,6 @@
         const parsed = JSON.parse(raw);
         if (parsed.githubUrl) state.githubUrl = parsed.githubUrl;
         if (parsed.magicNumber) state.magicNumber = Number(parsed.magicNumber) || 178000;
-        if (parsed.overrides && typeof parsed.overrides === "object") state.overrides = parsed.overrides;
         if (parsed.squadIds && typeof parsed.squadIds === "object") state.squadIds = parsed.squadIds;
         if (parsed.watchlistIds && typeof parsed.watchlistIds === "object") state.watchlistIds = parsed.watchlistIds;
       } catch (e) {}
@@ -923,7 +1066,6 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           githubUrl: state.githubUrl,
           magicNumber: state.magicNumber,
-          overrides: state.overrides,
           squadIds: state.squadIds,
           watchlistIds: state.watchlistIds
         }));
@@ -969,18 +1111,16 @@
     }
 
     function computeRow(base) {
-      const ov = state.overrides[base.id] || {};
-      const hasOverride = Object.keys(ov).length > 0;
-      const price = ov.price !== undefined ? Number(ov.price) : base.price;
-      const r2 = ov.r_minus_2 !== undefined ? Number(ov.r_minus_2) : (state.autoFillScores ? base.r_minus_2 : 0);
-      const r1 = ov.r_minus_1 !== undefined ? Number(ov.r_minus_1) : (state.autoFillScores ? base.r_minus_1 : 0);
-      const proj = ov.proj !== undefined ? Number(ov.proj) : base.proj;
+      const price = base.price;
+      const r2 = base.r_minus_2;
+      const r1 = base.r_minus_1;
+      const proj = base.proj;
       const magic = state.magicNumber || 178000;
 
       const isInactive = (r2 === 0 && r1 === 0 && proj === 0);
       const rolling3 = (r2 + r1 + proj) / 3;
 
-      const be = (!hasOverride && base.officialBe !== null)
+      const be = base.officialBe !== null
         ? Math.round(base.officialBe)
         : (isInactive ? 0 : Math.round((3 * price / magic) - r2 - r1));
 
@@ -1045,7 +1185,8 @@
         const res = await fetch(`${state.githubUrl}${sep}cb=${Date.now()}`, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-        loadDataset(data, "GitHub");
+        state.isHistorical = false;
+        loadDataset(data, "GitHub (Live)");
       } catch (err) {
         console.error("GitHub sync error:", err);
         setSyncStatus("error", "Sync Failed");
@@ -1058,20 +1199,106 @@
       }
     }
 
+    async function loadHistoricalRound(roundNum) {
+      if (Number(roundNum) === Number(state.liveRound)) {
+        syncFromGitHub();
+        return;
+      }
+      setSyncStatus("loading", `Loading Rd ${roundNum}...`);
+      try {
+        const url = getHistoryUrl(roundNum);
+        const res = await fetch(`${url}?cb=${Date.now()}`, { cache: "no-store" });
+        if (!res.ok) throw new Error(`Snapshot for Round ${roundNum} not found (HTTP ${res.status})`);
+        const data = await res.json();
+        state.isHistorical = true;
+        loadDataset(data, `Snapshot Rd ${roundNum}`);
+      } catch (err) {
+        console.error("Snapshot load error:", err);
+        setSyncStatus("error", `Rd ${roundNum} Missing`);
+        alert(`Could not load Round ${roundNum} snapshot. Run your GitHub Action once to generate history/round_${roundNum}.json.`);
+        document.getElementById("roundSelect").value = String(state.round);
+      }
+    }
+
+    function populateRoundDropdown() {
+      const sel = document.getElementById("roundSelect");
+      const rounds = state.availableRounds.length
+        ? [...state.availableRounds].sort((a, b) => b - a)
+        : [state.liveRound];
+
+      sel.innerHTML = rounds.map((r) => {
+        const isLive = Number(r) === Number(state.liveRound);
+        const tag = isLive ? " · LIVE" : " · SNAPSHOT";
+        return `<option value="${r}">ROUND ${r} · ${getRoundDateRangeAEDT(r)}${tag}</option>`;
+      }).join("");
+
+      sel.value = String(state.round);
+      sel.classList.toggle("historical", state.isHistorical);
+    }
+
     function loadDataset(data, sourceLabel) {
       const list = Array.isArray(data) ? data : (data.players || data.data || []);
       state.players = list.map(normalizePlayer);
-      if (data.round) state.round = Number(data.round);
+      if (data.round) {
+        state.round = Number(data.round);
+        if (!state.isHistorical) state.liveRound = Number(data.round);
+      }
+      if (Array.isArray(data.availableRounds) && data.availableRounds.length) {
+        state.availableRounds = data.availableRounds.map(Number);
+      } else if (!state.availableRounds.includes(state.round)) {
+        state.availableRounds.push(state.round);
+      }
+
       if (data.magicNumber && !localStorage.getItem(STORAGE_KEY)) {
         state.magicNumber = Number(data.magicNumber);
       }
       state.lastUpdated = data.lastUpdated || new Date().toISOString();
 
       const timeStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-      setSyncStatus("", `Synced ${timeStr}`);
+      setSyncStatus("", state.isHistorical ? `Snapshot Rd ${state.round}` : `Synced ${timeStr}`);
       document.getElementById("syncMetaHint").textContent =
         `Source: ${sourceLabel} · ${state.players.length} players · File updated: ${new Date(state.lastUpdated).toLocaleString()}`;
+
+      populateRoundDropdown();
+      populateCalculatorDropdown();
       render();
+    }
+
+    function populateCalculatorDropdown() {
+      const select = document.getElementById("calcPlayerSelect");
+      const prevSelected = select.value;
+      const sorted = [...state.players].sort((a, b) => a.name.localeCompare(b.name));
+      select.innerHTML = `<option value="">Custom / Manual BE</option>` + sorted.map((p) =>
+        `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)} (${escapeHtml(p.team)} · $${(p.price / 1000000).toFixed(2)}M)</option>`
+      ).join("");
+      if (prevSelected && sorted.some((p) => p.id === prevSelected)) {
+        select.value = prevSelected;
+      }
+      recalculateScratchpad();
+    }
+
+    function recalculateScratchpad() {
+      const be = parseFloat(document.getElementById("calcBeInput").value) || 0;
+      const score = parseFloat(document.getElementById("calcScoreInput").value) || 0;
+      const priceM = parseFloat(document.getElementById("calcPriceInput").value) || 0;
+      const magic = state.magicNumber || 178000;
+
+      const ptsDiff = score - be;
+      const rawCashDelta = ptsDiff * (magic / 3);
+      const roundedCashDelta = Math.round(rawCashDelta / 10000) * 10000;
+      const newPriceDollars = Math.max(0, Math.round(priceM * 1000000) + roundedCashDelta);
+
+      const diffEl = document.getElementById("calcPtsDiff");
+      const cashEl = document.getElementById("calcCashEarned");
+      const newPriceEl = document.getElementById("calcNewPrice");
+
+      diffEl.textContent = `${ptsDiff > 0 ? "+" : ""}${Math.round(ptsDiff)}`;
+      diffEl.className = "sp-stat-val " + (ptsDiff > 0 ? "pos-text" : ptsDiff < 0 ? "neg-text" : "muted-text");
+
+      cashEl.textContent = formatMoney(roundedCashDelta);
+      cashEl.className = "sp-stat-val " + (roundedCashDelta > 0 ? "pos-text" : roundedCashDelta < 0 ? "neg-text" : "muted-text");
+
+      newPriceEl.textContent = formatPriceM(newPriceDollars);
     }
 
     function getFilteredRows(allComputed) {
@@ -1160,16 +1387,17 @@
 
     function render() {
       const r = state.round;
-      document.getElementById("roundBadge").textContent = `ROUND ${r} · ${getRoundDateRangeAEDT(r)}`;
       document.getElementById("playerCountBadge").textContent = `${state.players.length} PLAYERS`;
       document.getElementById("magicInput").value = state.magicNumber;
-      document.getElementById("roundInput").value = r;
       document.getElementById("thWkMinus2").textContent = `Wk ${Math.max(1, r - 2)}`;
       document.getElementById("thWkMinus1").textContent = `Wk ${Math.max(1, r - 1)}`;
       document.getElementById("thGms").textContent = `Rd ${r} Gms`;
       document.getElementById("thProj").textContent = `Rd ${r} Proj`;
 
       const allComputed = state.players.map(computeRow);
+      state.computedById = {};
+      allComputed.forEach((p) => { state.computedById[p.id] = p; });
+
       updateKPIs(allComputed);
 
       const filtered = sortRows(getFilteredRows(allComputed));
@@ -1193,14 +1421,6 @@
           const badgeClass = p.trend === "cow" ? "cow" : p.trend === "bleed" ? "bleed" : "";
           const badgeText = p.trend === "cow" ? "COW" : p.trend === "bleed" ? "BLEED" : "—";
 
-          const renderEditable = (field, displayVal) => {
-            if (state.editingCell && state.editingCell.id === p.id && state.editingCell.field === field) {
-              const rawVal = field === "price" ? (p.price / 1000000).toFixed(2) : p[field];
-              return `<input class="cell-input" data-id="${p.id}" data-field="${field}" value="${rawVal}" autofocus />`;
-            }
-            return `<span class="editable mono" data-edit-id="${p.id}" data-edit-field="${field}">${displayVal}</span>`;
-          };
-
           return `
             <tr>
               <td>
@@ -1221,12 +1441,12 @@
                   </div>
                 </div>
               </td>
-              <td class="num">${renderEditable("price", (p.price / 1000000).toFixed(2))}</td>
+              <td class="num mono">${(p.price / 1000000).toFixed(2)}</td>
               <td class="num mono muted-text">${p.owned.toFixed(1)}%</td>
-              <td class="num">${renderEditable("r_minus_2", p.r_minus_2)}</td>
-              <td class="num">${renderEditable("r_minus_1", p.r_minus_1)}</td>
+              <td class="num mono">${p.r_minus_2}</td>
+              <td class="num mono">${p.r_minus_1}</td>
               <td class="num mono ${p.games >= 4 ? "pos-text" : "muted-text"}">${p.games}</td>
-              <td class="num">${renderEditable("proj", p.proj)}</td>
+              <td class="num mono">${p.proj}</td>
               <td class="num mono">
                 <span>${p.be}</span>
                 <span class="${distClass}" style="font-size:10.5px; margin-left:4px;">(${distSign}${p.dist})</span>
@@ -1249,33 +1469,49 @@
       } else {
         showAllBtn.style.display = "none";
       }
-
-      const activeInput = tbody.querySelector(".cell-input");
-      if (activeInput) {
-        activeInput.focus();
-        activeInput.select();
-      }
     }
 
     function escapeHtml(str) {
       return String(str).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
     }
 
-    function commitEdit(inputEl) {
-      if (!inputEl) return;
-      const id = inputEl.dataset.id;
-      const field = inputEl.dataset.field;
-      const num = parseFloat(inputEl.value);
-      if (!Number.isNaN(num)) {
-        if (!state.overrides[id]) state.overrides[id] = {};
-        state.overrides[id][field] = field === "price" ? Math.round(num * 1000000) : Math.round(num);
-        savePrefs();
-      }
-      state.editingCell = null;
-      render();
-    }
+    // Round Snapshot Selector
+    document.getElementById("roundSelect").addEventListener("change", (e) => {
+      const selectedRound = Number(e.target.value);
+      loadHistoricalRound(selectedRound);
+    });
 
-    // Event Listeners
+    // Scratchpad Listeners
+    const scratchpad = document.getElementById("scratchpadPanel");
+    const toggleCalcBtn = document.getElementById("toggleCalcBtn");
+
+    toggleCalcBtn.addEventListener("click", () => {
+      const isOpen = scratchpad.classList.toggle("open");
+      toggleCalcBtn.classList.toggle("active", isOpen);
+      if (isOpen) document.getElementById("calcScoreInput").focus();
+    });
+
+    document.getElementById("closeCalcBtn").addEventListener("click", () => {
+      scratchpad.classList.remove("open");
+      toggleCalcBtn.classList.remove("active");
+    });
+
+    document.getElementById("calcPlayerSelect").addEventListener("change", (e) => {
+      const id = e.target.value;
+      const p = state.computedById[id];
+      if (p) {
+        document.getElementById("calcBeInput").value = p.be;
+        document.getElementById("calcPriceInput").value = (p.price / 1000000).toFixed(2);
+        document.getElementById("calcScoreInput").value = p.proj || 0;
+      }
+      recalculateScratchpad();
+    });
+
+    ["calcBeInput", "calcScoreInput", "calcPriceInput"].forEach((id) => {
+      document.getElementById(id).addEventListener("input", recalculateScratchpad);
+    });
+
+    // Table Row Actions
     document.getElementById("tableBody").addEventListener("click", (e) => {
       const watchBtn = e.target.closest("[data-toggle-watch]");
       if (watchBtn) {
@@ -1295,24 +1531,7 @@
         state.squadIds[id] = !current;
         savePrefs();
         render();
-        return;
       }
-
-      const editSpan = e.target.closest("[data-edit-id]");
-      if (editSpan) {
-        state.editingCell = { id: editSpan.dataset.editId, field: editSpan.dataset.editField };
-        render();
-      }
-    });
-
-    document.getElementById("tableBody").addEventListener("keydown", (e) => {
-      if (!e.target.classList.contains("cell-input")) return;
-      if (e.key === "Enter") commitEdit(e.target);
-      if (e.key === "Escape") { state.editingCell = null; render(); }
-    });
-
-    document.getElementById("tableBody").addEventListener("focusout", (e) => {
-      if (e.target.classList.contains("cell-input")) commitEdit(e.target);
     });
 
     document.querySelectorAll("thead th[data-sort]").forEach((th) => {
@@ -1344,7 +1563,6 @@
       });
     });
 
-    // Max Price Filter
     const maxPriceInput = document.getElementById("maxPriceInput");
     const priceFilterWrap = document.getElementById("priceFilterWrap");
     maxPriceInput.addEventListener("input", (e) => {
@@ -1383,12 +1601,6 @@
       render();
     });
 
-    document.getElementById("toggleAutoFill").addEventListener("click", (e) => {
-      state.autoFillScores = !state.autoFillScores;
-      e.target.classList.toggle("active", state.autoFillScores);
-      render();
-    });
-
     document.getElementById("searchInput").addEventListener("input", (e) => {
       state.search = e.target.value;
       state.showAll = false;
@@ -1399,6 +1611,7 @@
       state.magicNumber = Number(e.target.value) || 178000;
       savePrefs();
       render();
+      recalculateScratchpad();
     });
 
     document.getElementById("showAllBtn").addEventListener("click", () => {
@@ -1412,7 +1625,6 @@
     const modal = document.getElementById("settingsModal");
     document.getElementById("openSettingsBtn").addEventListener("click", () => {
       document.getElementById("githubUrlInput").value = state.githubUrl;
-      document.getElementById("roundInput").value = state.round;
       modal.classList.add("open");
     });
 
@@ -1435,31 +1647,6 @@
       savePrefs();
     });
 
-    document.getElementById("roundInput").addEventListener("change", (e) => {
-      state.round = Math.max(1, Number(e.target.value) || 1);
-      render();
-    });
-
-    document.getElementById("rollWeekBtn").addEventListener("click", () => {
-      const rolled = state.players.map((p) => {
-        const c = computeRow(p);
-        return {
-          ...p,
-          price: c.newPrice,
-          r_minus_2: c.r_minus_1,
-          r_minus_1: c.proj,
-          proj: Math.round((c.r_minus_1 + c.proj) / 2),
-          officialBe: null
-        };
-      });
-      state.players = rolled;
-      state.round += 1;
-      state.overrides = {};
-      savePrefs();
-      modal.classList.remove("open");
-      render();
-    });
-
     document.getElementById("uploadJsonBtn").addEventListener("click", () => {
       document.getElementById("localFileInput").click();
     });
@@ -1471,6 +1658,7 @@
       reader.onload = () => {
         try {
           const parsed = JSON.parse(reader.result);
+          state.isHistorical = false;
           loadDataset(parsed, file.name);
           modal.classList.remove("open");
         } catch (err) {
@@ -1499,12 +1687,13 @@
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = "supercoach_data.json";
+      a.download = `supercoach_round_${state.round}.json`;
       a.click();
     });
 
-    document.getElementById("clearOverridesBtn").addEventListener("click", () => {
-      state.overrides = {};
+    document.getElementById("clearSquadBtn").addEventListener("click", () => {
+      state.squadIds = {};
+      state.watchlistIds = {};
       savePrefs();
       modal.classList.remove("open");
       render();
@@ -1512,6 +1701,7 @@
 
     // Boot
     loadSavedPrefs();
+    recalculateScratchpad();
     syncFromGitHub();
   </script>
 </body>
