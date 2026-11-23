@@ -12,7 +12,7 @@ import json
 import os
 import sys
 from datetime import datetime, timezone
-import requests
+from curl_cffi import requests
 
 DATA_FILE = "supercoach_data.json"
 DEFAULT_MAGIC_NUMBER = 178000
@@ -32,7 +32,7 @@ HEADERS = {
 
 
 def fetch_json(url):
-    res = requests.get(url, headers=HEADERS, timeout=25)
+    res = requests.get(url, headers=HEADERS, impersonate="chrome", timeout=25)
     if res.status_code != 200:
         raise RuntimeError(f"HTTP {res.status_code}")
     try:
