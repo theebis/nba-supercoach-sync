@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SCHOOPS — NBA SuperCoach Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0A0A0C;
+      --surface: #111114;
+      --surface-hover: #17171C;
+      --border: #222228;
+      --border-strong: #32323C;
+      --text: #F4F4F6;
+      --text-muted: #8E8E9A;
+      --text-dim: #5A5A66;
+      --pos: #10B981;
+      --pos-bg: rgba(16, 185, 129, 0.12);
+      --neg: #EF4444;
+      --neg-bg: rgba(239, 68, 68, 0.12);
+      --neutral-bg: #1E1E24;
+      --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 13px;
+      line-height: 1.4;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .mono {
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .container {
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 14px 20px 40px;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--pos);
+      display: inline-block;
+    }
+
+    .badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .magic-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .magic-box input {
+      width: 68px;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      outline: none;
+      text-align: right;
+    }
+
+    .sync-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      font-family: var(--mono);
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .sync-btn:hover {
+      border-color: var(--border-strong);
+      background: var(--surface-hover);
+    }
+
+    .sync-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--pos);
+    }
+
+    .sync-dot.loading { background: #F59E0B; }
+    .sync-dot.error { background: var(--neg); }
+
+    .icon-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 30px;
+      height: 30px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .icon-btn:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+      background: var(--surface-hover);
+    }
+
+    /* Slim KPI Ticker Bar */
+    .kpi-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 14px 0;
+    }
+
+    @media (max-width: 900px) {
+      .kpi-bar { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .kpi-item {
+      background: var(--surface);
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .kpi-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+    }
+
+    .kpi-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .kpi-val {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .kpi-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* Unified Monochrome Filter Bar */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-left, .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .segmented {
+      display: inline-flex;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px;
+      gap: 2px;
+    }
+
+    .seg-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 4px 9px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 3px;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: all 0.12s;
+    }
+
+    .seg-btn:hover { color: var(--text); }
+    .seg-btn.active {
+      background: #27272F;
+      color: var(--text);
+    }
+
+    .toggle-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 500;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .toggle-btn:hover { border-color: var(--border-strong); color: var(--text); }
+    .toggle-btn.active {
+      border-color: #52525E;
+      background: #22222A;
+      color: var(--text);
+    }
+
+    .search-input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      width: 210px;
+      outline: none;
+    }
+
+    .search-input:focus { border-color: var(--border-strong); }
+    .search-input::placeholder { color: var(--text-dim); }
+
+    /* Table */
+    .table-wrap {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow-x: auto;
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      background: #0E0E11;
+      border-bottom: 1px solid var(--border);
+      padding: 9px 10px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    thead th:hover { color: var(--text); }
+    thead th.num, tbody td.num { text-align: right; }
+
+    tbody tr {
+      border-bottom: 1px solid #1A1A20;
+      transition: background 0.1s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--surface-hover); }
+
+    tbody td {
+      padding: 7px 10px;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
+    .player-cell {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 210px;
+    }
+
+    .status-pill {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 3px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-dim);
+      width: 46px;
+      text-align: center;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .status-pill.squad {
+      background: #F4F4F6;
+      color: #0A0A0C;
+      border-color: #F4F4F6;
+    }
+
+    .status-pill.cow {
+      background: var(--pos-bg);
+      color: var(--pos);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .player-name {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 12.5px;
+    }
+
+    .player-meta {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .inj-tag {
+      color: var(--neg);
+      font-weight: 600;
+    }
+
+    /* Click-to-edit cells */
+    .editable {
+      cursor: pointer;
+      border-radius: 3px;
+      padding: 2px 5px;
+      display: inline-block;
+      min-width: 42px;
+      text-align: right;
+      border: 1px solid transparent;
+      transition: border-color 0.12s, background 0.12s;
+    }
+
+    .editable:hover {
+      border-color: var(--border-strong);
+      background: var(--bg);
+    }
+
+    .cell-input {
+      width: 58px;
+      background: var(--bg);
+      border: 1px solid #52525E;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 2px 5px;
+      border-radius: 3px;
+      text-align: right;
+      outline: none;
+    }
+
+    .pos-text { color: var(--pos); }
+    .neg-text { color: var(--neg); }
+    .muted-text { color: var(--text-muted); }
+    .dim-text { color: var(--text-dim); }
+
+    .signal-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .signal-buy { background: var(--pos-bg); color: var(--pos); }
+    .signal-sell { background: var(--neg-bg); color: var(--neg); }
+    .signal-hold { background: var(--neutral-bg); color: var(--text-muted); }
+
+    .table-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-top: 1px solid var(--border);
+      background: #0E0E11;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .btn {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .btn:hover { background: var(--surface-hover); }
+    .btn-primary { background: #F4F4F6; color: #0A0A0C; border-color: #F4F4F6; font-weight: 600; }
+    .btn-primary:hover { background: #E2E2E6; }
+    .btn-danger { color: var(--neg); border-color: rgba(239, 68, 68, 0.35); }
+    .btn-danger:hover { background: var(--neg-bg); }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 520px;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-header h2 { font-size: 14px; font-weight: 600; }
+
+    .modal-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .field-group { display: flex; flex-direction: column; gap: 6px; }
+    .field-group label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .text-input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 12px;
+      width: 100%;
+      outline: none;
+    }
+
+    .text-input:focus { border-color: var(--border-strong); }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .divider { height: 1px; background: var(--border); }
+
+    .hint { font-size: 11px; color: var(--text-dim); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Top Header -->
+    <header>
+      <div class="brand-group">
+        <div class="logo"><span class="logo-dot"></span>SCHOOPS</div>
+        <span class="badge" id="roundBadge">ROUND 5 → ROUND 6</span>
+        <span class="badge" id="playerCountBadge">0 PLAYERS</span>
+      </div>
+
+      <div class="header-controls">
+        <div class="magic-box">
+          <span>MAGIC #</span>
+          <input type="number" id="magicInput" value="178000" step="1000" />
+        </div>
+        <button class="sync-btn" id="syncBtn" title="Click to pull latest JSON from GitHub">
+          <span class="sync-dot" id="syncDot"></span>
+          <span id="syncText">Syncing...</span>
+        </button>
+        <button class="icon-btn" id="openSettingsBtn" title="Settings">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Slim KPI Summary Bar -->
+    <div class="kpi-bar">
+      <div class="kpi-item">
+        <span class="kpi-label">Squad Value</span>
+        <div class="kpi-row">
+          <span class="kpi-val" id="kpiSquadVal">$0.00M</span>
+          <span class="kpi-sub" id="kpiSquadCount">0 tracked</span>
+        </div>
+      </div>
+      <div class="kpi-item">
+        <span class="kpi-label">Projected Squad Cash Gen</span>
+        <div class="kpi-row">
+          <span class="kpi-val" id="kpiCashGen">$0</span>
+          <span class="kpi-sub" id="kpiCashSub">Next rollover</span>
+        </div>
+      </div>
+      <div class="kpi-item">
+        <span class="kpi-label">#1 League Cash Cow</span>
+        <div class="kpi-row">
+          <span class="kpi-val" id="kpiTopCow">—</span>
+          <span class="kpi-sub pos-text" id="kpiTopCowMeta">—</span>
+        </div>
+      </div>
+      <div class="kpi-item">
+        <span class="kpi-label">Top 4-Game POD (&lt;5% Own)</span>
+        <div class="kpi-row">
+          <span class="kpi-val" id="kpiTopPod">—</span>
+          <span class="kpi-sub pos-text" id="kpiTopPodMeta">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Unified Monochrome Filter Bar -->
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <div class="segmented" id="statusTabs">
+          <button class="seg-btn active" data-status="all">All</button>
+          <button class="seg-btn" data-status="squad">Squad</button>
+          <button class="seg-btn" data-status="cow">Cows</button>
+          <button class="seg-btn" data-status="watch">Watch</button>
+        </div>
+
+        <div class="segmented" id="posTabs">
+          <button class="seg-btn active" data-pos="ALL">ALL</button>
+          <button class="seg-btn" data-pos="PG">PG</button>
+          <button class="seg-btn" data-pos="SG">SG</button>
+          <button class="seg-btn" data-pos="SF">SF</button>
+          <button class="seg-btn" data-pos="PF">PF</button>
+          <button class="seg-btn" data-pos="C">C</button>
+        </div>
+
+        <button class="toggle-btn active" id="toggleHideDnp">Hide 0/DNPs</button>
+        <button class="toggle-btn" id="toggleFourGames">4-Game Only</button>
+        <button class="toggle-btn" id="togglePods">PODs &lt;5%</button>
+        <button class="toggle-btn active" id="toggleAutoFill" title="Toggle between GitHub JSON past scores and blank manual inputs">Auto-Fill Scores</button>
+      </div>
+
+      <div class="toolbar-right">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search player or team..." />
+      </div>
+    </div>
+
+    <!-- Main Data Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-sort="name">Player</th>
+            <th class="num" data-sort="price">Price ($M)</th>
+            <th class="num" data-sort="owned">Own %</th>
+            <th class="num" data-sort="r_minus_2" id="thWkMinus2">Wk 4</th>
+            <th class="num" data-sort="r_minus_1" id="thWkMinus1">Wk 5</th>
+            <th class="num" data-sort="games" id="thGms">Rd 6 Gms</th>
+            <th class="num" data-sort="proj" id="thProj">Wk 6 Proj</th>
+            <th class="num" data-sort="be">Breakeven</th>
+            <th class="num" data-sort="avg3">3-Wk Avg</th>
+            <th class="num" data-sort="avg5" title="Reads avg5 / avg_5 / five_week_avg from your JSON">5-Wk Avg</th>
+            <th class="num" data-sort="priceChange">Proj Chg</th>
+            <th class="num" data-sort="newPrice">New Price</th>
+            <th class="num" data-sort="priceChange">Signal</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr>
+            <td colspan="13" style="text-align:center; padding:32px; color:var(--text-dim);">
+              Loading player feed from GitHub...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="table-footer">
+        <span id="showingCount">Showing 0 of 0 players</span>
+        <button class="btn" id="showAllBtn" style="display:none;">Show All</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Terminal Settings &amp; Data Source</h2>
+        <button class="icon-btn" id="closeSettingsBtn">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="field-group">
+          <label>GitHub Raw JSON URL</label>
+          <input type="text" class="text-input" id="githubUrlInput" />
+          <div class="btn-row">
+            <button class="btn btn-primary" id="saveSyncBtn">Save &amp; Sync Now</button>
+            <button class="btn" id="resetUrlBtn">Reset Default URL</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field-group">
+          <label>Local JSON Import / Export</label>
+          <div class="btn-row">
+            <input type="file" id="localFileInput" accept=".json" style="display:none;" />
+            <button class="btn" id="uploadJsonBtn">Load Local JSON</button>
+            <button class="btn" id="exportJsonBtn">Export Current JSON</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field-group">
+          <label>Round Controls</label>
+          <div class="btn-row" style="align-items:center;">
+            <input type="number" class="text-input" id="roundInput" style="width:90px;" min="1" max="30" />
+            <button class="btn" id="rollWeekBtn">Roll Week Forward</button>
+          </div>
+          <span class="hint">Rolling forward shifts Wk N-1 → Wk N-2, Proj → Wk N-1, and updates prices.</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field-group">
+          <label>Maintenance</label>
+          <div class="btn-row">
+            <button class="btn btn-danger" id="clearOverridesBtn">Clear Local Overrides</button>
+          </div>
+          <span class="hint" id="syncMetaHint">Last synced: —</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DEFAULT_GITHUB_URL = "https://raw.githubusercontent.com/theebis/nba-supercoach-sync/main/supercoach_data.json";
+    const STORAGE_KEY = "schoops_terminal_v1";
+
+    const state = {
+      githubUrl: DEFAULT_GITHUB_URL,
+      round: 5,
+      magicNumber: 178000,
+      lastUpdated: null,
+      players: [],
+      overrides: {}, // { [id]: { price, r_minus_2, r_minus_1, proj, status } }
+      filterStatus: "all",
+      filterPos: "ALL",
+      hideDnp: true,
+      fourGamesOnly: false,
+      podsOnly: false,
+      autoFillScores: true,
+      search: "",
+      sortKey: "priceChange",
+      sortDir: "desc",
+      showAll: false,
+      editingCell: null // { id, field }
+    };
+
+    function loadSavedPrefs() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed.githubUrl) state.githubUrl = parsed.githubUrl;
+        if (parsed.magicNumber) state.magicNumber = Number(parsed.magicNumber) || 178000;
+        if (parsed.overrides && typeof parsed.overrides === "object") state.overrides = parsed.overrides;
+      } catch (e) {}
+    }
+
+    function savePrefs() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          githubUrl: state.githubUrl,
+          magicNumber: state.magicNumber,
+          overrides: state.overrides
+        }));
+      } catch (e) {}
+    }
+
+    function normalizeStatus(rawStatus, price, proj) {
+      const s = String(rawStatus || "").toLowerCase();
+      if (s === "squad") return "squad";
+      if (s === "prospect" || s === "cow") return "cow";
+      if (s === "watchlist" || s === "watch") return "watch";
+      return (price <= 9800000 && proj >= 55) ? "cow" : "watch";
+    }
+
+    function normalizePlayer(p, idx) {
+      const id = String(p.id ?? p.name ?? idx);
+      let price = Number(p.price) || 0;
+      if (price > 0 && price < 1000) price = Math.round(price * 1000000);
+
+      const r2 = Number(p.r_minus_2) || 0;
+      const r1 = Number(p.r_minus_1) || 0;
+      const proj = Number(p.proj) || 0;
+      const games = Number(p.games ?? 3);
+      const owned = Number(p.owned ?? p.ownership ?? 0);
+
+      const avg5Raw = p.avg5 ?? p.avg_5 ?? p.five_week_avg ?? p.avg5_points ?? null;
+      const avg5 = (avg5Raw !== null && avg5Raw !== undefined && avg5Raw !== "") ? Number(avg5Raw) : null;
+
+      return {
+        id,
+        name: String(p.name || "Unknown"),
+        team: String(p.team || "NBA"),
+        pos: String(p.pos || "UTIL"),
+        price,
+        r_minus_2: r2,
+        r_minus_1: r1,
+        proj,
+        games,
+        owned,
+        avg5,
+        injury: p.injury || null,
+        status: normalizeStatus(p.status, price, proj)
+      };
+    }
+
+    function computeRow(base) {
+      const ov = state.overrides[base.id] || {};
+      const price = ov.price !== undefined ? Number(ov.price) : base.price;
+      const r2 = ov.r_minus_2 !== undefined ? Number(ov.r_minus_2) : (state.autoFillScores ? base.r_minus_2 : 0);
+      const r1 = ov.r_minus_1 !== undefined ? Number(ov.r_minus_1) : (state.autoFillScores ? base.r_minus_1 : 0);
+      const proj = ov.proj !== undefined ? Number(ov.proj) : base.proj;
+      const status = ov.status !== undefined ? ov.status : base.status;
+      const magic = state.magicNumber || 178000;
+
+      const isInactive = (r2 === 0 && r1 === 0 && proj === 0);
+      const rolling3 = (r2 + r1 + proj) / 3;
+      const be = isInactive ? 0 : Math.round((3 * price / magic) - r2 - r1);
+      const dist = proj - be;
+      const newPrice = isInactive
+        ? price
+        : Math.round((0.75 * price + 0.25 * rolling3 * magic) / 10000) * 10000;
+      const priceChange = newPrice - price;
+
+      let signal = "HOLD";
+      if (priceChange >= 350000) signal = "BUY / COW";
+      else if (priceChange <= -350000) signal = "SELL";
+
+      return {
+        ...base,
+        price,
+        r_minus_2: r2,
+        r_minus_1: r1,
+        proj,
+        status,
+        avg3: rolling3,
+        be,
+        dist,
+        newPrice,
+        priceChange,
+        signal
+      };
+    }
+
+    function formatMoney(val) {
+      const abs = Math.abs(val);
+      const sign = val > 0 ? "+" : val < 0 ? "-" : "";
+      if (abs >= 1000000) return `${sign}$${(abs / 1000000).toFixed(2)}M`;
+      if (abs >= 1000) return `${sign}$${Math.round(abs / 1000)}K`;
+      return `${sign}$0`;
+    }
+
+    function formatPriceM(val) {
+      return `$${(val / 1000000).toFixed(2)}M`;
+    }
+
+    function setSyncStatus(mode, text) {
+      const dot = document.getElementById("syncDot");
+      const label = document.getElementById("syncText");
+      dot.className = "sync-dot" + (mode ? ` ${mode}` : "");
+      label.textContent = text;
+    }
+
+    async function syncFromGitHub() {
+      setSyncStatus("loading", "Syncing...");
+      try {
+        const sep = state.githubUrl.includes("?") ? "&" : "?";
+        const res = await fetch(`${state.githubUrl}${sep}t=${Date.now()}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        loadDataset(data, "GitHub");
+      } catch (err) {
+        console.error(err);
+        setSyncStatus("error", "Sync Failed");
+      }
+    }
+
+    function loadDataset(data, sourceLabel) {
+      const list = Array.isArray(data) ? data : (data.players || []);
+      state.players = list.map(normalizePlayer);
+      if (data.round) state.round = Number(data.round);
+      if (data.magicNumber && !localStorage.getItem(STORAGE_KEY)) {
+        state.magicNumber = Number(data.magicNumber);
+      }
+      state.lastUpdated = data.lastUpdated || new Date().toISOString();
+
+      const timeStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      setSyncStatus("", `Synced ${timeStr}`);
+      document.getElementById("syncMetaHint").textContent =
+        `Source: ${sourceLabel} · ${state.players.length} players · File updated: ${new Date(state.lastUpdated).toLocaleString()}`;
+      render();
+    }
+
+    function getFilteredRows() {
+      const computed = state.players.map(computeRow);
+      const q = state.search.trim().toLowerCase();
+
+      return computed.filter((p) => {
+        if (state.filterStatus !== "all" && p.status !== state.filterStatus) return false;
+        if (state.filterPos !== "ALL") {
+          const parts = p.pos.toUpperCase().split(/[\/,\s]+/);
+          if (!parts.includes(state.filterPos)) return false;
+        }
+        if (state.hideDnp && p.r_minus_2 === 0 && p.r_minus_1 === 0 && p.proj === 0) return false;
+        if (state.fourGamesOnly && p.games < 4) return false;
+        if (state.podsOnly && !(p.owned > 0 && p.owned < 5)) return false;
+        if (q && !p.name.toLowerCase().includes(q) && !p.team.toLowerCase().includes(q)) return false;
+        return true;
+      });
+    }
+
+    function sortRows(rows) {
+      const dir = state.sortDir === "asc" ? 1 : -1;
+      const k = state.sortKey;
+      return [...rows].sort((a, b) => {
+        if (k === "name") return a.name.localeCompare(b.name) * dir;
+        const av = a[k] ?? -999999999;
+        const bv = b[k] ?? -999999999;
+        return (av - bv) * dir;
+      });
+    }
+
+    function updateKPIs(allComputed) {
+      const squad = allComputed.filter((p) => p.status === "squad");
+      const squadVal = squad.reduce((s, p) => s + p.price, 0);
+      const squadCash = squad.reduce((s, p) => s + p.priceChange, 0);
+
+      document.getElementById("kpiSquadVal").textContent = formatPriceM(squadVal);
+      document.getElementById("kpiSquadCount").textContent = `${squad.length} tracked`;
+
+      const cashEl = document.getElementById("kpiCashGen");
+      cashEl.textContent = formatMoney(squadCash);
+      cashEl.className = "kpi-val " + (squadCash > 0 ? "pos-text" : squadCash < 0 ? "neg-text" : "");
+      document.getElementById("kpiCashSub").textContent = `Rd ${state.round + 1} rollover`;
+
+      const sortedCows = [...allComputed].sort((a, b) => b.priceChange - a.priceChange);
+      const topCow = sortedCows[0];
+      if (topCow) {
+        document.getElementById("kpiTopCow").textContent = topCow.name;
+        document.getElementById("kpiTopCowMeta").textContent = `${formatMoney(topCow.priceChange)} · BE ${topCow.be}`;
+      }
+
+      const topPod = sortedCows.find((p) => p.games >= 4 && p.owned > 0 && p.owned < 5);
+      if (topPod) {
+        document.getElementById("kpiTopPod").textContent = topPod.name;
+        document.getElementById("kpiTopPodMeta").textContent = `${formatMoney(topPod.priceChange)} · ${topPod.owned.toFixed(1)}%`;
+      } else {
+        document.getElementById("kpiTopPod").textContent = "—";
+        document.getElementById("kpiTopPodMeta").textContent = "No 4G PODs";
+      }
+
+      // Update status tab counts
+      const counts = {
+        all: allComputed.length,
+        squad: squad.length,
+        cow: allComputed.filter((p) => p.status === "cow").length,
+        watch: allComputed.filter((p) => p.status === "watch").length
+      };
+      document.querySelectorAll("#statusTabs .seg-btn").forEach((btn) => {
+        const st = btn.dataset.status;
+        const labels = { all: "All", squad: "Squad", cow: "Cows", watch: "Watch" };
+        btn.textContent = `${labels[st]} (${counts[st]})`;
+      });
+    }
+
+    function render() {
+      const r = state.round;
+      document.getElementById("roundBadge").textContent = `ROUND ${r} → ROUND ${r + 1}`;
+      document.getElementById("playerCountBadge").textContent = `${state.players.length} PLAYERS`;
+      document.getElementById("magicInput").value = state.magicNumber;
+      document.getElementById("roundInput").value = r;
+      document.getElementById("thWkMinus2").textContent = `Wk ${Math.max(1, r - 1)}`;
+      document.getElementById("thWkMinus1").textContent = `Wk ${r}`;
+      document.getElementById("thGms").textContent = `Rd ${r + 1} Gms`;
+      document.getElementById("thProj").textContent = `Wk ${r + 1} Proj`;
+
+      const allComputed = state.players.map(computeRow);
+      updateKPIs(allComputed);
+
+      const filtered = sortRows(getFilteredRows());
+      const limit = state.showAll ? filtered.length : Math.min(100, filtered.length);
+      const visible = filtered.slice(0, limit);
+
+      const tbody = document.getElementById("tableBody");
+      if (visible.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="13" style="text-align:center; padding:32px; color:var(--text-dim);">No players match your current filters.</td></tr>`;
+      } else {
+        tbody.innerHTML = visible.map((p) => {
+          const chgClass = p.priceChange > 0 ? "pos-text" : p.priceChange < 0 ? "neg-text" : "muted-text";
+          const distClass = p.dist >= 0 ? "pos-text" : "neg-text";
+          const distSign = p.dist > 0 ? "+" : "";
+          const sigClass = p.signal === "BUY / COW" ? "signal-buy" : p.signal === "SELL" ? "signal-sell" : "signal-hold";
+          const avg5Cell = (p.avg5 !== null && !Number.isNaN(p.avg5))
+            ? `<span class="mono">${p.avg5.toFixed(1)}</span>`
+            : `<span class="mono dim-text" title="Not yet in JSON feed">—</span>`;
+
+          const statusLabel = p.status === "squad" ? "SQUAD" : p.status === "cow" ? "COW" : "WATCH";
+
+          const renderEditable = (field, displayVal) => {
+            if (state.editingCell && state.editingCell.id === p.id && state.editingCell.field === field) {
+              const rawVal = field === "price" ? (p.price / 1000000).toFixed(2) : p[field];
+              return `<input class="cell-input" data-id="${p.id}" data-field="${field}" value="${rawVal}" autofocus />`;
+            }
+            return `<span class="editable mono" data-edit-id="${p.id}" data-edit-field="${field}">${displayVal}</span>`;
+          };
+
+          return `
+            <tr>
+              <td>
+                <div class="player-cell">
+                  <span class="status-pill ${p.status}" data-toggle-status="${p.id}" title="Click to cycle Squad / Cow / Watch">${statusLabel}</span>
+                  <div>
+                    <div class="player-name">${escapeHtml(p.name)}</div>
+                    <div class="player-meta">
+                      <span>${escapeHtml(p.team)}</span>
+                      <span>·</span>
+                      <span>${escapeHtml(p.pos)}</span>
+                      ${p.injury ? `<span class="inj-tag">· ${escapeHtml(String(p.injury))}</span>` : ""}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="num">${renderEditable("price", (p.price / 1000000).toFixed(2))}</td>
+              <td class="num mono muted-text">${p.owned.toFixed(1)}%</td>
+              <td class="num">${renderEditable("r_minus_2", p.r_minus_2)}</td>
+              <td class="num">${renderEditable("r_minus_1", p.r_minus_1)}</td>
+              <td class="num mono ${p.games >= 4 ? "pos-text" : "muted-text"}">${p.games}G</td>
+              <td class="num">${renderEditable("proj", p.proj)}</td>
+              <td class="num mono">
+                <span>${p.be}</span>
+                <span class="${distClass}" style="font-size:10.5px; margin-left:4px;">(${distSign}${p.dist})</span>
+              </td>
+              <td class="num mono muted-text">${p.avg3.toFixed(1)}</td>
+              <td class="num">${avg5Cell}</td>
+              <td class="num mono ${chgClass}" style="font-weight:600;">${formatMoney(p.priceChange)}</td>
+              <td class="num mono">${formatPriceM(p.newPrice)}</td>
+              <td class="num"><span class="signal-tag ${sigClass}">${p.signal}</span></td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      document.getElementById("showingCount").textContent = `Showing ${visible.length} of ${filtered.length} matching players`;
+      const showAllBtn = document.getElementById("showAllBtn");
+      if (filtered.length > 100 && !state.showAll) {
+        showAllBtn.style.display = "inline-block";
+        showAllBtn.textContent = `Show All (${filtered.length})`;
+      } else {
+        showAllBtn.style.display = "none";
+      }
+
+      const activeInput = tbody.querySelector(".cell-input");
+      if (activeInput) {
+        activeInput.focus();
+        activeInput.select();
+      }
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+    }
+
+    function commitEdit(inputEl) {
+      if (!inputEl) return;
+      const id = inputEl.dataset.id;
+      const field = inputEl.dataset.field;
+      const num = parseFloat(inputEl.value);
+      if (!Number.isNaN(num)) {
+        if (!state.overrides[id]) state.overrides[id] = {};
+        state.overrides[id][field] = field === "price" ? Math.round(num * 1000000) : Math.round(num);
+        savePrefs();
+      }
+      state.editingCell = null;
+      render();
+    }
+
+    // Event Listeners
+    document.getElementById("tableBody").addEventListener("click", (e) => {
+      const statusBtn = e.target.closest("[data-toggle-status]");
+      if (statusBtn) {
+        const id = statusBtn.dataset.toggleStatus;
+        const base = state.players.find((p) => p.id === id);
+        if (!base) return;
+        const curr = (state.overrides[id]?.status) || base.status;
+        const next = curr === "watch" ? "squad" : curr === "squad" ? "cow" : "watch";
+        if (!state.overrides[id]) state.overrides[id] = {};
+        state.overrides[id].status = next;
+        savePrefs();
+        render();
+        return;
+      }
+
+      const editSpan = e.target.closest("[data-edit-id]");
+      if (editSpan) {
+        state.editingCell = { id: editSpan.dataset.editId, field: editSpan.dataset.editField };
+        render();
+      }
+    });
+
+    document.getElementById("tableBody").addEventListener("keydown", (e) => {
+      if (!e.target.classList.contains("cell-input")) return;
+      if (e.key === "Enter") commitEdit(e.target);
+      if (e.key === "Escape") { state.editingCell = null; render(); }
+    });
+
+    document.getElementById("tableBody").addEventListener("focusout", (e) => {
+      if (e.target.classList.contains("cell-input")) commitEdit(e.target);
+    });
+
+    document.querySelectorAll("thead th[data-sort]").forEach((th) => {
+      th.addEventListener("click", () => {
+        const key = th.dataset.sort;
+        if (state.sortKey === key) state.sortDir = state.sortDir === "desc" ? "asc" : "desc";
+        else { state.sortKey = key; state.sortDir = key === "name" ? "asc" : "desc"; }
+        render();
+      });
+    });
+
+    document.querySelectorAll("#statusTabs .seg-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#statusTabs .seg-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.filterStatus = btn.dataset.status;
+        state.showAll = false;
+        render();
+      });
+    });
+
+    document.querySelectorAll("#posTabs .seg-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#posTabs .seg-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.filterPos = btn.dataset.pos;
+        state.showAll = false;
+        render();
+      });
+    });
+
+    document.getElementById("toggleHideDnp").addEventListener("click", (e) => {
+      state.hideDnp = !state.hideDnp;
+      e.target.classList.toggle("active", state.hideDnp);
+      render();
+    });
+
+    document.getElementById("toggleFourGames").addEventListener("click", (e) => {
+      state.fourGamesOnly = !state.fourGamesOnly;
+      e.target.classList.toggle("active", state.fourGamesOnly);
+      render();
+    });
+
+    document.getElementById("togglePods").addEventListener("click", (e) => {
+      state.podsOnly = !state.podsOnly;
+      e.target.classList.toggle("active", state.podsOnly);
+      render();
+    });
+
+    document.getElementById("toggleAutoFill").addEventListener("click", (e) => {
+      state.autoFillScores = !state.autoFillScores;
+      e.target.classList.toggle("active", state.autoFillScores);
+      render();
+    });
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      state.search = e.target.value;
+      state.showAll = false;
+      render();
+    });
+
+    document.getElementById("magicInput").addEventListener("change", (e) => {
+      state.magicNumber = Number(e.target.value) || 178000;
+      savePrefs();
+      render();
+    });
+
+    document.getElementById("showAllBtn").addEventListener("click", () => {
+      state.showAll = true;
+      render();
+    });
+
+    document.getElementById("syncBtn").addEventListener("click", syncFromGitHub);
+
+    // Settings Modal
+    const modal = document.getElementById("settingsModal");
+    document.getElementById("openSettingsBtn").addEventListener("click", () => {
+      document.getElementById("githubUrlInput").value = state.githubUrl;
+      document.getElementById("roundInput").value = state.round;
+      modal.classList.add("open");
+    });
+
+    document.getElementById("closeSettingsBtn").addEventListener("click", () => modal.classList.remove("open"));
+    modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
+
+    document.getElementById("saveSyncBtn").addEventListener("click", () => {
+      const val = document.getElementById("githubUrlInput").value.trim();
+      if (val) {
+        state.githubUrl = val;
+        savePrefs();
+        modal.classList.remove("open");
+        syncFromGitHub();
+      }
+    });
+
+    document.getElementById("resetUrlBtn").addEventListener("click", () => {
+      state.githubUrl = DEFAULT_GITHUB_URL;
+      document.getElementById("githubUrlInput").value = DEFAULT_GITHUB_URL;
+      savePrefs();
+    });
+
+    document.getElementById("roundInput").addEventListener("change", (e) => {
+      state.round = Math.max(1, Number(e.target.value) || 1);
+      render();
+    });
+
+    document.getElementById("rollWeekBtn").addEventListener("click", () => {
+      const rolled = state.players.map((p) => {
+        const c = computeRow(p);
+        return {
+          ...p,
+          price: c.newPrice,
+          r_minus_2: c.r_minus_1,
+          r_minus_1: c.proj,
+          proj: Math.round((c.r_minus_1 + c.proj) / 2),
+          status: c.status
+        };
+      });
+      state.players = rolled;
+      state.round += 1;
+      state.overrides = {};
+      savePrefs();
+      modal.classList.remove("open");
+      render();
+    });
+
+    document.getElementById("uploadJsonBtn").addEventListener("click", () => {
+      document.getElementById("localFileInput").click();
+    });
+
+    document.getElementById("localFileInput").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          loadDataset(parsed, file.name);
+          modal.classList.remove("open");
+        } catch (err) {
+          alert("Invalid JSON file.");
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    document.getElementById("exportJsonBtn").addEventListener("click", () => {
+      const payload = {
+        round: state.round,
+        magicNumber: state.magicNumber,
+        lastUpdated: new Date().toISOString(),
+        players: state.players.map((p) => {
+          const c = computeRow(p);
+          return {
+            id: p.id, name: p.name, team: p.team, pos: p.pos,
+            price: c.price, r_minus_2: c.r_minus_2, r_minus_1: c.r_minus_1,
+            proj: c.proj, games: p.games, owned: p.owned,
+            avg5: p.avg5, injury: p.injury, status: c.status
+          };
+        })
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "supercoach_data.json";
+      a.click();
+    });
+
+    document.getElementById("clearOverridesBtn").addEventListener("click", () => {
+      state.overrides = {};
+      savePrefs();
+      modal.classList.remove("open");
+      render();
+    });
+
+    // Boot
+    loadSavedPrefs();
+    syncFromGitHub();
+  </script>
+</body>
+</html>
