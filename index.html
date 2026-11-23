@@ -21,6 +21,7 @@
       --pos-bg: rgba(16, 185, 129, 0.12);
       --neg: #EF4444;
       --neg-bg: rgba(239, 68, 68, 0.12);
+      --warn: #F59E0B;
       --neutral-bg: #1E1E24;
       --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
       --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -43,7 +44,7 @@
     }
 
     .container {
-      max-width: 1480px;
+      max-width: 1520px;
       margin: 0 auto;
       padding: 14px 20px 40px;
     }
@@ -62,7 +63,7 @@
     .brand-group {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
@@ -94,6 +95,11 @@
       background: var(--surface);
       color: var(--text-muted);
       letter-spacing: 0.03em;
+    }
+
+    .badge-bright {
+      color: var(--text);
+      border-color: var(--border-strong);
     }
 
     .header-controls {
@@ -154,7 +160,7 @@
       background: var(--pos);
     }
 
-    .sync-dot.loading { background: #F59E0B; }
+    .sync-dot.loading { background: var(--warn); }
     .sync-dot.error { background: var(--neg); }
 
     .icon-btn {
@@ -365,36 +371,86 @@
     .player-cell {
       display: flex;
       align-items: center;
-      gap: 9px;
-      min-width: 210px;
+      gap: 8px;
+      min-width: 250px;
     }
 
-    .status-pill {
+    /* Non-clickable status tag */
+    .trend-badge {
       font-family: var(--mono);
       font-size: 9px;
       font-weight: 700;
       padding: 2px 5px;
       border-radius: 3px;
-      cursor: pointer;
       border: 1px solid var(--border);
       background: var(--bg);
       color: var(--text-dim);
-      width: 46px;
+      width: 48px;
       text-align: center;
       flex-shrink: 0;
       user-select: none;
     }
 
-    .status-pill.squad {
+    .trend-badge.cow {
+      background: var(--pos-bg);
+      color: var(--pos);
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+
+    .trend-badge.bleed {
+      background: var(--neg-bg);
+      color: var(--neg);
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+
+    /* Action buttons between badge and player name */
+    .row-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .action-icon-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-dim);
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      line-height: 1;
+      transition: all 0.12s;
+    }
+
+    .action-icon-btn:hover {
+      background: var(--bg);
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
+
+    .action-icon-btn.starred {
+      color: var(--warn);
+    }
+
+    .action-icon-btn.in-squad {
       background: #F4F4F6;
       color: #0A0A0C;
       border-color: #F4F4F6;
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
     }
 
-    .status-pill.cow {
-      background: var(--pos-bg);
-      color: var(--pos);
-      border-color: rgba(16, 185, 129, 0.3);
+    .action-icon-btn.squad-off {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      border-color: var(--border);
     }
 
     .player-name {
@@ -569,16 +625,16 @@
     <header>
       <div class="brand-group">
         <div class="logo"><span class="logo-dot"></span>SCHOOPS</div>
-        <span class="badge" id="roundBadge">ROUND 5 → ROUND 6</span>
+        <span class="badge badge-bright" id="roundBadge">ROUND 5 · NOV 17 – NOV 23 (AEDT)</span>
         <span class="badge" id="playerCountBadge">0 PLAYERS</span>
       </div>
 
       <div class="header-controls">
-        <div class="magic-box">
-          <span>MAGIC #</span>
+        <div class="magic-box" title="Weekly-total approximation (~$654k per-game MN ÷ ~3.67 games/wk). Adjust anytime.">
+          <span>EST. MN</span>
           <input type="number" id="magicInput" value="178000" step="1000" />
         </div>
-        <button class="sync-btn" id="syncBtn" title="Click to pull latest JSON from GitHub">
+        <button class="sync-btn" id="syncBtn" title="Click to force-pull latest JSON from GitHub">
           <span class="sync-dot" id="syncDot"></span>
           <span id="syncText">Syncing...</span>
         </button>
@@ -604,7 +660,7 @@
         <span class="kpi-label">Projected Squad Cash Gen</span>
         <div class="kpi-row">
           <span class="kpi-val" id="kpiCashGen">$0</span>
-          <span class="kpi-sub" id="kpiCashSub">Next rollover</span>
+          <span class="kpi-sub" id="kpiCashSub">Next price change</span>
         </div>
       </div>
       <div class="kpi-item">
@@ -627,10 +683,11 @@
     <div class="toolbar">
       <div class="toolbar-left">
         <div class="segmented" id="statusTabs">
-          <button class="seg-btn active" data-status="all">All</button>
-          <button class="seg-btn" data-status="squad">Squad</button>
-          <button class="seg-btn" data-status="cow">Cows</button>
-          <button class="seg-btn" data-status="watch">Watch</button>
+          <button class="seg-btn active" data-tab="all">All</button>
+          <button class="seg-btn" data-tab="squad">Squad</button>
+          <button class="seg-btn" data-tab="cows">Cows</button>
+          <button class="seg-btn" data-tab="bleeding">Bleeding</button>
+          <button class="seg-btn" data-tab="watchlist">Watchlist</button>
         </div>
 
         <div class="segmented" id="posTabs">
@@ -732,7 +789,7 @@
         <div class="field-group">
           <label>Maintenance</label>
           <div class="btn-row">
-            <button class="btn btn-danger" id="clearOverridesBtn">Clear Local Overrides</button>
+            <button class="btn btn-danger" id="clearOverridesBtn">Clear Local Edits</button>
           </div>
           <span class="hint" id="syncMetaHint">Last synced: —</span>
         </div>
@@ -742,7 +799,11 @@
 
   <script>
     const DEFAULT_GITHUB_URL = "https://raw.githubusercontent.com/theebis/nba-supercoach-sync/main/supercoach_data.json";
-    const STORAGE_KEY = "schoops_terminal_v1";
+    const STORAGE_KEY = "schoops_terminal_v2";
+
+    // Thresholds for auto-classification of Cows vs Bleeding
+    const COW_THRESHOLD = 350000;
+    const BLEED_THRESHOLD = -350000;
 
     const state = {
       githubUrl: DEFAULT_GITHUB_URL,
@@ -750,8 +811,10 @@
       magicNumber: 178000,
       lastUpdated: null,
       players: [],
-      overrides: {}, // { [id]: { price, r_minus_2, r_minus_1, proj, status } }
-      filterStatus: "all",
+      overrides: {},      // { [id]: { price, r_minus_2, r_minus_1, proj } }
+      squadIds: {},       // { [id]: true }
+      watchlistIds: {},   // { [id]: true }
+      activeTab: "all",   // all | squad | cows | bleeding | watchlist
       filterPos: "ALL",
       hideDnp: true,
       fourGamesOnly: false,
@@ -761,8 +824,20 @@
       sortKey: "priceChange",
       sortDir: "desc",
       showAll: false,
-      editingCell: null // { id, field }
+      editingCell: null   // { id, field }
     };
+
+    // 2026-27 NBA SuperCoach Round Dates in AEDT
+    // Round 5 (NBA Week 5: Nov 16-22 US) = Tue Nov 17 – Mon Nov 23, 2026 AEDT
+    function getRoundDateRangeAEDT(roundNum) {
+      const r = Number(roundNum) || 5;
+      // Anchor: Round 5 starts Nov 17, 2026 AEDT
+      const anchorStart = new Date(Date.UTC(2026, 10, 17)); // Month is 0-indexed (10 = Nov)
+      const start = new Date(anchorStart.getTime() + (r - 5) * 7 * 86400000);
+      const end = new Date(start.getTime() + 6 * 86400000);
+      const fmt = (d) => d.toLocaleDateString("en-AU", { month: "short", day: "numeric", timeZone: "UTC" }).toUpperCase();
+      return `${fmt(start)} – ${fmt(end)} (AEDT)`;
+    }
 
     function loadSavedPrefs() {
       try {
@@ -772,6 +847,8 @@
         if (parsed.githubUrl) state.githubUrl = parsed.githubUrl;
         if (parsed.magicNumber) state.magicNumber = Number(parsed.magicNumber) || 178000;
         if (parsed.overrides && typeof parsed.overrides === "object") state.overrides = parsed.overrides;
+        if (parsed.squadIds && typeof parsed.squadIds === "object") state.squadIds = parsed.squadIds;
+        if (parsed.watchlistIds && typeof parsed.watchlistIds === "object") state.watchlistIds = parsed.watchlistIds;
       } catch (e) {}
     }
 
@@ -780,38 +857,41 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           githubUrl: state.githubUrl,
           magicNumber: state.magicNumber,
-          overrides: state.overrides
+          overrides: state.overrides,
+          squadIds: state.squadIds,
+          watchlistIds: state.watchlistIds
         }));
       } catch (e) {}
     }
 
-    function normalizeStatus(rawStatus, price, proj) {
-      const s = String(rawStatus || "").toLowerCase();
-      if (s === "squad") return "squad";
-      if (s === "prospect" || s === "cow") return "cow";
-      if (s === "watchlist" || s === "watch") return "watch";
-      return (price <= 9800000 && proj >= 55) ? "cow" : "watch";
-    }
-
     function normalizePlayer(p, idx) {
-      const id = String(p.id ?? p.name ?? idx);
-      let price = Number(p.price) || 0;
+      const id = String(p.id ?? p.player_id ?? p.name ?? idx);
+      let price = Number(p.price ?? p.current_price ?? 0) || 0;
       if (price > 0 && price < 1000) price = Math.round(price * 1000000);
 
-      const r2 = Number(p.r_minus_2) || 0;
-      const r1 = Number(p.r_minus_1) || 0;
-      const proj = Number(p.proj) || 0;
-      const games = Number(p.games ?? 3);
-      const owned = Number(p.owned ?? p.ownership ?? 0);
+      const r2 = Number(p.r_minus_2 ?? p.wk_minus_2 ?? p.score_minus_2 ?? 0) || 0;
+      const r1 = Number(p.r_minus_1 ?? p.wk_minus_1 ?? p.last_score ?? 0) || 0;
+      const proj = Number(p.proj ?? p.projected_score ?? p.projection ?? 0) || 0;
+      const games = Number(p.games ?? p.upcoming_games ?? p.next_games ?? 3);
+
+      let owned = Number(p.owned ?? p.ownership ?? p.owned_pct ?? 0) || 0;
+      // Handle cases where ownership is stored as a decimal (e.g., 0.626 -> 62.6%) if <= 1 and not clearly tiny?
+      // Note: SuperCoach JSON stores percentage directly (e.g., 0.674041 = 0.7%, 62.6 = 62.6%), so leave as-is.
 
       const avg5Raw = p.avg5 ?? p.avg_5 ?? p.five_week_avg ?? p.avg5_points ?? null;
       const avg5 = (avg5Raw !== null && avg5Raw !== undefined && avg5Raw !== "") ? Number(avg5Raw) : null;
 
+      const officialBeRaw = p.be ?? p.breakeven ?? p.break_even ?? null;
+      const officialBe = (officialBeRaw !== null && officialBeRaw !== undefined && officialBeRaw !== "") ? Number(officialBeRaw) : null;
+
+      const rawStatus = String(p.status || "").toLowerCase();
+      const jsonInSquad = rawStatus === "squad";
+
       return {
         id,
-        name: String(p.name || "Unknown"),
-        team: String(p.team || "NBA"),
-        pos: String(p.pos || "UTIL"),
+        name: String(p.name || `${p.first_name || ""} ${p.last_name || ""}`.trim() || "Unknown"),
+        team: String(p.team || p.team_abbrev || "NBA"),
+        pos: Array.isArray(p.positions) ? p.positions.join("/") : String(p.pos || p.position || "UTIL"),
         price,
         r_minus_2: r2,
         r_minus_1: r1,
@@ -819,32 +899,46 @@
         games,
         owned,
         avg5,
-        injury: p.injury || null,
-        status: normalizeStatus(p.status, price, proj)
+        officialBe,
+        injury: p.injury || p.injury_status || null,
+        jsonInSquad
       };
     }
 
     function computeRow(base) {
       const ov = state.overrides[base.id] || {};
+      const hasOverride = Object.keys(ov).length > 0;
       const price = ov.price !== undefined ? Number(ov.price) : base.price;
       const r2 = ov.r_minus_2 !== undefined ? Number(ov.r_minus_2) : (state.autoFillScores ? base.r_minus_2 : 0);
       const r1 = ov.r_minus_1 !== undefined ? Number(ov.r_minus_1) : (state.autoFillScores ? base.r_minus_1 : 0);
       const proj = ov.proj !== undefined ? Number(ov.proj) : base.proj;
-      const status = ov.status !== undefined ? ov.status : base.status;
       const magic = state.magicNumber || 178000;
 
       const isInactive = (r2 === 0 && r1 === 0 && proj === 0);
       const rolling3 = (r2 + r1 + proj) / 3;
-      const be = isInactive ? 0 : Math.round((3 * price / magic) - r2 - r1);
+
+      // Use official BE from JSON if present and user hasn't manually edited scores/price
+      const be = (!hasOverride && base.officialBe !== null)
+        ? Math.round(base.officialBe)
+        : (isInactive ? 0 : Math.round((3 * price / magic) - r2 - r1));
+
       const dist = proj - be;
       const newPrice = isInactive
         ? price
         : Math.round((0.75 * price + 0.25 * rolling3 * magic) / 10000) * 10000;
       const priceChange = newPrice - price;
 
+      const inSquad = state.squadIds[base.id] !== undefined ? !!state.squadIds[base.id] : base.jsonInSquad;
+      const inWatchlist = !!state.watchlistIds[base.id];
+
+      // Auto-computed cash movement tag: cow | bleed | neutral
+      let trend = "neutral";
+      if (priceChange >= COW_THRESHOLD) trend = "cow";
+      else if (priceChange <= BLEED_THRESHOLD) trend = "bleed";
+
       let signal = "HOLD";
-      if (priceChange >= 350000) signal = "BUY / COW";
-      else if (priceChange <= -350000) signal = "SELL";
+      if (trend === "cow") signal = "CASH COW";
+      else if (trend === "bleed") signal = "BLEEDING";
 
       return {
         ...base,
@@ -852,12 +946,14 @@
         r_minus_2: r2,
         r_minus_1: r1,
         proj,
-        status,
         avg3: rolling3,
         be,
         dist,
         newPrice,
         priceChange,
+        inSquad,
+        inWatchlist,
+        trend,
         signal
       };
     }
@@ -885,18 +981,24 @@
       setSyncStatus("loading", "Syncing...");
       try {
         const sep = state.githubUrl.includes("?") ? "&" : "?";
-        const res = await fetch(`${state.githubUrl}${sep}t=${Date.now()}`);
+        const res = await fetch(`${state.githubUrl}${sep}cb=${Date.now()}`, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         loadDataset(data, "GitHub");
       } catch (err) {
-        console.error(err);
+        console.error("GitHub sync error:", err);
         setSyncStatus("error", "Sync Failed");
+        document.getElementById("tableBody").innerHTML = `
+          <tr>
+            <td colspan="13" style="text-align:center; padding:32px; color:var(--neg);">
+              Failed to load JSON from GitHub (${escapeHtml(err.message)}). Click Sync or check Settings.
+            </td>
+          </tr>`;
       }
     }
 
     function loadDataset(data, sourceLabel) {
-      const list = Array.isArray(data) ? data : (data.players || []);
+      const list = Array.isArray(data) ? data : (data.players || data.data || []);
       state.players = list.map(normalizePlayer);
       if (data.round) state.round = Number(data.round);
       if (data.magicNumber && !localStorage.getItem(STORAGE_KEY)) {
@@ -911,12 +1013,15 @@
       render();
     }
 
-    function getFilteredRows() {
-      const computed = state.players.map(computeRow);
+    function getFilteredRows(allComputed) {
       const q = state.search.trim().toLowerCase();
 
-      return computed.filter((p) => {
-        if (state.filterStatus !== "all" && p.status !== state.filterStatus) return false;
+      return allComputed.filter((p) => {
+        if (state.activeTab === "squad" && !p.inSquad) return false;
+        if (state.activeTab === "cows" && p.trend !== "cow") return false;
+        if (state.activeTab === "bleeding" && p.trend !== "bleed") return false;
+        if (state.activeTab === "watchlist" && !p.inWatchlist) return false;
+
         if (state.filterPos !== "ALL") {
           const parts = p.pos.toUpperCase().split(/[\/,\s]+/);
           if (!parts.includes(state.filterPos)) return false;
@@ -941,7 +1046,7 @@
     }
 
     function updateKPIs(allComputed) {
-      const squad = allComputed.filter((p) => p.status === "squad");
+      const squad = allComputed.filter((p) => p.inSquad);
       const squadVal = squad.reduce((s, p) => s + p.price, 0);
       const squadCash = squad.reduce((s, p) => s + p.priceChange, 0);
 
@@ -951,7 +1056,7 @@
       const cashEl = document.getElementById("kpiCashGen");
       cashEl.textContent = formatMoney(squadCash);
       cashEl.className = "kpi-val " + (squadCash > 0 ? "pos-text" : squadCash < 0 ? "neg-text" : "");
-      document.getElementById("kpiCashSub").textContent = `Rd ${state.round + 1} rollover`;
+      document.getElementById("kpiCashSub").textContent = `Round ${state.round} est.`;
 
       const sortedCows = [...allComputed].sort((a, b) => b.priceChange - a.priceChange);
       const topCow = sortedCows[0];
@@ -969,35 +1074,42 @@
         document.getElementById("kpiTopPodMeta").textContent = "No 4G PODs";
       }
 
-      // Update status tab counts
+      // Tab counts (excluding unowned)
       const counts = {
         all: allComputed.length,
         squad: squad.length,
-        cow: allComputed.filter((p) => p.status === "cow").length,
-        watch: allComputed.filter((p) => p.status === "watch").length
+        cows: allComputed.filter((p) => p.trend === "cow").length,
+        bleeding: allComputed.filter((p) => p.trend === "bleed").length,
+        watchlist: allComputed.filter((p) => p.inWatchlist).length
+      };
+      const labels = {
+        all: "All",
+        squad: "Squad",
+        cows: "Cows",
+        bleeding: "Bleeding",
+        watchlist: "Watchlist"
       };
       document.querySelectorAll("#statusTabs .seg-btn").forEach((btn) => {
-        const st = btn.dataset.status;
-        const labels = { all: "All", squad: "Squad", cow: "Cows", watch: "Watch" };
-        btn.textContent = `${labels[st]} (${counts[st]})`;
+        const t = btn.dataset.tab;
+        btn.textContent = `${labels[t]} (${counts[t]})`;
       });
     }
 
     function render() {
       const r = state.round;
-      document.getElementById("roundBadge").textContent = `ROUND ${r} → ROUND ${r + 1}`;
+      document.getElementById("roundBadge").textContent = `ROUND ${r} · ${getRoundDateRangeAEDT(r)}`;
       document.getElementById("playerCountBadge").textContent = `${state.players.length} PLAYERS`;
       document.getElementById("magicInput").value = state.magicNumber;
       document.getElementById("roundInput").value = r;
-      document.getElementById("thWkMinus2").textContent = `Wk ${Math.max(1, r - 1)}`;
-      document.getElementById("thWkMinus1").textContent = `Wk ${r}`;
-      document.getElementById("thGms").textContent = `Rd ${r + 1} Gms`;
-      document.getElementById("thProj").textContent = `Wk ${r + 1} Proj`;
+      document.getElementById("thWkMinus2").textContent = `Wk ${Math.max(1, r - 2)}`;
+      document.getElementById("thWkMinus1").textContent = `Wk ${Math.max(1, r - 1)}`;
+      document.getElementById("thGms").textContent = `Rd ${r} Gms`;
+      document.getElementById("thProj").textContent = `Rd ${r} Proj`;
 
       const allComputed = state.players.map(computeRow);
       updateKPIs(allComputed);
 
-      const filtered = sortRows(getFilteredRows());
+      const filtered = sortRows(getFilteredRows(allComputed));
       const limit = state.showAll ? filtered.length : Math.min(100, filtered.length);
       const visible = filtered.slice(0, limit);
 
@@ -1009,12 +1121,15 @@
           const chgClass = p.priceChange > 0 ? "pos-text" : p.priceChange < 0 ? "neg-text" : "muted-text";
           const distClass = p.dist >= 0 ? "pos-text" : "neg-text";
           const distSign = p.dist > 0 ? "+" : "";
-          const sigClass = p.signal === "BUY / COW" ? "signal-buy" : p.signal === "SELL" ? "signal-sell" : "signal-hold";
+          const sigClass = p.trend === "cow" ? "signal-buy" : p.trend === "bleed" ? "signal-sell" : "signal-hold";
+
           const avg5Cell = (p.avg5 !== null && !Number.isNaN(p.avg5))
             ? `<span class="mono">${p.avg5.toFixed(1)}</span>`
             : `<span class="mono dim-text" title="Not yet in JSON feed">—</span>`;
 
-          const statusLabel = p.status === "squad" ? "SQUAD" : p.status === "cow" ? "COW" : "WATCH";
+          // Read-only badge: COW / BLEED / — (unowned/neutral)
+          const badgeClass = p.trend === "cow" ? "cow" : p.trend === "bleed" ? "bleed" : "";
+          const badgeText = p.trend === "cow" ? "COW" : p.trend === "bleed" ? "BLEED" : "—";
 
           const renderEditable = (field, displayVal) => {
             if (state.editingCell && state.editingCell.id === p.id && state.editingCell.field === field) {
@@ -1028,7 +1143,11 @@
             <tr>
               <td>
                 <div class="player-cell">
-                  <span class="status-pill ${p.status}" data-toggle-status="${p.id}" title="Click to cycle Squad / Cow / Watch">${statusLabel}</span>
+                  <span class="trend-badge ${badgeClass}">${badgeText}</span>
+                  <div class="row-actions">
+                    <button class="action-icon-btn ${p.inWatchlist ? "starred" : ""}" data-toggle-watch="${p.id}" title="${p.inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}">${p.inWatchlist ? "★" : "☆"}</button>
+                    <button class="action-icon-btn ${p.inSquad ? "in-squad" : "squad-off"}" data-toggle-squad="${p.id}" title="${p.inSquad ? "In Squad (click to remove)" : "Add to Squad"}">${p.inSquad ? "SQ" : "+"}</button>
+                  </div>
                   <div>
                     <div class="player-name">${escapeHtml(p.name)}</div>
                     <div class="player-meta">
@@ -1077,7 +1196,7 @@
     }
 
     function escapeHtml(str) {
-      return str.replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+      return String(str).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
     }
 
     function commitEdit(inputEl) {
@@ -1096,15 +1215,22 @@
 
     // Event Listeners
     document.getElementById("tableBody").addEventListener("click", (e) => {
-      const statusBtn = e.target.closest("[data-toggle-status]");
-      if (statusBtn) {
-        const id = statusBtn.dataset.toggleStatus;
+      const watchBtn = e.target.closest("[data-toggle-watch]");
+      if (watchBtn) {
+        const id = watchBtn.dataset.toggleWatch;
+        if (state.watchlistIds[id]) delete state.watchlistIds[id];
+        else state.watchlistIds[id] = true;
+        savePrefs();
+        render();
+        return;
+      }
+
+      const squadBtn = e.target.closest("[data-toggle-squad]");
+      if (squadBtn) {
+        const id = squadBtn.dataset.toggleSquad;
         const base = state.players.find((p) => p.id === id);
-        if (!base) return;
-        const curr = (state.overrides[id]?.status) || base.status;
-        const next = curr === "watch" ? "squad" : curr === "squad" ? "cow" : "watch";
-        if (!state.overrides[id]) state.overrides[id] = {};
-        state.overrides[id].status = next;
+        const current = state.squadIds[id] !== undefined ? !!state.squadIds[id] : !!(base && base.jsonInSquad);
+        state.squadIds[id] = !current;
         savePrefs();
         render();
         return;
@@ -1140,7 +1266,7 @@
       btn.addEventListener("click", () => {
         document.querySelectorAll("#statusTabs .seg-btn").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
-        state.filterStatus = btn.dataset.status;
+        state.activeTab = btn.dataset.tab;
         state.showAll = false;
         render();
       });
@@ -1240,7 +1366,7 @@
           r_minus_2: c.r_minus_1,
           r_minus_1: c.proj,
           proj: Math.round((c.r_minus_1 + c.proj) / 2),
-          status: c.status
+          officialBe: null
         };
       });
       state.players = rolled;
@@ -1282,7 +1408,8 @@
             id: p.id, name: p.name, team: p.team, pos: p.pos,
             price: c.price, r_minus_2: c.r_minus_2, r_minus_1: c.r_minus_1,
             proj: c.proj, games: p.games, owned: p.owned,
-            avg5: p.avg5, injury: p.injury, status: c.status
+            avg5: p.avg5, be: p.officialBe, injury: p.injury,
+            status: c.inSquad ? "squad" : "watchlist"
           };
         })
       };
