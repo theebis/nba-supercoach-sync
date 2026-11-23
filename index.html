@@ -1436,7 +1436,7 @@
       const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
 
       const ptsDiff = score - be;
-      const rawCashDelta = ptsDiff * (magic / 3);
+      const rawCashDelta = 0.25 * ptsDiff * (magic / 3);
       const roundedCashDelta = Math.round(rawCashDelta / 10000) * 10000;
       const newPriceDollars = Math.max(0, Math.round(priceM * 1000000) + roundedCashDelta);
 
