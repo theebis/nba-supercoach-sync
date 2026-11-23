@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "05929d6687524b7aa4a3465a3facb806"}'></script><!-- End Cloudflare Web Analytics -->
   <style>
     :root {
       --bg: #0A0A0C;
@@ -90,7 +91,7 @@
       font-family: var(--mono);
       font-size: 11px;
       font-weight: 600;
-      padding: 3px 8px;
+      padding: 4px 8px;
       border-radius: 4px;
       border: 1px solid var(--border);
       background: var(--surface);
@@ -98,36 +99,121 @@
       letter-spacing: 0.03em;
     }
 
-    /* Round Snapshot Dropdown */
-    .round-select {
+    /* Custom Dark-Mode Round Dropdown */
+    .round-dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .round-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       font-family: var(--mono);
       font-size: 11px;
       font-weight: 600;
-      padding: 4px 26px 4px 9px;
+      padding: 4px 10px;
       border-radius: 4px;
       border: 1px solid var(--border-strong);
       background: var(--surface);
       color: var(--text);
       letter-spacing: 0.03em;
       cursor: pointer;
-      outline: none;
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238E8E9A' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 8px center;
-      transition: border-color 0.15s, background-color 0.15s;
+      transition: border-color 0.15s, background 0.15s;
     }
 
-    .round-select:hover {
+    .round-trigger:hover {
       border-color: #52525E;
-      background-color: var(--surface-hover);
+      background: var(--surface-hover);
     }
 
-    .round-select.historical {
-      border-color: rgba(245, 158, 11, 0.55);
+    .round-tag-live {
+      color: var(--pos);
+      font-weight: 700;
+    }
+
+    .round-tag-snap {
       color: var(--warn);
-      background-color: var(--warn-bg);
+      font-weight: 700;
+    }
+
+    .round-chevron {
+      color: var(--text-dim);
+      font-size: 9px;
+      margin-left: 2px;
+      transition: transform 0.15s;
+    }
+
+    .round-dropdown.open .round-chevron {
+      transform: rotate(180deg);
+    }
+
+    .round-menu {
+      position: absolute;
+      top: calc(100% + 5px);
+      left: 0;
+      min-width: 310px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 4px;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.65);
+      z-index: 90;
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .round-dropdown.open .round-menu {
+      display: flex;
+    }
+
+    .round-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: transparent;
+      border: none;
+      border-radius: 4px;
+      padding: 7px 10px;
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      transition: background 0.1s, color 0.1s;
+    }
+
+    .round-option:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+
+    .round-option.active {
+      background: #1E1E26;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .round-opt-pill {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 3px;
+      letter-spacing: 0.04em;
+    }
+
+    .round-opt-pill.live {
+      background: var(--pos-bg);
+      color: var(--pos);
+    }
+
+    .round-opt-pill.snap {
+      background: var(--warn-bg);
+      color: var(--warn);
     }
 
     .header-controls {
@@ -137,30 +223,6 @@
       flex-wrap: wrap;
     }
 
-    .magic-box {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 4px 8px;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .magic-box input {
-      width: 68px;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 600;
-      outline: none;
-      text-align: right;
-    }
-
     .calc-btn {
       display: inline-flex;
       align-items: center;
@@ -168,12 +230,13 @@
       background: var(--surface);
       border: 1px solid var(--border-strong);
       color: var(--text);
-      padding: 5px 10px;
+      padding: 5px 11px;
       border-radius: 4px;
       cursor: pointer;
       font-size: 11px;
       font-weight: 600;
       font-family: var(--mono);
+      letter-spacing: 0.03em;
       transition: all 0.15s;
     }
 
@@ -232,7 +295,7 @@
       background: var(--surface-hover);
     }
 
-    /* Live Scratchpad Drawer / Bar */
+    /* Live Cash Calculator Scratchpad */
     .scratchpad {
       display: none;
       background: var(--surface);
@@ -261,6 +324,7 @@
       display: flex;
       flex-direction: column;
       gap: 3px;
+      position: relative;
     }
 
     .sp-field label {
@@ -271,29 +335,83 @@
       color: var(--text-dim);
     }
 
-    .sp-select, .sp-num {
+    .sp-search, .sp-num {
       background: var(--bg);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 5px 8px;
+      padding: 5px 9px;
       border-radius: 4px;
-      font-family: var(--mono);
       font-size: 12px;
       outline: none;
     }
 
-    .sp-select {
-      min-width: 210px;
+    .sp-search {
+      width: 230px;
       font-family: var(--sans);
     }
 
-    .sp-num {
-      width: 76px;
-      text-align: right;
+    .sp-search::placeholder {
+      color: var(--text-dim);
     }
 
-    .sp-select:focus, .sp-num:focus {
+    .sp-num {
+      width: 78px;
+      text-align: right;
+      font-family: var(--mono);
+    }
+
+    .sp-search:focus, .sp-num:focus {
       border-color: #636370;
+    }
+
+    /* Autocomplete Dropdown */
+    .ac-list {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      width: 280px;
+      max-height: 240px;
+      overflow-y: auto;
+      background: #141419;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 4px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7);
+      z-index: 95;
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .ac-list.open {
+      display: flex;
+    }
+
+    .ac-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: transparent;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 8px;
+      color: var(--text);
+      font-size: 12px;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+    }
+
+    .ac-item:hover, .ac-item.active {
+      background: #23232C;
+    }
+
+    .ac-meta {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--text-muted);
+      white-space: nowrap;
     }
 
     .scratchpad-results {
@@ -710,6 +828,7 @@
       font-size: 12px;
       font-weight: 500;
       cursor: pointer;
+      transition: background 0.12s;
     }
 
     .btn:hover { background: var(--surface-hover); }
@@ -737,7 +856,7 @@
       border: 1px solid var(--border-strong);
       border-radius: 8px;
       width: 100%;
-      max-width: 520px;
+      max-width: 500px;
       overflow: hidden;
     }
 
@@ -758,7 +877,7 @@
       gap: 16px;
     }
 
-    .field-group { display: flex; flex-direction: column; gap: 6px; }
+    .field-group { display: flex; flex-direction: column; gap: 7px; }
     .field-group label {
       font-size: 11px;
       font-weight: 600;
@@ -767,11 +886,25 @@
       color: var(--text-muted);
     }
 
+    .info-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 9px 11px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .info-box strong {
+      color: var(--text);
+    }
+
     .text-input {
       background: var(--bg);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 8px 10px;
+      padding: 7px 10px;
       border-radius: 4px;
       font-family: var(--mono);
       font-size: 12px;
@@ -781,11 +914,18 @@
 
     .text-input:focus { border-color: var(--border-strong); }
 
-    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .inline-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
     .divider { height: 1px; background: var(--border); }
 
     .hint { font-size: 11px; color: var(--text-dim); }
+    .status-msg { font-size: 11px; font-family: var(--mono); color: var(--pos); }
   </style>
 </head>
 <body>
@@ -794,25 +934,29 @@
     <header>
       <div class="brand-group">
         <div class="logo"><span class="logo-dot"></span>SCHOOPS</div>
-        <select class="round-select" id="roundSelect" title="Switch between live round and historical round snapshots">
-          <option value="live">ROUND 6 · NOV 24 – NOV 30 (AEDT)</option>
-        </select>
+
+        <!-- Custom Dark-Mode Round Selector -->
+        <div class="round-dropdown" id="roundDropdown">
+          <button class="round-trigger" id="roundTrigger" type="button" title="Switch between live round and historical snapshots">
+            <span id="roundTriggerText">ROUND 6 · NOV 24 – NOV 30 (AEDT)</span>
+            <span class="round-tag-live" id="roundTriggerTag">LIVE</span>
+            <span class="round-chevron">▼</span>
+          </button>
+          <div class="round-menu" id="roundMenu"></div>
+        </div>
+
         <span class="badge" id="playerCountBadge">0 PLAYERS</span>
       </div>
 
       <div class="header-controls">
-        <div class="magic-box" title="Weekly-total approximation (~$654k per-game MN ÷ ~3.67 games/wk). Adjust anytime.">
-          <span>EST. MN</span>
-          <input type="number" id="magicInput" value="178000" step="1000" />
-        </div>
-        <button class="calc-btn" id="toggleCalcBtn" title="Open temporary Live Score & Cash Scratchpad">
-          <span>CALC</span>
+        <button class="calc-btn" id="toggleCalcBtn" title="Estimate live cash earned from a player's current score and breakeven">
+          <span>LIVE CASH CALC</span>
         </button>
-        <button class="sync-btn" id="syncBtn" title="Click to force-pull latest JSON from GitHub">
+        <button class="sync-btn" id="syncBtn" title="Refresh latest synced SuperCoach data">
           <span class="sync-dot" id="syncDot"></span>
           <span id="syncText">Syncing...</span>
         </button>
-        <button class="icon-btn" id="openSettingsBtn" title="Settings">
+        <button class="icon-btn" id="openSettingsBtn" title="Settings & Squad Code">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"></circle>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -821,14 +965,13 @@
       </div>
     </header>
 
-    <!-- Temporary Live Cash Scratchpad (Does not mutate table data) -->
+    <!-- Temporary Live Cash Calculator (Type-to-search autocomplete) -->
     <div class="scratchpad" id="scratchpadPanel">
       <div class="scratchpad-inputs">
         <div class="sp-field">
-          <label>Player</label>
-          <select class="sp-select" id="calcPlayerSelect">
-            <option value="">Custom / Manual BE</option>
-          </select>
+          <label>Search Player</label>
+          <input type="text" class="sp-search" id="calcPlayerSearch" placeholder="Type name (e.g. wemb)..." autocomplete="off" />
+          <div class="ac-list" id="calcAcList"></div>
         </div>
         <div class="sp-field">
           <label>Breakeven</label>
@@ -857,7 +1000,7 @@
           <span class="sp-stat-label">Est. New Price</span>
           <span class="sp-stat-val" id="calcNewPrice">$13.38M</span>
         </div>
-        <button class="icon-btn" id="closeCalcBtn" title="Close Scratchpad">✕</button>
+        <button class="icon-btn" id="closeCalcBtn" title="Close Calculator">✕</button>
       </div>
     </div>
 
@@ -952,7 +1095,7 @@
         <tbody id="tableBody">
           <tr>
             <td colspan="13" style="text-align:center; padding:32px; color:var(--text-dim);">
-              Loading player feed from GitHub...
+              Loading player feed...
             </td>
           </tr>
         </tbody>
@@ -964,40 +1107,49 @@
     </div>
   </div>
 
-  <!-- Settings Modal -->
+  <!-- User-Safe Settings Modal -->
   <div class="modal-backdrop" id="settingsModal">
     <div class="modal">
       <div class="modal-header">
-        <h2>Terminal Settings &amp; Data Source</h2>
+        <h2>Settings &amp; Squad Transfer</h2>
         <button class="icon-btn" id="closeSettingsBtn">✕</button>
       </div>
       <div class="modal-body">
+        <!-- Squad Copy/Paste Code -->
         <div class="field-group">
-          <label>GitHub Raw JSON URL</label>
-          <input type="text" class="text-input" id="githubUrlInput" />
+          <label>Squad &amp; Watchlist Transfer Code</label>
+          <span class="hint">Your squad saves automatically in this browser. Copy your code to load the same squad on another device (like your phone).</span>
           <div class="btn-row">
-            <button class="btn btn-primary" id="saveSyncBtn">Save &amp; Sync Now</button>
-            <button class="btn" id="resetUrlBtn">Reset Default URL</button>
+            <button class="btn btn-primary" id="copySquadCodeBtn">Copy Squad Code</button>
+            <span class="status-msg" id="squadCodeStatus"></span>
+          </div>
+          <div class="inline-row" style="margin-top:4px;">
+            <input type="text" class="text-input" id="importSquadCodeInput" placeholder="Paste squad code here..." />
+            <button class="btn" id="loadSquadCodeBtn" style="white-space:nowrap;">Load Code</button>
           </div>
         </div>
 
         <div class="divider"></div>
 
+        <!-- Est. Magic Number (Moved out of header) -->
         <div class="field-group">
-          <label>Local JSON Import / Export</label>
-          <div class="btn-row">
-            <input type="file" id="localFileInput" accept=".json" style="display:none;" />
-            <button class="btn" id="uploadJsonBtn">Load Local JSON</button>
-            <button class="btn" id="exportJsonBtn">Export Current JSON</button>
+          <label>Est. Magic Number (EST. MN)</label>
+          <div class="inline-row">
+            <input type="number" class="text-input" id="magicInput" value="178000" step="1000" style="width:140px;" />
+            <button class="btn" id="resetMagicBtn">Reset Default ($178,000)</button>
+          </div>
+          <div class="info-box">
+            <strong>About the Est. Magic Number ($178,000):</strong> This converts weekly SuperCoach points into estimated dollar value (~$654K per-game value ÷ ~3.67 avg games/week). Adjusting it will shift every projected price change and breakeven on your screen. Unless you know why you're tweaking it, it's best to leave it at the default—and hit <strong>Reset</strong> if things look off.
           </div>
         </div>
 
         <div class="divider"></div>
 
+        <!-- Maintenance -->
         <div class="field-group">
-          <label>Maintenance</label>
+          <label>Local Browser Data</label>
           <div class="btn-row">
-            <button class="btn btn-danger" id="clearSquadBtn">Reset Squad &amp; Watchlist</button>
+            <button class="btn btn-danger" id="clearSquadBtn">Reset My Squad &amp; Watchlist</button>
           </div>
           <span class="hint" id="syncMetaHint">Last synced: —</span>
         </div>
@@ -1006,19 +1158,22 @@
   </div>
 
   <script>
-    const DEFAULT_GITHUB_URL = "https://raw.githubusercontent.com/theebis/nba-supercoach-sync/main/supercoach_data.json";
+    const DATA_URL = "https://raw.githubusercontent.com/theebis/nba-supercoach-sync/main/supercoach_data.json";
+    const DEFAULT_MAGIC_NUMBER = 178000;
+
+    // Permanently locked storage key (with one-time silent migration from v2 if present)
     const STORAGE_KEY = "schoops_terminal_v3";
+    const LEGACY_STORAGE_KEY = "schoops_terminal_v2";
 
     const COW_THRESHOLD = 350000;
     const BLEED_THRESHOLD = -350000;
 
     const state = {
-      githubUrl: DEFAULT_GITHUB_URL,
       liveRound: 6,
       round: 6,
       availableRounds: [],
       isHistorical: false,
-      magicNumber: 178000,
+      magicNumber: DEFAULT_MAGIC_NUMBER,
       lastUpdated: null,
       players: [],
       computedById: {},
@@ -1045,17 +1200,24 @@
     }
 
     function getHistoryUrl(roundNum) {
-      const base = state.githubUrl.replace(/\/[^\/]+$/, "");
+      const base = DATA_URL.replace(/\/[^\/]+$/, "");
       return `${base}/history/round_${roundNum}.json`;
     }
 
     function loadSavedPrefs() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        let raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          // One-time silent migration from v2 if user had a squad saved there
+          const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+          if (legacy) {
+            raw = legacy;
+            localStorage.setItem(STORAGE_KEY, legacy);
+          }
+        }
         if (!raw) return;
         const parsed = JSON.parse(raw);
-        if (parsed.githubUrl) state.githubUrl = parsed.githubUrl;
-        if (parsed.magicNumber) state.magicNumber = Number(parsed.magicNumber) || 178000;
+        if (parsed.magicNumber) state.magicNumber = Number(parsed.magicNumber) || DEFAULT_MAGIC_NUMBER;
         if (parsed.squadIds && typeof parsed.squadIds === "object") state.squadIds = parsed.squadIds;
         if (parsed.watchlistIds && typeof parsed.watchlistIds === "object") state.watchlistIds = parsed.watchlistIds;
       } catch (e) {}
@@ -1064,7 +1226,6 @@
     function savePrefs() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          githubUrl: state.githubUrl,
           magicNumber: state.magicNumber,
           squadIds: state.squadIds,
           watchlistIds: state.watchlistIds
@@ -1089,9 +1250,6 @@
       const officialBeRaw = p.be ?? p.breakeven ?? p.break_even ?? null;
       const officialBe = (officialBeRaw !== null && officialBeRaw !== undefined && officialBeRaw !== "") ? Number(officialBeRaw) : null;
 
-      const rawStatus = String(p.status || "").toLowerCase();
-      const jsonInSquad = rawStatus === "squad";
-
       return {
         id,
         name: String(p.name || `${p.first_name || ""} ${p.last_name || ""}`.trim() || "Unknown"),
@@ -1105,8 +1263,7 @@
         owned,
         avg5,
         officialBe,
-        injury: p.injury || p.injury_status || null,
-        jsonInSquad
+        injury: p.injury || p.injury_status || null
       };
     }
 
@@ -1115,7 +1272,7 @@
       const r2 = base.r_minus_2;
       const r1 = base.r_minus_1;
       const proj = base.proj;
-      const magic = state.magicNumber || 178000;
+      const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
 
       const isInactive = (r2 === 0 && r1 === 0 && proj === 0);
       const rolling3 = (r2 + r1 + proj) / 3;
@@ -1130,7 +1287,7 @@
         : Math.round((0.75 * price + 0.25 * rolling3 * magic) / 10000) * 10000;
       const priceChange = newPrice - price;
 
-      const inSquad = state.squadIds[base.id] !== undefined ? !!state.squadIds[base.id] : base.jsonInSquad;
+      const inSquad = !!state.squadIds[base.id];
       const inWatchlist = !!state.watchlistIds[base.id];
 
       let trend = "neutral";
@@ -1181,19 +1338,18 @@
     async function syncFromGitHub() {
       setSyncStatus("loading", "Syncing...");
       try {
-        const sep = state.githubUrl.includes("?") ? "&" : "?";
-        const res = await fetch(`${state.githubUrl}${sep}cb=${Date.now()}`, { cache: "no-store" });
+        const res = await fetch(`${DATA_URL}?cb=${Date.now()}`, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         state.isHistorical = false;
-        loadDataset(data, "GitHub (Live)");
+        loadDataset(data, "Live Feed");
       } catch (err) {
-        console.error("GitHub sync error:", err);
+        console.error("Sync error:", err);
         setSyncStatus("error", "Sync Failed");
         document.getElementById("tableBody").innerHTML = `
           <tr>
             <td colspan="13" style="text-align:center; padding:32px; color:var(--neg);">
-              Failed to load JSON from GitHub (${escapeHtml(err.message)}). Click Sync or check Settings.
+              Failed to load player feed (${escapeHtml(err.message)}). Click Sync to retry.
             </td>
           </tr>`;
       }
@@ -1206,8 +1362,7 @@
       }
       setSyncStatus("loading", `Loading Rd ${roundNum}...`);
       try {
-        const url = getHistoryUrl(roundNum);
-        const res = await fetch(`${url}?cb=${Date.now()}`, { cache: "no-store" });
+        const res = await fetch(`${getHistoryUrl(roundNum)}?cb=${Date.now()}`, { cache: "no-store" });
         if (!res.ok) throw new Error(`Snapshot for Round ${roundNum} not found (HTTP ${res.status})`);
         const data = await res.json();
         state.isHistorical = true;
@@ -1215,25 +1370,38 @@
       } catch (err) {
         console.error("Snapshot load error:", err);
         setSyncStatus("error", `Rd ${roundNum} Missing`);
-        alert(`Could not load Round ${roundNum} snapshot. Run your GitHub Action once to generate history/round_${roundNum}.json.`);
-        document.getElementById("roundSelect").value = String(state.round);
+        alert(`Could not load Round ${roundNum} snapshot.`);
       }
     }
 
-    function populateRoundDropdown() {
-      const sel = document.getElementById("roundSelect");
+    function renderRoundDropdown() {
       const rounds = state.availableRounds.length
         ? [...state.availableRounds].sort((a, b) => b - a)
         : [state.liveRound];
 
-      sel.innerHTML = rounds.map((r) => {
-        const isLive = Number(r) === Number(state.liveRound);
-        const tag = isLive ? " · LIVE" : " · SNAPSHOT";
-        return `<option value="${r}">ROUND ${r} · ${getRoundDateRangeAEDT(r)}${tag}</option>`;
-      }).join("");
+      const triggerText = document.getElementById("roundTriggerText");
+      const triggerTag = document.getElementById("roundTriggerTag");
+      const menu = document.getElementById("roundMenu");
 
-      sel.value = String(state.round);
-      sel.classList.toggle("historical", state.isHistorical);
+      triggerText.textContent = `ROUND ${state.round} · ${getRoundDateRangeAEDT(state.round)}`;
+      if (state.isHistorical) {
+        triggerTag.textContent = "SNAPSHOT";
+        triggerTag.className = "round-tag-snap";
+      } else {
+        triggerTag.textContent = "LIVE";
+        triggerTag.className = "round-tag-live";
+      }
+
+      menu.innerHTML = rounds.map((r) => {
+        const isLive = Number(r) === Number(state.liveRound);
+        const isActive = Number(r) === Number(state.round);
+        return `
+          <button type="button" class="round-option ${isActive ? "active" : ""}" data-round="${r}">
+            <span>ROUND ${r} · ${getRoundDateRangeAEDT(r)}</span>
+            <span class="round-opt-pill ${isLive ? "live" : "snap"}">${isLive ? "LIVE" : "SNAPSHOT"}</span>
+          </button>
+        `;
+      }).join("");
     }
 
     function loadDataset(data, sourceLabel) {
@@ -1249,39 +1417,23 @@
         state.availableRounds.push(state.round);
       }
 
-      if (data.magicNumber && !localStorage.getItem(STORAGE_KEY)) {
-        state.magicNumber = Number(data.magicNumber);
-      }
       state.lastUpdated = data.lastUpdated || new Date().toISOString();
 
       const timeStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
       setSyncStatus("", state.isHistorical ? `Snapshot Rd ${state.round}` : `Synced ${timeStr}`);
       document.getElementById("syncMetaHint").textContent =
-        `Source: ${sourceLabel} · ${state.players.length} players · File updated: ${new Date(state.lastUpdated).toLocaleString()}`;
+        `${sourceLabel} · ${state.players.length} players · Updated ${new Date(state.lastUpdated).toLocaleString()}`;
 
-      populateRoundDropdown();
-      populateCalculatorDropdown();
+      renderRoundDropdown();
       render();
     }
 
-    function populateCalculatorDropdown() {
-      const select = document.getElementById("calcPlayerSelect");
-      const prevSelected = select.value;
-      const sorted = [...state.players].sort((a, b) => a.name.localeCompare(b.name));
-      select.innerHTML = `<option value="">Custom / Manual BE</option>` + sorted.map((p) =>
-        `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)} (${escapeHtml(p.team)} · $${(p.price / 1000000).toFixed(2)}M)</option>`
-      ).join("");
-      if (prevSelected && sorted.some((p) => p.id === prevSelected)) {
-        select.value = prevSelected;
-      }
-      recalculateScratchpad();
-    }
-
+    /* Live Cash Calculator Autocomplete & Math */
     function recalculateScratchpad() {
       const be = parseFloat(document.getElementById("calcBeInput").value) || 0;
       const score = parseFloat(document.getElementById("calcScoreInput").value) || 0;
       const priceM = parseFloat(document.getElementById("calcPriceInput").value) || 0;
-      const magic = state.magicNumber || 178000;
+      const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
 
       const ptsDiff = score - be;
       const rawCashDelta = ptsDiff * (magic / 3);
@@ -1299,6 +1451,83 @@
       cashEl.className = "sp-stat-val " + (roundedCashDelta > 0 ? "pos-text" : roundedCashDelta < 0 ? "neg-text" : "muted-text");
 
       newPriceEl.textContent = formatPriceM(newPriceDollars);
+    }
+
+    let acMatches = [];
+    let acIndex = -1;
+
+    function renderAutocomplete(query) {
+      const listEl = document.getElementById("calcAcList");
+      const q = query.trim().toLowerCase();
+      if (!q) {
+        acMatches = [];
+        acIndex = -1;
+        listEl.classList.remove("open");
+        listEl.innerHTML = "";
+        return;
+      }
+
+      acMatches = Object.values(state.computedById)
+        .filter((p) => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))
+        .sort((a, b) => {
+          const aStarts = a.name.toLowerCase().startsWith(q) ? 0 : 1;
+          const bStarts = b.name.toLowerCase().startsWith(q) ? 0 : 1;
+          if (aStarts !== bStarts) return aStarts - bStarts;
+          return b.price - a.price;
+        })
+        .slice(0, 8);
+
+      acIndex = acMatches.length > 0 ? 0 : -1;
+
+      if (acMatches.length === 0) {
+        listEl.innerHTML = `<div style="padding:6px 8px; font-size:11px; color:var(--text-dim);">No matching players</div>`;
+      } else {
+        listEl.innerHTML = acMatches.map((p, i) => `
+          <button type="button" class="ac-item ${i === acIndex ? "active" : ""}" data-ac-id="${escapeHtml(p.id)}">
+            <span>${escapeHtml(p.name)}</span>
+            <span class="ac-meta">${escapeHtml(p.team)} · BE ${p.be} · $${(p.price / 1000000).toFixed(2)}M</span>
+          </button>
+        `).join("");
+      }
+      listEl.classList.add("open");
+    }
+
+    function selectAutocompletePlayer(playerId) {
+      const p = state.computedById[playerId];
+      if (!p) return;
+      document.getElementById("calcPlayerSearch").value = p.name;
+      document.getElementById("calcBeInput").value = p.be;
+      document.getElementById("calcPriceInput").value = (p.price / 1000000).toFixed(2);
+      document.getElementById("calcScoreInput").value = p.proj || 0;
+      document.getElementById("calcAcList").classList.remove("open");
+      recalculateScratchpad();
+      document.getElementById("calcScoreInput").focus();
+      document.getElementById("calcScoreInput").select();
+    }
+
+    /* Squad Transfer Code (Copy / Paste) */
+    function generateSquadCode() {
+      const squad = Object.keys(state.squadIds).filter((k) => state.squadIds[k]);
+      const watch = Object.keys(state.watchlistIds).filter((k) => state.watchlistIds[k]);
+      const json = JSON.stringify({ s: squad, w: watch });
+      return "SCH1-" + btoa(unescape(encodeURIComponent(json)));
+    }
+
+    function applySquadCode(codeStr) {
+      const cleaned = codeStr.trim();
+      if (!cleaned.startsWith("SCH1-")) throw new Error("Invalid code format");
+      const rawJson = decodeURIComponent(escape(atob(cleaned.slice(5))));
+      const parsed = JSON.parse(rawJson);
+      if (!Array.isArray(parsed.s) && !Array.isArray(parsed.w)) throw new Error("Invalid squad payload");
+      const newSquad = {};
+      const newWatch = {};
+      (parsed.s || []).forEach((id) => { newSquad[String(id)] = true; });
+      (parsed.w || []).forEach((id) => { newWatch[String(id)] = true; });
+      state.squadIds = newSquad;
+      state.watchlistIds = newWatch;
+      savePrefs();
+      render();
+      return { squadCount: Object.keys(newSquad).length, watchCount: Object.keys(newWatch).length };
     }
 
     function getFilteredRows(allComputed) {
@@ -1475,20 +1704,38 @@
       return String(str).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
     }
 
-    // Round Snapshot Selector
-    document.getElementById("roundSelect").addEventListener("change", (e) => {
-      const selectedRound = Number(e.target.value);
-      loadHistoricalRound(selectedRound);
+    /* Custom Round Dropdown Events */
+    const roundDropdown = document.getElementById("roundDropdown");
+    document.getElementById("roundTrigger").addEventListener("click", (e) => {
+      e.stopPropagation();
+      roundDropdown.classList.toggle("open");
     });
 
-    // Scratchpad Listeners
+    document.getElementById("roundMenu").addEventListener("click", (e) => {
+      const opt = e.target.closest("[data-round]");
+      if (!opt) return;
+      const selectedRound = Number(opt.dataset.round);
+      roundDropdown.classList.remove("open");
+      if (selectedRound !== state.round) {
+        loadHistoricalRound(selectedRound);
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!roundDropdown.contains(e.target)) roundDropdown.classList.remove("open");
+      if (!e.target.closest(".sp-field")) document.getElementById("calcAcList").classList.remove("open");
+    });
+
+    /* Scratchpad Listeners */
     const scratchpad = document.getElementById("scratchpadPanel");
     const toggleCalcBtn = document.getElementById("toggleCalcBtn");
+    const calcSearchInput = document.getElementById("calcPlayerSearch");
+    const calcAcList = document.getElementById("calcAcList");
 
     toggleCalcBtn.addEventListener("click", () => {
       const isOpen = scratchpad.classList.toggle("open");
       toggleCalcBtn.classList.toggle("active", isOpen);
-      if (isOpen) document.getElementById("calcScoreInput").focus();
+      if (isOpen) calcSearchInput.focus();
     });
 
     document.getElementById("closeCalcBtn").addEventListener("click", () => {
@@ -1496,22 +1743,43 @@
       toggleCalcBtn.classList.remove("active");
     });
 
-    document.getElementById("calcPlayerSelect").addEventListener("change", (e) => {
-      const id = e.target.value;
-      const p = state.computedById[id];
-      if (p) {
-        document.getElementById("calcBeInput").value = p.be;
-        document.getElementById("calcPriceInput").value = (p.price / 1000000).toFixed(2);
-        document.getElementById("calcScoreInput").value = p.proj || 0;
+    calcSearchInput.addEventListener("input", (e) => {
+      renderAutocomplete(e.target.value);
+    });
+
+    calcSearchInput.addEventListener("focus", (e) => {
+      if (e.target.value.trim()) renderAutocomplete(e.target.value);
+    });
+
+    calcSearchInput.addEventListener("keydown", (e) => {
+      if (!calcAcList.classList.contains("open") || acMatches.length === 0) return;
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        acIndex = (acIndex + 1) % acMatches.length;
+        calcAcList.querySelectorAll(".ac-item").forEach((el, i) => el.classList.toggle("active", i === acIndex));
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        acIndex = (acIndex - 1 + acMatches.length) % acMatches.length;
+        calcAcList.querySelectorAll(".ac-item").forEach((el, i) => el.classList.toggle("active", i === acIndex));
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        const pick = acMatches[acIndex >= 0 ? acIndex : 0];
+        if (pick) selectAutocompletePlayer(pick.id);
+      } else if (e.key === "Escape") {
+        calcAcList.classList.remove("open");
       }
-      recalculateScratchpad();
+    });
+
+    calcAcList.addEventListener("click", (e) => {
+      const item = e.target.closest("[data-ac-id]");
+      if (item) selectAutocompletePlayer(item.dataset.acId);
     });
 
     ["calcBeInput", "calcScoreInput", "calcPriceInput"].forEach((id) => {
       document.getElementById(id).addEventListener("input", recalculateScratchpad);
     });
 
-    // Table Row Actions
+    /* Table Row Actions */
     document.getElementById("tableBody").addEventListener("click", (e) => {
       const watchBtn = e.target.closest("[data-toggle-watch]");
       if (watchBtn) {
@@ -1526,9 +1794,8 @@
       const squadBtn = e.target.closest("[data-toggle-squad]");
       if (squadBtn) {
         const id = squadBtn.dataset.toggleSquad;
-        const base = state.players.find((p) => p.id === id);
-        const current = state.squadIds[id] !== undefined ? !!state.squadIds[id] : !!(base && base.jsonInSquad);
-        state.squadIds[id] = !current;
+        if (state.squadIds[id]) delete state.squadIds[id];
+        else state.squadIds[id] = true;
         savePrefs();
         render();
       }
@@ -1607,13 +1874,6 @@
       render();
     });
 
-    document.getElementById("magicInput").addEventListener("change", (e) => {
-      state.magicNumber = Number(e.target.value) || 178000;
-      savePrefs();
-      render();
-      recalculateScratchpad();
-    });
-
     document.getElementById("showAllBtn").addEventListener("click", () => {
       state.showAll = true;
       render();
@@ -1621,77 +1881,62 @@
 
     document.getElementById("syncBtn").addEventListener("click", syncFromGitHub);
 
-    // Settings Modal
+    /* Settings Modal */
     const modal = document.getElementById("settingsModal");
+    const squadCodeStatus = document.getElementById("squadCodeStatus");
+
     document.getElementById("openSettingsBtn").addEventListener("click", () => {
-      document.getElementById("githubUrlInput").value = state.githubUrl;
+      document.getElementById("magicInput").value = state.magicNumber;
+      squadCodeStatus.textContent = "";
       modal.classList.add("open");
     });
 
     document.getElementById("closeSettingsBtn").addEventListener("click", () => modal.classList.remove("open"));
     modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
 
-    document.getElementById("saveSyncBtn").addEventListener("click", () => {
-      const val = document.getElementById("githubUrlInput").value.trim();
-      if (val) {
-        state.githubUrl = val;
-        savePrefs();
-        modal.classList.remove("open");
-        syncFromGitHub();
+    document.getElementById("magicInput").addEventListener("change", (e) => {
+      state.magicNumber = Number(e.target.value) || DEFAULT_MAGIC_NUMBER;
+      savePrefs();
+      render();
+      recalculateScratchpad();
+    });
+
+    document.getElementById("resetMagicBtn").addEventListener("click", () => {
+      state.magicNumber = DEFAULT_MAGIC_NUMBER;
+      document.getElementById("magicInput").value = DEFAULT_MAGIC_NUMBER;
+      savePrefs();
+      render();
+      recalculateScratchpad();
+    });
+
+    document.getElementById("copySquadCodeBtn").addEventListener("click", async () => {
+      const code = generateSquadCode();
+      try {
+        await navigator.clipboard.writeText(code);
+        squadCodeStatus.style.color = "var(--pos)";
+        squadCodeStatus.textContent = "Copied to clipboard!";
+      } catch (e) {
+        document.getElementById("importSquadCodeInput").value = code;
+        squadCodeStatus.style.color = "var(--text-muted)";
+        squadCodeStatus.textContent = "Code placed in box below — copy it manually.";
       }
     });
 
-    document.getElementById("resetUrlBtn").addEventListener("click", () => {
-      state.githubUrl = DEFAULT_GITHUB_URL;
-      document.getElementById("githubUrlInput").value = DEFAULT_GITHUB_URL;
-      savePrefs();
-    });
-
-    document.getElementById("uploadJsonBtn").addEventListener("click", () => {
-      document.getElementById("localFileInput").click();
-    });
-
-    document.getElementById("localFileInput").addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const parsed = JSON.parse(reader.result);
-          state.isHistorical = false;
-          loadDataset(parsed, file.name);
-          modal.classList.remove("open");
-        } catch (err) {
-          alert("Invalid JSON file.");
-        }
-      };
-      reader.readAsText(file);
-    });
-
-    document.getElementById("exportJsonBtn").addEventListener("click", () => {
-      const payload = {
-        round: state.round,
-        magicNumber: state.magicNumber,
-        lastUpdated: new Date().toISOString(),
-        players: state.players.map((p) => {
-          const c = computeRow(p);
-          return {
-            id: p.id, name: p.name, team: p.team, pos: p.pos,
-            price: c.price, r_minus_2: c.r_minus_2, r_minus_1: c.r_minus_1,
-            proj: c.proj, games: p.games, owned: p.owned,
-            avg5: p.avg5, be: p.officialBe, injury: p.injury,
-            status: c.inSquad ? "squad" : "watchlist"
-          };
-        })
-      };
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = `supercoach_round_${state.round}.json`;
-      a.click();
+    document.getElementById("loadSquadCodeBtn").addEventListener("click", () => {
+      const val = document.getElementById("importSquadCodeInput").value;
+      try {
+        const res = applySquadCode(val);
+        squadCodeStatus.style.color = "var(--pos)";
+        squadCodeStatus.textContent = `Loaded ${res.squadCount} squad & ${res.watchCount} watchlist!`;
+        document.getElementById("importSquadCodeInput").value = "";
+      } catch (err) {
+        squadCodeStatus.style.color = "var(--neg)";
+        squadCodeStatus.textContent = "Invalid squad code.";
+      }
     });
 
     document.getElementById("clearSquadBtn").addEventListener("click", () => {
+      if (!confirm("Reset your saved squad and watchlist in this browser?")) return;
       state.squadIds = {};
       state.watchlistIds = {};
       savePrefs();
