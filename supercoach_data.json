@@ -2,7 +2,7 @@
   "round": 6,
   "magicNumber": 178000,
   "totalPlayersScraped": 643,
-  "lastUpdated": "2026-11-23T06:36:49.200158+00:00",
+  "lastUpdated": "2026-11-23T09:05:13.370394+00:00",
   "players": [
     {
       "id": "1",
@@ -16,7 +16,7 @@
       "avg5": 62.8,
       "be": null,
       "games": 2,
-      "owned": 0.66,
+      "owned": 0.64,
       "injury": null,
       "status": "watchlist"
     },
@@ -32,7 +32,7 @@
       "avg5": 78.8,
       "be": null,
       "games": 2,
-      "owned": 3.71,
+      "owned": 3.7,
       "injury": null,
       "status": "watchlist"
     },
@@ -48,7 +48,7 @@
       "avg5": 12.0,
       "be": null,
       "games": 2,
-      "owned": 0.09,
+      "owned": 0.1,
       "injury": null,
       "status": "watchlist"
     },
@@ -64,7 +64,7 @@
       "avg5": 35.6,
       "be": null,
       "games": 2,
-      "owned": 0.76,
+      "owned": 0.77,
       "injury": null,
       "status": "watchlist"
     },
@@ -96,7 +96,7 @@
       "avg5": 28.8,
       "be": null,
       "games": 2,
-      "owned": 5.65,
+      "owned": 5.49,
       "injury": null,
       "status": "watchlist"
     },
@@ -128,7 +128,7 @@
       "avg5": null,
       "be": null,
       "games": 2,
-      "owned": 0.07,
+      "owned": 0.06,
       "injury": null,
       "status": "watchlist"
     },
@@ -144,7 +144,7 @@
       "avg5": 31.4,
       "be": null,
       "games": 3,
-      "owned": 0.71,
+      "owned": 0.76,
       "injury": null,
       "status": "watchlist"
     },
@@ -160,7 +160,7 @@
       "avg5": 70.8,
       "be": null,
       "games": 2,
-      "owned": 4.14,
+      "owned": 4.11,
       "injury": null,
       "status": "watchlist"
     },
@@ -208,7 +208,7 @@
       "avg5": 55.0,
       "be": null,
       "games": 2,
-      "owned": 0.35,
+      "owned": 0.33,
       "injury": null,
       "status": "watchlist"
     },
@@ -272,7 +272,7 @@
       "avg5": null,
       "be": null,
       "games": 2,
-      "owned": 1.18,
+      "owned": 1.19,
       "injury": null,
       "status": "watchlist"
     },
@@ -288,7 +288,7 @@
       "avg5": 47.6,
       "be": null,
       "games": 2,
-      "owned": 1.23,
+      "owned": 1.17,
       "injury": null,
       "status": "watchlist"
     },
@@ -336,7 +336,7 @@
       "avg5": 20.0,
       "be": null,
       "games": 4,
-      "owned": 16.73,
+      "owned": 16.62,
       "injury": null,
       "status": "watchlist"
     },
@@ -480,7 +480,7 @@
       "avg5": 57.8,
       "be": null,
       "games": 4,
-      "owned": 0.58,
+      "owned": 0.59,
       "injury": null,
       "status": "watchlist"
     },
@@ -512,7 +512,7 @@
       "avg5": 64.6,
       "be": null,
       "games": 4,
-      "owned": 1.12,
+      "owned": 1.19,
       "injury": null,
       "status": "watchlist"
     },
@@ -544,7 +544,7 @@
       "avg5": 56.2,
       "be": null,
       "games": 4,
-      "owned": 1.18,
+      "owned": 1.21,
       "injury": null,
       "status": "watchlist"
     },
@@ -560,7 +560,7 @@
       "avg5": 38.0,
       "be": null,
       "games": 4,
-      "owned": 0.64,
+      "owned": 0.62,
       "injury": null,
       "status": "watchlist"
     },
@@ -576,7 +576,7 @@
       "avg5": 37.0,
       "be": null,
       "games": 4,
-      "owned": 15.73,
+      "owned": 15.62,
       "injury": null,
       "status": "watchlist"
     },
@@ -592,7 +592,7 @@
       "avg5": 25.4,
       "be": null,
       "games": 4,
-      "owned": 0.14,
+      "owned": 0.12,
       "injury": null,
       "status": "watchlist"
     },
@@ -608,7 +608,7 @@
       "avg5": 8.0,
       "be": null,
       "games": 3,
-      "owned": 0.2,
+      "owned": 0.25,
       "injury": null,
       "status": "watchlist"
     },
@@ -624,7 +624,7 @@
       "avg5": 19.3,
       "be": null,
       "games": 3,
-      "owned": 0.36,
+      "owned": 0.37,
       "injury": null,
       "status": "watchlist"
     },
@@ -672,7 +672,7 @@
       "avg5": 63.4,
       "be": null,
       "games": 3,
-      "owned": 3.44,
+      "owned": 3.29,
       "injury": null,
       "status": "watchlist"
     },
@@ -688,7 +688,7 @@
       "avg5": 19.8,
       "be": null,
       "games": 3,
-      "owned": 0.58,
+      "owned": 0.57,
       "injury": null,
       "status": "watchlist"
     },
@@ -704,7 +704,7 @@
       "avg5": 5.0,
       "be": null,
       "games": 3,
-      "owned": 0.35,
+      "owned": 0.38,
       "injury": null,
       "status": "watchlist"
     },
@@ -736,7 +736,7 @@
       "avg5": null,
       "be": null,
       "games": 3,
-      "owned": 0.46,
+      "owned": 0.47,
       "injury": null,
       "status": "watchlist"
     },
@@ -784,7 +784,7 @@
       "avg5": 31.0,
       "be": null,
       "games": 3,
-      "owned": 0.2,
+      "owned": 0.19,
       "injury": null,
       "status": "watchlist"
     },
@@ -800,7 +800,7 @@
       "avg5": 30.0,
       "be": null,
       "games": 3,
-      "owned": 0.23,
+      "owned": 0.22,
       "injury": null,
       "status": "watchlist"
     },
@@ -816,7 +816,7 @@
       "avg5": 81.6,
       "be": null,
       "games": 3,
-      "owned": 18.33,
+      "owned": 18.08,
       "injury": null,
       "status": "watchlist"
     },
@@ -832,7 +832,7 @@
       "avg5": null,
       "be": null,
       "games": 3,
-      "owned": 2.27,
+      "owned": 2.26,
       "injury": null,
       "status": "watchlist"
     },
@@ -864,7 +864,7 @@
       "avg5": 49.6,
       "be": null,
       "games": 3,
-      "owned": 0.59,
+      "owned": 0.58,
       "injury": null,
       "status": "watchlist"
     },
@@ -976,7 +976,7 @@
       "avg5": 55.8,
       "be": null,
       "games": 3,
-      "owned": 0.13,
+      "owned": 0.12,
       "injury": null,
       "status": "watchlist"
     },
@@ -1024,7 +1024,7 @@
       "avg5": 25.0,
       "be": null,
       "games": 3,
-      "owned": 0.13,
+      "owned": 0.12,
       "injury": null,
       "status": "watchlist"
     },
@@ -1104,7 +1104,7 @@
       "avg5": 22.0,
       "be": null,
       "games": 3,
-      "owned": 0.2,
+      "owned": 0.19,
       "injury": null,
       "status": "watchlist"
     },
@@ -1120,7 +1120,7 @@
       "avg5": 51.2,
       "be": null,
       "games": 3,
-      "owned": 1.56,
+      "owned": 1.55,
       "injury": null,
       "status": "watchlist"
     },
@@ -1152,7 +1152,7 @@
       "avg5": 31.7,
       "be": null,
       "games": 3,
-      "owned": 0.18,
+      "owned": 0.17,
       "injury": null,
       "status": "watchlist"
     },
@@ -1168,7 +1168,7 @@
       "avg5": 7.2,
       "be": null,
       "games": 3,
-      "owned": 5.8,
+      "owned": 5.73,
       "injury": null,
       "status": "watchlist"
     },
@@ -1184,7 +1184,7 @@
       "avg5": 25.0,
       "be": null,
       "games": 3,
-      "owned": 0.78,
+      "owned": 0.77,
       "injury": null,
       "status": "watchlist"
     },
@@ -1232,7 +1232,7 @@
       "avg5": 50.4,
       "be": null,
       "games": 3,
-      "owned": 1.69,
+      "owned": 1.7,
       "injury": null,
       "status": "watchlist"
     },
@@ -1296,7 +1296,7 @@
       "avg5": 18.6,
       "be": null,
       "games": 3,
-      "owned": 3.35,
+      "owned": 3.36,
       "injury": null,
       "status": "watchlist"
     },
@@ -1312,7 +1312,7 @@
       "avg5": 60.2,
       "be": null,
       "games": 3,
-      "owned": 3.54,
+      "owned": 3.64,
       "injury": null,
       "status": "watchlist"
     },
@@ -1328,7 +1328,7 @@
       "avg5": 43.0,
       "be": null,
       "games": 3,
-      "owned": 0.05,
+      "owned": 0.06,
       "injury": null,
       "status": "watchlist"
     },
@@ -1392,7 +1392,7 @@
       "avg5": 5.8,
       "be": null,
       "games": 3,
-      "owned": 1.66,
+      "owned": 1.65,
       "injury": null,
       "status": "watchlist"
     },
@@ -1408,7 +1408,7 @@
       "avg5": 61.0,
       "be": null,
       "games": 3,
-      "owned": 0.33,
+      "owned": 0.37,
       "injury": null,
       "status": "watchlist"
     },
@@ -1440,7 +1440,7 @@
       "avg5": 28.0,
       "be": null,
       "games": 3,
-      "owned": 1.91,
+      "owned": 1.73,
       "injury": null,
       "status": "watchlist"
     },
@@ -1456,7 +1456,7 @@
       "avg5": 48.0,
       "be": null,
       "games": 3,
-      "owned": 29.24,
+      "owned": 28.17,
       "injury": null,
       "status": "watchlist"
     },
@@ -1488,7 +1488,7 @@
       "avg5": 32.0,
       "be": null,
       "games": 3,
-      "owned": 0.26,
+      "owned": 0.27,
       "injury": null,
       "status": "watchlist"
     },
@@ -1536,7 +1536,7 @@
       "avg5": 68.2,
       "be": null,
       "games": 3,
-      "owned": 0.56,
+      "owned": 0.58,
       "injury": null,
       "status": "watchlist"
     },
@@ -1552,7 +1552,7 @@
       "avg5": 44.4,
       "be": null,
       "games": 3,
-      "owned": 4.62,
+      "owned": 4.69,
       "injury": null,
       "status": "watchlist"
     },
@@ -1600,7 +1600,7 @@
       "avg5": 78.6,
       "be": null,
       "games": 3,
-      "owned": 2.93,
+      "owned": 2.95,
       "injury": null,
       "status": "watchlist"
     },
@@ -1616,7 +1616,7 @@
       "avg5": 69.5,
       "be": null,
       "games": 3,
-      "owned": 0.65,
+      "owned": 0.64,
       "injury": null,
       "status": "watchlist"
     },
@@ -1648,7 +1648,7 @@
       "avg5": 38.8,
       "be": null,
       "games": 3,
-      "owned": 5.44,
+      "owned": 5.16,
       "injury": null,
       "status": "watchlist"
     },
@@ -1664,7 +1664,7 @@
       "avg5": 46.5,
       "be": null,
       "games": 3,
-      "owned": 7.08,
+      "owned": 6.99,
       "injury": null,
       "status": "watchlist"
     },
@@ -1824,7 +1824,7 @@
       "avg5": 92.6,
       "be": null,
       "games": 2,
-      "owned": 29.12,
+      "owned": 27.8,
       "injury": null,
       "status": "watchlist"
     },
@@ -1840,7 +1840,7 @@
       "avg5": 58.6,
       "be": null,
       "games": 2,
-      "owned": 0.16,
+      "owned": 0.15,
       "injury": null,
       "status": "watchlist"
     },
@@ -1872,7 +1872,7 @@
       "avg5": 62.0,
       "be": null,
       "games": 2,
-      "owned": 3.57,
+      "owned": 3.54,
       "injury": null,
       "status": "watchlist"
     },
@@ -1904,7 +1904,7 @@
       "avg5": 28.8,
       "be": null,
       "games": 2,
-      "owned": 0.94,
+      "owned": 0.91,
       "injury": null,
       "status": "watchlist"
     },
@@ -1920,7 +1920,7 @@
       "avg5": 4.5,
       "be": null,
       "games": 2,
-      "owned": 0.68,
+      "owned": 0.67,
       "injury": null,
       "status": "watchlist"
     },
@@ -1968,7 +1968,7 @@
       "avg5": 37.0,
       "be": null,
       "games": 2,
-      "owned": 14.63,
+      "owned": 14.72,
       "injury": null,
       "status": "watchlist"
     },
@@ -2000,7 +2000,7 @@
       "avg5": 45.4,
       "be": null,
       "games": 2,
-      "owned": 1.04,
+      "owned": 1.03,
       "injury": null,
       "status": "watchlist"
     },
@@ -2016,7 +2016,7 @@
       "avg5": 11.8,
       "be": null,
       "games": 2,
-      "owned": 0.87,
+      "owned": 0.88,
       "injury": null,
       "status": "watchlist"
     },
@@ -2032,7 +2032,7 @@
       "avg5": 49.6,
       "be": null,
       "games": 2,
-      "owned": 0.32,
+      "owned": 0.31,
       "injury": null,
       "status": "watchlist"
     },
@@ -2064,7 +2064,7 @@
       "avg5": 57.0,
       "be": null,
       "games": 3,
-      "owned": 0.44,
+      "owned": 0.46,
       "injury": null,
       "status": "watchlist"
     },
@@ -2080,7 +2080,7 @@
       "avg5": 31.4,
       "be": null,
       "games": 3,
-      "owned": 10.94,
+      "owned": 10.61,
       "injury": null,
       "status": "watchlist"
     },
@@ -2128,7 +2128,7 @@
       "avg5": 43.4,
       "be": null,
       "games": 3,
-      "owned": 0.71,
+      "owned": 0.7,
       "injury": null,
       "status": "watchlist"
     },
@@ -2192,7 +2192,7 @@
       "avg5": 113.8,
       "be": null,
       "games": 3,
-      "owned": 35.61,
+      "owned": 36.16,
       "injury": null,
       "status": "watchlist"
     },
@@ -2224,7 +2224,7 @@
       "avg5": 11.4,
       "be": null,
       "games": 3,
-      "owned": 0.61,
+      "owned": 0.62,
       "injury": null,
       "status": "watchlist"
     },
@@ -2240,7 +2240,7 @@
       "avg5": 89.8,
       "be": null,
       "games": 3,
-      "owned": 4.17,
+      "owned": 4.71,
       "injury": null,
       "status": "watchlist"
     },
@@ -2320,7 +2320,7 @@
       "avg5": 83.8,
       "be": null,
       "games": 3,
-      "owned": 16.3,
+      "owned": 15.25,
       "injury": null,
       "status": "watchlist"
     },
@@ -2336,7 +2336,7 @@
       "avg5": 29.6,
       "be": null,
       "games": 3,
-      "owned": 0.25,
+      "owned": 0.26,
       "injury": null,
       "status": "watchlist"
     },
@@ -2400,7 +2400,7 @@
       "avg5": 38.8,
       "be": null,
       "games": 3,
-      "owned": 0.19,
+      "owned": 0.18,
       "injury": null,
       "status": "watchlist"
     },
@@ -2416,7 +2416,7 @@
       "avg5": 52.2,
       "be": null,
       "games": 3,
-      "owned": 0.92,
+      "owned": 0.88,
       "injury": null,
       "status": "watchlist"
     },
@@ -2528,7 +2528,7 @@
       "avg5": 62.6,
       "be": null,
       "games": 3,
-      "owned": 0.59,
+      "owned": 0.61,
       "injury": null,
       "status": "watchlist"
     },
@@ -2544,7 +2544,7 @@
       "avg5": 49.2,
       "be": null,
       "games": 3,
-      "owned": 0.73,
+      "owned": 0.68,
       "injury": null,
       "status": "watchlist"
     },
@@ -2560,7 +2560,7 @@
       "avg5": 68.8,
       "be": null,
       "games": 3,
-      "owned": 2.47,
+      "owned": 2.66,
       "injury": null,
       "status": "watchlist"
     },
@@ -2576,7 +2576,7 @@
       "avg5": 45.0,
       "be": null,
       "games": 3,
-      "owned": 0.32,
+      "owned": 0.41,
       "injury": null,
       "status": "watchlist"
     },
@@ -2592,7 +2592,7 @@
       "avg5": null,
       "be": null,
       "games": 3,
-      "owned": 0.09,
+      "owned": 0.08,
       "injury": null,
       "status": "watchlist"
     },
@@ -2608,7 +2608,7 @@
       "avg5": 14.0,
       "be": null,
       "games": 3,
-      "owned": 1.29,
+      "owned": 1.3,
       "injury": null,
       "status": "watchlist"
     },
@@ -2624,7 +2624,7 @@
       "avg5": 69.0,
       "be": null,
       "games": 3,
-      "owned": 3.33,
+      "owned": 3.27,
       "injury": null,
       "status": "watchlist"
     },
@@ -2640,7 +2640,7 @@
       "avg5": 37.4,
       "be": null,
       "games": 3,
-      "owned": 1.84,
+      "owned": 1.83,
       "injury": null,
       "status": "watchlist"
     },
@@ -2688,7 +2688,7 @@
       "avg5": 72.8,
       "be": null,
       "games": 3,
-      "owned": 66.13,
+      "owned": 65.85,
       "injury": null,
       "status": "watchlist"
     },
@@ -2704,7 +2704,7 @@
       "avg5": 4.6,
       "be": null,
       "games": 3,
-      "owned": 0.55,
+      "owned": 0.56,
       "injury": null,
       "status": "watchlist"
     },
@@ -2720,7 +2720,7 @@
       "avg5": 41.4,
       "be": null,
       "games": 3,
-      "owned": 0.25,
+      "owned": 0.24,
       "injury": null,
       "status": "watchlist"
     },
@@ -2768,7 +2768,7 @@
       "avg5": 18.2,
       "be": null,
       "games": 3,
-      "owned": 0.26,
+      "owned": 0.27,
       "injury": null,
       "status": "watchlist"
     },
@@ -2784,7 +2784,7 @@
       "avg5": 53.2,
       "be": null,
       "games": 3,
-      "owned": 1.3,
+      "owned": 1.28,
       "injury": null,
       "status": "watchlist"
     },
@@ -2816,7 +2816,7 @@
       "avg5": 27.0,
       "be": null,
       "games": 3,
-      "owned": 0.16,
+      "owned": 0.18,
       "injury": null,
       "status": "watchlist"
     },
@@ -2832,7 +2832,7 @@
       "avg5": 25.4,
       "be": null,
       "games": 3,
-      "owned": 0.14,
+      "owned": 0.13,
       "injury": null,
       "status": "watchlist"
     },
@@ -2896,7 +2896,7 @@
       "avg5": 18.8,
       "be": null,
       "games": 3,
-      "owned": 0.61,
+      "owned": 0.59,
       "injury": null,
       "status": "watchlist"
     },
@@ -2960,7 +2960,7 @@
       "avg5": 8.0,
       "be": null,
       "games": 3,
-      "owned": 0.18,
+      "owned": 0.21,
       "injury": null,
       "status": "watchlist"
     },
@@ -2976,7 +2976,7 @@
       "avg5": 77.0,
       "be": null,
       "games": 3,
-      "owned": 3.71,
+      "owned": 3.66,
       "injury": null,
       "status": "watchlist"
     },
@@ -3040,7 +3040,7 @@
       "avg5": 93.2,
       "be": null,
       "games": 3,
-      "owned": 3.79,
+      "owned": 3.76,
       "injury": null,
       "status": "watchlist"
     },
@@ -3056,7 +3056,7 @@
       "avg5": 27.6,
       "be": null,
       "games": 3,
-      "owned": 0.42,
+      "owned": 0.41,
       "injury": null,
       "status": "watchlist"
     },
@@ -3072,7 +3072,7 @@
       "avg5": 20.4,
       "be": null,
       "games": 3,
-      "owned": 0.47,
+      "owned": 0.48,
       "injury": null,
       "status": "watchlist"
     },
@@ -3088,7 +3088,7 @@
       "avg5": 67.0,
       "be": null,
       "games": 3,
-      "owned": 0.61,
+      "owned": 0.59,
       "injury": null,
       "status": "watchlist"
     },
@@ -3120,7 +3120,7 @@
       "avg5": 69.6,
       "be": null,
       "games": 3,
-      "owned": 2.33,
+      "owned": 2.31,
       "injury": null,
       "status": "watchlist"
     },
@@ -3168,7 +3168,7 @@
       "avg5": 49.6,
       "be": null,
       "games": 3,
-      "owned": 1.23,
+      "owned": 1.21,
       "injury": null,
       "status": "watchlist"
     },
@@ -3200,7 +3200,7 @@
       "avg5": null,
       "be": null,
       "games": 3,
-      "owned": 0.09,
+      "owned": 0.08,
       "injury": null,
       "status": "watchlist"
     },
@@ -3216,7 +3216,7 @@
       "avg5": 59.0,
       "be": null,
       "games": 3,
-      "owned": 15.39,
+      "owned": 15.31,
       "injury": null,
       "status": "watchlist"
     },
@@ -3280,7 +3280,7 @@
       "avg5": 22.2,
       "be": null,
       "games": 3,
-      "owned": 1.13,
+      "owned": 1.14,
       "injury": null,
       "status": "watchlist"
     },
@@ -3360,7 +3360,7 @@
       "avg5": 74.8,
       "be": null,
       "games": 3,
-      "owned": 0.79,
+      "owned": 0.78,
       "injury": null,
       "status": "watchlist"
     },
@@ -3376,7 +3376,7 @@
       "avg5": 28.0,
       "be": null,
       "games": 3,
-      "owned": 0.2,
+      "owned": 0.19,
       "injury": null,
       "status": "watchlist"
     },
@@ -3392,7 +3392,7 @@
       "avg5": 22.5,
       "be": null,
       "games": 3,
-      "owned": 1.1,
+      "owned": 1.21,
       "injury": null,
       "status": "watchlist"
     },
@@ -3424,7 +3424,7 @@
       "avg5": 26.2,
       "be": null,
       "games": 3,
-      "owned": 0.24,
+      "owned": 0.23,
       "injury": null,
       "status": "watchlist"
     },
@@ -3504,7 +3504,7 @@
       "avg5": 25.0,
       "be": null,
       "games": 4,
-      "owned": 6.26,
+      "owned": 6.16,
       "injury": null,
       "status": "watchlist"
     },
@@ -3520,7 +3520,7 @@
       "avg5": 45.4,
       "be": null,
       "games": 4,
-      "owned": 1.32,
+      "owned": 1.31,
       "injury": null,
       "status": "watchlist"
     },
@@ -3536,7 +3536,7 @@
       "avg5": 55.4,
       "be": null,
       "games": 4,
-      "owned": 1.51,
+      "owned": 1.56,
       "injury": null,
       "status": "watchlist"
     },
@@ -3552,7 +3552,7 @@
       "avg5": 37.2,
       "be": null,
       "games": 4,
-      "owned": 5.71,
+      "owned": 5.76,
       "injury": null,
       "status": "watchlist"
     },
@@ -3600,7 +3600,7 @@
       "avg5": 39.4,
       "be": null,
       "games": 4,
-      "owned": 0.31,
+      "owned": 0.3,
       "injury": null,
       "status": "watchlist"
     },
@@ -3632,7 +3632,7 @@
       "avg5": 55.8,
       "be": null,
       "games": 4,
-      "owned": 0.71,
+      "owned": 0.74,
       "injury": null,
       "status": "watchlist"
     },
@@ -3648,7 +3648,7 @@
       "avg5": 5.2,
       "be": null,
       "games": 4,
-      "owned": 0.29,
+      "owned": 0.28,
       "injury": null,
       "status": "watchlist"
     },
@@ -3664,7 +3664,7 @@
       "avg5": 15.6,
       "be": null,
       "games": 4,
-      "owned": 0.72,
+      "owned": 0.7,
       "injury": null,
       "status": "watchlist"
     },
@@ -3712,7 +3712,7 @@
       "avg5": 20.0,
       "be": null,
       "games": 4,
-      "owned": 0.13,
+      "owned": 0.16,
       "injury": null,
       "status": "watchlist"
     },
@@ -3792,7 +3792,7 @@
       "avg5": 36.8,
       "be": null,
       "games": 4,
-      "owned": 5.79,
+      "owned": 5.69,
       "injury": null,
       "status": "watchlist"
     },
@@ -3808,7 +3808,7 @@
       "avg5": 2.8,
       "be": null,
       "games": 3,
-      "owned": 0.53,
+      "owned": 0.54,
       "injury": null,
       "status": "watchlist"
     },
@@ -3824,7 +3824,7 @@
       "avg5": 110.2,
       "be": null,
       "games": 3,
-      "owned": 53.6,
+      "owned": 52.75,
       "injury": null,
       "status": "watchlist"
     },
@@ -3840,7 +3840,7 @@
       "avg5": 42.4,
       "be": null,
       "games": 3,
-      "owned": 0.74,
+      "owned": 0.8,
       "injury": null,
       "status": "watchlist"
     },
@@ -3904,7 +3904,7 @@
       "avg5": 86.4,
       "be": null,
       "games": 3,
-      "owned": 4.23,
+      "owned": 4.06,
       "injury": null,
       "status": "watchlist"
     },
@@ -3920,7 +3920,7 @@
       "avg5": 6.3,
       "be": null,
       "games": 3,
-      "owned": 0.52,
+      "owned": 0.51,
       "injury": null,
       "status": "watchlist"
     },
@@ -3968,7 +3968,7 @@
       "avg5": 42.0,
       "be": null,
       "games": 3,
-      "owned": 1.35,
+      "owned": 1.33,
       "injury": null,
       "status": "watchlist"
     },
@@ -4016,7 +4016,7 @@
       "avg5": 72.0,
       "be": null,
       "games": 3,
-      "owned": 4.16,
+      "owned": 4.05,
       "injury": null,
       "status": "watchlist"
     },
@@ -4048,7 +4048,7 @@
       "avg5": 8.0,
       "be": null,
       "games": 3,
-      "owned": 0.26,
+      "owned": 0.27,
       "injury": null,
       "status": "watchlist"
     },
@@ -4064,7 +4064,7 @@
       "avg5": 43.4,
       "be": null,
       "games": 3,
-      "owned": 1.17,
+      "owned": 1.19,
       "injury": null,
       "status": "watchlist"
     },
@@ -4080,7 +4080,7 @@
       "avg5": 22.2,
       "be": null,
       "games": 3,
-      "owned": 2.1,
+      "owned": 2.12,
       "injury": null,
       "status": "watchlist"
     },
@@ -4112,7 +4112,7 @@
       "avg5": 74.2,
       "be": null,
       "games": 4,
-      "owned": 62.36,
+      "owned": 61.73,
       "injury": null,
       "status": "watchlist"
     },
@@ -4128,7 +4128,7 @@
       "avg5": 33.0,
       "be": null,
       "games": 2,
-      "owned": 0.18,
+      "owned": 0.16,
       "injury": null,
       "status": "watchlist"
     },
@@ -4144,7 +4144,7 @@
       "avg5": 72.2,
       "be": null,
       "games": 4,
-      "owned": 6.39,
+      "owned": 9.26,
       "injury": null,
       "status": "watchlist"
     },
@@ -4176,7 +4176,7 @@
       "avg5": 32.6,
       "be": null,
       "games": 4,
-      "owned": 0.11,
+      "owned": 0.1,
       "injury": null,
       "status": "watchlist"
     },
@@ -4208,7 +4208,7 @@
       "avg5": 26.6,
       "be": null,
       "games": 4,
-      "owned": 0.29,
+      "owned": 0.33,
       "injury": null,
       "status": "watchlist"
     },
@@ -4240,7 +4240,7 @@
       "avg5": 54.6,
       "be": null,
       "games": 4,
-      "owned": 4.03,
+      "owned": 3.88,
       "injury": null,
       "status": "watchlist"
     },
@@ -4256,7 +4256,7 @@
       "avg5": 3.2,
       "be": null,
       "games": 4,
-      "owned": 1.66,
+      "owned": 1.65,
       "injury": null,
       "status": "watchlist"
     },
@@ -4272,7 +4272,7 @@
       "avg5": 5.2,
       "be": null,
       "games": 4,
-      "owned": 0.03,
+      "owned": 0.04,
       "injury": null,
       "status": "watchlist"
     },
@@ -4288,7 +4288,7 @@
       "avg5": 10.6,
       "be": null,
       "games": 4,
-      "owned": 0.09,
+      "owned": 0.1,
       "injury": null,
       "status": "watchlist"
     },
@@ -4320,7 +4320,7 @@
       "avg5": 20.0,
       "be": null,
       "games": 4,
-      "owned": 0.19,
+      "owned": 0.18,
       "injury": null,
       "status": "watchlist"
     },
@@ -4368,7 +4368,7 @@
       "avg5": null,
       "be": null,
       "games": 4,
-      "owned": 0.28,
+      "owned": 0.27,
       "injury": null,
       "status": "watchlist"
     },
@@ -4384,7 +4384,7 @@
       "avg5": null,
       "be": null,
       "games": 4,
-      "owned": 0.11,
+      "owned": 0.12,
       "injury": null,
       "status": "watchlist"
     },
@@ -4416,7 +4416,7 @@
       "avg5": 58.0,
       "be": null,
       "games": 4,
-      "owned": 0.27,
+      "owned": 0.38,
       "injury": null,
       "status": "watchlist"
     },
@@ -4448,7 +4448,7 @@
       "avg5": 41.8,
       "be": null,
       "games": 4,
-      "owned": 1.94,
+      "owned": 1.96,
       "injury": null,
       "status": "watchlist"
     },
@@ -4464,7 +4464,7 @@
       "avg5": 89.0,
       "be": null,
       "games": 3,
-      "owned": 1.67,
+      "owned": 1.72,
       "injury": null,
       "status": "watchlist"
     },
@@ -4480,7 +4480,7 @@
       "avg5": 110.8,
       "be": null,
       "games": 3,
-      "owned": 25.14,
+      "owned": 24.9,
       "injury": null,
       "status": "watchlist"
     },
@@ -4496,7 +4496,7 @@
       "avg5": 22.0,
       "be": null,
       "games": 3,
-      "owned": 0.82,
+      "owned": 0.84,
       "injury": null,
       "status": "watchlist"
     },
@@ -4544,7 +4544,7 @@
       "avg5": 10.2,
       "be": null,
       "games": 3,
-      "owned": 0.28,
+      "owned": 0.29,
       "injury": null,
       "status": "watchlist"
     },
@@ -4592,7 +4592,7 @@
       "avg5": 8.8,
       "be": null,
       "games": 3,
-      "owned": 0.65,
+      "owned": 0.64,
       "injury": null,
       "status": "watchlist"
     },
@@ -4640,7 +4640,7 @@
       "avg5": 39.6,
       "be": null,
       "games": 3,
-      "owned": 0.12,
+      "owned": 0.11,
       "injury": null,
       "status": "watchlist"
     },
@@ -4656,7 +4656,7 @@
       "avg5": 72.8,
       "be": null,
       "games": 3,
-      "owned": 2.59,
+      "owned": 2.72,
       "injury": null,
       "status": "watchlist"
     },
@@ -4672,7 +4672,7 @@
       "avg5": 34.8,
       "be": null,
       "games": 3,
-      "owned": 0.26,
+      "owned": 0.27,
       "injury": null,
       "status": "watchlist"
     },
@@ -4720,7 +4720,7 @@
       "avg5": 40.0,
       "be": null,
       "games": 3,
-      "owned": 5.74,
+      "owned": 5.67,
       "injury": null,
       "status": "watchlist"
     },
@@ -4752,7 +4752,7 @@
       "avg5": 24.0,
       "be": null,
       "games": 4,
-      "owned": 0.42,
+      "owned": 0.43,
       "injury": null,
       "status": "watchlist"
     },
@@ -4768,7 +4768,7 @@
       "avg5": 48.0,
       "be": null,
       "games": 4,
-      "owned": 13.32,
+      "owned": 13.86,
       "injury": null,
       "status": "watchlist"
     },
@@ -4800,7 +4800,7 @@
       "avg5": 19.4,
       "be": null,
       "games": 4,
-      "owned": 0.54,
+      "owned": 0.55,
       "injury": null,
       "status": "watchlist"
     },
@@ -4816,7 +4816,7 @@
       "avg5": 64.8,
       "be": null,
       "games": 4,
-      "owned": 2.29,
+      "owned": 2.52,
       "injury": null,
       "status": "watchlist"
     },
@@ -4832,7 +4832,7 @@
       "avg5": 35.6,
       "be": null,
       "games": 4,
-      "owned": 0.46,
+      "owned": 0.47,
       "injury": null,
       "status": "watchlist"
     },
@@ -4880,7 +4880,7 @@
       "avg5": 44.8,
       "be": null,
       "games": 4,
-      "owned": 0.85,
+      "owned": 0.83,
       "injury": null,
       "status": "watchlist"
     },
@@ -4928,7 +4928,7 @@
       "avg5": 3.0,
       "be": null,
       "games": 4,
-      "owned": 0.19,
+      "owned": 0.2,
       "injury": null,
       "status": "watchlist"
     },
@@ -4960,7 +4960,7 @@
       "avg5": null,
       "be": null,
       "games": 4,
-      "owned": 0.11,
+      "owned": 0.13,
       "injury": null,
       "status": "watchlist"
     },
@@ -4992,7 +4992,7 @@
       "avg5": null,
       "be": null,
       "games": 4,
-      "owned": 0.1,
+      "owned": 0.09,
       "injury": null,
       "status": "watchlist"
     },
@@ -5024,7 +5024,7 @@
       "avg5": 9.3,
       "be": null,
       "games": 4,
-      "owned": 0.42,
+      "owned": 0.43,
       "injury": null,
       "status": "watchlist"
     },
@@ -5072,7 +5072,7 @@
       "avg5": 61.6,
       "be": null,
       "games": 4,
-      "owned": 7.62,
+      "owned": 7.59,
       "injury": null,
       "status": "watchlist"
     },
@@ -5088,7 +5088,7 @@
       "avg5": 40.6,
       "be": null,
       "games": 4,
-      "owned": 1.57,
+      "owned": 1.58,
       "injury": null,
       "status": "watchlist"
     },
@@ -5104,7 +5104,7 @@
       "avg5": 19.5,
       "be": null,
       "games": 4,
-      "owned": 0.28,
+      "owned": 0.26,
       "injury": null,
       "status": "watchlist"
     },
@@ -5136,7 +5136,7 @@
       "avg5": 67.8,
       "be": null,
       "games": 4,
-      "owned": 5.46,
+      "owned": 5.42,
       "injury": null,
       "status": "watchlist"
     },
@@ -5152,7 +5152,7 @@
       "avg5": 57.5,
       "be": null,
       "games": 4,
-      "owned": 8.2,
+      "owned": 8.16,
       "injury": null,
       "status": "watchlist"
     },
@@ -5168,7 +5168,7 @@
       "avg5": -0.6,
       "be": null,
       "games": 4,
-      "owned": 12.59,
+      "owned": 12.5,
       "injury": null,
       "status": "watchlist"
     },
@@ -5216,7 +5216,7 @@
       "avg5": 35.4,
       "be": null,
       "games": 4,
-      "owned": 0.55,
+      "owned": 0.54,
       "injury": null,
       "status": "watchlist"
     },
@@ -5248,7 +5248,7 @@
       "avg5": 52.6,
       "be": null,
       "games": 4,
-      "owned": 3.91,
+      "owned": 3.97,
       "injury": null,
       "status": "watchlist"
     },
@@ -5264,7 +5264,7 @@
       "avg5": 30.4,
       "be": null,
       "games": 4,
-      "owned": 0.72,
+      "owned": 0.75,
       "injury": null,
       "status": "watchlist"
     },
@@ -5280,7 +5280,7 @@
       "avg5": 77.4,
       "be": null,
       "games": 4,
-      "owned": 10.95,
+      "owned": 13.02,
       "injury": null,
       "status": "watchlist"
     },
@@ -5312,7 +5312,7 @@
       "avg5": 37.0,
       "be": null,
       "games": 4,
-      "owned": 1.52,
+      "owned": 1.91,
       "injury": null,
       "status": "watchlist"
     },
@@ -5392,7 +5392,7 @@
       "avg5": 2.0,
       "be": null,
       "games": 3,
-      "owned": 0.15,
+      "owned": 0.17,
       "injury": null,
       "status": "watchlist"
     },
@@ -5408,7 +5408,7 @@
       "avg5": 66.6,
       "be": null,
       "games": 3,
-      "owned": 2.54,
+      "owned": 2.68,
       "injury": null,
       "status": "watchlist"
     },
@@ -5520,7 +5520,7 @@
       "avg5": 30.2,
       "be": null,
       "games": 3,
-      "owned": 0.24,
+      "owned": 0.22,
       "injury": null,
       "status": "watchlist"
     },
@@ -5552,7 +5552,7 @@
       "avg5": 41.0,
       "be": null,
       "games": 3,
-      "owned": 0.3,
+      "owned": 0.29,
       "injury": null,
       "status": "watchlist"
     },
@@ -5600,7 +5600,7 @@
       "avg5": 15.5,
       "be": null,
       "games": 3,
-      "owned": 0.27,
+      "owned": 0.29,
       "injury": null,
       "status": "watchlist"
     },
@@ -5616,7 +5616,7 @@
       "avg5": 37.0,
       "be": null,
       "games": 3,
-      "owned": 0.97,
+      "owned": 0.98,
       "injury": null,
       "status": "watchlist"
     },
@@ -5664,7 +5664,7 @@
       "avg5": 81.8,
       "be": null,
       "games": 3,
-      "owned": 1.25,
+      "owned": 1.18,
       "injury": null,
       "status": "watchlist"
     },
@@ -5696,7 +5696,7 @@
       "avg5": 53.2,
       "be": null,
       "games": 3,
-      "owned": 2.27,
+      "owned": 2.22,
       "injury": null,
       "status": "watchlist"
     },
@@ -5728,7 +5728,7 @@
       "avg5": 77.0,
       "be": null,
       "games": 3,
-      "owned": 9.75,
+      "owned": 9.82,
       "injury": null,
       "status": "watchlist"
     },
@@ -5744,7 +5744,7 @@
       "avg5": 12.2,
       "be": null,
       "games": 3,
-      "owned": 0.97,
+      "owned": 0.96,
       "injury": null,
       "status": "watchlist"
     },
@@ -5792,7 +5792,7 @@
       "avg5": 37.4,
       "be": null,
       "games": 3,
-      "owned": 0.12,
+      "owned": 0.13,
       "injury": null,
       "status": "watchlist"
     },
@@ -5808,7 +5808,7 @@
       "avg5": 39.4,
       "be": null,
       "games": 3,
-      "owned": 0.52,
+      "owned": 0.53,
       "injury": null,
       "status": "watchlist"
     },
@@ -5840,7 +5840,7 @@
       "avg5": 25.4,
       "be": null,
       "games": 3,
-      "owned": 2.71,
+      "owned": 2.69,
       "injury": null,
       "status": "watchlist"
     },
@@ -5888,7 +5888,7 @@
       "avg5": 37.0,
       "be": null,
       "games": 3,
-      "owned": 0.17,
+      "owned": 0.18,
       "injury": null,
       "status": "watchlist"
     },
@@ -5904,7 +5904,7 @@
       "avg5": 103.2,
       "be": null,
       "games": 3,
-      "owned": 14.19,
+      "owned": 14.3,
       "injury": null,
       "status": "watchlist"
     },
@@ -5920,7 +5920,7 @@
       "avg5": 7.4,
       "be": null,
       "games": 3,
-      "owned": 0.07,
+      "owned": 0.08,
       "injury": null,
       "status": "watchlist"
     },
@@ -5936,7 +5936,7 @@
       "avg5": 31.4,
       "be": null,
       "games": 3,
-      "owned": 1.85,
+      "owned": 1.81,
       "injury": null,
       "status": "watchlist"
     },
@@ -5952,7 +5952,7 @@
       "avg5": 8.8,
       "be": null,
       "games": 3,
-      "owned": 0.14,
+      "owned": 0.16,
       "injury": null,
       "status": "watchlist"
     },
@@ -5968,7 +5968,7 @@
       "avg5": 90.0,
       "be": null,
       "games": 3,
-      "owned": 20.3,
+      "owned": 19.35,
       "injury": null,
       "status": "watchlist"
     },
@@ -6016,7 +6016,7 @@
       "avg5": 56.4,
       "be": null,
       "games": 3,
-      "owned": 13.07,
+      "owned": 13.01,
       "injury": null,
       "status": "watchlist"
     },
@@ -6032,7 +6032,7 @@
       "avg5": 41.8,
       "be": null,
       "games": 3,
-      "owned": 10.11,
+      "owned": 10.06,
       "injury": null,
       "status": "watchlist"
     },
@@ -6048,7 +6048,7 @@
       "avg5": 54.0,
       "be": null,
       "games": 3,
-      "owned": 2.14,
+      "owned": 2.03,
       "injury": null,
       "status": "watchlist"
     },
@@ -6096,7 +6096,7 @@
       "avg5": 31.4,
       "be": null,
       "games": 3,
-      "owned": 2.7,
+      "owned": 2.94,
       "injury": null,
       "status": "watchlist"
     },
@@ -6160,7 +6160,7 @@
       "avg5": 10.2,
       "be": null,
       "games": 3,
-      "owned": 0.5,
+      "owned": 0.49,
       "injury": null,
       "status": "watchlist"
     },
@@ -6208,7 +6208,7 @@
       "avg5": 55.0,
       "be": null,
       "games": 3,
-      "owned": 0.47,
+      "owned": 0.48,
       "injury": null,
       "status": "watchlist"
     },
@@ -6240,7 +6240,7 @@
       "avg5": 54.2,
       "be": null,
       "games": 3,
-      "owned": 0.75,
+      "owned": 0.74,
       "injury": null,
       "status": "watchlist"
     },
@@ -6256,7 +6256,7 @@
       "avg5": 15.6,
       "be": null,
       "games": 3,
-      "owned": 0.29,
+      "owned": 0.28,
       "injury": null,
       "status": "watchlist"
     },
@@ -6272,7 +6272,7 @@
       "avg5": 12.4,
       "be": null,
       "games": 3,
-      "owned": 0.22,
+      "owned": 0.23,
       "injury": null,
       "status": "watchlist"
     },
@@ -6288,7 +6288,7 @@
       "avg5": 64.8,
       "be": null,
       "games": 3,
-      "owned": 0.93,
+      "owned": 0.92,
       "injury": null,
       "status": "watchlist"
     },
@@ -6304,7 +6304,7 @@
       "avg5": 3.2,
       "be": null,
       "games": 3,
-      "owned": 0.16,
+      "owned": 0.15,
       "injury": null,
       "status": "watchlist"
     },
@@ -6352,7 +6352,7 @@
       "avg5": 7.4,
       "be": null,
       "games": 3,
-      "owned": 0.18,
+      "owned": 0.19,
       "injury": null,
       "status": "watchlist"
     },
@@ -6448,7 +6448,7 @@
       "avg5": 88.6,
       "be": null,
       "games": 3,
-      "owned": 12.53,
+      "owned": 12.78,
       "injury": null,
       "status": "watchlist"
     },
@@ -6464,7 +6464,7 @@
       "avg5": 15.0,
       "be": null,
       "games": 4,
-      "owned": 0.05,
+      "owned": 0.07,
       "injury": null,
       "status": "watchlist"
     },
@@ -6480,7 +6480,7 @@
       "avg5": 20.7,
       "be": null,
       "games": 4,
-      "owned": 0.92,
+      "owned": 0.91,
       "injury": null,
       "status": "watchlist"
     },
@@ -6496,7 +6496,7 @@
       "avg5": 66.0,
       "be": null,
       "games": 4,
-      "owned": 4.38,
+      "owned": 4.33,
       "injury": null,
       "status": "watchlist"
     },
@@ -6528,7 +6528,7 @@
       "avg5": 65.6,
       "be": null,
       "games": 4,
-      "owned": 2.32,
+      "owned": 2.35,
       "injury": null,
       "status": "watchlist"
     },
@@ -6560,7 +6560,7 @@
       "avg5": 66.8,
       "be": null,
       "games": 4,
-      "owned": 1.49,
+      "owned": 1.78,
       "injury": null,
       "status": "watchlist"
     },
@@ -6576,7 +6576,7 @@
       "avg5": 4.7,
       "be": null,
       "games": 4,
-      "owned": 0.4,
+      "owned": 0.42,
       "injury": null,
       "status": "watchlist"
     },
@@ -6608,7 +6608,7 @@
       "avg5": 59.8,
       "be": null,
       "games": 4,
-      "owned": 2.43,
+      "owned": 2.44,
       "injury": null,
       "status": "watchlist"
     },
@@ -6640,7 +6640,7 @@
       "avg5": 85.8,
       "be": null,
       "games": 4,
-      "owned": 15.48,
+      "owned": 17.19,
       "injury": null,
       "status": "watchlist"
     },
@@ -6672,7 +6672,7 @@
       "avg5": null,
       "be": null,
       "games": 4,
-      "owned": 0.2,
+      "owned": 0.21,
       "injury": null,
       "status": "watchlist"
     },
@@ -6688,7 +6688,7 @@
       "avg5": 5.4,
       "be": null,
       "games": 4,
-      "owned": 1.84,
+      "owned": 1.88,
       "injury": null,
       "status": "watchlist"
     },
@@ -6704,7 +6704,7 @@
       "avg5": 2.0,
       "be": null,
       "games": 4,
-      "owned": 0.15,
+      "owned": 0.16,
       "injury": null,
       "status": "watchlist"
     },
@@ -6720,7 +6720,7 @@
       "avg5": 33.8,
       "be": null,
       "games": 4,
-      "owned": 1.36,
+      "owned": 1.37,
       "injury": null,
       "status": "watchlist"
     },
@@ -6768,7 +6768,7 @@
       "avg5": 25.8,
       "be": null,
       "games": 4,
-      "owned": 0.66,
+      "owned": 0.69,
       "injury": null,
       "status": "watchlist"
     },
@@ -6784,7 +6784,7 @@
       "avg5": 69.6,
       "be": null,
       "games": 4,
-      "owned": 4.17,
+      "owned": 4.69,
       "injury": null,
       "status": "watchlist"
     },
@@ -6832,7 +6832,7 @@
       "avg5": 64.8,
       "be": null,
       "games": 4,
-      "owned": 1.63,
+      "owned": 1.68,
       "injury": null,
       "status": "watchlist"
     },
@@ -6896,7 +6896,7 @@
       "avg5": 37.2,
       "be": null,
       "games": 4,
-      "owned": 0.17,
+      "owned": 0.16,
       "injury": null,
       "status": "watchlist"
     },
@@ -6928,7 +6928,7 @@
       "avg5": 36.4,
       "be": null,
       "games": 4,
-      "owned": 0.45,
+      "owned": 0.46,
       "injury": null,
       "status": "watchlist"
     },
@@ -7008,7 +7008,7 @@
       "avg5": 40.0,
       "be": null,
       "games": 4,
-      "owned": 33.11,
+      "owned": 32.83,
       "injury": null,
       "status": "watchlist"
     },
@@ -7024,7 +7024,7 @@
       "avg5": 5.8,
       "be": null,
       "games": 4,
-      "owned": 1.74,
+      "owned": 1.72,
       "injury": null,
       "status": "watchlist"
     },
@@ -7072,7 +7072,7 @@
       "avg5": 72.6,
       "be": null,
       "games": 4,
-      "owned": 9.71,
+      "owned": 10.54,
       "injury": null,
       "status": "watchlist"
     },
@@ -7120,7 +7120,7 @@
       "avg5": 35.8,
       "be": null,
       "games": 4,
-      "owned": 1.74,
+      "owned": 1.77,
       "injury": null,
       "status": "watchlist"
     },
@@ -7136,7 +7136,7 @@
       "avg5": 77.2,
       "be": null,
       "games": 4,
-      "owned": 0.68,
+      "owned": 0.96,
       "injury": null,
       "status": "watchlist"
     },
@@ -7152,7 +7152,7 @@
       "avg5": 18.4,
       "be": null,
       "games": 4,
-      "owned": 0.56,
+      "owned": 0.58,
       "injury": null,
       "status": "watchlist"
     },
@@ -7168,7 +7168,7 @@
       "avg5": 55.8,
       "be": null,
       "games": 4,
-      "owned": 0.44,
+      "owned": 0.53,
       "injury": null,
       "status": "watchlist"
     },
@@ -7184,7 +7184,7 @@
       "avg5": 6.2,
       "be": null,
       "games": 4,
-      "owned": 0.06,
+      "owned": 0.07,
       "injury": null,
       "status": "watchlist"
     },
@@ -7232,7 +7232,7 @@
       "avg5": 37.5,
       "be": null,
       "games": 4,
-      "owned": 0.69,
+      "owned": 0.68,
       "injury": null,
       "status": "watchlist"
     },
@@ -7376,7 +7376,7 @@
       "avg5": 64.8,
       "be": null,
       "games": 3,
-      "owned": 58.49,
+      "owned": 58.41,
       "injury": null,
       "status": "watchlist"
     },
@@ -7440,7 +7440,7 @@
       "avg5": 40.8,
       "be": null,
       "games": 3,
-      "owned": 0.28,
+      "owned": 0.29,
       "injury": null,
       "status": "watchlist"
     },
@@ -7520,7 +7520,7 @@
       "avg5": 29.2,
       "be": null,
       "games": 3,
-      "owned": 0.13,
+      "owned": 0.14,
       "injury": null,
       "status": "watchlist"
     },
@@ -7568,7 +7568,7 @@
       "avg5": 81.4,
       "be": null,
       "games": 3,
-      "owned": 3.77,
+      "owned": 3.78,
       "injury": null,
       "status": "watchlist"
     },
@@ -7584,7 +7584,7 @@
       "avg5": 15.8,
       "be": null,
       "games": 3,
-      "owned": 0.76,
+      "owned": 0.75,
       "injury": null,
       "status": "watchlist"
     },
@@ -7600,7 +7600,7 @@
       "avg5": null,
       "be": null,
       "games": 3,
-      "owned": 2.16,
+      "owned": 2.17,
       "injury": null,
       "status": "watchlist"
     },
@@ -7648,7 +7648,7 @@
       "avg5": 10.4,
       "be": null,
       "games": 4,
-      "owned": 1.77,
+      "owned": 1.75,
       "injury": null,
       "status": "watchlist"
     },
@@ -7664,7 +7664,7 @@
       "avg5": 64.8,
       "be": null,
       "games": 4,
-      "owned": 4.0,
+      "owned": 5.28,
       "injury": null,
       "status": "watchlist"
     },
@@ -7696,7 +7696,7 @@
       "avg5": 56.6,
       "be": null,
       "games": 4,
-      "owned": 0.36,
+      "owned": 0.34,
       "injury": null,
       "status": "watchlist"
     },
@@ -7728,7 +7728,7 @@
       "avg5": 64.8,
       "be": null,
       "games": 4,
-      "owned": 28.24,
+      "owned": 25.84,
       "injury": null,
       "status": "watchlist"
     },
@@ -7760,7 +7760,7 @@
       "avg5": 43.0,
       "be": null,
       "games": 4,
-      "owned": 0.72,
+      "owned": 0.7,
       "injury": null,
       "status": "watchlist"
     },
@@ -7840,7 +7840,7 @@
       "avg5": 8.4,
       "be": null,
       "games": 4,
-      "owned": 0.54,
+      "owned": 0.55,
       "injury": null,
       "status": "watchlist"
     },
@@ -7856,7 +7856,7 @@
       "avg5": 46.0,
       "be": null,
       "games": 4,
-      "owned": 0.86,
+      "owned": 0.91,
       "injury": null,
       "status": "watchlist"
     },
@@ -7872,7 +7872,7 @@
       "avg5": 144.6,
       "be": null,
       "games": 4,
-      "owned": 62.73,
+      "owned": 62.39,
       "injury": null,
       "status": "watchlist"
     },
@@ -7904,7 +7904,7 @@
       "avg5": 57.8,
       "be": null,
       "games": 3,
-      "owned": 2.97,
+      "owned": 2.96,
       "injury": null,
       "status": "watchlist"
     },
@@ -7920,7 +7920,7 @@
       "avg5": 57.2,
       "be": null,
       "games": 3,
-      "owned": 0.63,
+      "owned": 0.59,
       "injury": null,
       "status": "watchlist"
     },
@@ -7936,7 +7936,7 @@
       "avg5": 27.0,
       "be": null,
       "games": 3,
-      "owned": 0.37,
+      "owned": 0.35,
       "injury": null,
       "status": "watchlist"
     },
@@ -7984,7 +7984,7 @@
       "avg5": 28.4,
       "be": null,
       "games": 3,
-      "owned": 0.88,
+      "owned": 0.99,
       "injury": null,
       "status": "watchlist"
     },
@@ -8032,7 +8032,7 @@
       "avg5": 18.6,
       "be": null,
       "games": 3,
-      "owned": 1.0,
+      "owned": 1.02,
       "injury": null,
       "status": "watchlist"
     },
@@ -8064,7 +8064,7 @@
       "avg5": 44.0,
       "be": null,
       "games": 3,
-      "owned": 1.09,
+      "owned": 1.08,
       "injury": null,
       "status": "watchlist"
     },
@@ -8096,7 +8096,7 @@
       "avg5": 39.0,
       "be": null,
       "games": 3,
-      "owned": 1.87,
+      "owned": 1.8,
       "injury": null,
       "status": "watchlist"
     },
@@ -8144,7 +8144,7 @@
       "avg5": 36.8,
       "be": null,
       "games": 3,
-      "owned": 0.29,
+      "owned": 0.28,
       "injury": null,
       "status": "watchlist"
     },
@@ -8176,7 +8176,7 @@
       "avg5": 42.4,
       "be": null,
       "games": 3,
-      "owned": 0.32,
+      "owned": 0.34,
       "injury": null,
       "status": "watchlist"
     },
@@ -8208,7 +8208,7 @@
       "avg5": 59.2,
       "be": null,
       "games": 3,
-      "owned": 5.0,
+      "owned": 4.87,
       "injury": null,
       "status": "watchlist"
     },
@@ -8224,7 +8224,7 @@
       "avg5": 61.0,
       "be": null,
       "games": 3,
-      "owned": 2.46,
+      "owned": 2.47,
       "injury": null,
       "status": "watchlist"
     },
@@ -8256,7 +8256,7 @@
       "avg5": 27.0,
       "be": null,
       "games": 3,
-      "owned": 0.09,
+      "owned": 0.08,
       "injury": null,
       "status": "watchlist"
     },
@@ -8288,7 +8288,7 @@
       "avg5": 69.6,
       "be": null,
       "games": 3,
-      "owned": 0.99,
+      "owned": 1.02,
       "injury": null,
       "status": "watchlist"
     },
@@ -8304,7 +8304,7 @@
       "avg5": 18.2,
       "be": null,
       "games": 3,
-      "owned": 1.41,
+      "owned": 1.65,
       "injury": null,
       "status": "watchlist"
     },
@@ -8320,7 +8320,7 @@
       "avg5": 51.2,
       "be": null,
       "games": 3,
-      "owned": 0.7,
+      "owned": 0.69,
       "injury": null,
       "status": "watchlist"
     },
@@ -8384,7 +8384,7 @@
       "avg5": 49.3,
       "be": null,
       "games": 3,
-      "owned": 0.22,
+      "owned": 0.23,
       "injury": null,
       "status": "watchlist"
     },
@@ -8400,7 +8400,7 @@
       "avg5": 26.8,
       "be": null,
       "games": 3,
-      "owned": 1.04,
+      "owned": 2.27,
       "injury": null,
       "status": "watchlist"
     },
@@ -8432,7 +8432,7 @@
       "avg5": 23.2,
       "be": null,
       "games": 3,
-      "owned": 0.93,
+      "owned": 0.92,
       "injury": null,
       "status": "watchlist"
     },
@@ -8448,7 +8448,7 @@
       "avg5": 61.2,
       "be": null,
       "games": 3,
-      "owned": 55.63,
+      "owned": 53.74,
       "injury": null,
       "status": "watchlist"
     },
@@ -8464,7 +8464,7 @@
       "avg5": 39.4,
       "be": null,
       "games": 3,
-      "owned": 0.21,
+      "owned": 0.25,
       "injury": null,
       "status": "watchlist"
     },
@@ -8512,7 +8512,7 @@
       "avg5": 32.0,
       "be": null,
       "games": 2,
-      "owned": 0.22,
+      "owned": 0.21,
       "injury": null,
       "status": "watchlist"
     },
@@ -8544,7 +8544,7 @@
       "avg5": 96.2,
       "be": null,
       "games": 2,
-      "owned": 1.56,
+      "owned": 1.52,
       "injury": null,
       "status": "watchlist"
     },
@@ -8560,7 +8560,7 @@
       "avg5": 61.5,
       "be": null,
       "games": 2,
-      "owned": 55.01,
+      "owned": 55.23,
       "injury": null,
       "status": "watchlist"
     },
@@ -8576,7 +8576,7 @@
       "avg5": 71.0,
       "be": null,
       "games": 2,
-      "owned": 1.38,
+      "owned": 1.22,
       "injury": null,
       "status": "watchlist"
     },
@@ -8608,7 +8608,7 @@
       "avg5": 3.2,
       "be": null,
       "games": 2,
-      "owned": 0.77,
+      "owned": 0.78,
       "injury": null,
       "status": "watchlist"
     },
@@ -8624,7 +8624,7 @@
       "avg5": 14.0,
       "be": null,
       "games": 2,
-      "owned": 0.36,
+      "owned": 0.37,
       "injury": null,
       "status": "watchlist"
     },
@@ -8640,7 +8640,7 @@
       "avg5": 1.0,
       "be": null,
       "games": 2,
-      "owned": 4.24,
+      "owned": 4.21,
       "injury": null,
       "status": "watchlist"
     },
@@ -8672,7 +8672,7 @@
       "avg5": 62.4,
       "be": null,
       "games": 2,
-      "owned": 0.48,
+      "owned": 0.45,
       "injury": null,
       "status": "watchlist"
     },
@@ -8720,7 +8720,7 @@
       "avg5": 70.4,
       "be": null,
       "games": 2,
-      "owned": 6.67,
+      "owned": 6.1,
       "injury": null,
       "status": "watchlist"
     },
@@ -8928,7 +8928,7 @@
       "avg5": 9.8,
       "be": null,
       "games": 3,
-      "owned": 0.28,
+      "owned": 0.29,
       "injury": null,
       "status": "watchlist"
     },
@@ -8960,7 +8960,7 @@
       "avg5": null,
       "be": null,
       "games": 3,
-      "owned": 0.11,
+      "owned": 0.12,
       "injury": null,
       "status": "watchlist"
     },
@@ -9392,7 +9392,7 @@
       "avg5": null,
       "be": null,
       "games": 3,
-      "owned": 0.23,
+      "owned": 0.22,
       "injury": null,
       "status": "watchlist"
     },
@@ -9408,7 +9408,7 @@
       "avg5": null,
       "be": null,
       "games": 3,
-      "owned": 0.41,
+      "owned": 0.42,
       "injury": null,
       "status": "watchlist"
     },
@@ -9424,7 +9424,7 @@
       "avg5": null,
       "be": null,
       "games": 3,
-      "owned": 0.3,
+      "owned": 0.29,
       "injury": null,
       "status": "watchlist"
     },
@@ -9440,7 +9440,7 @@
       "avg5": null,
       "be": null,
       "games": 3,
-      "owned": 0.18,
+      "owned": 0.19,
       "injury": null,
       "status": "watchlist"
     },
@@ -9536,7 +9536,7 @@
       "avg5": null,
       "be": null,
       "games": 3,
-      "owned": 0.24,
+      "owned": 0.26,
       "injury": null,
       "status": "watchlist"
     },
@@ -9664,7 +9664,7 @@
       "avg5": 20.0,
       "be": null,
       "games": 3,
-      "owned": 0.4,
+      "owned": 0.44,
       "injury": null,
       "status": "watchlist"
     },
@@ -10000,7 +10000,7 @@
       "avg5": null,
       "be": null,
       "games": 4,
-      "owned": 1.29,
+      "owned": 1.31,
       "injury": null,
       "status": "watchlist"
     },
@@ -10016,7 +10016,7 @@
       "avg5": 8.0,
       "be": null,
       "games": 3,
-      "owned": 0.35,
+      "owned": 0.39,
       "injury": null,
       "status": "watchlist"
     },
@@ -10160,7 +10160,7 @@
       "avg5": null,
       "be": null,
       "games": 3,
-      "owned": 0.12,
+      "owned": 0.13,
       "injury": null,
       "status": "watchlist"
     },
@@ -10176,7 +10176,7 @@
       "avg5": null,
       "be": null,
       "games": 3,
-      "owned": 0.42,
+      "owned": 0.44,
       "injury": null,
       "status": "watchlist"
     },
@@ -10288,7 +10288,7 @@
       "avg5": 3.0,
       "be": null,
       "games": 3,
-      "owned": 0.01,
+      "owned": 0.0,
       "injury": null,
       "status": "watchlist"
     }
