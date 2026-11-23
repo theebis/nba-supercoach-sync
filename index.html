@@ -307,6 +307,67 @@
       color: var(--text);
     }
 
+    /* Max Price Filter Pill */
+    .price-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+      transition: border-color 0.12s, background 0.12s;
+    }
+
+    .price-filter.active {
+      border-color: #52525E;
+      background: #22222A;
+      color: var(--text);
+    }
+
+    .price-filter input {
+      width: 48px;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      outline: none;
+      text-align: right;
+    }
+
+    .price-filter input::placeholder {
+      color: var(--text-dim);
+      font-weight: 400;
+    }
+
+    /* Hide number spinners */
+    .price-filter input::-webkit-outer-spin-button,
+    .price-filter input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .price-clear {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 1;
+      padding: 0 2px;
+      display: none;
+    }
+
+    .price-filter.active .price-clear {
+      display: inline-block;
+    }
+
+    .price-clear:hover { color: var(--text); }
+
     .search-input {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -699,7 +760,13 @@
           <button class="seg-btn" data-pos="C">C</button>
         </div>
 
-        <button class="toggle-btn active" id="toggleHideDnp">Hide 0/DNPs</button>
+        <div class="price-filter" id="priceFilterWrap" title="Filter to players at or under your budget (e.g. type 6 for ≤ $6.00M)">
+          <span>MAX $</span>
+          <input type="number" id="maxPriceInput" placeholder="Any" step="0.5" min="0" />
+          <span>M</span>
+          <button class="price-clear" id="clearPriceBtn" title="Clear price filter">×</button>
+        </div>
+
         <button class="toggle-btn" id="toggleFourGames">4-Game Only</button>
         <button class="toggle-btn" id="togglePods">PODs &lt;5%</button>
         <button class="toggle-btn active" id="toggleAutoFill" title="Toggle between GitHub JSON past scores and blank manual inputs">Auto-Fill Scores</button>
@@ -718,10 +785,10 @@
             <th data-sort="name">Player</th>
             <th class="num" data-sort="price">Price ($M)</th>
             <th class="num" data-sort="owned">Own %</th>
-            <th class="num" data-sort="r_minus_2" id="thWkMinus2">Wk 4</th>
-            <th class="num" data-sort="r_minus_1" id="thWkMinus1">Wk 5</th>
-            <th class="num" data-sort="games" id="thGms">Rd 6 Gms</th>
-            <th class="num" data-sort="proj" id="thProj">Wk 6 Proj</th>
+            <th class="num" data-sort="r_minus_2" id="thWkMinus2">Wk 3</th>
+            <th class="num" data-sort="r_minus_1" id="thWkMinus1">Wk 4</th>
+            <th class="num" data-sort="games" id="thGms">Rd 5 Gms</th>
+            <th class="num" data-sort="proj" id="thProj">Rd 5 Proj</th>
             <th class="num" data-sort="be">Breakeven</th>
             <th class="num" data-sort="avg3">3-Wk Avg</th>
             <th class="num" data-sort="avg5" title="Reads avg5 / avg_5 / five_week_avg from your JSON">5-Wk Avg</th>
@@ -816,7 +883,7 @@
       watchlistIds: {},   // { [id]: true }
       activeTab: "all",   // all | squad | cows | bleeding | watchlist
       filterPos: "ALL",
-      hideDnp: true,
+      maxPriceM: null,    // e.g. 6.0 means <= $6,000,000
       fourGamesOnly: false,
       podsOnly: false,
       autoFillScores: true,
@@ -831,8 +898,7 @@
     // Round 5 (NBA Week 5: Nov 16-22 US) = Tue Nov 17 – Mon Nov 23, 2026 AEDT
     function getRoundDateRangeAEDT(roundNum) {
       const r = Number(roundNum) || 5;
-      // Anchor: Round 5 starts Nov 17, 2026 AEDT
-      const anchorStart = new Date(Date.UTC(2026, 10, 17)); // Month is 0-indexed (10 = Nov)
+      const anchorStart = new Date(Date.UTC(2026, 10, 17));
       const start = new Date(anchorStart.getTime() + (r - 5) * 7 * 86400000);
       const end = new Date(start.getTime() + 6 * 86400000);
       const fmt = (d) => d.toLocaleDateString("en-AU", { month: "short", day: "numeric", timeZone: "UTC" }).toUpperCase();
@@ -873,10 +939,7 @@
       const r1 = Number(p.r_minus_1 ?? p.wk_minus_1 ?? p.last_score ?? 0) || 0;
       const proj = Number(p.proj ?? p.projected_score ?? p.projection ?? 0) || 0;
       const games = Number(p.games ?? p.upcoming_games ?? p.next_games ?? 3);
-
-      let owned = Number(p.owned ?? p.ownership ?? p.owned_pct ?? 0) || 0;
-      // Handle cases where ownership is stored as a decimal (e.g., 0.626 -> 62.6%) if <= 1 and not clearly tiny?
-      // Note: SuperCoach JSON stores percentage directly (e.g., 0.674041 = 0.7%, 62.6 = 62.6%), so leave as-is.
+      const owned = Number(p.owned ?? p.ownership ?? p.owned_pct ?? 0) || 0;
 
       const avg5Raw = p.avg5 ?? p.avg_5 ?? p.five_week_avg ?? p.avg5_points ?? null;
       const avg5 = (avg5Raw !== null && avg5Raw !== undefined && avg5Raw !== "") ? Number(avg5Raw) : null;
@@ -917,7 +980,6 @@
       const isInactive = (r2 === 0 && r1 === 0 && proj === 0);
       const rolling3 = (r2 + r1 + proj) / 3;
 
-      // Use official BE from JSON if present and user hasn't manually edited scores/price
       const be = (!hasOverride && base.officialBe !== null)
         ? Math.round(base.officialBe)
         : (isInactive ? 0 : Math.round((3 * price / magic) - r2 - r1));
@@ -931,7 +993,6 @@
       const inSquad = state.squadIds[base.id] !== undefined ? !!state.squadIds[base.id] : base.jsonInSquad;
       const inWatchlist = !!state.watchlistIds[base.id];
 
-      // Auto-computed cash movement tag: cow | bleed | neutral
       let trend = "neutral";
       if (priceChange >= COW_THRESHOLD) trend = "cow";
       else if (priceChange <= BLEED_THRESHOLD) trend = "bleed";
@@ -1015,6 +1076,9 @@
 
     function getFilteredRows(allComputed) {
       const q = state.search.trim().toLowerCase();
+      const maxPriceDollars = state.maxPriceM !== null
+        ? (state.maxPriceM > 1000 ? state.maxPriceM : state.maxPriceM * 1000000)
+        : null;
 
       return allComputed.filter((p) => {
         if (state.activeTab === "squad" && !p.inSquad) return false;
@@ -1026,7 +1090,7 @@
           const parts = p.pos.toUpperCase().split(/[\/,\s]+/);
           if (!parts.includes(state.filterPos)) return false;
         }
-        if (state.hideDnp && p.r_minus_2 === 0 && p.r_minus_1 === 0 && p.proj === 0) return false;
+        if (maxPriceDollars !== null && p.price > maxPriceDollars) return false;
         if (state.fourGamesOnly && p.games < 4) return false;
         if (state.podsOnly && !(p.owned > 0 && p.owned < 5)) return false;
         if (q && !p.name.toLowerCase().includes(q) && !p.team.toLowerCase().includes(q)) return false;
@@ -1074,7 +1138,6 @@
         document.getElementById("kpiTopPodMeta").textContent = "No 4G PODs";
       }
 
-      // Tab counts (excluding unowned)
       const counts = {
         all: allComputed.length,
         squad: squad.length,
@@ -1127,7 +1190,6 @@
             ? `<span class="mono">${p.avg5.toFixed(1)}</span>`
             : `<span class="mono dim-text" title="Not yet in JSON feed">—</span>`;
 
-          // Read-only badge: COW / BLEED / — (unowned/neutral)
           const badgeClass = p.trend === "cow" ? "cow" : p.trend === "bleed" ? "bleed" : "";
           const badgeText = p.trend === "cow" ? "COW" : p.trend === "bleed" ? "BLEED" : "—";
 
@@ -1163,7 +1225,7 @@
               <td class="num mono muted-text">${p.owned.toFixed(1)}%</td>
               <td class="num">${renderEditable("r_minus_2", p.r_minus_2)}</td>
               <td class="num">${renderEditable("r_minus_1", p.r_minus_1)}</td>
-              <td class="num mono ${p.games >= 4 ? "pos-text" : "muted-text"}">${p.games}G</td>
+              <td class="num mono ${p.games >= 4 ? "pos-text" : "muted-text"}">${p.games}</td>
               <td class="num">${renderEditable("proj", p.proj)}</td>
               <td class="num mono">
                 <span>${p.be}</span>
@@ -1282,9 +1344,30 @@
       });
     });
 
-    document.getElementById("toggleHideDnp").addEventListener("click", (e) => {
-      state.hideDnp = !state.hideDnp;
-      e.target.classList.toggle("active", state.hideDnp);
+    // Max Price Filter
+    const maxPriceInput = document.getElementById("maxPriceInput");
+    const priceFilterWrap = document.getElementById("priceFilterWrap");
+    maxPriceInput.addEventListener("input", (e) => {
+      const raw = e.target.value.trim();
+      if (raw === "") {
+        state.maxPriceM = null;
+        priceFilterWrap.classList.remove("active");
+      } else {
+        const val = parseFloat(raw);
+        if (!Number.isNaN(val) && val >= 0) {
+          state.maxPriceM = val;
+          priceFilterWrap.classList.add("active");
+        }
+      }
+      state.showAll = false;
+      render();
+    });
+
+    document.getElementById("clearPriceBtn").addEventListener("click", () => {
+      maxPriceInput.value = "";
+      state.maxPriceM = null;
+      priceFilterWrap.classList.remove("active");
+      state.showAll = false;
       render();
     });
 
