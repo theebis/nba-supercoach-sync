@@ -1,192 +1,261 @@
 #!/usr/bin/env python3
 """
 update_supercoach.py
-DIRECT NBA SUPERCOACH 640+ PLAYER SCRAPER!
-Pulls the official NBA SuperCoach master players JSON feed directly from SuperCoach's API:
-- Every active NBA player (~640+ players)
-- Exact SuperCoach Price ($), Dual Positions (PG/SG, PF/C, etc.), Team, Games, Ownership %, and Injury Status
-- Exact Last 2 Weekly Round Scores (Wk N-2 and Wk N-1) & Rolling 3-Week Averages
-- Automatically calculates the current Round
+Live NBA SuperCoach scraper using the public CloudFront (players-cf) JSON feed.
+- Fetches current round from /settings
+- Fetches full player pool, prices, ownership %, 3-wk & 5-wk averages, projections (ppts1), and injuries
+- Fetches exact Wk N-1 and Wk N-2 scores from the previous two rounds
+- Counts exact upcoming games per team from /real_fixture
+- NEVER runs fake offline rollovers: if the API fails, it exits cleanly without corrupting your data
 """
 import json
 import os
+import sys
 from datetime import datetime, timezone
 import requests
 
 DATA_FILE = "supercoach_data.json"
 DEFAULT_MAGIC_NUMBER = 178000
 
-# Official SuperCoach API endpoints that serve the player pool
-SC_API_ENDPOINTS = [
-    "https://supercoach.heraldsun.com.au/2026/api/nba/classic/v1/players?embed=notes,odds,player_stats,positions",
-    "https://supercoach.heraldsun.com.au/2025/api/nba/classic/v1/players?embed=notes,odds,player_stats,positions",
-    "https://fantasy.nba.com/api/nba/classic/v1/players?embed=notes,odds,player_stats,positions"
+BASE_URLS = [
+    "https://www.supercoach.com.au/2026/api/nba/classic/v1",
+    "https://supercoach.com.au/2026/api/nba/classic/v1",
+    "https://www.supercoach.com.au/2027/api/nba/classic/v1",
 ]
 
-def parse_supercoach_player(p, existing_status_map):
-    """Extracts exact stats, price, positions, ownership, and weekly averages."""
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "Accept": "application/json, text/plain, */*",
+    "Origin": "https://www.supercoach.com.au",
+    "Referer": "https://www.supercoach.com.au/",
+}
+
+
+def fetch_json(url):
+    res = requests.get(url, headers=HEADERS, timeout=25)
+    if res.status_code != 200:
+        raise RuntimeError(f"HTTP {res.status_code}")
+    try:
+        return res.json()
+    except Exception:
+        snippet = res.text[:120].replace("\n", " ")
+        raise RuntimeError(f"Non-JSON response: {snippet!r}")
+
+
+def detect_working_base_and_round():
+    for base in BASE_URLS:
+        try:
+            print(f"Checking SuperCoach settings: {base}/settings?min=false")
+            settings = fetch_json(f"{base}/settings?min=false")
+            comp = settings.get("competition") or settings
+            curr_round = (
+                comp.get("current_round")
+                or comp.get("next_round")
+                or settings.get("current_round")
+                or settings.get("round")
+            )
+            if curr_round:
+                print(f"Connected! Active SuperCoach round: {curr_round}")
+                return base, int(curr_round)
+            print(f"Connected to {base} (no round field in settings)")
+            return base, None
+        except Exception as err:
+            print(f"  -> {base} failed: {err}")
+    return None, None
+
+
+def fetch_round_scores(base_url, round_num):
+    """Returns { player_id: points } for a specific completed round."""
+    if not round_num or round_num < 1:
+        return {}
+    url = f"{base_url}/players-cf?embed=player_stats&round={round_num}"
+    try:
+        payload = fetch_json(url)
+        raw_list = payload if isinstance(payload, list) else payload.get("players", [])
+        scores = {}
+        for p in raw_list:
+            pid = str(p.get("id", ""))
+            stats = p.get("player_stats") or []
+            pts = 0
+            for s in stats:
+                if s.get("round") == round_num or len(stats) == 1:
+                    pts = int(s.get("points") or 0)
+                    break
+            scores[pid] = pts
+        print(f"Fetched Round {round_num} scores for {len(scores)} players.")
+        return scores
+    except Exception as err:
+        print(f"Could not fetch Round {round_num} scores: {err}")
+        return {}
+
+
+def fetch_team_game_counts(base_url, round_num):
+    """Counts how many NBA games each team plays in the target round."""
+    if not round_num or round_num < 1:
+        return {}
+    url = f"{base_url}/real_fixture?round={round_num}"
+    counts = {}
+    try:
+        fixtures = fetch_json(url)
+        if not isinstance(fixtures, list):
+            fixtures = fixtures.get("fixtures") or fixtures.get("matches") or []
+        for fx in fixtures:
+            for key in ("team1", "team2", "home_team", "away_team"):
+                t = fx.get(key)
+                if isinstance(t, dict):
+                    abbrev = t.get("abbrev") or t.get("team_abbrev")
+                    if abbrev:
+                        counts[abbrev] = counts.get(abbrev, 0) + 1
+            for id_key in ("team1_id", "team2_id"):
+                tid = fx.get(id_key)
+                if tid is not None:
+                    counts[str(tid)] = counts.get(str(tid), 0) + 1
+        print(f"Fetched Round {round_num} fixture game counts ({len(fixtures)} games).")
+    except Exception as err:
+        print(f"Could not fetch Round {round_num} fixtures (will default to player feed): {err}")
+    return counts
+
+
+def parse_player(p, existing_status_map, scores_r1, scores_r2, team_games):
+    pid = str(p.get("id", ""))
     first_name = str(p.get("first_name", "")).strip()
     last_name = str(p.get("last_name", "")).strip()
     full_name = p.get("name") or f"{first_name} {last_name}".strip()
 
-    # Team abbreviation
     team_obj = p.get("team") or {}
     team = team_obj.get("abbrev") or p.get("team_abbrev") or "NBA"
+    team_id = str(p.get("team_id") or team_obj.get("id") or "")
 
-    # Positions (e.g., PG/SG, PF/C)
     positions_arr = p.get("positions") or []
-    if isinstance(positions_arr, list) and len(positions_arr) > 0:
-        pos = "/".join([str(x.get("position", "")) for x in positions_arr if x.get("position")])
+    if isinstance(positions_arr, list) and positions_arr:
+        pos = "/".join(str(x.get("position", "")) for x in positions_arr if x.get("position"))
     else:
         pos = str(p.get("position") or "UTIL")
 
-    # Round-by-round SuperCoach scores
     stats = p.get("player_stats") or []
-    completed_rounds = [
-        s for s in stats
-        if s.get("points") is not None and int(s.get("points") or 0) > 0
-    ]
-    
-    rounds_played = len(completed_rounds)
+    latest_stat = stats[-1] if stats else {}
 
-    # FIX 3: Accurately handle rookies with only 1 game (r_minus_2 must be 0)
-    if rounds_played >= 2:
-        r_minus_1 = int(completed_rounds[-1].get("points", 0))
-        r_minus_2 = int(completed_rounds[-2].get("points", 0))
-    elif rounds_played == 1:
-        r_minus_1 = int(completed_rounds[-1].get("points", 0))
-        r_minus_2 = 0
-    else:
-        r_minus_1 = int(p.get("last_score") or p.get("r_minus_1") or 0)
-        r_minus_2 = int(p.get("r_minus_2") or 0)
+    # Exact past 2 round scores
+    r_minus_1 = scores_r1.get(pid, None)
+    r_minus_2 = scores_r2.get(pid, None)
 
-    latest_stat = stats[-1] if len(stats) > 0 else {}
-    price = int(p.get("price") or latest_stat.get("price") or 3800000)
+    if r_minus_1 is None or r_minus_2 is None:
+        completed = [s for s in stats if s.get("points") is not None]
+        if r_minus_1 is None:
+            r_minus_1 = int(completed[-1].get("points") or 0) if len(completed) >= 1 else 0
+        if r_minus_2 is None:
+            r_minus_2 = int(completed[-2].get("points") or 0) if len(completed) >= 2 else 0
 
-    # Weekly average / projection
-    season_avg = float(
-        p.get("points_average")
+    price = int(latest_stat.get("price") or p.get("price") or 3800000)
+
+    # Real projection: SuperCoach uses ppts1 (fall back to avg3 / avg)
+    proj_raw = (
+        latest_stat.get("ppts1")
+        or p.get("ppts1")
         or latest_stat.get("avg3")
         or latest_stat.get("avg")
-        or ((r_minus_2 + r_minus_1) / 2.0 if rounds_played > 1 else r_minus_1)
+        or p.get("points_average")
+        or 0
     )
-    proj = int(round(season_avg)) if season_avg > 0 else int(round((r_minus_2 + r_minus_1) / 2.0))
+    proj = int(round(float(proj_raw))) if proj_raw else 0
 
-    # FIX 1: Extract missing Games, Ownership, and Injury
-    games = int(p.get("games") or p.get("matches_played") or 3)
-    
-    owned_raw = p.get("owned") or p.get("ownership") or p.get("selections")
-    owned = float(owned_raw.get("percentage", 0)) if isinstance(owned_raw, dict) else float(owned_raw or 0)
-    
-    injury = p.get("injury_status") or p.get("injury") or None
+    # 5-week average if provided by SuperCoach
+    avg5_raw = latest_stat.get("avg5") or p.get("avg5")
+    avg5 = round(float(avg5_raw), 1) if avg5_raw not in (None, "", 0) else None
 
-    # Preserve Squad & Prospect tags
-    saved_status = existing_status_map.get(full_name.lower())
-    if saved_status:
-        status = saved_status
-    elif price <= 9800000 and proj >= 55 and rounds_played > 0:
-        status = "prospect"
+    # Official breakeven if provided by SuperCoach
+    be_raw = latest_stat.get("be") or latest_stat.get("breakeven") or p.get("be")
+    be = int(round(float(be_raw))) if be_raw not in (None, "") else None
+
+    # Ownership %
+    owned_raw = latest_stat.get("owned")
+    if owned_raw is None:
+        owned_raw = p.get("owned") or p.get("ownership") or 0
+    if isinstance(owned_raw, dict):
+        owned = float(owned_raw.get("percentage") or 0)
     else:
-        status = "watchlist"
+        owned = float(owned_raw or 0)
+
+    # Games this round (prefer fixture count, fallback to player field)
+    games = team_games.get(team) or team_games.get(team_id) or int(latest_stat.get("games") or p.get("games") or 3)
+
+    # Injury status
+    injury = p.get("injury_suspension_status") or p.get("injury") or None
+    if isinstance(injury, str) and injury.strip().lower() in ("", "none", "available", "fit"):
+        injury = None
+
+    # Preserve your squad tags
+    saved_status = existing_status_map.get(full_name.lower())
+    status = saved_status if saved_status == "squad" else "watchlist"
 
     return {
-        "id": str(p.get("id", full_name)),
+        "id": pid or full_name,
         "name": full_name,
         "team": team,
-        "pos": pos or "PG",
+        "pos": pos or "UTIL",
         "price": price,
-        "r_minus_2": r_minus_2,
-        "r_minus_1": r_minus_1,
+        "r_minus_2": int(r_minus_2),
+        "r_minus_1": int(r_minus_1),
         "proj": proj,
-        "games": games,
-        "owned": owned,
+        "avg5": avg5,
+        "be": be,
+        "games": int(games),
+        "owned": round(owned, 2),
         "injury": injury,
-        "status": status
-    }, rounds_played
-
-def scrape_all_supercoach_players(existing_players):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        "Accept": "application/json"
+        "status": status,
     }
-    sc_token = os.environ.get("SC_BEARER_TOKEN", "").strip()
-    if sc_token:
-        headers["Authorization"] = f"Bearer {sc_token}"
 
-    existing_status_map = {p["name"].lower(): p.get("status", "watchlist") for p in existing_players}
-
-    for url in SC_API_ENDPOINTS:
-        try:
-            print(f"Trying SuperCoach endpoint: {url}")
-            res = requests.get(url, headers=headers, timeout=20)
-            if res.status_code == 200:
-                payload = res.json()
-                raw_list = payload if isinstance(payload, list) else payload.get("players", [])
-                if isinstance(raw_list, list) and len(raw_list) > 50:
-                    print(f"Found {len(raw_list)} official NBA SuperCoach players!")
-                    
-                    parsed_players = []
-                    max_rounds_played = 0
-                    
-                    for p in raw_list:
-                        player_data, rounds_played = parse_supercoach_player(p, existing_status_map)
-                        parsed_players.append(player_data)
-                        if rounds_played > max_rounds_played:
-                            max_rounds_played = rounds_played
-                            
-                    # FIX 2: Autodetect the exact Round based on the API response
-                    extracted_round = payload.get("round") or max_rounds_played
-                    return parsed_players, extracted_round
-        except Exception as err:
-            print(f"Endpoint attempt failed: {err}")
-            
-    return None, None
-
-def fallback_rollover(current_data):
-    """FIX 4: Fallback mathematical rollover if the API completely goes down or blocks the server."""
-    print("API failed or unavailable. Falling back to local offline mathematical rollover...")
-    current_data["round"] = current_data.get("round", 4) + 1
-    
-    for p in current_data.get("players", []):
-        r2, r1, proj, price = int(p.get("r_minus_2", 0)), int(p.get("r_minus_1", 0)), int(p.get("proj", 0)), int(p.get("price", 0))
-        
-        is_inactive = (r2 == 0 and r1 == 0)
-        rolling3 = (r2 + r1 + proj) / 3.0
-        
-        new_price = price if is_inactive else int(round((0.75 * price + 0.25 * rolling3 * DEFAULT_MAGIC_NUMBER) / 10000) * 10000)
-            
-        p["price"] = new_price
-        p["r_minus_2"] = r1
-        p["r_minus_1"] = proj
-        p["proj"] = int(round((r1 + proj) / 2.0))
-        
-    return current_data
 
 def main():
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
     else:
-        data = {"round": 4, "magicNumber": DEFAULT_MAGIC_NUMBER, "players": []}
+        data = {"round": 5, "magicNumber": DEFAULT_MAGIC_NUMBER, "players": []}
 
     existing_players = data.get("players", [])
-    scraped_players, api_round = scrape_all_supercoach_players(existing_players)
+    existing_status_map = {
+        p.get("name", "").lower(): str(p.get("status", "")).lower()
+        for p in existing_players
+    }
 
-    if scraped_players:
-        data["players"] = scraped_players
-        data["totalPlayersScraped"] = len(scraped_players)
-        data["round"] = int(api_round) if api_round else data.get("round", 4)
-        data["lastUpdated"] = datetime.now(timezone.utc).isoformat()
-        
-        with open(DATA_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
-        print(f"Successfully saved {len(scraped_players)} players to {DATA_FILE} (Round {data['round']})")
-    else:
-        data = fallback_rollover(data)
-        data["lastUpdated"] = datetime.now(timezone.utc).isoformat()
-        with open(DATA_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
-        print(f"Applied fallback rollover. Now at Round {data['round']}")
+    base_url, active_round = detect_working_base_and_round()
+    if not base_url:
+        print("ERROR: Could not connect to any SuperCoach API endpoint. Leaving existing JSON untouched.")
+        sys.exit(1)
+
+    round_param = f"&round={active_round}" if active_round else ""
+    players_url = f"{base_url}/players-cf?embed=notes,odds,player_stats,positions{round_param}"
+    print(f"Fetching main player pool: {players_url}")
+
+    payload = fetch_json(players_url)
+    raw_list = payload if isinstance(payload, list) else payload.get("players", [])
+    if not isinstance(raw_list, list) or len(raw_list) < 50:
+        print(f"ERROR: Unexpected player count ({len(raw_list)}). Aborting without modifying JSON.")
+        sys.exit(1)
+
+    target_round = active_round or data.get("round", 5)
+
+    # Pull exact scores from the 2 most recently completed rounds
+    scores_r1 = fetch_round_scores(base_url, target_round - 1)
+    scores_r2 = fetch_round_scores(base_url, target_round - 2)
+    team_games = fetch_team_game_counts(base_url, target_round)
+
+    parsed = [
+        parse_player(p, existing_status_map, scores_r1, scores_r2, team_games)
+        for p in raw_list
+    ]
+
+    data["round"] = int(target_round)
+    data["totalPlayersScraped"] = len(parsed)
+    data["lastUpdated"] = datetime.now(timezone.utc).isoformat()
+    data["players"] = parsed
+
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+
+    print(f"SUCCESS: Saved {len(parsed)} live NBA SuperCoach players for Round {target_round}.")
+
 
 if __name__ == "__main__":
     main()
