@@ -2,11 +2,11 @@
 """
 update_supercoach.py
 Live NBA SuperCoach scraper using the public CloudFront (players-cf) JSON feed.
-- Fetches current round from /settings
-- Fetches full player pool, prices, ownership %, 3-wk & 5-wk averages, projections (ppts1), and injuries
-- Fetches exact Wk N-1 and Wk N-2 scores from the previous two rounds
-- Counts exact upcoming games per team from /real_fixture
-- NEVER runs fake offline rollovers: if the API fails, it exits cleanly without corrupting your data
+- Uses curl_cffi (Chrome impersonation) to bypass 403 firewall blocks on GitHub Actions
+- Smart Rollover: only flips to next_round when BOTH is_lockout and is_partial_lockout are False
+  (meaning the entire previous round has concluded and salaries have updated, not mid-round gaps)
+- Historical Snapshots: saves history/round_X.json and automatically backfills past rounds
+- NEVER runs fake offline rollovers: if the API fails, it exits cleanly without corrupting data
 """
 import json
 import os
@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 from curl_cffi import requests
 
 DATA_FILE = "supercoach_data.json"
+HISTORY_DIR = "history"
 DEFAULT_MAGIC_NUMBER = 178000
 
 BASE_URLS = [
@@ -48,15 +49,31 @@ def detect_working_base_and_round():
             print(f"Checking SuperCoach settings: {base}/settings?min=false")
             settings = fetch_json(f"{base}/settings?min=false")
             comp = settings.get("competition") or settings
-            curr_round = (
-                comp.get("current_round")
-                or comp.get("next_round")
-                or settings.get("current_round")
-                or settings.get("round")
-            )
+            curr_round = comp.get("current_round") or settings.get("current_round") or settings.get("round")
+            next_round = comp.get("next_round") or settings.get("next_round")
+            is_lockout = bool(comp.get("is_lockout", False))
+            is_partial = bool(comp.get("is_partial_lockout", False))
+
             if curr_round:
-                print(f"Connected! Active SuperCoach round: {curr_round}")
-                return base, int(curr_round)
+                curr_round = int(curr_round)
+                next_round = int(next_round) if next_round else curr_round
+
+                # Only roll over to next_round when the ENTIRE round has finished
+                # (neither full lockout nor mid-round partial rolling lockout is active)
+                if not is_lockout and not is_partial and next_round > curr_round:
+                    target_round = next_round
+                    print(
+                        f"Connected! Round {curr_round} fully concluded "
+                        f"(is_lockout=False, is_partial_lockout=False). Targeting Round {target_round}."
+                    )
+                else:
+                    target_round = curr_round
+                    print(
+                        f"Connected! Round {curr_round} still in progress "
+                        f"(is_lockout={is_lockout}, is_partial_lockout={is_partial}). Staying on Round {target_round}."
+                    )
+                return base, target_round
+
             print(f"Connected to {base} (no round field in settings)")
             return base, None
         except Exception as err:
@@ -64,10 +81,13 @@ def detect_working_base_and_round():
     return None, None
 
 
-def fetch_round_scores(base_url, round_num):
-    """Returns { player_id: points } for a specific completed round."""
+def fetch_round_scores(base_url, round_num, cache):
+    """Returns { player_id: points } for a specific completed round (cached)."""
     if not round_num or round_num < 1:
         return {}
+    if round_num in cache:
+        return cache[round_num]
+
     url = f"{base_url}/players-cf?embed=player_stats&round={round_num}"
     try:
         payload = fetch_json(url)
@@ -83,9 +103,11 @@ def fetch_round_scores(base_url, round_num):
                     break
             scores[pid] = pts
         print(f"Fetched Round {round_num} scores for {len(scores)} players.")
+        cache[round_num] = scores
         return scores
     except Exception as err:
         print(f"Could not fetch Round {round_num} scores: {err}")
+        cache[round_num] = {}
         return {}
 
 
@@ -148,7 +170,6 @@ def parse_player(p, existing_status_map, scores_r1, scores_r2, team_games):
 
     price = int(latest_stat.get("price") or p.get("price") or 3800000)
 
-    # Real projection: SuperCoach uses ppts1 (fall back to avg3 / avg)
     proj_raw = (
         latest_stat.get("ppts1")
         or p.get("ppts1")
@@ -159,15 +180,12 @@ def parse_player(p, existing_status_map, scores_r1, scores_r2, team_games):
     )
     proj = int(round(float(proj_raw))) if proj_raw else 0
 
-    # 5-week average if provided by SuperCoach
     avg5_raw = latest_stat.get("avg5") or p.get("avg5")
     avg5 = round(float(avg5_raw), 1) if avg5_raw not in (None, "", 0) else None
 
-    # Official breakeven if provided by SuperCoach
     be_raw = latest_stat.get("be") or latest_stat.get("breakeven") or p.get("be")
     be = int(round(float(be_raw))) if be_raw not in (None, "") else None
 
-    # Ownership %
     owned_raw = latest_stat.get("owned")
     if owned_raw is None:
         owned_raw = p.get("owned") or p.get("ownership") or 0
@@ -176,15 +194,12 @@ def parse_player(p, existing_status_map, scores_r1, scores_r2, team_games):
     else:
         owned = float(owned_raw or 0)
 
-    # Games this round (prefer fixture count, fallback to player field)
     games = team_games.get(team) or team_games.get(team_id) or int(latest_stat.get("games") or p.get("games") or 3)
 
-    # Injury status
     injury = p.get("injury_suspension_status") or p.get("injury") or None
     if isinstance(injury, str) and injury.strip().lower() in ("", "none", "available", "fit"):
         injury = None
 
-    # Preserve your squad tags
     saved_status = existing_status_map.get(full_name.lower())
     status = saved_status if saved_status == "squad" else "watchlist"
 
@@ -206,17 +221,43 @@ def parse_player(p, existing_status_map, scores_r1, scores_r2, team_games):
     }
 
 
+def build_round_dataset(base_url, round_num, existing_status_map, magic_number, scores_cache):
+    players_url = f"{base_url}/players-cf?embed=notes,odds,player_stats,positions&round={round_num}"
+    print(f"Fetching Round {round_num} player pool: {players_url}")
+    payload = fetch_json(players_url)
+    raw_list = payload if isinstance(payload, list) else payload.get("players", [])
+    if not isinstance(raw_list, list) or len(raw_list) < 50:
+        raise RuntimeError(f"Unexpected player count ({len(raw_list)}) for Round {round_num}")
+
+    scores_r1 = fetch_round_scores(base_url, round_num - 1, scores_cache)
+    scores_r2 = fetch_round_scores(base_url, round_num - 2, scores_cache)
+    team_games = fetch_team_game_counts(base_url, round_num)
+
+    parsed = [
+        parse_player(p, existing_status_map, scores_r1, scores_r2, team_games)
+        for p in raw_list
+    ]
+
+    return {
+        "round": int(round_num),
+        "magicNumber": magic_number,
+        "totalPlayersScraped": len(parsed),
+        "lastUpdated": datetime.now(timezone.utc).isoformat(),
+        "players": parsed,
+    }
+
+
 def main():
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
+            existing_data = json.load(f)
     else:
-        data = {"round": 5, "magicNumber": DEFAULT_MAGIC_NUMBER, "players": []}
+        existing_data = {"round": 5, "magicNumber": DEFAULT_MAGIC_NUMBER, "players": []}
 
-    existing_players = data.get("players", [])
+    magic_number = existing_data.get("magicNumber", DEFAULT_MAGIC_NUMBER)
     existing_status_map = {
         p.get("name", "").lower(): str(p.get("status", "")).lower()
-        for p in existing_players
+        for p in existing_data.get("players", [])
     }
 
     base_url, active_round = detect_working_base_and_round()
@@ -224,37 +265,55 @@ def main():
         print("ERROR: Could not connect to any SuperCoach API endpoint. Leaving existing JSON untouched.")
         sys.exit(1)
 
-    round_param = f"&round={active_round}" if active_round else ""
-    players_url = f"{base_url}/players-cf?embed=notes,odds,player_stats,positions{round_param}"
-    print(f"Fetching main player pool: {players_url}")
+    target_round = active_round or existing_data.get("round", 5)
+    scores_cache = {}
 
-    payload = fetch_json(players_url)
-    raw_list = payload if isinstance(payload, list) else payload.get("players", [])
-    if not isinstance(raw_list, list) or len(raw_list) < 50:
-        print(f"ERROR: Unexpected player count ({len(raw_list)}). Aborting without modifying JSON.")
+    # 1. Build live target round dataset
+    try:
+        live_data = build_round_dataset(base_url, target_round, existing_status_map, magic_number, scores_cache)
+    except Exception as err:
+        print(f"ERROR: {err}. Aborting without modifying JSON.")
         sys.exit(1)
 
-    target_round = active_round or data.get("round", 5)
+    # 2. Save historical snapshot for current round + backfill any missing past rounds
+    os.makedirs(HISTORY_DIR, exist_ok=True)
+    current_snap_path = os.path.join(HISTORY_DIR, f"round_{target_round}.json")
+    with open(current_snap_path, "w", encoding="utf-8") as f:
+        json.dump(live_data, f, indent=2)
 
-    # Pull exact scores from the 2 most recently completed rounds
-    scores_r1 = fetch_round_scores(base_url, target_round - 1)
-    scores_r2 = fetch_round_scores(base_url, target_round - 2)
-    team_games = fetch_team_game_counts(base_url, target_round)
+    for past_r in range(1, target_round):
+        snap_path = os.path.join(HISTORY_DIR, f"round_{past_r}.json")
+        if not os.path.exists(snap_path):
+            try:
+                print(f"Backfilling missing historical snapshot for Round {past_r}...")
+                past_data = build_round_dataset(base_url, past_r, existing_status_map, magic_number, scores_cache)
+                with open(snap_path, "w", encoding="utf-8") as f:
+                    json.dump(past_data, f, indent=2)
+            except Exception as err:
+                print(f"  -> Skipped backfill for Round {past_r}: {err}")
 
-    parsed = [
-        parse_player(p, existing_status_map, scores_r1, scores_r2, team_games)
-        for p in raw_list
-    ]
+    # Collect all available snapshot rounds
+    available_rounds = []
+    for fname in os.listdir(HISTORY_DIR):
+        if fname.startswith("round_") and fname.endswith(".json"):
+            try:
+                r_num = int(fname.replace("round_", "").replace(".json", ""))
+                available_rounds.append(r_num)
+            except ValueError:
+                pass
+    if target_round not in available_rounds:
+        available_rounds.append(target_round)
+    available_rounds.sort()
 
-    data["round"] = int(target_round)
-    data["totalPlayersScraped"] = len(parsed)
-    data["lastUpdated"] = datetime.now(timezone.utc).isoformat()
-    data["players"] = parsed
+    live_data["availableRounds"] = available_rounds
 
     with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+        json.dump(live_data, f, indent=2)
 
-    print(f"SUCCESS: Saved {len(parsed)} live NBA SuperCoach players for Round {target_round}.")
+    print(
+        f"SUCCESS: Saved {len(live_data['players'])} live NBA SuperCoach players for Round {target_round}. "
+        f"Snapshots available: {available_rounds}"
+    )
 
 
 if __name__ == "__main__":
