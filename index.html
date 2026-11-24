@@ -1587,7 +1587,7 @@
     .sim-metric span:last-child { font-family: var(--mono); font-size: 13px; font-weight: 600; }
 
     /* =====================================================================
-       COMMAND PALETTE (⌘K) & SETTINGS MODAL
+       SETTINGS MODAL
        ===================================================================== */
     .overlay-backdrop {
       position: fixed;
@@ -1837,10 +1837,6 @@
           <span class="brand-mark">S</span>
           <span>SCHOOPS</span>
         </div>
-        <button type="button" class="sb-cmd-btn" id="openCmdBtn" title="Command Menu (⌘K / Ctrl+K)">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <span class="kbd">⌘K</span>
-        </button>
       </div>
 
       <!-- Primary Workspace Navigation -->
@@ -2144,18 +2140,6 @@
     </div>
   </div>
 
-  <!-- ⌘K COMMAND PALETTE -->
-  <div class="overlay-backdrop" id="cmdOverlay">
-    <div class="cmd-dialog" role="dialog" aria-modal="true" aria-label="Command Menu">
-      <div class="cmd-input-bar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" class="cmd-input" id="cmdInput" placeholder="Search any NBA player or type a command..." autocomplete="off" />
-        <span class="kbd">ESC</span>
-      </div>
-      <div class="cmd-list" id="cmdList"></div>
-    </div>
-  </div>
-
   <!-- SETTINGS MODAL -->
   <div class="overlay-backdrop" id="settingsOverlay">
     <div class="settings-dialog" role="dialog" aria-modal="true" aria-label="Settings">
@@ -2281,8 +2265,7 @@
           "<strong>Captain picks</strong> (top of the page) suggest your Captain and Vice-Captain, with each player's chance of top-scoring. <strong>Use C &amp; VC</strong> sets them in My Squad.",
           "The tiles under the title show your <strong>squad value</strong>, <strong>projected cash generation</strong> and the <strong>top cash cow</strong>. Click one to dig in.",
           "Use <strong>+</strong> to add a player to your squad and <strong>☆</strong> to watch him (left of each row). Click a row (or press <strong>Enter</strong>) for his profile, including his live score this round.",
-          "Hover any number with a dotted underline, the games boxes or the Form chart for details. Drag a column header edge to resize it; double-click to reset.",
-          "Press <strong>⌘K</strong> / <strong>Ctrl+K</strong> (or <strong>/</strong>) anywhere to jump to a player or page."
+          "Hover any number with a dotted underline, the games boxes or the Form chart for details. Drag a column header edge to resize it; double-click to reset."
         ]
       },
       court: {
@@ -3535,101 +3518,6 @@
       }
     }
 
-    /* =====================================================================
-       ⌘K COMMAND PALETTE
-       ===================================================================== */
-    let cmdItems = [];
-    let cmdActiveIdx = 0;
-
-    function openCommandPalette() {
-      const overlay = document.getElementById("cmdOverlay");
-      const input = document.getElementById("cmdInput");
-      overlay.classList.add("open");
-      input.value = "";
-      renderCommandList("");
-      setTimeout(() => input.focus(), 10);
-    }
-
-    function closeCommandPalette() {
-      document.getElementById("cmdOverlay").classList.remove("open");
-    }
-
-    function renderCommandList(query) {
-      const q = query.trim().toLowerCase();
-      const commands = [
-        { type: "cmd", label: "Go to Market", meta: "G M", run: () => setActiveNav("market", "all") },
-        { type: "cmd", label: "Go to My Squad", meta: "G C", run: () => setActiveNav("court") },
-        { type: "cmd", label: "Go to Trade Lab", meta: "G T", run: () => setActiveNav("tradelab") },
-        { type: "cmd", label: "Optimise My Squad Lineup", meta: "Best 9 + 2× C", run: () => { setActiveNav("court"); setTimeout(() => { const b = document.getElementById("courtOptimiseBtn"); if (b) b.click(); }, 30); } },
-        { type: "cmd", label: "Add Player to My Squad", meta: "Squad", run: () => { setActiveNav("court"); setTimeout(() => { const b = document.getElementById("courtAddPlayerBtn"); if (b) b.click(); }, 30); } },
-        { type: "cmd", label: "View: Cash Cows", meta: "Filter", run: () => setActiveNav("market", "cows") },
-        { type: "cmd", label: "View: 4-Games Round", meta: "Filter", run: () => setActiveNav("market", "fourgames") },
-        { type: "cmd", label: "Open Workspace Settings", meta: "Sync & Code", run: () => openSettingsModal() }
-      ];
-
-      const matchedCmds = q ? commands.filter((c) => c.label.toLowerCase().includes(q) || c.meta.toLowerCase().includes(q)) : commands;
-
-      const matchedPlayers = q
-        ? Object.values(state.computedById)
-            .filter((p) => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))
-            .sort((a, b) => ((a.name.toLowerCase().startsWith(q) ? 0 : 1) - (b.name.toLowerCase().startsWith(q) ? 0 : 1)) || (b.price - a.price))
-            .slice(0, 8)
-            .map((p) => ({
-              type: "player", player: p, label: p.name,
-              meta: `${p.team} · BE ${p.be === null ? "—" : p.be} · ${formatMoney(p.priceChange)}`,
-              run: () => openInspector(p.id)
-            }))
-        : Object.values(state.computedById)
-            .filter((p) => p.inSquad)
-            .sort((a, b) => b.proj - a.proj)
-            .slice(0, 5)
-            .map((p) => ({
-              type: "player", player: p, label: p.name,
-              meta: `Squad · BE ${p.be === null ? "—" : p.be} · Proj ${p.proj}`,
-              run: () => openInspector(p.id)
-            }));
-
-      cmdItems = [...matchedPlayers, ...matchedCmds];
-      cmdActiveIdx = 0;
-
-      const listEl = document.getElementById("cmdList");
-      if (!cmdItems.length) {
-        listEl.innerHTML = `<div style="padding:18px; text-align:center; color:var(--text-tertiary);">No matching players or commands</div>`;
-        return;
-      }
-
-      let html = "";
-      if (matchedPlayers.length) {
-        html += `<div class="cmd-group-title">${q ? "Players" : "Your Squad"}</div>`;
-        html += matchedPlayers.map((item, idx) => `
-          <button type="button" class="cmd-item ${idx === 0 ? "active" : ""}" data-cmd-idx="${idx}">
-            <span class="cmd-item-left">${renderAvatar(item.player, 24)}<span>${escapeHtml(item.label)}</span></span>
-            <span class="cmd-item-meta">${escapeHtml(item.meta)}</span>
-          </button>
-        `).join("");
-      }
-      if (matchedCmds.length) {
-        html += `<div class="cmd-group-title">Commands</div>`;
-        html += matchedCmds.map((item, i) => {
-          const idx = matchedPlayers.length + i;
-          return `
-            <button type="button" class="cmd-item ${idx === 0 ? "active" : ""}" data-cmd-idx="${idx}">
-              <span class="cmd-item-left"><span>${escapeHtml(item.label)}</span></span>
-              <span class="cmd-item-meta">${escapeHtml(item.meta)}</span>
-            </button>
-          `;
-        }).join("");
-      }
-      listEl.innerHTML = html;
-    }
-
-    function executeCommandIndex(idx) {
-      const item = cmdItems[idx];
-      if (!item) return;
-      closeCommandPalette();
-      item.run();
-    }
-
     /* Squad Code Transfer */
     function generateSquadCode() {
       const squad = Object.keys(state.squadIds).filter((k) => state.squadIds[k]);
@@ -4075,32 +3963,6 @@
     // New live scores: refresh the open player profile
     document.addEventListener("schoops:live", () => { if (state.inspectorId) renderInspector(); });
 
-    // Command palette
-    document.getElementById("openCmdBtn").addEventListener("click", openCommandPalette);
-    document.getElementById("cmdOverlay").addEventListener("click", (e) => {
-      if (e.target.id === "cmdOverlay") closeCommandPalette();
-    });
-    document.getElementById("cmdInput").addEventListener("input", (e) => renderCommandList(e.target.value));
-    document.getElementById("cmdInput").addEventListener("keydown", (e) => {
-      if (!cmdItems.length) return;
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        cmdActiveIdx = (cmdActiveIdx + 1) % cmdItems.length;
-        document.querySelectorAll("#cmdList .cmd-item").forEach((el, i) => el.classList.toggle("active", i === cmdActiveIdx));
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        cmdActiveIdx = (cmdActiveIdx - 1 + cmdItems.length) % cmdItems.length;
-        document.querySelectorAll("#cmdList .cmd-item").forEach((el, i) => el.classList.toggle("active", i === cmdActiveIdx));
-      } else if (e.key === "Enter") {
-        e.preventDefault();
-        executeCommandIndex(cmdActiveIdx);
-      }
-    });
-    document.getElementById("cmdList").addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-cmd-idx]");
-      if (btn) executeCommandIndex(Number(btn.dataset.cmdIdx));
-    });
-
     // Settings Modal
     const settingsOverlay = document.getElementById("settingsOverlay");
     document.getElementById("openSettingsBtn").addEventListener("click", openSettingsModal);
@@ -4175,15 +4037,7 @@
       const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
       const isTyping = (tag === "input" || tag === "textarea" || tag === "select");
 
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        if (document.getElementById("cmdOverlay").classList.contains("open")) closeCommandPalette();
-        else openCommandPalette();
-        return;
-      }
-
       if (e.key === "Escape") {
-        closeCommandPalette();
         settingsOverlay.classList.remove("open");
         roundMenuEl.classList.remove("open");
         filterPopWrap.classList.remove("open");
@@ -4195,12 +4049,6 @@
       }
 
       if (isTyping) return;
-
-      if (e.key === "/") {
-        e.preventDefault();
-        openCommandPalette();
-        return;
-      }
 
       const lower = e.key.toLowerCase();
       if (gPrefixActive) {
