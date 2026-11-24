@@ -42,6 +42,25 @@ const VIEWS = {
     await page.waitForTimeout(300);
   },
   tradelab: async (page) => openNav(page, "tradelab"),
+  // Trade Lab after clicking "Choose who leaves" and picking the first player: the IN suggestions open
+  "tradelab-picker": async (page) => {
+    await openNav(page, "tradelab");
+    await page.locator('[data-open-picker="out"]').first().click();
+    await page.waitForTimeout(200);
+    await page.locator("[data-pick-out]:not([disabled])").first().click();
+    await page.waitForTimeout(300);
+  },
+  // Trade Lab with one complete trade and a second plan, so the summary and comparison show
+  "tradelab-plan": async (page) => {
+    await openNav(page, "tradelab");
+    await page.locator('[data-open-picker="out"]').first().click();
+    await page.locator("[data-pick-out]:not([disabled])").first().click();
+    await page.waitForTimeout(200);
+    await page.locator("[data-pick-in]").nth(1).click();
+    await page.waitForTimeout(200);
+    await page.locator("#tlClonePlanBtn").click();
+    await page.waitForTimeout(300);
+  },
   settings: async (page) => {
     await page.evaluate(() => openSettingsModal());
     await page.waitForTimeout(300);
