@@ -2410,10 +2410,13 @@
 
       // Games expected this round: 0 if ruled Out (a player who doesn't play keeps his price)
       const isOut = !!base.injuryStatus && String(base.injuryStatus).toLowerCase().startsWith("out");
-      const gamesThisRound = isOut ? 0 : base.games;
+      // No games in either of the last two rounds and no recent average: SuperCoach still projects
+      // a score for many of these, but they almost never play, so assume the price holds.
+      const isLikelyDnp = !isInactive && r1 === 0 && r2 === 0 && !hasRecentAvg5 && (base.prevGames === null || base.prevGames === 0);
+      const gamesThisRound = (isOut || isLikelyDnp) ? 0 : base.games;
       const be = isInactive ? null : (base.officialBe !== null ? Math.round(base.officialBe) : calcBreakeven(base, magic));
       const dist = (be === null) ? null : (proj - be);
-      const newPrice = isInactive ? price : projectPrice(base, isOut ? 0 : proj, gamesThisRound, magic);
+      const newPrice = isInactive ? price : projectPrice(base, gamesThisRound ? proj : 0, gamesThisRound, magic);
       const priceChange = newPrice - price;
 
       let trend = "neutral";
@@ -2428,7 +2431,7 @@
         avg3: rolling3,
         be, dist, newPrice, priceChange,
         inSquad, inWatchlist,
-        isInactive, isRelevantOut, isFringeDnp, isZeroGames,
+        isInactive, isRelevantOut, isFringeDnp, isZeroGames, isLikelyDnp,
         trend
       };
     }
@@ -2966,7 +2969,9 @@
             const injTag = renderInjuryTag(p);
             const tagHtml = injTag
               || (p.isRelevantOut ? `<span class="micro-tag out" title="No recent scores">OUT</span>`
-              : (p.isFringeDnp ? `<span class="micro-tag dnp">DNP</span>` : (p.isZeroGames ? `<span class="micro-tag g0">0G</span>` : "")));
+              : (p.isFringeDnp ? `<span class="micro-tag dnp">DNP</span>`
+              : (p.isLikelyDnp ? `<span class="micro-tag dnp" title="No games in the last two rounds, so projected to hold price">DNP</span>`
+              : (p.isZeroGames ? `<span class="micro-tag g0">0G</span>` : ""))));
 
             const cells = cols.map((c) => {
               if (c.key === "name") {
