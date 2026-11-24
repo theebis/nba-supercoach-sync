@@ -30,6 +30,32 @@
     5
   ],
   "rows": 2560,
+  "honest_test": [
+    {
+      "round": 2,
+      "n": 642,
+      "ours_mae": 11.29,
+      "sc_mae": 20.0
+    },
+    {
+      "round": 3,
+      "n": 639,
+      "ours_mae": 11.47,
+      "sc_mae": 19.38
+    },
+    {
+      "round": 4,
+      "n": 638,
+      "ours_mae": 10.71,
+      "sc_mae": 19.29
+    },
+    {
+      "round": 5,
+      "n": 641,
+      "ours_mae": 10.88,
+      "sc_mae": 19.1
+    }
+  ],
   "in_sample_mae": 11.05,
   "range_coverage": 0.716
 }

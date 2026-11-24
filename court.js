@@ -701,6 +701,12 @@
       .lc-hero-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
       .lc-hero-msg { flex-basis: 100%; display: flex; }
 
+      .lc-drop-strip {
+        margin: -10px -13px 0 -14px; padding: 4px 12px; border-bottom: 1px dashed rgba(229, 160, 50, 0.35);
+        background: rgba(229, 160, 50, 0.08); color: var(--warn-bright); font-size: 11px; font-weight: 500; cursor: help;
+      }
+      body.density-compact .lc-drop-strip { margin: -8px -10px 0 -11px; }
+      .lc-tile.is-drop { opacity: 0.85; border-style: dashed; border-color: rgba(229, 160, 50, 0.35); }
       .lc-opt-big {
         height: 40px;
         padding: 0 16px 0 14px;
@@ -1212,12 +1218,12 @@
     const gCls = player.games >= 4 ? "g4" : (player.games === 0 ? "g0" : (player.games <= 2 ? "g2" : ""));
     const displayPts = isCap ? Math.round(player.proj * 2) : Math.round(player.proj);
 
-    // C / VC show as the highlighted buttons on the card, so only the "not counted" badge is needed here
+    // C / VC show as the highlighted buttons on the card; "not counted" gets its own labelled strip (below)
     const badges = [];
-    if (isDrop) badges.push(`<span class="lc-pill drop" title="Lowest of the 10 starters: not counted this round">NOT COUNTED</span>`);
 
     return `
       <div class="${cls.join(" ")}" data-slot-key="${slotDef.key}" style="--team-accent:${accent};">
+        ${isDrop ? `<div class="lc-drop-strip" title="Your lineup score counts your best 9 of 10 starters. This is the lowest projected starter, so his points don't count this round. If someone on your bench projects higher, Optimise will swap them in.">Not counted · only your best 9 starters score</div>` : ""}
         <div class="lc-top">
           <div class="lc-id">
             ${renderAvatar(player, avSz)}
@@ -1415,7 +1421,7 @@
             ${renderCourtSvg()}
             <div class="lc-section-head">
               <span class="lc-section-title">On-Court Starters (${evalRes.starters.length}/10)</span>
-              <span class="lc-section-hint">Click two cards to swap · C / VC / lock / remove on each card</span>
+              <span class="lc-section-hint">Your best 9 of 10 starters score · captain counts double</span>
             </div>
             <div class="lc-formation">
               <div class="lc-pair-row"><div class="lc-pos-lbl">PG</div>${card("PG1")}${card("PG2")}</div>

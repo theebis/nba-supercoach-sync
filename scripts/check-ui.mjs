@@ -153,7 +153,7 @@ async function seedSquad(page) {
     localStorage.removeItem("schoops_check_seed");
     const rows = Object.values(state.computedById || {}).filter((p) => !p.isInactive && p.games > 0);
     rows.sort((a, b) => b.proj - a.proj);
-    const pick = [...rows.slice(0, 4), ...rows.slice(40, 46)];
+    const pick = [...rows.slice(0, 4), ...rows.slice(40, 48)];
     state.squadIds = {};
     pick.forEach((p) => { state.squadIds[p.id] = true; });
     if (typeof savePrefs === "function") savePrefs();
