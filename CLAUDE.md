@@ -11,6 +11,15 @@ Standing brief from the owner: [docs/BRIEF.md](docs/BRIEF.md). Read it. Roadmap/
 - UI work: read the relevant skills in `.claude/skills/` first (emil-design-eng, interface-polish, transitions-dev/-polish, design-taste-frontend, break-ui, review-animations). Polish is part of done.
 - Blocked? Unblock yourself → find another source → ask for exactly what you need with steps → only then report it as blocked. Never silently drop a goal.
 
+## Owner preferences (learned while working together)
+- Plain language, short answers; explain any jargon once. The owner is not a developer.
+- **Show a preview (screenshots) of visual changes before shipping**, and always ask before pushing to main.
+- Be honest about numbers: report real test results (including "no improvement"), never overstate confidence.
+- Run the requirements-interview style (numbered questions, recommended answer, "yes" accepts) for roadmap decisions; record answers in `docs/ROADMAP.md`.
+- Never ask for or accept secrets in chat; keys go straight into GitHub secrets. (`ACCURACY_TOKEN` exists for the private repo.)
+- The owner's screen is 2560px wide (1440p) — check `npm run check:ui` xwide/wide screenshots, not just 1440.
+- Current status and what's next: `docs/ROADMAP.md`.
+
 ## Layout
 - `index.html` — the whole app shell, styles and Market/Inspector/Settings logic (vanilla JS, no build step).
 - `court.js` — My Court (lineup board, captaincy, Best-9-of-10 optimiser). `tradelab.js` — Trade Lab.
