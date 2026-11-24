@@ -15,6 +15,8 @@ Standing brief from the owner: [docs/BRIEF.md](docs/BRIEF.md). Read it. Roadmap/
 - `index.html` — the whole app shell, styles and Market/Inspector/Settings logic (vanilla JS, no build step).
 - `court.js` — My Court (lineup board, captaincy, Best-9-of-10 optimiser). `tradelab.js` — Trade Lab.
 - `briefing.js` — Round briefing panel on wide screens (your squad's news, injury report, cash cows). What fits beside the Market (briefing, Form & price column) is decided by `marketExtras()` in index.html.
+- `importer.js` + `importmatch.js` — squad import (screenshot read in-browser by Tesseract.js from jsDelivr, or pasted names) with a review step. `npm run check:import` runs real OCR on generated light/dark team screenshots (expects 13+/15).
+- `scripts/accuracy_report.py` — per finished round: projection miss, price-model miss, breakeven hit rate. Published by the data sync to the PRIVATE repo theebis/schoops-private (README.md) when the `ACCURACY_TOKEN` secret exists; it's the owner's private page until they choose to publish it.
 - `pricing.js` — the price/breakeven model. Shared by the site and `tests/pricing.test.js`.
 - `update_supercoach.py` — scraper → `supercoach_data.json` (live round) + `history/round_N.json`.
 - `debug/` — feed inspection report and `price_history.json` (per-round price rows used to fit/backtest the model).
