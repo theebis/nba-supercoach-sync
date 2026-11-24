@@ -10,12 +10,17 @@
   <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "05929d6687524b7aa4a3465a3facb806"}'></script><!-- End Cloudflare Web Analytics -->
   <style>
     :root {
-      --bg: #0D1015;
-      --surface: #13171F;
-      --surface-elevated: #1A1F2A;
-      --surface-hover: #1D2330;
-      --border: #222836;
-      --border-strong: #2F374A;
+      --bg: #0B0E14;
+      --surface: #12161F;
+      --surface-elevated: #181D29;
+      --surface-hover: #1C2230;
+      --border: rgba(255, 255, 255, 0.075);
+      --border-strong: rgba(255, 255, 255, 0.13);
+      --ring-elevated: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 18px 40px rgba(0, 0, 0, 0.68);
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-press: cubic-bezier(0.25, 1, 0.5, 1);
+      --dur-fast: 140ms;
+      --dur-mid: 180ms;
       --text: #F2F4F8;
       --text-muted: #949DAD;
       --text-dim: #5F687A;
@@ -35,7 +40,17 @@
       --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      color-scheme: dark;
+      background: var(--bg);
+    }
 
     body {
       background: var(--bg);
@@ -43,7 +58,18 @@
       font-family: var(--sans);
       font-size: 13px;
       line-height: 1.4;
+      min-height: 100dvh;
       -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    button, input {
+      touch-action: manipulation;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--pos-bright);
+      outline-offset: 2px;
     }
 
     .mono {
@@ -54,7 +80,7 @@
     .container {
       max-width: 1520px;
       margin: 0 auto;
-      padding: 14px 22px 44px;
+      padding: 14px max(22px, env(safe-area-inset-right)) max(44px, env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left));
       position: relative;
     }
 
@@ -126,7 +152,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: color 0.14s, background 0.14s;
+      transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
       white-space: nowrap;
     }
 
@@ -205,7 +231,7 @@
       color: var(--text);
       letter-spacing: 0.02em;
       cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
+      transition: border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
       white-space: nowrap;
     }
 
@@ -220,7 +246,7 @@
     .round-chevron {
       color: var(--text-dim);
       font-size: 8.5px;
-      transition: transform 0.15s;
+      transition: transform var(--dur-fast) var(--ease-out);
     }
 
     .round-dropdown.open .round-chevron { transform: rotate(180deg); }
@@ -231,17 +257,30 @@
       right: 0;
       min-width: 295px;
       background: var(--surface-elevated);
-      border: 1px solid var(--border-strong);
+      border: none;
       border-radius: 8px;
-      padding: 4px;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.72);
+      padding: 5px;
+      box-shadow: var(--ring-elevated);
       z-index: 95;
-      display: none;
+      display: flex;
       flex-direction: column;
       gap: 2px;
+      overscroll-behavior: contain;
+      transform-origin: top right;
+      opacity: 0;
+      transform: translateY(-4px) scale(0.96);
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-mid) var(--ease-out), visibility 0s linear var(--dur-mid);
     }
 
-    .round-dropdown.open .round-menu { display: flex; }
+    .round-dropdown.open .round-menu {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-mid) var(--ease-out), visibility 0s linear 0s;
+    }
 
     .round-option {
       display: flex;
@@ -287,7 +326,7 @@
       font-weight: 600;
       font-family: var(--mono);
       letter-spacing: 0.02em;
-      transition: all 0.15s;
+      transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
       white-space: nowrap;
     }
 
@@ -308,7 +347,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.15s;
+      transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
       flex-shrink: 0;
     }
 
@@ -320,23 +359,36 @@
 
     /* Floating LIVE BE CALC Popover (anchored under header right, never shifts layout) */
     .calc-popover {
-      display: none;
+      display: flex;
       position: absolute;
       top: 56px;
-      right: 22px;
+      right: max(22px, env(safe-area-inset-right));
       width: 440px;
       max-width: calc(100vw - 28px);
       background: var(--surface-elevated);
-      border: 1px solid var(--border-strong);
-      border-radius: 8px;
+      border: none;
+      border-radius: 9px;
       padding: 14px 16px;
-      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.78);
+      box-shadow: var(--ring-elevated);
       z-index: 98;
       flex-direction: column;
       gap: 12px;
+      overscroll-behavior: contain;
+      transform-origin: top right;
+      opacity: 0;
+      transform: translateY(-6px) scale(0.96);
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-mid) var(--ease-out), visibility 0s linear var(--dur-mid);
     }
 
-    .calc-popover.open { display: flex; }
+    .calc-popover.open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-mid) var(--ease-out), visibility 0s linear 0s;
+    }
 
     .calc-pop-head {
       display: flex;
@@ -529,7 +581,7 @@
       border-radius: 4px;
       cursor: pointer;
       font-family: var(--sans);
-      transition: all 0.12s;
+      transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
       white-space: nowrap;
     }
 
@@ -636,7 +688,7 @@
       background: #252B3A;
       border: 1px solid #343D52;
       position: relative;
-      transition: background 0.15s, border-color 0.15s;
+      transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
       flex-shrink: 0;
     }
 
@@ -648,7 +700,7 @@
       height: 12px;
       border-radius: 50%;
       background: #949DAD;
-      transition: transform 0.15s, background 0.15s;
+      transition: transform var(--dur-mid) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
     }
 
     .switch-btn.active .switch-track {
@@ -799,7 +851,7 @@
       justify-content: center;
       font-size: 14px;
       line-height: 1;
-      transition: all 0.12s;
+      transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
     }
 
     .action-icon-btn:hover {
@@ -1026,7 +1078,7 @@
       font-size: 12px;
       font-weight: 500;
       cursor: pointer;
-      transition: background 0.12s;
+      transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -1042,23 +1094,43 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.72);
-      display: none;
+      background: rgba(6, 8, 12, 0.74);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
       align-items: center;
       justify-content: center;
       z-index: 120;
       padding: 16px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity var(--dur-mid) var(--ease-out), visibility 0s linear var(--dur-mid);
     }
 
-    .modal-backdrop.open { display: flex; }
+    .modal-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity var(--dur-mid) var(--ease-out), visibility 0s linear 0s;
+    }
 
     .modal {
-      background: var(--surface);
-      border: 1px solid var(--border-strong);
-      border-radius: 8px;
+      background: var(--surface-elevated);
+      border: none;
+      border-radius: 10px;
+      box-shadow: var(--ring-elevated);
       width: 100%;
       max-width: 500px;
-      overflow: hidden;
+      max-height: calc(100dvh - 32px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      transform: translateY(6px) scale(0.97);
+      transition: transform 200ms var(--ease-out);
+    }
+
+    .modal-backdrop.open .modal {
+      transform: translateY(0) scale(1);
     }
 
     .modal-header {
@@ -1126,6 +1198,97 @@
     }
     .sync-dot.loading { background: var(--warn-bright); }
     .sync-dot.error { background: var(--neg); }
+
+    /* Emil Design-Eng: Tactile press feedback (subtle scale 0.97) */
+    .calc-btn:active,
+    .round-trigger:active,
+    .icon-btn:active,
+    .btn:active,
+    .action-icon-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Break-UI Hardening: Long player names & injury strings never distort columns */
+    .player-info-col {
+      min-width: 0;
+      max-width: 215px;
+    }
+
+    .player-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 190px;
+    }
+
+    .inj-tag {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 110px;
+      display: inline-block;
+      vertical-align: bottom;
+    }
+
+    /* Sticky table header + overscroll containment */
+    .table-wrap {
+      overscroll-behavior-x: contain;
+      box-shadow: 0 0 0 1px var(--border);
+      border: none;
+    }
+
+    .ac-list {
+      overscroll-behavior: contain;
+      box-shadow: var(--ring-elevated);
+      border: none;
+    }
+
+    /* Mobile-Native: Prevent sticky hover on touch devices */
+    @media (hover: none) {
+      tbody tr:hover { background: transparent; }
+      tbody tr:hover td.col-be { background: var(--be-col-bg); }
+      .top-nav-btn:hover { background: transparent; color: var(--text-muted); }
+      .top-nav-btn.active:hover { color: var(--text); }
+      .round-trigger:hover, .calc-btn:hover, .icon-btn:hover { background: var(--surface); }
+    }
+
+    /* Mobile-Native: Prevent iOS Safari auto-zoom on form inputs (>= 16px) */
+    @media (max-width: 768px) {
+      .search-input,
+      .price-filter input,
+      .sp-search,
+      .sp-num,
+      .text-input {
+        font-size: 16px;
+      }
+      .search-input {
+        width: 100%;
+        min-width: 160px;
+      }
+      .calc-popover {
+        right: 12px;
+        left: 12px;
+        width: auto;
+      }
+      .header-controls {
+        flex-wrap: wrap;
+      }
+    }
+
+    /* Accessibility: Respect prefers-reduced-motion (keep opacity/color, drop transforms) */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+      .round-menu, .calc-popover, .modal {
+        transform: none !important;
+      }
+      .calc-btn:active, .round-trigger:active, .icon-btn:active, .btn:active, .action-icon-btn:active {
+        transform: none !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -2154,9 +2317,9 @@
                       <button class="action-icon-btn ${p.inSquad ? "in-squad" : "squad-off"}" data-toggle-squad="${p.id}" title="${p.inSquad ? "In Squad (click to remove)" : "Add to Squad"}">${p.inSquad ? "SQ" : "+"}</button>
                     </div>
                     ${renderAvatar(p, 34)}
-                    <div>
+                    <div class="player-info-col">
                       <div class="player-name-row">
-                        <span class="player-name">${escapeHtml(p.name)}</span>
+                        <span class="player-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</span>
                         ${statusDot}
                       </div>
                       <div class="player-meta">
@@ -2165,7 +2328,7 @@
                         <span>·</span>
                         <span>${escapeHtml(p.pos)}</span>
                         ${statusPill}
-                        ${p.injury ? `<span class="inj-tag">· ${escapeHtml(String(p.injury))}</span>` : ""}
+                        ${p.injury ? `<span class="inj-tag" title="${escapeHtml(String(p.injury))}">· ${escapeHtml(String(p.injury))}</span>` : ""}
                       </div>
                     </div>
                   </div>
@@ -2272,6 +2435,15 @@
         toggleCalcBtn.classList.remove("active");
       }
       if (!e.target.closest(".sp-field")) calcAcList.classList.remove("open");
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      roundDropdown.classList.remove("open");
+      calcAcList.classList.remove("open");
+      scratchpad.classList.remove("open");
+      toggleCalcBtn.classList.remove("active");
+      modal.classList.remove("open");
     });
 
     calcSearchInput.addEventListener("input", (e) => renderAutocomplete(e.target.value));
@@ -2493,6 +2665,6 @@
     syncFromGitHub();
   </script>
   <!-- Modular Phase 2: My Court Tactical Board & Exact Lineup Optimiser -->
-  <script src="court.js?v=9"></script>
+  <script src="court.js?v=10"></script>
 </body>
 </html>
