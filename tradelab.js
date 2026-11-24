@@ -177,7 +177,34 @@
       @media (hover: hover) { .tl-cmp tbody tr[data-select-plan]:hover td { background: var(--bg-hover); } }
       .tl-best { margin-left: 6px; font-size: 9.5px; font-weight: 700; padding: 1px 5px; border-radius: 3px; background: var(--pos-bg); color: var(--pos-bright); }
 
+      /* Trade advisor */
+      .tl-adv { margin: 18px 18px 0; border: 1px solid rgba(110, 123, 242, 0.28); border-radius: 12px;
+        background: linear-gradient(180deg, rgba(110, 123, 242, 0.07), rgba(110, 123, 242, 0.015)); }
+      .tl-adv-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px 20px; flex-wrap: wrap; padding: 14px 16px 10px; }
+      .tl-adv-title { font-size: 14px; font-weight: 600; }
+      .tl-adv-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+      .tl-adv-ctrls { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+      .tl-adv-lbl { font-size: 11.5px; color: var(--text-tertiary); margin-right: 2px; }
+      .tl-adv-list { padding: 0 8px 4px; }
+      .tl-adv-row { display: grid; grid-template-columns: 22px minmax(0, 1.3fr) minmax(0, 1fr) auto; align-items: center; gap: 12px;
+        padding: 10px 8px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+      .tl-adv-rank { font-family: var(--mono); font-size: 12px; color: var(--text-tertiary); text-align: center; }
+      .tl-adv-moves { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+      .tl-adv-move { font-size: 13px; font-weight: 500; min-width: 0; }
+      .tl-adv-meta { display: block; font-family: var(--mono); font-size: 11px; font-weight: 400; color: var(--text-tertiary); margin-top: 1px; }
+      .tl-adv-stats { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; font-family: var(--mono); font-size: 12px; }
+      .tl-adv-stats strong { font-size: 14px; }
+      .tl-adv-conf { font-family: var(--sans); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px; }
+      .tl-adv-conf.strong { background: var(--pos-bg); color: var(--pos-bright); }
+      .tl-adv-conf.lean { background: rgba(255, 196, 0, 0.1); color: #e8c25a; }
+      .tl-adv-conf.flip { background: rgba(255, 255, 255, 0.06); color: var(--text-tertiary); }
+      .tl-adv-empty { padding: 14px 8px 16px; font-size: 12.5px; color: var(--text-tertiary); }
+      .tl-adv-foot { padding: 8px 16px 12px; font-size: 11.5px; color: var(--text-tertiary); border-top: 1px solid rgba(255, 255, 255, 0.05); }
+
       @media (max-width: 760px) {
+        .tl-adv { margin: 10px 10px 0; }
+        .tl-adv-row { grid-template-columns: 18px minmax(0, 1fr); }
+        .tl-adv-stats, .tl-adv-row > .ghost-btn { grid-column: 2; }
         .tl-plans { padding: 8px 12px; }
         .tl-layout { padding: 10px; gap: 12px; }
         .tl-trade { grid-template-columns: minmax(0, 1fr) 28px; gap: 8px; padding: 10px; }
@@ -272,6 +299,141 @@
       if (i !== idx && t.inId && byId[t.inId]) money -= byId[t.inId].price;
     });
     return money;
+  }
+
+  // ---------- trade advisor ----------
+  // Ranks this round's trades for your squad. Scores use the exact best-9-of-10 + 2x captain solver.
+  // "Chance it helps" = P(trade scores more), from how far projections typically miss (likely ranges).
+  const CASH_PER_POINT = 50000; // Balanced goal: $50K of projected price rise counts as 1 point
+  const advisor = { goal: "balanced", n: 1, results: null, key: "", busy: false };
+
+  function sigmaOf(p) {
+    if (p.projIsOurs && p.projLo !== null && p.projHi !== null) return Math.max(4, (p.projHi - p.projLo) / 1.35);
+    return Math.max(6, (p.proj || 0) * 0.3);
+  }
+  function normCdf(z) {
+    const t = 1 / (1 + 0.2316419 * Math.abs(z));
+    const d = 0.3989423 * Math.exp((-z * z) / 2);
+    const p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+    return z > 0 ? 1 - p : p;
+  }
+  const goalValue = (dPts, dCash) => (advisor.goal === "points" ? dPts : advisor.goal === "cash" ? dCash / CASH_PER_POINT : dPts + dCash / CASH_PER_POINT);
+
+  function bestSingles(state, squad, bank, used, limit = 60) {
+    const base = evaluateSquadMetrics(squad, state.court.lockedBenchIds);
+    const pool = Object.values(state.computedById).filter((p) => !p.inSquad && !used.has(p.id) && !p.isInactive
+      && !p.isLikelyDnp && !p.isFringeDnp && p.games > 0 && !isOut(p) && !squad.some((s) => s.id === p.id));
+    const pairs = [];
+    squad.forEach((o) => {
+      if (used.has(o.id)) return;
+      pool.forEach((i) => {
+        if (!sharesPosition(i, o) || i.price > bank + o.price) return;
+        pairs.push({ o, i, proxy: goalValue(i.proj - o.proj, i.priceChange - o.priceChange) });
+      });
+    });
+    pairs.sort((a, b) => b.proxy - a.proxy);
+    return pairs.slice(0, limit).map(({ o, i }) => {
+      const sim = squad.filter((p) => p.id !== o.id).concat([i]);
+      const m = evaluateSquadMetrics(sim, state.court.lockedBenchIds);
+      const dPts = m.optScore - base.optScore;
+      const dCash = m.cashGen - base.cashGen;
+      return { trades: [{ o, i }], dPts, dCash, sd: Math.hypot(sigmaOf(i), sigmaOf(o)), bankAfter: bank + o.price - i.price, value: goalValue(dPts, dCash) };
+    }).sort((a, b) => b.value - a.value);
+  }
+
+  function runAdvisor(state, squad) {
+    const bank = Math.round((Number(state.tradeLab.bankM) || 0) * 1000000);
+    const singles = bestSingles(state, squad, bank, new Set());
+    let results;
+    if (advisor.n === 1) {
+      // Variety: at most two ideas per player going out, so one obvious sell doesn't fill the list
+      const perOut = {};
+      results = singles.filter((r) => {
+        const id = r.trades[0].o.id;
+        perOut[id] = (perOut[id] || 0) + 1;
+        return perOut[id] <= 2;
+      }).slice(0, 6);
+    } else {
+      // Two trades: start from each of the best few singles, then find the best follow-up with the new squad and bank
+      results = singles.slice(0, 4).map((first) => {
+        const t = first.trades[0];
+        const squad2 = squad.filter((p) => p.id !== t.o.id).concat([t.i]);
+        const used = new Set([t.o.id, t.i.id]);
+        const second = bestSingles(state, squad2, first.bankAfter, used, 25)[0];
+        if (!second) return first;
+        return {
+          trades: [t, second.trades[0]],
+          dPts: first.dPts + second.dPts, dCash: first.dCash + second.dCash,
+          sd: Math.hypot(first.sd, second.sd), bankAfter: second.bankAfter,
+          value: first.value + second.value
+        };
+      }).sort((a, b) => b.value - a.value);
+    }
+    results.forEach((r) => { r.pBetter = normCdf(r.dPts / r.sd); });
+    return results;
+  }
+
+  function advisorKey(state, squad) {
+    return [state.projSource, state.tradeLab.bankM, squad.map((p) => p.id).sort().join(","), advisor.goal, advisor.n, state.round].join("|");
+  }
+
+  function renderAdvisor(state, squad) {
+    const { escapeHtml, formatMoney } = window.SCHOOPS;
+    const key = advisorKey(state, squad);
+    if (advisor.key !== key && !advisor.busy) {
+      advisor.busy = true;
+      advisor.key = key;
+      setTimeout(() => {
+        try { advisor.results = runAdvisor(window.SCHOOPS.getState(), window.SCHOOPS.getSquadPlayers()); }
+        catch (err) { advisor.results = []; console.error("Trade advisor:", err); }
+        advisor.busy = false;
+        renderTradeLab();
+      }, 30);
+    }
+    const chip = (attr, val, label, on) => `<button type="button" class="chip-btn ${on ? "active" : ""}" ${attr}="${val}">${label}</button>`;
+    const conf = (p) => (p >= 0.75 ? ["strong", "Strong"] : p >= 0.6 ? ["lean", "Lean"] : ["flip", "Coin flip"]);
+    const rows = advisor.busy || !advisor.results
+      ? `<div class="tl-adv-empty">Checking every trade for your squad…</div>`
+      : !advisor.results.length
+        ? `<div class="tl-adv-empty">No affordable trades improve your squad on this goal. Try another goal, or add bank.</div>`
+        : advisor.results.map((r, idx) => {
+          const [cls, label] = conf(r.pBetter);
+          return `
+            <div class="tl-adv-row">
+              <span class="tl-adv-rank">${idx + 1}</span>
+              <span class="tl-adv-moves">${r.trades.map(({ o, i }) => `
+                <span class="tl-adv-move"><span class="neg-text">${escapeHtml(o.name)}</span> <span class="dim-text">→</span> <span class="pos-text">${escapeHtml(i.name)}</span>
+                <span class="tl-adv-meta">${escapeHtml(i.team)} · ${escapeHtml(i.pos)} · $${(i.price / 1e6).toFixed(2)}M · proj ${i.proj} vs ${o.proj}</span></span>`).join("")}
+              </span>
+              <span class="tl-adv-stats">
+                <span class="${r.dPts > 0 ? "pos-text" : r.dPts < 0 ? "neg-text" : "muted-text"}"><strong>${r.dPts > 0 ? "+" : ""}${r.dPts}</strong> pts</span>
+                <span class="tl-adv-conf ${cls}" title="How often a trade like this ends up scoring more this round, given how much projections usually miss">${label} · ${Math.round(r.pBetter * 100)}%</span>
+                <span class="${r.dCash > 0 ? "pos-text" : r.dCash < 0 ? "neg-text" : "muted-text"}">${formatMoney(r.dCash)} price change</span>
+                <span class="dim-text">bank after ${formatMoney(r.bankAfter).replace("+", "")}</span>
+              </span>
+              <button type="button" class="ghost-btn" data-adv-apply="${idx}">Try in a plan</button>
+            </div>`;
+        }).join("");
+    return `
+      <section class="tl-adv" aria-label="Trade advisor">
+        <div class="tl-adv-head">
+          <div>
+            <div class="tl-adv-title">Trade advisor</div>
+            <div class="tl-adv-sub">Best trades for your squad this round, using ${state.projSource === "sc" ? "SuperCoach's" : "SCHOOPS"} projections and your $${(Number(state.tradeLab.bankM) || 0).toFixed(2)}M bank.</div>
+          </div>
+          <div class="tl-adv-ctrls">
+            <span class="tl-adv-lbl">Goal</span>
+            ${chip("data-adv-goal", "points", "Most points", advisor.goal === "points")}
+            ${chip("data-adv-goal", "balanced", "Balanced", advisor.goal === "balanced")}
+            ${chip("data-adv-goal", "cash", "Most cash", advisor.goal === "cash")}
+            <span class="tl-adv-lbl" style="margin-left:8px">Trades</span>
+            ${chip("data-adv-n", "1", "1", advisor.n === 1)}
+            ${chip("data-adv-n", "2", "2", advisor.n === 2)}
+          </div>
+        </div>
+        <div class="tl-adv-list">${rows}</div>
+        <div class="tl-adv-foot">"Chance" is how often a trade like this ends up scoring more, given how far projections usually miss. Balanced counts $50K of price rise as 1 point.</div>
+      </section>`;
   }
 
   // ---------- rendering ----------
@@ -501,6 +663,8 @@
           <button type="button" class="tl-plan-tab tl-plan-new" id="tlNewPlanBtn" title="Start another plan to compare">${ICON_PLUS} New plan</button>
         </div>
 
+        ${renderAdvisor(state, squad)}
+
         <div class="tl-layout">
           <div>
             <div class="tl-section-title">Trades <span>Pick who leaves, then a replacement. Up to ${MAX_TRADES}.</span></div>
@@ -592,6 +756,16 @@
       return;
     }
     if (e.target.closest("#tlNewPlanBtn")) { createNewPlan(null); return; }
+    const goalBtn = e.target.closest("[data-adv-goal]");
+    if (goalBtn) { advisor.goal = goalBtn.dataset.advGoal; renderTradeLab(); return; }
+    const nBtn = e.target.closest("[data-adv-n]");
+    if (nBtn) { advisor.n = Number(nBtn.dataset.advN); renderTradeLab(); return; }
+    const applyAdv = e.target.closest("[data-adv-apply]");
+    if (applyAdv && advisor.results) {
+      const r = advisor.results[Number(applyAdv.dataset.advApply)];
+      if (r) createNewPlan({ trades: r.trades.map(({ o, i }) => ({ outId: o.id, inId: i.id })) });
+      return;
+    }
     const sel = e.target.closest("[data-select-plan]");
     if (sel) { state.tradeLab.activePlanId = sel.dataset.selectPlan; closePicker(); tlUi.confirmApply = false; save(); return; }
 
