@@ -1,6 +1,6 @@
-/* SCHOOPS Modular Plugin — Phase 2 (Option A Proportions + Option 2 Palette):
- * My Court Tactical Board & Exact Lineup Optimiser
- * Loaded by index.html via <script src="court.js?v=10"></script>
+/* SCHOOPS — Linear Edition: My Court & Shared Exact Lineup Solver
+ * Loaded by index.html via <script src="court.js?v=11"></script>
+ * Exposes window.SCHOOPS_SOLVER for tradelab.js exact Best-9-of-10 + 2x C scoring.
  */
 (function () {
   "use strict";
@@ -33,9 +33,10 @@
   const STARTER_KEYS = new Set(STARTER_SLOTS.map((s) => s.key));
   const VALID_POS = new Set(["PG", "SG", "SF", "PF", "C"]);
 
-  const ICON_LOCK_CLOSED = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
-  const ICON_LOCK_OPEN = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>`;
-  const ICON_BOLT = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+  const ICON_LOCK_CLOSED = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+  const ICON_LOCK_OPEN = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>`;
+  const ICON_INFO = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`;
+  const ICON_BOLT = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
 
   const ui = {
     selectedSource: null,
@@ -50,238 +51,162 @@
     const style = document.createElement("style");
     style.id = "schoops-court-styles";
     style.textContent = `
-      .court-shell {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+      @keyframes lcBannerIn {
+        from { opacity: 0; transform: translateY(-2px); }
+        to { opacity: 1; transform: translateY(0); }
       }
 
-      /* Slim Single-Line Summary Bar matching Market KPI Ticker */
-      .court-ticker {
+      @keyframes lcMovedRing {
+        0% { box-shadow: 0 0 0 1.5px var(--pos-bright), 0 6px 20px rgba(34, 197, 139, 0.18); }
+        100% { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.065), 0 2px 8px rgba(0, 0, 0, 0.25); }
+      }
+
+      .lc-wrap {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+      }
+
+      /* Calm Single-Line Telemetry Bar matching Market's context-strip */
+      .lc-strip {
+        min-height: 36px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 14px;
         flex-wrap: wrap;
-        padding: 8px 14px;
-        background: #10141B;
-        border: 1px solid var(--border);
-        border-radius: 7px;
+        padding: 6px 16px;
+        border-bottom: 1px solid var(--border-subtle);
+        background: rgba(255, 255, 255, 0.012);
+        font-size: 11.5px;
       }
 
-      .court-ticker-left {
+      .lc-metrics {
         display: flex;
         align-items: center;
-        gap: 20px;
+        gap: 18px;
         flex-wrap: wrap;
       }
 
-      .ct-item {
+      .lc-m {
         display: inline-flex;
         align-items: baseline;
-        gap: 6px;
-        white-space: nowrap;
+        gap: 5px;
+        color: var(--text-tertiary);
       }
 
-      .ct-lbl {
-        font-size: 10px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--text-dim);
-      }
-
-      .ct-val {
+      .lc-m strong {
         font-family: var(--mono);
-        font-size: 13px;
-        font-weight: 700;
-        color: var(--text);
+        font-weight: 600;
+        color: var(--text-primary);
       }
 
-      .ct-sub {
+      .lc-banner {
         font-family: var(--mono);
         font-size: 11px;
-        color: var(--text-muted);
-      }
-
-      .court-ticker-right {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .court-banner {
-        font-family: var(--mono);
-        font-size: 11px;
-        font-weight: 600;
-        padding: 5px 10px;
+        padding: 3px 8px;
         border-radius: 5px;
-        border: 1px solid var(--border-strong);
-        background: var(--bg);
-        color: var(--text-muted);
+        background: var(--bg-active);
+        color: var(--text-primary);
+        animation: lcBannerIn 150ms var(--ease-out) both;
       }
 
-      .court-banner.pos {
-        background: var(--pos-bg);
-        color: var(--pos-bright);
-        border-color: rgba(16, 185, 129, 0.4);
-      }
+      .lc-banner.pos { background: var(--pos-bg); color: var(--pos-bright); }
+      .lc-banner.warn { background: var(--warn-bg); color: var(--warn-bright); }
+      .lc-banner.neg { background: var(--neg-bg); color: var(--neg-soft); }
 
-      .court-banner.warn {
-        background: var(--warn-bg);
-        color: var(--warn-bright);
-        border-color: rgba(245, 158, 11, 0.4);
-      }
-
-      .court-banner.neg {
-        background: var(--neg-bg);
-        color: var(--neg);
-        border-color: rgba(239, 68, 68, 0.4);
-      }
-
-      @keyframes scBannerIn {
-        from { opacity: 0; transform: translateY(-3px) scale(0.98); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
-      }
-
-      @keyframes scMovedPulse {
-        0% { box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.72), 0 6px 18px rgba(16, 185, 129, 0.18); }
-        100% { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 4px 12px rgba(0, 0, 0, 0.3); }
-      }
-
-      .court-banner {
-        animation: scBannerIn 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
-      }
-
-      .court-opt-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: #22C58B;
-        color: #061A12;
-        border: 1px solid #4ADEA8;
-        padding: 6px 15px;
-        border-radius: 6px;
-        font-family: var(--mono);
-        font-size: 11.5px;
-        font-weight: 800;
-        letter-spacing: 0.05em;
-        cursor: pointer;
-        touch-action: manipulation;
-        transition: filter 140ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), transform 120ms var(--ease-press, cubic-bezier(0.25, 1, 0.5, 1));
-      }
-
-      .court-opt-btn:active { transform: scale(0.96); }
-
-      /* Main 2-Column Layout: Spacious Court Floor + Compact Bench Sidebar */
-      .court-grid {
+      /* Main 2-Column Linear Board */
+      .lc-grid {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 330px;
-        gap: 14px;
+        grid-template-columns: minmax(0, 1fr) 316px;
+        gap: 16px;
+        padding: 16px;
         align-items: start;
       }
 
-      @media (max-width: 1060px) {
-        .court-grid { grid-template-columns: 1fr; }
+      @media (max-width: 1020px) {
+        .lc-grid { grid-template-columns: 1fr; }
       }
 
-      .court-panel {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 14px 18px 18px;
+      .lc-board-card {
+        background: #0D0D0F;
+        border: 1px solid var(--border-subtle);
+        border-radius: 9px;
+        padding: 14px 16px 18px;
         position: relative;
         overflow: hidden;
       }
 
-      .court-panel-head {
+      .lc-section-head {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 8px;
-        padding-bottom: 10px;
         margin-bottom: 14px;
-        border-bottom: 1px solid var(--border);
         position: relative;
         z-index: 2;
       }
 
-      .court-panel-title {
-        font-family: var(--mono);
+      .lc-section-title {
+        font-size: 11.5px;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+
+      .lc-section-hint {
         font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--text);
+        color: var(--text-tertiary);
       }
 
-      .court-panel-hint {
-        font-size: 11px;
-        color: var(--text-dim);
-      }
-
-      /* Tactical Court Surface (Visible Geometric Basketball Markings) */
-      .court-floor-box {
-        position: relative;
-        background: radial-gradient(ellipse at 50% 50%, #171D28 0%, #11151E 100%);
-        border: 1px solid #262E3E;
-        border-radius: 7px;
-        padding: 18px 20px;
-        overflow: hidden;
-      }
-
-      .court-lines-svg {
+      .lc-svg {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
         pointer-events: none;
-        opacity: 0.16;
+        opacity: 0.085;
         z-index: 0;
       }
 
-      /* Centered Compact Formation Grid (True Option A Proportions) */
-      .court-formation {
+      /* Centered Symmetrical Formation */
+      .lc-formation {
         position: relative;
         z-index: 1;
-        max-width: 590px;
+        max-width: 580px;
         margin: 0 auto;
         display: flex;
         flex-direction: column;
-        gap: 11px;
+        gap: 10px;
       }
 
-      .formation-pair-row {
+      .lc-pair-row {
         display: grid;
-        grid-template-columns: 32px minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-columns: 28px minmax(0, 1fr) minmax(0, 1fr);
         align-items: center;
-        gap: 12px;
+        gap: 10px;
       }
 
-      .formation-center-row {
+      .lc-center-row {
         display: flex;
         align-items: center;
         justify-content: center;
+      }
+
+      .lc-center-wrap {
+        width: calc(50% - 19px);
+        min-width: 248px;
         position: relative;
       }
 
-      .formation-center-wrap {
-        width: calc(50% - 22px);
-        min-width: 255px;
-        position: relative;
-      }
-
-      .pos-side-label {
+      .lc-pos-lbl {
         font-family: var(--mono);
-        font-size: 10.5px;
-        font-weight: 700;
-        color: var(--text-dim);
-        letter-spacing: 0.05em;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-tertiary);
         text-align: right;
       }
 
-      .formation-center-wrap .pos-side-label {
+      .lc-center-wrap .lc-pos-lbl {
         position: absolute;
         right: calc(100% + 10px);
         top: 50%;
@@ -289,156 +214,118 @@
       }
 
       @media (max-width: 680px) {
-        .formation-pair-row {
-          grid-template-columns: 1fr;
-          gap: 8px;
-        }
-        .pos-side-label { text-align: left; }
-        .formation-center-wrap { width: 100%; min-width: 0; }
-        .formation-center-wrap .pos-side-label {
-          position: static;
-          transform: none;
-          display: block;
-          margin-bottom: 5px;
-        }
+        .lc-pair-row { grid-template-columns: 1fr; gap: 7px; }
+        .lc-pos-lbl { text-align: left; }
+        .lc-center-wrap { width: 100%; min-width: 0; }
+        .lc-center-wrap .lc-pos-lbl { position: static; transform: none; display: block; margin-bottom: 4px; }
       }
 
-      .bench-stack {
+      .lc-bench-panel {
+        background: #0D0D0F;
+        border: 1px solid var(--border-subtle);
+        border-radius: 9px;
+        padding: 14px;
+      }
+
+      .lc-bench-stack {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
       }
 
-      /* Compact Option A Player Card */
-      .mc-card {
-        background: rgba(18, 22, 31, 0.94);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+      /* Calm Linear Player Tile */
+      .lc-tile {
+        background: #141417;
+        border: 1px solid var(--border-subtle);
         border-radius: 7px;
-        padding: 9px 11px 8px 13px;
+        padding: 8px 10px 7px 11px;
         cursor: pointer;
-        touch-action: manipulation;
-        transition: border-color 140ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), background-color 140ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), transform 120ms var(--ease-press, cubic-bezier(0.25, 1, 0.5, 1)), opacity 140ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
+        user-select: none;
         display: flex;
         flex-direction: column;
         gap: 6px;
-        min-height: 76px;
+        min-height: 70px;
         position: relative;
         overflow: hidden;
-        user-select: none;
-        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 4px 12px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.24);
+        transition: background-color 120ms var(--ease-out), border-color 120ms var(--ease-out), transform 110ms var(--ease-press), opacity 130ms var(--ease-out);
       }
 
-      .mc-card::before {
+      .lc-tile::before {
         content: "";
         position: absolute;
         left: 0;
-        top: 0;
-        bottom: 0;
-        width: 3.5px;
-        background: var(--team-accent, #525D73);
+        top: 6px;
+        bottom: 6px;
+        width: 2.5px;
+        border-radius: 2px;
+        background: var(--team-accent, rgba(255, 255, 255, 0.14));
       }
 
-      .mc-card:active {
-        transform: scale(0.985);
-      }
-
-      .mc-card.mc-just-moved {
-        animation: scMovedPulse 280ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
-      }
+      .lc-tile:active { transform: scale(0.985); }
 
       @media (hover: hover) and (pointer: fine) {
-        .court-opt-btn:hover { filter: brightness(1.08); }
-        .mc-card:hover {
-          background: #1B212F;
-          border-color: rgba(255, 255, 255, 0.18);
+        .lc-tile:hover {
+          background: #1A1A1E;
+          border-color: var(--border-strong);
         }
-        .mc-act:hover { color: #FFFFFF; border-color: #52607D; }
       }
 
-      .mc-card.is-empty {
-        background: rgba(13, 16, 21, 0.65);
+      .lc-tile.is-empty {
+        background: rgba(255, 255, 255, 0.015);
         border-style: dashed;
-        border-color: #2B3345;
         align-items: center;
         justify-content: center;
-        color: var(--text-dim);
+        color: var(--text-tertiary);
         font-family: var(--mono);
         font-size: 10.5px;
         box-shadow: none;
       }
+      .lc-tile.is-empty::before { display: none; }
 
-      .mc-card.is-empty::before { display: none; }
+      .lc-tile.is-cap { border-color: rgba(229, 160, 50, 0.5); }
+      .lc-tile.is-vc { border-color: rgba(110, 123, 242, 0.45); }
+      .lc-tile.is-drop { opacity: 0.62; }
+      .lc-tile.is-locked { border-color: rgba(229, 160, 50, 0.36); }
+      .lc-tile.selected { border-color: var(--text-primary); background: #1E1E23; }
+      .lc-tile.valid-target { border-color: var(--pos-bright); border-style: dashed; background: rgba(34, 197, 139, 0.07); }
+      .lc-tile.just-moved { animation: lcMovedRing 300ms var(--ease-out) both; }
 
-      .mc-card.is-captain {
-        border-color: rgba(245, 158, 11, 0.72);
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.07) 0%, rgba(19, 23, 31, 0.96) 55%);
-      }
-
-      .mc-card.is-vc {
-        border-color: rgba(59, 130, 246, 0.65);
-      }
-
-      .mc-card.is-drop {
-        opacity: 0.74;
-      }
-
-      .mc-card.is-locked-bench {
-        border-color: rgba(245, 158, 11, 0.52);
-      }
-
-      .mc-card.selected {
-        border-color: #FFFFFF;
-        background: #232B3C;
-        box-shadow: 0 0 0 2px rgba(242, 244, 248, 0.24);
-      }
-
-      .mc-card.valid-target {
-        border-color: var(--pos-bright);
-        border-style: dashed;
-        background: rgba(16, 185, 129, 0.09);
-      }
-
-      .mc-top {
+      .lc-top {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 8px;
       }
 
-      .mc-left {
+      .lc-id {
         display: flex;
         align-items: center;
-        gap: 9px;
+        gap: 8px;
         min-width: 0;
       }
 
-      .mc-id-col {
-        display: flex;
-        flex-direction: column;
-        min-width: 0;
-      }
+      .lc-name-col { min-width: 0; display: flex; flex-direction: column; }
 
-      .mc-name {
+      .lc-name {
         font-size: 12.5px;
-        font-weight: 700;
-        color: #FFFFFF;
+        font-weight: 600;
+        color: var(--text-primary);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        line-height: 1.25;
       }
 
-      .mc-sub {
+      .lc-sub {
         font-family: var(--mono);
         font-size: 10px;
-        color: var(--text-muted);
+        color: var(--text-tertiary);
         display: flex;
         align-items: center;
         gap: 4px;
-        margin-top: 2px;
       }
 
-      .mc-score-col {
+      .lc-score-col {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
@@ -446,179 +333,139 @@
         gap: 2px;
       }
 
-      .mc-pts {
+      .lc-pts {
         font-family: var(--mono);
-        font-size: 15px;
-        font-weight: 800;
-        color: #FFFFFF;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-primary);
         line-height: 1.1;
       }
 
-      .mc-pts.cap-pts { color: var(--warn-bright); }
-      .mc-pts.struck { color: var(--text-dim); text-decoration: line-through; }
+      .lc-pts.cap { color: var(--warn-bright); }
+      .lc-pts.struck { color: var(--text-tertiary); text-decoration: line-through; }
 
-      .mc-gms-pill {
+      .lc-g {
         font-family: var(--mono);
         font-size: 9.5px;
-        font-weight: 700;
-        padding: 1px 5px;
-        border-radius: 3px;
-        background: #232A38;
-        color: var(--text-muted);
+        font-weight: 600;
+        color: var(--text-tertiary);
       }
+      .lc-g.g4 { color: var(--pos-bright); }
+      .lc-g.g2 { color: var(--warn-bright); }
+      .lc-g.g0 { color: var(--neg-soft); }
 
-      .mc-gms-pill.g4 { background: rgba(16, 185, 129, 0.22); color: var(--pos-bright); }
-      .mc-gms-pill.g2 { background: rgba(245, 158, 11, 0.22); color: var(--warn-bright); }
-      .mc-gms-pill.g0 { background: rgba(239, 68, 68, 0.22); color: var(--neg); }
-
-      .mc-bottom {
+      .lc-foot {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 6px;
-        border-top: 1px solid rgba(255, 255, 255, 0.045);
         padding-top: 5px;
-        min-height: 22px;
+        border-top: 1px solid rgba(255, 255, 255, 0.042);
+        min-height: 21px;
       }
 
-      .mc-badges {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        flex-shrink: 0;
-      }
-
-      .mc-pill {
-        font-family: var(--mono);
-        font-size: 9px;
-        font-weight: 800;
-        padding: 1px 5px;
-        border-radius: 3px;
-        line-height: 1.3;
-      }
-
-      .mc-pill.c { background: var(--warn); color: #0D1015; }
-      .mc-pill.vc { background: #3B82F6; color: #FFFFFF; }
-      .mc-pill.drop { background: #232936; color: var(--text-muted); border: 1px solid #353E52; }
-      .mc-pill.lock { background: var(--warn-bg); color: var(--warn-bright); }
-
-      .mc-hover-btns {
+      .lc-badges {
         display: inline-flex;
         align-items: center;
         gap: 3px;
-        opacity: 0;
-        transition: opacity 0.12s;
       }
 
-      .mc-card:hover .mc-hover-btns,
-      .mc-card.selected .mc-hover-btns,
-      .mc-hover-btns.always-show {
-        opacity: 1;
-      }
-
-      .mc-act {
-        background: #1A202C;
-        border: 1px solid rgba(255, 255, 255, 0.11);
-        color: var(--text-muted);
+      .lc-pill {
         font-family: var(--mono);
         font-size: 9px;
         font-weight: 700;
-        height: 19px;
-        min-width: 21px;
+        padding: 1px 4px;
+        border-radius: 3px;
+      }
+      .lc-pill.c { background: var(--warn); color: #0A0A0B; }
+      .lc-pill.vc { background: var(--accent-soft); color: #A5AEFF; }
+      .lc-pill.drop { background: rgba(255, 255, 255, 0.05); color: var(--text-tertiary); }
+
+      .lc-acts {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+        opacity: 0;
+        transition: opacity 110ms var(--ease-out);
+      }
+
+      .lc-tile:hover .lc-acts,
+      .lc-tile.selected .lc-acts,
+      .lc-acts.always { opacity: 1; }
+
+      .lc-act-btn {
+        height: 18px;
+        min-width: 20px;
         padding: 0 4px;
         border-radius: 3px;
+        background: transparent;
+        border: 1px solid var(--border-subtle);
+        color: var(--text-secondary);
+        font-family: var(--mono);
+        font-size: 9px;
+        font-weight: 600;
         cursor: pointer;
-        touch-action: manipulation;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        transition: color 120ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), background-color 120ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), border-color 120ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), transform 110ms var(--ease-press, cubic-bezier(0.25, 1, 0.5, 1));
+        transition: background-color 110ms var(--ease-out), color 110ms var(--ease-out), border-color 110ms var(--ease-out);
       }
 
-      .mc-act:active { transform: scale(0.93); }
-      .mc-act.on-c { background: var(--warn); color: #0D1015; border-color: var(--warn); }
-      .mc-act.on-vc { background: #3B82F6; color: #FFFFFF; border-color: #3B82F6; }
-      .mc-act.on-lock { background: var(--warn-bg); color: var(--warn-bright); border-color: rgba(245, 158, 11, 0.55); }
+      .lc-act-btn:hover { background: var(--bg-active); color: var(--text-primary); border-color: var(--border-default); }
+      .lc-act-btn.on-c { background: var(--warn); color: #0A0A0B; border-color: var(--warn); }
+      .lc-act-btn.on-vc { background: var(--accent); color: #FFFFFF; border-color: var(--accent); }
+      .lc-act-btn.on-lock { background: var(--warn-bg); color: var(--warn-bright); border-color: rgba(229, 160, 50, 0.45); }
 
-      .mc-fin {
+      .lc-fin {
         font-family: var(--mono);
         font-size: 10px;
-        color: var(--text-muted);
+        color: var(--text-tertiary);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
 
-      .overflow-box {
-        margin-top: 14px;
-        padding-top: 12px;
-        border-top: 1px dashed var(--border-strong);
-      }
-
-      .overflow-title {
-        font-family: var(--mono);
-        font-size: 9.5px;
-        font-weight: 700;
-        color: var(--warn-bright);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        margin-bottom: 8px;
-      }
-
-      .court-empty-state {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 38px 20px;
+      .lc-empty-page {
+        padding: 56px 24px;
         text-align: center;
-        color: var(--text-muted);
+        color: var(--text-secondary);
+        max-width: 420px;
+        margin: 0 auto;
       }
 
-      .court-empty-state h3 { color: var(--text); font-size: 14px; margin-bottom: 6px; }
+      .lc-empty-page h3 {
+        color: var(--text-primary);
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
 
-      /* Mobile-Native: Never hide C / VC / Lock behind mouse-only hover on touch devices */
+      .lc-overflow {
+        margin-top: 12px;
+        padding-top: 10px;
+        border-top: 1px dashed var(--border-default);
+      }
+
       @media (hover: none), (pointer: coarse) {
-        .mc-hover-btns {
-          opacity: 0.92;
-        }
-        .mc-act {
-          height: 24px;
-          min-width: 25px;
-          font-size: 9.5px;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .court-banner, .mc-card.mc-just-moved {
-          animation: none !important;
-        }
-        .mc-card:active, .court-opt-btn:active, .mc-act:active {
-          transform: none !important;
-        }
+        .lc-acts { opacity: 0.92; }
+        .lc-act-btn { height: 22px; min-width: 23px; }
       }
     `;
     document.head.appendChild(style);
   }
 
-  function renderCourtLinesSvg() {
+  function renderCourtSvg() {
     return `
-      <svg class="court-lines-svg" viewBox="0 0 900 540" preserveAspectRatio="none" aria-hidden="true">
-        <rect x="22" y="18" width="856" height="504" rx="8" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
-        <line x1="450" y1="18" x2="450" y2="522" stroke="#94A3B8" stroke-width="1.8"/>
-        <circle cx="450" cy="270" r="74" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
-        <circle cx="450" cy="270" r="22" fill="none" stroke="#94A3B8" stroke-width="1.4"/>
-        <!-- Left key, free-throw circle, restricted arc & 3pt arc -->
-        <rect x="22" y="170" width="152" height="200" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
-        <circle cx="174" cy="270" r="60" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
-        <circle cx="62" cy="270" r="10" fill="none" stroke="#94A3B8" stroke-width="1.6"/>
-        <line x1="48" y1="246" x2="48" y2="294" stroke="#94A3B8" stroke-width="2"/>
-        <path d="M 22 68 L 106 68 A 226 226 0 0 1 106 472 L 22 472" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
-        <!-- Right key, free-throw circle, restricted arc & 3pt arc -->
-        <rect x="726" y="170" width="152" height="200" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
-        <circle cx="726" cy="270" r="60" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
-        <circle cx="838" cy="270" r="10" fill="none" stroke="#94A3B8" stroke-width="1.6"/>
-        <line x1="852" y1="246" x2="852" y2="294" stroke="#94A3B8" stroke-width="2"/>
-        <path d="M 878 68 L 794 68 A 226 226 0 0 0 794 472 L 878 472" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
+      <svg class="lc-svg" viewBox="0 0 900 540" preserveAspectRatio="none" aria-hidden="true">
+        <rect x="20" y="18" width="860" height="504" rx="8" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+        <line x1="450" y1="18" x2="450" y2="522" stroke="#FFFFFF" stroke-width="1.5"/>
+        <circle cx="450" cy="270" r="72" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+        <rect x="20" y="170" width="150" height="200" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+        <circle cx="170" cy="270" r="58" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+        <path d="M 20 68 L 106 68 A 226 226 0 0 1 106 472 L 20 472" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+        <rect x="730" y="170" width="150" height="200" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+        <circle cx="730" cy="270" r="58" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+        <path d="M 880 68 L 794 68 A 226 226 0 0 0 794 472 L 880 472" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
       </svg>
     `;
   }
@@ -643,22 +490,18 @@
     const adj = players.map((p) => {
       const edges = [];
       for (let j = 0; j < nSlots; j++) {
-        if (slotDefs[j].req === "ANY" || getPositions(p).includes(slotDefs[j].req)) {
-          edges.push(j);
-        }
+        if (slotDefs[j].req === "ANY" || getPositions(p).includes(slotDefs[j].req)) edges.push(j);
       }
       return edges;
     });
 
     const slotOwner = new Array(nSlots).fill(-1);
-
-    function dfs(u, visited) {
-      const edges = adj[u];
-      for (let i = 0; i < edges.length; i++) {
-        const v = edges[i];
-        if (visited[v]) continue;
-        visited[v] = true;
-        if (slotOwner[v] === -1 || dfs(slotOwner[v], visited)) {
+    function dfs(u, vis) {
+      for (let i = 0; i < adj[u].length; i++) {
+        const v = adj[u][i];
+        if (vis[v]) continue;
+        vis[v] = true;
+        if (slotOwner[v] === -1 || dfs(slotOwner[v], vis)) {
           slotOwner[v] = u;
           return true;
         }
@@ -668,8 +511,7 @@
 
     let matched = 0;
     for (let u = 0; u < players.length; u++) {
-      const visited = new Array(nSlots).fill(false);
-      if (dfs(u, visited)) matched++;
+      if (dfs(u, new Array(nSlots).fill(false))) matched++;
     }
 
     const assignment = {};
@@ -681,52 +523,33 @@
         assignedIds.add(p.id);
       }
     }
-
     return { matched, assignment, assignedIds };
   }
 
   function evaluateLineup(slots, byId, captainId, viceCaptainId) {
     const starters = [];
     const bench = [];
-
-    STARTER_SLOTS.forEach((s) => {
-      const pid = slots[s.key];
-      if (pid && byId[pid]) starters.push(byId[pid]);
-    });
-    BENCH_SLOTS.forEach((s) => {
-      const pid = slots[s.key];
-      if (pid && byId[pid]) bench.push(byId[pid]);
-    });
+    STARTER_SLOTS.forEach((s) => { const pid = slots[s.key]; if (pid && byId[pid]) starters.push(byId[pid]); });
+    BENCH_SLOTS.forEach((s) => { const pid = slots[s.key]; if (pid && byId[pid]) bench.push(byId[pid]); });
 
     const starterIds = new Set(starters.map((p) => p.id));
     let cap = (captainId && starterIds.has(captainId)) ? byId[captainId] : null;
-    if (!cap && starters.length > 0) {
-      cap = [...starters].sort((a, b) => (b.proj - a.proj) || (b.games - a.games))[0];
-    }
+    if (!cap && starters.length) cap = [...starters].sort((a, b) => (b.proj - a.proj) || (b.games - a.games))[0];
 
-    let vc = (viceCaptainId && starterIds.has(viceCaptainId) && (!cap || viceCaptainId !== cap.id))
-      ? byId[viceCaptainId]
-      : null;
+    let vc = (viceCaptainId && starterIds.has(viceCaptainId) && (!cap || viceCaptainId !== cap.id)) ? byId[viceCaptainId] : null;
     if (!vc && starters.length > 1) {
-      vc = [...starters]
-        .filter((p) => !cap || p.id !== cap.id)
-        .sort((a, b) => (b.proj - a.proj) || (b.games - a.games))[0];
+      vc = [...starters].filter((p) => !cap || p.id !== cap.id).sort((a, b) => (b.proj - a.proj) || (b.games - a.games))[0];
     }
 
     let droppedPlayer = null;
     let totalProj = starters.reduce((sum, p) => sum + (p.proj || 0), 0);
-
     if (starters.length === 10) {
       const nonCap = starters.filter((p) => !cap || p.id !== cap.id);
       nonCap.sort((a, b) => (a.proj - b.proj) || (a.games - b.games) || (a.price - b.price));
       droppedPlayer = nonCap[0] || null;
       if (droppedPlayer) totalProj -= (droppedPlayer.proj || 0);
     }
-
     if (cap) totalProj += (cap.proj || 0);
-
-    const starterGames = starters.reduce((sum, p) => sum + (p.games || 0), 0);
-    const benchProj = bench.reduce((sum, p) => sum + (p.proj || 0), 0);
 
     return {
       starters,
@@ -735,22 +558,20 @@
       viceCaptain: vc,
       droppedPlayer,
       totalProj: Math.round(totalProj),
-      starterGames,
-      benchProj: Math.round(benchProj)
+      starterGames: starters.reduce((sum, p) => sum + (p.games || 0), 0),
+      benchProj: Math.round(bench.reduce((sum, p) => sum + (p.proj || 0), 0))
     };
   }
 
   function solveOptimalLineup(squadPlayers, lockedBenchIds) {
     if (!squadPlayers.length) return null;
-
     const lockedSet = new Set(Object.keys(lockedBenchIds || {}).filter((id) => lockedBenchIds[id]));
     const unlocked = squadPlayers.filter((p) => !lockedSet.has(p.id));
     unlocked.sort((a, b) => (b.proj - a.proj) || (b.games - a.games) || (b.avg3 - a.avg3));
 
-    const targetStarters = Math.min(10, unlocked.length);
     const pool = unlocked.length > 18 ? unlocked.slice(0, 18) : unlocked;
     const pLen = pool.length;
-    const k = Math.min(targetStarters, pLen);
+    const k = Math.min(10, pLen);
 
     function scoreStarterSet(starters) {
       const projs = starters.map((p) => p.proj || 0).sort((a, b) => b - a);
@@ -764,15 +585,12 @@
         if (projs.length > 0) main = projs[0] * 2;
         for (let i = 1; i < projs.length; i++) main += projs[i];
       }
-      const gms = starters.reduce((s, p) => s + (p.games || 0), 0);
-      return [main, dropScore, gms];
+      return [main, dropScore, starters.reduce((s, p) => s + (p.games || 0), 0)];
     }
 
     function isBetter(a, b) {
       if (!b) return true;
-      for (let i = 0; i < a.length; i++) {
-        if (a[i] !== b[i]) return a[i] > b[i];
-      }
+      for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] > b[i];
       return false;
     }
 
@@ -786,41 +604,22 @@
         if (remNeeded === 0) {
           const candScore = scoreStarterSet(chosen);
           if (!isBetter(candScore, bestScore)) return;
-
           const stMatch = matchPlayersToSlots(chosen, STARTER_SLOTS);
           if (stMatch.matched < k) return;
-
           const chosenSet = new Set(chosen.map((p) => p.id));
           const benchCandidates = squadPlayers.filter((p) => !chosenSet.has(p.id));
-          benchCandidates.sort((a, b) => {
-            const al = lockedSet.has(a.id) ? 0 : 1;
-            const bl = lockedSet.has(b.id) ? 0 : 1;
-            if (al !== bl) return al - bl;
-            return (b.proj - a.proj);
-          });
-
+          benchCandidates.sort((a, b) => ((lockedSet.has(a.id) ? 0 : 1) - (lockedSet.has(b.id) ? 0 : 1)) || (b.proj - a.proj));
           const bMatch = matchPlayersToSlots(benchCandidates.slice(0, 5), BENCH_SLOTS);
-          if (requireFullBench) {
-            const expectedBench = Math.min(5, benchCandidates.length);
-            if (bMatch.matched < expectedBench) return;
-          }
-
+          if (requireFullBench && bMatch.matched < Math.min(5, benchCandidates.length)) return;
           bestScore = candScore;
-          bestResult = {
-            slots: { ...stMatch.assignment, ...bMatch.assignment },
-            starters: [...chosen]
-          };
+          bestResult = { slots: { ...stMatch.assignment, ...bMatch.assignment }, starters: [...chosen] };
           return;
         }
-
         if (pLen - startIdx < remNeeded) return;
-
         if (bestScore) {
-          const optimistic = chosen.concat(pool.slice(startIdx, startIdx + remNeeded));
-          const optScore = scoreStarterSet(optimistic);
+          const optScore = scoreStarterSet(chosen.concat(pool.slice(startIdx, startIdx + remNeeded)));
           if (optScore[0] < bestScore[0]) return;
         }
-
         for (let i = startIdx; i <= pLen - remNeeded; i++) {
           chosen.push(pool[i]);
           comb(i + 1);
@@ -832,8 +631,7 @@
       return bestResult;
     }
 
-    let result = runSearch(true);
-    if (!result) result = runSearch(false);
+    let result = runSearch(true) || runSearch(false);
     if (!result) {
       const stMatch = matchPlayersToSlots(pool, STARTER_SLOTS);
       const rest = squadPlayers.filter((p) => !stMatch.assignedIds.has(p.id));
@@ -844,10 +642,7 @@
       };
     }
 
-    const sortedStarters = [...result.starters].sort(
-      (a, b) => (b.proj - a.proj) || (b.games - a.games) || (b.avg3 - a.avg3)
-    );
-
+    const sortedStarters = [...result.starters].sort((a, b) => (b.proj - a.proj) || (b.games - a.games));
     return {
       slots: result.slots,
       captainId: sortedStarters[0] ? sortedStarters[0].id : null,
@@ -855,14 +650,20 @@
     };
   }
 
+  /* Export exact solver for Trade Lab */
+  window.SCHOOPS_SOLVER = {
+    STARTER_SLOTS,
+    BENCH_SLOTS,
+    solveOptimalLineup,
+    evaluateLineup
+  };
+
   function reconcileCourtState(state, squadPlayers) {
     const byId = {};
     squadPlayers.forEach((p) => { byId[p.id] = p; });
-
     const court = state.court;
     if (!court.slots) court.slots = {};
     if (!court.lockedBenchIds) court.lockedBenchIds = {};
-
     let changed = false;
 
     const seen = new Set();
@@ -879,10 +680,7 @@
     });
 
     Object.keys(court.lockedBenchIds).forEach((pid) => {
-      if (!byId[pid]) {
-        delete court.lockedBenchIds[pid];
-        changed = true;
-      }
+      if (!byId[pid]) { delete court.lockedBenchIds[pid]; changed = true; }
     });
 
     if (Object.keys(court.slots).length === 0 && squadPlayers.length > 0) {
@@ -894,35 +692,18 @@
         changed = true;
       }
     } else {
-      const unassigned = squadPlayers
-        .filter((p) => !seen.has(p.id))
-        .sort((a, b) => b.proj - a.proj);
-
-      if (unassigned.length > 0) {
-        const openStarters = STARTER_SLOTS.filter((s) => !court.slots[s.key]);
-        const openBench = BENCH_SLOTS.filter((s) => !court.slots[s.key]);
-
-        unassigned.forEach((p) => {
-          const isLocked = !!court.lockedBenchIds[p.id];
-          const searchOrder = isLocked ? [...openBench, ...openStarters] : [...openStarters, ...openBench];
-          const matchSlot = searchOrder.find((s) => !court.slots[s.key] && canFillSlot(p, s.key));
-          if (matchSlot) {
-            court.slots[matchSlot.key] = p.id;
-            seen.add(p.id);
-            changed = true;
-          }
-        });
-      }
+      const unassigned = squadPlayers.filter((p) => !seen.has(p.id)).sort((a, b) => b.proj - a.proj);
+      unassigned.forEach((p) => {
+        const order = court.lockedBenchIds[p.id] ? [...BENCH_SLOTS, ...STARTER_SLOTS] : [...STARTER_SLOTS, ...BENCH_SLOTS];
+        const open = order.find((s) => !court.slots[s.key] && canFillSlot(p, s.key));
+        if (open) { court.slots[open.key] = p.id; seen.add(p.id); changed = true; }
+      });
     }
 
     const starterIds = new Set(STARTER_SLOTS.map((s) => court.slots[s.key]).filter(Boolean));
-    if (court.captainId && !starterIds.has(court.captainId)) {
-      court.captainId = null;
-      changed = true;
-    }
+    if (court.captainId && !starterIds.has(court.captainId)) { court.captainId = null; changed = true; }
     if (court.viceCaptainId && (!starterIds.has(court.viceCaptainId) || court.viceCaptainId === court.captainId)) {
-      court.viceCaptainId = null;
-      changed = true;
+      court.viceCaptainId = null; changed = true;
     }
 
     if (changed) window.SCHOOPS.savePrefs();
@@ -931,18 +712,13 @@
   function setBanner(text, tone) {
     ui.bannerMsg = { text, tone: tone || "info" };
     if (ui.bannerTimer) clearTimeout(ui.bannerTimer);
-    ui.bannerTimer = setTimeout(() => {
-      ui.bannerMsg = null;
-      renderCourt();
-    }, 6500);
+    ui.bannerTimer = setTimeout(() => { ui.bannerMsg = null; renderCourt(); }, 6000);
   }
 
-  function flashMovedPlayers(ids) {
+  function flashMoved(ids) {
     ui.movedIds = new Set(ids.filter(Boolean));
     if (ui.movedTimer) clearTimeout(ui.movedTimer);
-    ui.movedTimer = setTimeout(() => {
-      ui.movedIds = new Set();
-    }, 340);
+    ui.movedTimer = setTimeout(() => { ui.movedIds = new Set(); }, 340);
   }
 
   function isValidSwap(source, targetSlotKey, slots, byId) {
@@ -961,123 +737,105 @@
     return false;
   }
 
-  function renderSlotCard(slotDef, player, ctx) {
+  function renderTile(slotDef, player, ctx) {
     const { escapeHtml, formatMoney, getTeamColor, renderAvatar } = window.SCHOOPS;
-    const isSelected = ui.selectedSource && ui.selectedSource.type === "slot" && ui.selectedSource.key === slotDef.key;
+    const isSel = ui.selectedSource && ui.selectedSource.type === "slot" && ui.selectedSource.key === slotDef.key;
     const isTarget = ui.selectedSource && isValidSwap(ui.selectedSource, slotDef.key, ctx.slots, ctx.byId);
 
     if (!player) {
-      const classes = ["mc-card", "is-empty"];
-      if (isSelected) classes.push("selected");
-      if (isTarget) classes.push("valid-target");
-      return `
-        <div class="${classes.join(" ")}" data-slot-key="${slotDef.key}">
-          <span>+ EMPTY ${slotDef.label}</span>
-        </div>
-      `;
+      const cls = ["lc-tile", "is-empty"];
+      if (isSel) cls.push("selected");
+      if (isTarget) cls.push("valid-target");
+      return `<div class="${cls.join(" ")}" data-slot-key="${slotDef.key}">+ ${slotDef.label}</div>`;
     }
 
     const isStarter = STARTER_KEYS.has(slotDef.key);
     const isCap = isStarter && ctx.evalRes.captain && ctx.evalRes.captain.id === player.id;
     const isVc = isStarter && ctx.evalRes.viceCaptain && ctx.evalRes.viceCaptain.id === player.id;
     const isDrop = isStarter && ctx.evalRes.droppedPlayer && ctx.evalRes.droppedPlayer.id === player.id;
-    const isLockedBench = !!ctx.lockedBenchIds[player.id];
+    const isLocked = !!ctx.lockedBenchIds[player.id];
     const accent = getTeamColor(player.team);
 
-    const classes = ["mc-card"];
-    if (isCap) classes.push("is-captain");
-    else if (isVc) classes.push("is-vc");
-    if (isDrop) classes.push("is-drop");
-    if (isLockedBench) classes.push("is-locked-bench");
-    if (isSelected) classes.push("selected");
-    if (isTarget) classes.push("valid-target");
-    if (ui.movedIds.has(player.id)) classes.push("mc-just-moved");
+    const cls = ["lc-tile"];
+    if (isCap) cls.push("is-cap");
+    else if (isVc) cls.push("is-vc");
+    if (isDrop) cls.push("is-drop");
+    if (isLocked) cls.push("is-locked");
+    if (isSel) cls.push("selected");
+    if (isTarget) cls.push("valid-target");
+    if (ui.movedIds.has(player.id)) cls.push("just-moved");
 
-    const gClass = player.games >= 4 ? "g4" : (player.games === 0 ? "g0" : (player.games <= 2 ? "g2" : ""));
-    const beTxt = player.be === null ? "BE —" : `BE ${player.be}`;
+    const gCls = player.games >= 4 ? "g4" : (player.games === 0 ? "g0" : (player.games <= 2 ? "g2" : ""));
     const displayPts = isCap ? Math.round(player.proj * 2) : Math.round(player.proj);
-    const ptsClass = isCap ? "cap-pts" : (isDrop ? "struck" : "");
 
-    const pills = [];
-    if (isCap) pills.push(`<span class="mc-pill c">C</span>`);
-    else if (isVc) pills.push(`<span class="mc-pill vc">VC</span>`);
-    if (isDrop) pills.push(`<span class="mc-pill drop" title="Dropped under Best 9 of 10">DROP</span>`);
-    if (isLockedBench && isStarter) pills.push(`<span class="mc-pill lock">LOCK</span>`);
-
-    const showBtnsAlways = !isStarter || isLockedBench;
+    const badges = [];
+    if (isCap) badges.push(`<span class="lc-pill c">C</span>`);
+    else if (isVc) badges.push(`<span class="lc-pill vc">VC</span>`);
+    if (isDrop) badges.push(`<span class="lc-pill drop">DROP</span>`);
 
     return `
-      <div class="${classes.join(" ")}" data-slot-key="${slotDef.key}" style="--team-accent:${accent};">
-        <div class="mc-top">
-          <div class="mc-left">
-            ${renderAvatar(player, 36)}
-            <div class="mc-id-col">
-              <div class="mc-name" title="${escapeHtml(player.name)}">${escapeHtml(player.name)}</div>
-              <div class="mc-sub">
-                <span class="team-dot" style="background:${accent};"></span>
+      <div class="${cls.join(" ")}" data-slot-key="${slotDef.key}" style="--team-accent:${accent};">
+        <div class="lc-top">
+          <div class="lc-id">
+            ${renderAvatar(player, 32)}
+            <div class="lc-name-col">
+              <div class="lc-name" title="${escapeHtml(player.name)}">${escapeHtml(player.name)}</div>
+              <div class="lc-sub">
                 <span>${escapeHtml(player.team)}</span>
                 <span>·</span>
                 <span>${escapeHtml(player.pos)}</span>
               </div>
             </div>
           </div>
-          <div class="mc-score-col">
-            <span class="mc-pts ${ptsClass}" title="${isCap ? "Captain 2× projected score" : "Round projected score"}">${displayPts}</span>
-            <span class="mc-gms-pill ${gClass}">${player.games}G</span>
+          <div class="lc-score-col">
+            <span class="lc-pts ${isCap ? "cap" : (isDrop ? "struck" : "")}">${displayPts}</span>
+            <span class="lc-g ${gCls}">${player.games}G</span>
           </div>
         </div>
-        <div class="mc-bottom">
-          <div class="mc-badges">
-            ${pills.join("")}
-            <div class="mc-hover-btns ${showBtnsAlways ? "always-show" : ""}">
+        <div class="lc-foot">
+          <div class="lc-badges">
+            ${badges.join("")}
+            <div class="lc-acts ${!isStarter || isLocked ? "always" : ""}">
               ${isStarter ? `
-                <button type="button" class="mc-act ${isCap ? "on-c" : ""}" data-set-cap="${escapeHtml(player.id)}" aria-pressed="${isCap}" aria-label="Set ${escapeHtml(player.name)} as Captain" title="Set Captain (2×)">C</button>
-                <button type="button" class="mc-act ${isVc ? "on-vc" : ""}" data-set-vc="${escapeHtml(player.id)}" aria-pressed="${isVc}" aria-label="Set ${escapeHtml(player.name)} as Vice-Captain" title="Set Vice-Captain">VC</button>
+                <button type="button" class="lc-act-btn ${isCap ? "on-c" : ""}" data-set-cap="${escapeHtml(player.id)}" title="Set Captain (2×)">C</button>
+                <button type="button" class="lc-act-btn ${isVc ? "on-vc" : ""}" data-set-vc="${escapeHtml(player.id)}" title="Set Vice-Captain">VC</button>
               ` : ""}
-              <button type="button" class="mc-act ${isLockedBench ? "on-lock" : ""}" data-toggle-lock="${escapeHtml(player.id)}" aria-pressed="${isLockedBench}" aria-label="${isLockedBench ? "Unlock" : "Lock"} ${escapeHtml(player.name)} to Bench" title="${isLockedBench ? "Unlock Bench pin" : "Pin to Bench for OPTIMISE"}">${isLockedBench ? ICON_LOCK_CLOSED : ICON_LOCK_OPEN}</button>
+              <button type="button" class="lc-act-btn ${isLocked ? "on-lock" : ""}" data-toggle-lock="${escapeHtml(player.id)}" title="${isLocked ? "Unlock from Bench" : "Pin to Bench"}">${isLocked ? ICON_LOCK_CLOSED : ICON_LOCK_OPEN}</button>
+              <button type="button" class="lc-act-btn" data-inspect-player="${escapeHtml(player.id)}" title="Inspect stats & Live BE simulator">${ICON_INFO}</button>
             </div>
           </div>
-          <div class="mc-fin">
-            $${(player.price / 1000000).toFixed(2)}M · ${beTxt} · <span class="${player.priceChange >= 0 ? "pos-text" : "neg-text"}">${formatMoney(player.priceChange)}</span>
-          </div>
+          <div class="lc-fin">BE ${player.be === null ? "—" : player.be} · <span class="${player.priceChange >= 0 ? "pos-text" : "neg-text"}">${formatMoney(player.priceChange)}</span></div>
         </div>
       </div>
     `;
   }
 
-  function renderOverflowCard(player, ctx) {
+  function renderOverflowTile(player, ctx) {
     const { escapeHtml, getTeamColor, renderAvatar } = window.SCHOOPS;
-    const isSelected = ui.selectedSource && ui.selectedSource.type === "overflow" && ui.selectedSource.playerId === player.id;
-    const isLockedBench = !!ctx.lockedBenchIds[player.id];
-    const accent = getTeamColor(player.team);
+    const isSel = ui.selectedSource && ui.selectedSource.type === "overflow" && ui.selectedSource.playerId === player.id;
+    const isLocked = !!ctx.lockedBenchIds[player.id];
 
     return `
-      <div class="mc-card ${isSelected ? "selected" : ""}" data-overflow-id="${escapeHtml(player.id)}" style="--team-accent:${accent};">
-        <div class="mc-top">
-          <div class="mc-left">
-            ${renderAvatar(player, 34)}
-            <div class="mc-id-col">
-              <div class="mc-name" title="${escapeHtml(player.name)}">${escapeHtml(player.name)}</div>
-              <div class="mc-sub">
-                <span class="team-dot" style="background:${accent};"></span>
-                <span>${escapeHtml(player.team)}</span>
-                <span>·</span>
-                <span>${escapeHtml(player.pos)}</span>
-              </div>
+      <div class="lc-tile ${isSel ? "selected" : ""}" data-overflow-id="${escapeHtml(player.id)}" style="--team-accent:${getTeamColor(player.team)};">
+        <div class="lc-top">
+          <div class="lc-id">
+            ${renderAvatar(player, 30)}
+            <div class="lc-name-col">
+              <div class="lc-name">${escapeHtml(player.name)}</div>
+              <div class="lc-sub">${escapeHtml(player.team)} · ${escapeHtml(player.pos)}</div>
             </div>
           </div>
-          <div class="mc-score-col">
-            <span class="mc-pts">${Math.round(player.proj)}</span>
-            <span class="mc-gms-pill">${player.games}G</span>
+          <div class="lc-score-col">
+            <span class="lc-pts">${Math.round(player.proj)}</span>
+            <span class="lc-g">${player.games}G</span>
           </div>
         </div>
-        <div class="mc-bottom">
-          <div class="mc-badges">
-            <div class="mc-hover-btns always-show">
-              <button type="button" class="mc-act ${isLockedBench ? "on-lock" : ""}" data-toggle-lock="${escapeHtml(player.id)}" title="Pin to Bench">${isLockedBench ? ICON_LOCK_CLOSED : ICON_LOCK_OPEN}</button>
-            </div>
+        <div class="lc-foot">
+          <div class="lc-acts always">
+            <button type="button" class="lc-act-btn ${isLocked ? "on-lock" : ""}" data-toggle-lock="${escapeHtml(player.id)}">${isLocked ? ICON_LOCK_CLOSED : ICON_LOCK_OPEN}</button>
+            <button type="button" class="lc-act-btn" data-inspect-player="${escapeHtml(player.id)}">${ICON_INFO}</button>
           </div>
-          <div class="mc-fin">$${(player.price / 1000000).toFixed(2)}M</div>
+          <div class="lc-fin">$${(player.price / 1000000).toFixed(2)}M</div>
         </div>
       </div>
     `;
@@ -1085,20 +843,28 @@
 
   function renderCourt() {
     const root = document.getElementById("courtViewRoot");
+    const headerActions = document.getElementById("moduleHeaderActions");
     if (!root || !window.SCHOOPS) return;
 
     const state = window.SCHOOPS.getState();
     if (state.activeNav !== "court") return;
 
     const squadPlayers = window.SCHOOPS.getSquadPlayers();
-    if (squadPlayers.length === 0) {
+    const lockCount = Object.keys(state.court.lockedBenchIds || {}).filter((k) => state.court.lockedBenchIds[k]).length;
+
+    if (headerActions) {
+      headerActions.innerHTML = `
+        ${lockCount > 0 ? `<button type="button" class="ghost-btn" id="courtClearLocksBtn">Clear Locks (${lockCount})</button>` : ""}
+        <button type="button" class="primary-btn" id="courtOptimiseBtn">${ICON_BOLT}<span>Optimise</span></button>
+      `;
+    }
+
+    if (!squadPlayers.length) {
       root.innerHTML = `
-        <div class="court-empty-state">
-          <h3>No Squad Tracked Yet</h3>
-          <p>Head to <strong>Market</strong> and click <strong>+</strong> on your 15 players to build your squad, then return to <strong>My Court</strong> to set starters, pin bench locks, and optimise.</p>
-          <div style="margin-top:14px;">
-            <button type="button" class="btn btn-primary" data-go-market="1">Go to Market</button>
-          </div>
+        <div class="lc-empty-page">
+          <h3>No squad tracked yet</h3>
+          <p style="margin-bottom:14px;">Tag your 15 players in Market with the <strong>+</strong> button to unlock the tactical court and exact Best-9-of-10 optimiser.</p>
+          <button type="button" class="primary-btn" data-go-market="1">Open Market</button>
         </div>
       `;
       return;
@@ -1111,136 +877,117 @@
     const slots = state.court.slots;
     const lockedBenchIds = state.court.lockedBenchIds;
     const evalRes = evaluateLineup(slots, byId, state.court.captainId, state.court.viceCaptainId);
-
     const assignedSet = new Set(Object.values(slots));
     const overflow = squadPlayers.filter((p) => !assignedSet.has(p.id));
-    const lockCount = Object.keys(lockedBenchIds).filter((k) => lockedBenchIds[k]).length;
+    const ctx = { slots, byId, lockedBenchIds, evalRes };
+    const card = (key) => renderTile(SLOT_BY_KEY[key], slots[key] ? byId[slots[key]] : null, ctx);
 
-    const ctx = { slots, byId, lockedBenchIds, evalRes, round: state.round };
-
-    const card = (key) => renderSlotCard(SLOT_BY_KEY[key], slots[key] ? byId[slots[key]] : null, ctx);
-
-    const formationHtml = `
-      <div class="formation-pair-row">
-        <div class="pos-side-label">PG</div>
-        ${card("PG1")}
-        ${card("PG2")}
-      </div>
-      <div class="formation-pair-row">
-        <div class="pos-side-label">SG</div>
-        ${card("SG1")}
-        ${card("SG2")}
-      </div>
-      <div class="formation-center-row">
-        <div class="formation-center-wrap">
-          <div class="pos-side-label">C</div>
-          ${card("C1")}
-        </div>
-      </div>
-      <div class="formation-pair-row">
-        <div class="pos-side-label">SF</div>
-        ${card("SF1")}
-        ${card("SF2")}
-      </div>
-      <div class="formation-pair-row">
-        <div class="pos-side-label">PF</div>
-        ${card("PF1")}
-        ${card("PF2")}
-      </div>
-      <div class="formation-center-row">
-        <div class="formation-center-wrap">
-          <div class="pos-side-label">FLX</div>
-          ${card("FLX")}
-        </div>
-      </div>
-    `;
-
-    const benchHtml = BENCH_SLOTS.map((s) => renderSlotCard(s, slots[s.key] ? byId[slots[s.key]] : null, ctx)).join("");
-
-    const overflowHtml = overflow.length > 0 ? `
-      <div class="overflow-box">
-        <div class="overflow-title">Overflow (${overflow.length}) — Click player then legal slot</div>
-        <div class="bench-stack">
-          ${overflow.map((p) => renderOverflowCard(p, ctx)).join("")}
-        </div>
-      </div>
-    ` : "";
-
-    let bannerHtml = "";
-    if (ui.bannerMsg) {
-      bannerHtml = `<span class="court-banner ${ui.bannerMsg.tone}">${window.SCHOOPS.escapeHtml(ui.bannerMsg.text)}</span>`;
-    } else if (ui.selectedSource) {
-      const selId = ui.selectedSource.type === "slot" ? slots[ui.selectedSource.key] : ui.selectedSource.playerId;
-      const selName = (selId && byId[selId]) ? byId[selId].name : "Empty Slot";
-      bannerHtml = `<span class="court-banner">Swapping ${window.SCHOOPS.escapeHtml(selName)} · click dashed green slot</span>`;
-    }
-
-    const dropText = evalRes.droppedPlayer
-      ? `(Drop: ${window.SCHOOPS.escapeHtml(evalRes.droppedPlayer.name)} ${Math.round(evalRes.droppedPlayer.proj)})`
-      : `(${evalRes.starters.length}/10 starters)`;
-
-    const capText = evalRes.captain ? `C: ${window.SCHOOPS.escapeHtml(evalRes.captain.name)}` : "No Captain";
+    const bannerHtml = ui.bannerMsg
+      ? `<span class="lc-banner ${ui.bannerMsg.tone}">${window.SCHOOPS.escapeHtml(ui.bannerMsg.text)}</span>`
+      : (ui.selectedSource
+        ? `<span class="lc-banner">Select a green dashed slot to swap · Esc to cancel</span>`
+        : "");
 
     root.innerHTML = `
-      <div class="court-shell">
-        <div class="court-ticker">
-          <div class="court-ticker-left">
-            <div class="ct-item">
-              <span class="ct-lbl">Rd ${state.round} Proj (Best 9 + 2× C):</span>
-              <span class="ct-val pos-text">${evalRes.totalProj.toLocaleString()} PTS</span>
-              <span class="ct-sub">${dropText}</span>
-            </div>
-            <div class="ct-item">
-              <span class="ct-lbl">Starter Slate:</span>
-              <span class="ct-val">${evalRes.starterGames} Gms</span>
-              <span class="ct-sub">· ${capText}</span>
-            </div>
-            <div class="ct-item">
-              <span class="ct-lbl">Bench:</span>
-              <span class="ct-val muted-text">${evalRes.bench.length}/5</span>
-              <span class="ct-sub">(${evalRes.benchProj.toLocaleString()} uncounted pts)</span>
-            </div>
+      <div class="lc-wrap">
+        <div class="lc-strip">
+          <div class="lc-metrics">
+            <span class="lc-m">Rd ${state.round} Proj <strong class="pos-text">${evalRes.totalProj.toLocaleString()} pts</strong> ${evalRes.droppedPlayer ? `<span class="mono">· Drop ${window.SCHOOPS.escapeHtml(evalRes.droppedPlayer.name)} (${Math.round(evalRes.droppedPlayer.proj)})</span>` : ""}</span>
+            <span class="lc-m">Games <strong>${evalRes.starterGames}</strong></span>
+            <span class="lc-m">Captain <strong>${evalRes.captain ? window.SCHOOPS.escapeHtml(evalRes.captain.name) : "—"}</strong></span>
+            <span class="lc-m">Bench <strong>${evalRes.bench.length}/5</strong> <span class="mono">(${evalRes.benchProj} pts)</span></span>
           </div>
-
-          <div class="court-ticker-right">
-            ${bannerHtml}
-            ${lockCount > 0 ? `<button type="button" class="btn" id="courtClearLocksBtn">Clear Locks (${lockCount})</button>` : ""}
-            <button type="button" class="court-opt-btn" id="courtOptimiseBtn" title="Find optimal Best 9 of 10 + 2× Captain respecting Bench Locks">OPTIMISE ${ICON_BOLT}</button>
-          </div>
+          <div>${bannerHtml}</div>
         </div>
 
-        <div class="court-grid">
-          <div class="court-panel">
-            <div class="court-panel-head">
-              <span class="court-panel-title">On-Court Starters (${evalRes.starters.length}/10)</span>
-              <span class="court-panel-hint">Click two cards to swap · Hover card for C / VC / Bench Lock</span>
+        <div class="lc-grid">
+          <div class="lc-board-card">
+            ${renderCourtSvg()}
+            <div class="lc-section-head">
+              <span class="lc-section-title">On-Court Starters (${evalRes.starters.length}/10)</span>
+              <span class="lc-section-hint">Click two cards to swap · Hover for C / VC / Lock / Inspect</span>
             </div>
-            <div class="court-floor-box">
-              ${renderCourtLinesSvg()}
-              <div class="court-formation">
-                ${formationHtml}
-              </div>
+            <div class="lc-formation">
+              <div class="lc-pair-row"><div class="lc-pos-lbl">PG</div>${card("PG1")}${card("PG2")}</div>
+              <div class="lc-pair-row"><div class="lc-pos-lbl">SG</div>${card("SG1")}${card("SG2")}</div>
+              <div class="lc-center-row"><div class="lc-center-wrap"><div class="lc-pos-lbl">C</div>${card("C1")}</div></div>
+              <div class="lc-pair-row"><div class="lc-pos-lbl">SF</div>${card("SF1")}${card("SF2")}</div>
+              <div class="lc-pair-row"><div class="lc-pos-lbl">PF</div>${card("PF1")}${card("PF2")}</div>
+              <div class="lc-center-row"><div class="lc-center-wrap"><div class="lc-pos-lbl">FLX</div>${card("FLX")}</div></div>
             </div>
           </div>
 
-          <div class="court-panel">
-            <div class="court-panel-head">
-              <span class="court-panel-title">Bench (${evalRes.bench.length}/5)</span>
-              <span class="court-panel-hint">Lock injured players</span>
+          <div class="lc-bench-panel">
+            <div class="lc-section-head">
+              <span class="lc-section-title">Bench (${evalRes.bench.length}/5)</span>
+              <span class="lc-section-hint">Pin injured players</span>
             </div>
-            <div class="bench-stack">
-              ${benchHtml}
+            <div class="lc-bench-stack">
+              ${BENCH_SLOTS.map((s) => renderTile(s, slots[s.key] ? byId[slots[s.key]] : null, ctx)).join("")}
             </div>
-            ${overflowHtml}
+            ${overflow.length ? `
+              <div class="lc-overflow">
+                <div class="lc-section-title" style="margin-bottom:8px; color:var(--warn-bright);">Overflow (${overflow.length})</div>
+                <div class="lc-bench-stack">${overflow.map((p) => renderOverflowTile(p, ctx)).join("")}</div>
+              </div>
+            ` : ""}
           </div>
         </div>
       </div>
     `;
   }
 
+  function runOptimise() {
+    const state = window.SCHOOPS.getState();
+    const squadPlayers = window.SCHOOPS.getSquadPlayers();
+    const byId = {};
+    squadPlayers.forEach((p) => { byId[p.id] = p; });
+    ui.selectedSource = null;
+
+    const before = evaluateLineup(state.court.slots, byId, state.court.captainId, state.court.viceCaptainId);
+    const solved = solveOptimalLineup(squadPlayers, state.court.lockedBenchIds);
+    if (!solved) { setBanner("Add players to Squad first.", "neg"); renderCourt(); return; }
+
+    const prev = { ...state.court.slots };
+    const moved = [];
+    ALL_SLOTS.forEach((s) => { if (solved.slots[s.key] && solved.slots[s.key] !== prev[s.key]) moved.push(solved.slots[s.key]); });
+    if (solved.captainId && solved.captainId !== state.court.captainId) moved.push(solved.captainId);
+
+    state.court.slots = solved.slots;
+    state.court.captainId = solved.captainId;
+    state.court.viceCaptainId = solved.viceCaptainId;
+    window.SCHOOPS.savePrefs();
+    flashMoved(moved);
+
+    const after = evaluateLineup(state.court.slots, byId, state.court.captainId, state.court.viceCaptainId);
+    const diff = after.totalProj - before.totalProj;
+    const locks = Object.keys(state.court.lockedBenchIds).filter((k) => state.court.lockedBenchIds[k]).length;
+    const suffix = locks ? ` · ${locks} lock${locks > 1 ? "s" : ""}` : "";
+
+    if (diff > 0) setBanner(`+${diff} pts (${before.totalProj} → ${after.totalProj})${suffix}`, "pos");
+    else if (diff === 0) setBanner(`Already optimal (${after.totalProj} pts)${suffix}`, "pos");
+    else setBanner(`${after.totalProj} pts (${diff} vs unlocked)${suffix}`, "warn");
+    renderCourt();
+  }
+
+  function handleActionClick(e) {
+    if (e.target.closest("#courtOptimiseBtn")) { runOptimise(); return; }
+    if (e.target.closest("#courtClearLocksBtn")) {
+      window.SCHOOPS.getState().court.lockedBenchIds = {};
+      window.SCHOOPS.savePrefs();
+      setBanner("Cleared bench locks", "info");
+      renderCourt();
+      return;
+    }
+  }
+
   function handleCourtClick(e) {
-    if (e.target.closest("[data-go-market]")) {
-      window.SCHOOPS.setActiveNav("market");
+    if (e.target.closest("[data-go-market]")) { window.SCHOOPS.setActiveNav("market", "all"); return; }
+
+    const inspBtn = e.target.closest("[data-inspect-player]");
+    if (inspBtn) {
+      e.stopPropagation();
+      window.SCHOOPS.openInspector(inspBtn.dataset.inspectPlayer);
       return;
     }
 
@@ -1248,52 +995,6 @@
     const squadPlayers = window.SCHOOPS.getSquadPlayers();
     const byId = {};
     squadPlayers.forEach((p) => { byId[p.id] = p; });
-
-    if (e.target.closest("#courtOptimiseBtn")) {
-      ui.selectedSource = null;
-      const before = evaluateLineup(state.court.slots, byId, state.court.captainId, state.court.viceCaptainId);
-      const solved = solveOptimalLineup(squadPlayers, state.court.lockedBenchIds);
-      if (!solved) {
-        setBanner("Add players to Squad first.", "neg");
-        renderCourt();
-        return;
-      }
-      const prevSlots = { ...state.court.slots };
-      const changedPlayerIds = [];
-      ALL_SLOTS.forEach((s) => {
-        if (solved.slots[s.key] && solved.slots[s.key] !== prevSlots[s.key]) {
-          changedPlayerIds.push(solved.slots[s.key]);
-        }
-      });
-      if (solved.captainId && solved.captainId !== state.court.captainId) {
-        changedPlayerIds.push(solved.captainId);
-      }
-
-      state.court.slots = solved.slots;
-      state.court.captainId = solved.captainId;
-      state.court.viceCaptainId = solved.viceCaptainId;
-      window.SCHOOPS.savePrefs();
-      flashMovedPlayers(changedPlayerIds);
-
-      const after = evaluateLineup(state.court.slots, byId, state.court.captainId, state.court.viceCaptainId);
-      const diff = after.totalProj - before.totalProj;
-      const lockCount = Object.keys(state.court.lockedBenchIds).filter((k) => state.court.lockedBenchIds[k]).length;
-      const lockSuffix = lockCount > 0 ? ` (${lockCount} lock${lockCount > 1 ? "s" : ""})` : "";
-
-      if (diff > 0) setBanner(`+${diff} PTS (${before.totalProj} → ${after.totalProj})${lockSuffix}`, "pos");
-      else if (diff === 0) setBanner(`Optimal: ${after.totalProj} PTS${lockSuffix}`, "pos");
-      else setBanner(`${after.totalProj} PTS (${diff} vs unlocked)${lockSuffix}`, "warn");
-      renderCourt();
-      return;
-    }
-
-    if (e.target.closest("#courtClearLocksBtn")) {
-      state.court.lockedBenchIds = {};
-      window.SCHOOPS.savePrefs();
-      setBanner("Cleared bench locks.", "info");
-      renderCourt();
-      return;
-    }
 
     const capBtn = e.target.closest("[data-set-cap]");
     if (capBtn) {
@@ -1325,88 +1026,75 @@
       const pid = lockBtn.dataset.toggleLock;
       if (state.court.lockedBenchIds[pid]) {
         delete state.court.lockedBenchIds[pid];
-        setBanner(`Unlocked ${byId[pid] ? byId[pid].name : "player"}.`, "info");
+        setBanner(`Unlocked ${byId[pid] ? byId[pid].name : "player"}`, "info");
       } else {
         state.court.lockedBenchIds[pid] = true;
-        setBanner(`${byId[pid] ? byId[pid].name : "player"} locked to Bench.`, "warn");
+        setBanner(`Locked ${byId[pid] ? byId[pid].name : "player"} to Bench`, "warn");
       }
       window.SCHOOPS.savePrefs();
       renderCourt();
       return;
     }
 
-    const ovCard = e.target.closest("[data-overflow-id]");
-    if (ovCard) {
-      const pid = ovCard.dataset.overflowId;
-      if (ui.selectedSource && ui.selectedSource.type === "overflow" && ui.selectedSource.playerId === pid) {
-        ui.selectedSource = null;
-      } else {
-        ui.selectedSource = { type: "overflow", playerId: pid };
-      }
+    const ov = e.target.closest("[data-overflow-id]");
+    if (ov) {
+      const pid = ov.dataset.overflowId;
+      ui.selectedSource = (ui.selectedSource && ui.selectedSource.type === "overflow" && ui.selectedSource.playerId === pid)
+        ? null : { type: "overflow", playerId: pid };
       renderCourt();
       return;
     }
 
     const slotEl = e.target.closest("[data-slot-key]");
-    if (slotEl) {
-      const targetKey = slotEl.dataset.slotKey;
-      const slots = state.court.slots;
+    if (!slotEl) return;
+    const targetKey = slotEl.dataset.slotKey;
+    const slots = state.court.slots;
 
-      if (!ui.selectedSource) {
-        if (!slots[targetKey]) return;
-        ui.selectedSource = { type: "slot", key: targetKey };
-        renderCourt();
-        return;
-      }
+    if (!ui.selectedSource) {
+      if (!slots[targetKey]) return;
+      ui.selectedSource = { type: "slot", key: targetKey };
+      renderCourt();
+      return;
+    }
 
-      if (ui.selectedSource.type === "slot" && ui.selectedSource.key === targetKey) {
-        ui.selectedSource = null;
-        renderCourt();
-        return;
-      }
-
-      if (!isValidSwap(ui.selectedSource, targetKey, slots, byId)) {
-        const srcId = ui.selectedSource.type === "slot" ? slots[ui.selectedSource.key] : ui.selectedSource.playerId;
-        const pA = srcId ? byId[srcId] : null;
-        const targetDef = SLOT_BY_KEY[targetKey];
-        setBanner(pA ? `${pA.name} (${pA.pos}) cannot play ${targetDef.label}.` : "Invalid swap.", "neg");
-        ui.selectedSource = null;
-        renderCourt();
-        return;
-      }
-
-      const swappedIds = [];
-      if (ui.selectedSource.type === "slot") {
-        const srcKey = ui.selectedSource.key;
-        const tmp = slots[srcKey];
-        if (slots[targetKey]) {
-          slots[srcKey] = slots[targetKey];
-          swappedIds.push(slots[srcKey]);
-        } else {
-          delete slots[srcKey];
-        }
-        if (tmp) {
-          slots[targetKey] = tmp;
-          swappedIds.push(tmp);
-        } else {
-          delete slots[targetKey];
-        }
-      } else if (ui.selectedSource.type === "overflow") {
-        slots[targetKey] = ui.selectedSource.playerId;
-        swappedIds.push(ui.selectedSource.playerId);
-      }
-      flashMovedPlayers(swappedIds);
-
-      const starterIds = new Set(STARTER_SLOTS.map((s) => slots[s.key]).filter(Boolean));
-      if (state.court.captainId && !starterIds.has(state.court.captainId)) state.court.captainId = null;
-      if (state.court.viceCaptainId && (!starterIds.has(state.court.viceCaptainId) || state.court.viceCaptainId === state.court.captainId)) {
-        state.court.viceCaptainId = null;
-      }
-
-      window.SCHOOPS.savePrefs();
+    if (ui.selectedSource.type === "slot" && ui.selectedSource.key === targetKey) {
       ui.selectedSource = null;
       renderCourt();
+      return;
     }
+
+    if (!isValidSwap(ui.selectedSource, targetKey, slots, byId)) {
+      const srcId = ui.selectedSource.type === "slot" ? slots[ui.selectedSource.key] : ui.selectedSource.playerId;
+      const pA = srcId ? byId[srcId] : null;
+      setBanner(pA ? `${pA.name} (${pA.pos}) cannot play ${SLOT_BY_KEY[targetKey].label}` : "Invalid swap", "neg");
+      ui.selectedSource = null;
+      renderCourt();
+      return;
+    }
+
+    const moved = [];
+    if (ui.selectedSource.type === "slot") {
+      const srcKey = ui.selectedSource.key;
+      const tmp = slots[srcKey];
+      if (slots[targetKey]) { slots[srcKey] = slots[targetKey]; moved.push(slots[srcKey]); }
+      else delete slots[srcKey];
+      if (tmp) { slots[targetKey] = tmp; moved.push(tmp); }
+      else delete slots[targetKey];
+    } else {
+      slots[targetKey] = ui.selectedSource.playerId;
+      moved.push(ui.selectedSource.playerId);
+    }
+    flashMoved(moved);
+
+    const starterIds = new Set(STARTER_SLOTS.map((s) => slots[s.key]).filter(Boolean));
+    if (state.court.captainId && !starterIds.has(state.court.captainId)) state.court.captainId = null;
+    if (state.court.viceCaptainId && (!starterIds.has(state.court.viceCaptainId) || state.court.viceCaptainId === state.court.captainId)) {
+      state.court.viceCaptainId = null;
+    }
+
+    window.SCHOOPS.savePrefs();
+    ui.selectedSource = null;
+    renderCourt();
   }
 
   function init() {
@@ -1414,19 +1102,15 @@
     injectStyles();
     const root = document.getElementById("courtViewRoot");
     if (root) root.addEventListener("click", handleCourtClick);
+    const hdr = document.getElementById("moduleHeaderActions");
+    if (hdr) hdr.addEventListener("click", handleActionClick);
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && ui.selectedSource) {
-        ui.selectedSource = null;
-        renderCourt();
-      }
+      if (e.key === "Escape" && ui.selectedSource) { ui.selectedSource = null; renderCourt(); }
     });
     window.SCHOOPS.onRender(renderCourt);
     renderCourt();
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
 })();
