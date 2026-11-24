@@ -13,7 +13,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
 
       - uses: actions/setup-python@v5
         with:
@@ -23,7 +23,7 @@ jobs:
         run: pip install curl_cffi pytest
 
       - name: Price model tests (incl. backtest on real price changes)
-        run: node --test tests/
+        run: node --test tests/pricing.test.js
 
       - name: Scraper unit tests
         run: python -m pytest -q tests

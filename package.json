@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "serve": "node scripts/serve.mjs",
-    "test": "node --test tests/",
+    "test": "node --test tests/pricing.test.js",
     "check:ui": "node scripts/check-ui.mjs",
     "check:data": "python -I scripts/check_data.py"
   },
