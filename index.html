@@ -1390,10 +1390,18 @@
 
     .insp-close:hover { background: var(--bg-hover); color: var(--text-primary); }
 
+    .insp-injury-note {
+      margin-top: 6px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--text-secondary);
+      text-wrap: pretty;
+    }
+
     .insp-hero {
       padding: 16px;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 13px;
       border-bottom: 1px solid var(--border-subtle);
     }
@@ -2862,7 +2870,7 @@
               ${p.injury ? ` · <span class="warn-text">${escapeHtml(String(p.injury))}</span>` : ""}
             </div>
             ${(p.injuryDetail || p.injuryReturn) ? `
-            <div class="insp-sub" style="margin-top:4px; white-space:normal;">
+            <div class="insp-injury-note">
               ${p.injuryDetail ? escapeHtml(p.injuryDetail) : ""}
               ${p.injuryReturn ? ` <span class="warn-text">Est. return ${escapeHtml(formatReturnDate(p.injuryReturn))}</span>` : ""}
             </div>` : ""}
