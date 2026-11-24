@@ -2068,6 +2068,15 @@
         <div class="divider"></div>
 
         <div class="field-group">
+          <div class="field-label">Projections</div>
+          <div class="seg-2" id="projSourceSeg">
+            <button type="button" class="chip-btn" data-proj-source="schoops">SCHOOPS model</button>
+            <button type="button" class="chip-btn" data-proj-source="sc">SuperCoach</button>
+          </div>
+          <div class="field-hint">SCHOOPS projects points per game from recent form, price and SuperCoach's projection, then multiplies by the games each player is actually expected to play (injuries, rest). Tested on every finished round, it misses by less than SuperCoach's own projections. Used for projected price changes, the optimiser and Trade Lab.</div>
+        </div>
+
+        <div class="field-group">
           <div class="field-label">Est. Magic Number</div>
           <div class="inline-row">
             <input type="number" class="text-input" id="magicInput" value="712000" step="1000" style="width:130px;" />
@@ -2220,6 +2229,7 @@
         trendcol: true
       },
       density: "comfortable",
+      projSource: "schoops",   // "schoops" (our model) or "sc" (SuperCoach's projections)
       sidebarWidth: DEFAULT_SIDEBAR_W,
       colWidths: {},
       dismissedTips: {},
@@ -2358,12 +2368,14 @@
         if (parsed.sidebarWidth) state.sidebarWidth = Number(parsed.sidebarWidth) || DEFAULT_SIDEBAR_W;
         if (parsed.colWidths && typeof parsed.colWidths === "object") state.colWidths = parsed.colWidths;
         if (parsed.dismissedTips && typeof parsed.dismissedTips === "object") state.dismissedTips = parsed.dismissedTips;
+        if (parsed.projSource === "sc" || parsed.projSource === "schoops") state.projSource = parsed.projSource;
       } catch (e) {}
     }
 
     function savePrefs() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          projSource: state.projSource,
           magicNumber: state.magicNumber,
           squadIds: state.squadIds,
           watchlistIds: state.watchlistIds,
@@ -2429,6 +2441,11 @@
         pos: Array.isArray(p.positions) ? p.positions.join("/") : String(p.pos || p.position || "UTIL"),
         price, r_minus_2: r2, r_minus_1: r1, proj, games,
         prevGames: (p.r_minus_1_games !== undefined && p.r_minus_1_games !== null) ? Number(p.r_minus_1_games) : null,
+        // SCHOOPS projection model (absent in older data files and history snapshots)
+        projV2: (p.proj_v2 !== undefined && p.proj_v2 !== null) ? Number(p.proj_v2) : null,
+        projLo: p.proj_lo ?? null,
+        projHi: p.proj_hi ?? null,
+        expGames: (p.exp_games !== undefined && p.exp_games !== null) ? Number(p.exp_games) : null,
         gamesNext: futureGms.gamesNext,
         gamesAfter: futureGms.gamesAfter,
         owned, avg5, officialBe,
@@ -2468,13 +2485,16 @@
       const price = base.price;
       const r2 = base.r_minus_2;
       const r1 = base.r_minus_1;
-      const proj = base.proj;
+      // Projection source: our model (default, see projection_model.py) or SuperCoach's own
+      const useOurs = state.projSource !== "sc" && base.projV2 !== null && base.projV2 !== undefined;
+      const scProj = base.proj;
+      const proj = useOurs ? base.projV2 : scProj;
       const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
 
       const inSquad = !!state.squadIds[base.id];
       const inWatchlist = !!state.watchlistIds[base.id];
 
-      const isInactive = (r2 === 0 && r1 === 0 && proj === 0);
+      const isInactive = (r2 === 0 && r1 === 0 && scProj === 0);
       const isZeroGames = (base.games === 0);
       const hasRecentAvg5 = (base.avg5 !== null && !Number.isNaN(base.avg5) && base.avg5 > 0);
       const isRelevantOut = isInactive && (
@@ -2488,7 +2508,8 @@
       // No games in either of the last two rounds and no recent average: SuperCoach still projects
       // a score for many of these, but they almost never play, so assume the price holds.
       const isLikelyDnp = !isInactive && r1 === 0 && r2 === 0 && !hasRecentAvg5 && (base.prevGames === null || base.prevGames === 0);
-      const gamesThisRound = (isOut || isLikelyDnp) ? 0 : base.games;
+      // Our model already expects fewer games for injured / rarely-used players; SuperCoach's doesn't
+      const gamesThisRound = useOurs ? (base.expGames ?? base.games) : ((isOut || isLikelyDnp) ? 0 : base.games);
       const be = isInactive ? null : (base.officialBe !== null ? Math.round(base.officialBe) : calcBreakeven(base, magic));
       const dist = (be === null) ? null : (proj - be);
       const newPrice = isInactive ? price : projectPrice(base, gamesThisRound ? proj : 0, gamesThisRound, magic);
@@ -2502,7 +2523,7 @@
 
       return {
         ...base,
-        price, r_minus_2: r2, r_minus_1: r1, proj,
+        price, r_minus_2: r2, r_minus_1: r1, proj, scProj, projIsOurs: useOurs,
         avg3: rolling3,
         be, dist, newPrice, priceChange,
         inSquad, inWatchlist,
@@ -2737,7 +2758,8 @@
       if (state.displayCols.form) cols.push({ key: "form", sort: "r_minus_1", label: `W${Math.max(1, r - 2)}/W${Math.max(1, r - 1)} scores`, title: "Round totals for the last two rounds", align: "num" });
       cols.push({ key: "games", sort: "games", label: `R${r}·R${r + 1}·R${r + 2} games`, title: "Games each team plays this round and the next two", align: "center" });
       cols.push({ key: "be", sort: "be", label: "BE", align: "num", isBe: true });
-      cols.push({ key: "proj", sort: "proj", label: `R${r} Proj`, align: "num" });
+      cols.push({ key: "proj", sort: "proj", label: `R${r} Proj`, align: "num",
+        title: state.projSource === "sc" ? "SuperCoach's projection for this round" : "SCHOOPS projection: points per game x the games he's expected to play. Hover a number for its likely range." });
       if (state.displayCols.avg3) cols.push({ key: "avg3", sort: "avg3", label: "3-Wk", align: "num" });
       if (state.displayCols.avg5) cols.push({ key: "avg5", sort: "avg5", label: "5-Wk", align: "num" });
       cols.push({ key: "priceChange", sort: "priceChange", label: "Proj Chg", align: "num" });
@@ -2992,7 +3014,9 @@
           <div class="insp-section-title">Properties</div>
           <div class="prop-list">
             <div class="prop-row"><span class="prop-key">Breakeven</span><span class="prop-val">${p.be === null ? "—" : p.be}</span></div>
-            <div class="prop-row"><span class="prop-key">Round ${r} Proj</span><span class="prop-val">${p.proj}</span></div>
+            <div class="prop-row"><span class="prop-key">Round ${r} projection</span><span class="prop-val">${p.proj}${p.projIsOurs && p.projLo !== null ? ` <span class="dim-text" style="font-weight:400">(likely ${p.projLo}–${p.projHi})</span>` : ""}</span></div>
+            ${p.projIsOurs ? `<div class="prop-row"><span class="prop-key">Expected games</span><span class="prop-val">${p.expGames ?? p.games} of ${p.games}</span></div>
+            <div class="prop-row"><span class="prop-key">SuperCoach projection</span><span class="prop-val muted-text">${p.scProj}</span></div>` : ""}
             <div class="prop-row"><span class="prop-key">Proj Change</span><span class="prop-val ${p.priceChange > 0 ? "pos-text" : p.priceChange < 0 ? "neg-text" : "muted-text"}">${formatMoney(p.priceChange)}</span></div>
             <div class="prop-row"><span class="prop-key">Est. New Price</span><span class="prop-val">${formatPriceM(p.newPrice)}</span></div>
             <div class="prop-row"><span class="prop-key">Schedule (R${r}–R${r + 2})</span>${renderSchedStrip(p, r)}</div>
@@ -3171,7 +3195,12 @@
                   : `<span class="be-num">${p.be}</span><span class="be-diff ${distClass}">${distSign}${p.dist}</span>`;
                 return `<td class="num mono col-be-cell">${beHtml}</td>`;
               }
-              if (c.key === "proj") return `<td class="num mono">${p.proj}</td>`;
+              if (c.key === "proj") {
+                const tip = p.projIsOurs && p.projLo !== null
+                  ? `Likely ${p.projLo}–${p.projHi} · expects ${p.expGames} of ${p.games} games · SuperCoach: ${p.scProj}`
+                  : `SuperCoach projection`;
+                return `<td class="num mono" title="${tip}">${p.proj}</td>`;
+              }
               if (c.key === "avg3") return `<td class="num mono muted-text">${p.avg3.toFixed(1)}</td>`;
               if (c.key === "avg5") return `<td class="num mono muted-text">${p.avg5 !== null ? p.avg5.toFixed(1) : "—"}</td>`;
               if (c.key === "priceChange") return `<td class="num mono ${chgClass}" style="font-weight:600;">${formatMoney(p.priceChange)}</td>`;
@@ -3764,6 +3793,19 @@
     document.getElementById("closeSettingsBtn").addEventListener("click", () => settingsOverlay.classList.remove("open"));
     settingsOverlay.addEventListener("click", (e) => { if (e.target === settingsOverlay) settingsOverlay.classList.remove("open"); });
     document.getElementById("syncBtn").addEventListener("click", syncFromGitHub);
+
+    document.getElementById("projSourceSeg").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-proj-source]");
+      if (!b) return;
+      state.projSource = b.dataset.projSource;
+      savePrefs();
+      syncProjSourceButtons();
+      render();
+    });
+    function syncProjSourceButtons() {
+      document.querySelectorAll("[data-proj-source]").forEach((el) => el.classList.toggle("active", el.dataset.projSource === state.projSource));
+    }
+    syncProjSourceButtons();
 
     document.getElementById("magicInput").addEventListener("change", (e) => {
       state.magicNumber = Number(e.target.value) || DEFAULT_MAGIC_NUMBER;

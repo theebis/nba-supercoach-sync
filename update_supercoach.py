@@ -15,7 +15,7 @@ import os
 import re
 import sys
 import unicodedata
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from curl_cffi import requests
 
 DATA_FILE = "supercoach_data.json"
@@ -775,6 +775,25 @@ def attach_trends(live_data, rounds, target_round, keep=8):
         p["trend"] = by_id.get(p["id"], [])
 
 
+def attach_projections(live_data, target_round):
+    """Adds the SCHOOPS projection (proj_v2, likely range, expected games) to every live player.
+    The model refits itself whenever a new round has finished (see projection_model.py)."""
+    try:
+        import projection_model as pm
+    except Exception as err:
+        print(f"Projection model unavailable: {err}")
+        return
+    hist = pm.load_history()
+    params = pm.maybe_refit(hist, target_round)
+    # Rounds run Tuesday to Monday (Sydney time): an injury return date after this Monday means out all round
+    now_syd = datetime.now(timezone.utc) + timedelta(hours=11)
+    round_end = (now_syd + timedelta(days=(0 - now_syd.weekday()) % 7)).strftime("%Y-%m-%d")
+    for p in live_data["players"]:
+        p.update(pm.project_player(params, p, p["id"], target_round, hist, round_end))
+    live_data["projectionModel"] = {"version": 2, "roundEnd": round_end}
+    print(f"Added SCHOOPS projections for {len(live_data['players'])} players (round ends {round_end}).")
+
+
 def main():
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r", encoding="utf-8") as f:
@@ -898,6 +917,10 @@ def main():
 
     live_data["availableRounds"] = available_rounds
     attach_trends(live_data, available_rounds, target_round)
+    attach_projections(live_data, target_round)
+    # Keep the live round's snapshot in step with the live file (it now carries our projections too)
+    with open(current_snap_path, "w", encoding="utf-8") as f:
+        json.dump(live_data, f, indent=2)
 
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(live_data, f, indent=2)

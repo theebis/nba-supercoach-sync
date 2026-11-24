@@ -43,12 +43,22 @@ def money(v):
     return f"{'+' if v > 0 else ('-' if v < 0 else '')}${abs(v) / 1e6:.2f}M" if abs(v) >= 1e6 else f"{'+' if v > 0 else ('-' if v < 0 else '')}${abs(v) / 1e3:.0f}K"
 
 
-def round_stats(snap):
+sys.path.insert(0, ROOT)
+try:
+    import projection_model as pm
+except Exception:  # report still works without the model
+    pm = None
+
+
+def round_stats(snap, rnd=None, hist=None, params=None):
     played = [p for p in snap["players"] if p.get("games_played", 0) > 0 and "price_after" in p]
     if len(played) < 50:
         return None
     proj = [p for p in played if p["proj"] > 0]
     miss = [abs(p["actual_points"] - p["proj"]) for p in proj]
+    ours = None
+    if pm and hist and params and rnd and rnd >= 2:
+        ours = [abs(p["actual_points"] - pm.project(params, p["price"], p["proj"], p["games"], pm.features(p["id"], rnd, hist)["past"])[0]) for p in proj]
     bias = [p["actual_points"] - p["proj"] for p in proj]
     # Fair baseline: only uses what was known before the round (last round's per-game average x scheduled games)
     naive = [abs(p["actual_points"] - (p["r_minus_1"] / max(p.get("r_minus_1_games") or 3, 1)) * p["games"]) for p in proj]
@@ -71,6 +81,7 @@ def round_stats(snap):
     return {
         "n": len(proj),
         "proj_median": st.median(miss) if miss else None,
+        "ours_median": st.median(ours) if ours else None,
         "proj_within10": sum(m <= 10 for m in miss) / len(miss) if miss else None,
         "proj_bias": st.mean(bias) if bias else None,
         "naive_median": st.median(naive) if naive else None,
@@ -88,12 +99,19 @@ def main(out_path):
     # The live round is still being played, so only score finished rounds
     with open(os.path.join(ROOT, "supercoach_data.json"), encoding="utf-8") as f:
         live_round = int(json.load(f).get("round") or 0)
+    hist = pm.load_history() if pm else None
+    params = pm.load_params() if pm else None
     rows = []
     for r in [x for x in rounds if x < live_round]:
         with open(os.path.join(HISTORY, f"round_{r}.json"), encoding="utf-8") as f:
-            s = round_stats(json.load(f))
+            s = round_stats(json.load(f), r, hist, params)
         if s:
             rows.append((r, s))
+    try:
+        with open(os.path.join(ROOT, "model", "projection_params.json"), encoding="utf-8") as f:
+            model_info = json.load(f)
+    except Exception:
+        model_info = None
 
     lines = [
         "# SCHOOPS accuracy report",
@@ -108,13 +126,31 @@ def main(out_path):
         "  Rounds 3–5 were used to fit the formula, so later rounds are the honest test.",
         "- **Breakeven right**: when a player beat (or missed) his breakeven by 10+ points, how often his price moved the way it said.",
         "",
-        "| Round | Players | Projection miss (median) | Within 10 pts | Projection bias | Simple guess miss | Price model miss | Price within $50K | Price direction right | Breakeven right |",
-        "|---|---|---|---|---|---|---|---|---|---|",
+    ]
+    if model_info and model_info.get("honest_test"):
+        lines += [
+            "## SCHOOPS projections vs SuperCoach's (honest test)",
+            "",
+            "Each round predicted with settings fitted on the OTHER rounds, using only information from before that round.",
+            "All players scheduled to play (so missed games count as misses). Mean miss in points per round, lower is better.",
+            "",
+            "| Round | Players | SCHOOPS | SuperCoach | Better by |",
+            "|---|---|---|---|---|",
+        ]
+        for c in model_info["honest_test"]:
+            lines.append(f"| R{c['round']} | {c['n']} | {c['ours_mae']:.1f} | {c['sc_mae']:.1f} | {(1 - c['ours_mae'] / c['sc_mae']) * 100:.0f}% |")
+        lines += ["", f"Likely ranges held the actual score {model_info.get('range_coverage', 0) * 100:.0f}% of the time.", ""]
+    lines += [
+        "## Round by round (players who played)",
+        "",
+        "| Round | Players | SuperCoach miss (median) | SCHOOPS miss (median) | SC within 10 pts | SC bias | Simple guess miss | Price model miss | Price within $50K | Price direction right | Breakeven right |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for r, s in rows:
         fit = " (fitting round)" if 3 <= r <= 5 else (" (opening round, no form yet)" if r == 1 else "")
+        ours_txt = "%.0f pts" % s["ours_median"] if s["ours_median"] is not None else "—"
         lines.append(
-            f"| R{r}{fit} | {s['n']} | {s['proj_median']:.0f} pts | {pct(s['proj_within10'])} | {s['proj_bias']:+.1f} | "
+            f"| R{r}{fit} | {s['n']} | {s['proj_median']:.0f} pts | {ours_txt} | {pct(s['proj_within10'])} | {s['proj_bias']:+.1f} | "
             f"{s['naive_median']:.0f} pts | {money(s['price_median']).lstrip('+') if s['price_median'] is not None else 'no price changes'} | "
             f"{pct(s['price_within50k']) if s['price_within50k'] is not None else '—'} | "
             f"{pct(s['price_dir']) if s['price_dir'] is not None else '—'} | {pct(s['be_right']) if s['be_right'] is not None else '—'} |"
@@ -123,7 +159,9 @@ def main(out_path):
         r, s = rows[-1]
         lines += ["", f"## Biggest projection misses, Round {r}", "", "| Player | Projected | Actual | Games |", "|---|---|---|---|"]
         lines += [f"| {n} | {pj} | {a} | {g} |" for n, pj, a, g in s["worst"]]
-    lines += ["", "_Projection v2 (our own projections, with ranges) will be added as a second set of columns once it exists._", ""]
+    lines += ["", "_The SCHOOPS model refits itself after every finished round. The round-by-round SCHOOPS column uses today's settings, "
+              "so earlier rounds are slightly flattering; the honest test table above is the fair comparison, "
+              "and every round from Round 6 on is a genuinely new test._", ""]
 
     with open(out_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
