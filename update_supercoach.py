@@ -784,6 +784,24 @@ def attach_trends(live_data, rounds, target_round, keep=8):
         p["trend"] = by_id.get(p["id"], [])
 
 
+def attach_snapshot_trends(rounds, target_round, keep=8):
+    """Past-round snapshots get the same trend rows (rounds before them), so the site can draw
+    form bars and price lines when you look back at an old round."""
+    for r in sorted(x for x in rounds if x < target_round):
+        path = os.path.join(HISTORY_DIR, f"round_{r}.json")
+        try:
+            with open(path, encoding="utf-8") as f:
+                snap = json.load(f)
+        except Exception as err:
+            print(f"  snapshot trend: skipped Round {r} ({err})")
+            continue
+        before = [p.get("trend") for p in snap.get("players", [])]
+        attach_trends(snap, rounds, r, keep)
+        if before != [p.get("trend") for p in snap.get("players", [])]:
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(snap, f, indent=2)
+
+
 def attach_projections(live_data, target_round):
     """Adds the SCHOOPS projection (proj_v2, likely range, expected games) to every live player.
     The model refits itself whenever a new round has finished (see projection_model.py)."""
@@ -799,7 +817,14 @@ def attach_projections(live_data, target_round):
     round_end = (now_syd + timedelta(days=(0 - now_syd.weekday()) % 7)).strftime("%Y-%m-%d")
     for p in live_data["players"]:
         p.update(pm.project_player(params, p, p["id"], target_round, hist, round_end))
-    live_data["projectionModel"] = {"version": 2, "roundEnd": round_end}
+    # rangeLevel: how much of real outcomes the likely range covers (0.8 = middle 80%), so the site sizes spreads right
+    try:
+        with open(pm.PARAMS_FILE, encoding="utf-8") as f:
+            pinfo = json.load(f)
+    except Exception:
+        pinfo = {}
+    live_data["projectionModel"] = {"version": 2, "roundEnd": round_end, "rangeLevel": pinfo.get("range_level", 0.5),
+                                    "rangeCoverage": pinfo.get("range_coverage_cv") or pinfo.get("range_coverage")}
     print(f"Added SCHOOPS projections for {len(live_data['players'])} players (round ends {round_end}).")
 
 
@@ -926,6 +951,7 @@ def main():
 
     live_data["availableRounds"] = available_rounds
     attach_trends(live_data, available_rounds, target_round)
+    attach_snapshot_trends(available_rounds, target_round)
     attach_projections(live_data, target_round)
     # Keep the live round's snapshot in step with the live file (it now carries our projections too)
     with open(current_snap_path, "w", encoding="utf-8") as f:

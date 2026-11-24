@@ -924,6 +924,7 @@
     /* Whisper-Quiet Context Bar + First-Visit Dismissible Tip */
     .context-strip {
       min-height: 38px;
+      padding-top: 10px !important; padding-bottom: 10px !important;
       flex-shrink: 0;
       display: flex;
       align-items: center;
@@ -939,9 +940,26 @@
     .ctx-metrics {
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 8px;
       flex-wrap: wrap;
     }
+
+    .ctx-tile {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0;
+      padding: 7px 14px 8px; border-radius: 9px; border: 1px solid var(--border-subtle); background: var(--bg-elevated);
+      color: var(--text-primary); text-align: left; cursor: pointer;
+      transition: border-color 120ms ease, background-color 120ms ease, transform 160ms var(--ease-press);
+    }
+    .ctx-tile:active { transform: scale(0.98); }
+    @media (hover: hover) { .ctx-tile:hover { border-color: var(--border-strong); } }
+    .ctx-tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .ctx-tile.is-pos { border-color: rgba(52, 211, 153, 0.28); background: linear-gradient(180deg in oklab, rgba(52, 211, 153, 0.09), rgba(52, 211, 153, 0.02)), var(--bg-elevated); }
+    .ctx-tile.is-neg { border-color: rgba(248, 113, 113, 0.28); background: linear-gradient(180deg in oklab, rgba(248, 113, 113, 0.09), rgba(248, 113, 113, 0.02)), var(--bg-elevated); }
+    .ctx-l { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; }
+    .ctx-v { display: inline-flex; align-items: baseline; gap: 7px; min-width: 0; max-width: 100%; }
+    .ctx-v strong { font-family: var(--mono); font-size: 17px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ctx-sub { font-family: var(--mono); font-size: 11.5px; color: var(--text-tertiary); white-space: nowrap; }
+    .ctx-sub.pos-text { color: var(--pos-bright); }
 
     .ctx-stat {
       display: inline-flex;
@@ -1135,6 +1153,7 @@
     .form-cell { display: flex; align-items: center; gap: 16px; width: 100%; }
     .form-cell svg { display: block; overflow: visible; }
     .form-cell .form-bars { width: clamp(62px, 22%, 100px); flex-shrink: 0; }
+    .form-cell .form-none { width: clamp(62px, 22%, 100px); flex-shrink: 0; font-size: 11px; color: var(--text-tertiary); white-space: nowrap; }
     .form-cell .form-price { flex: 1 1 64px; min-width: 64px; max-width: 320px; position: relative; display: block; height: 24px; }
     .form-cell .form-price svg { position: absolute; inset: 0; width: 100%; height: 100%; }
     .form-bars .tip-hit { cursor: default; }
@@ -1196,6 +1215,12 @@
       #marketHeaderControls .ghost-btn span { display: none; }
       #marketHeaderControls .ghost-btn { padding: 0 9px; }
       .context-strip { padding: 6px 12px; }
+      .ctx-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; gap: 6px; align-items: stretch; }
+      .ctx-tile { justify-content: flex-start; }
+      .ctx-tile { padding: 6px 9px 7px; }
+      .ctx-v { flex-direction: column; gap: 0; }
+      .ctx-v strong { font-size: 14.5px; max-width: 100%; }
+      .ctx-l { font-size: 10.5px; }
       .ctx-metrics { gap: 6px 14px; }
     }
 
@@ -1550,6 +1575,14 @@
     }
 
     .sim-metric { display: flex; flex-direction: column; gap: 2px; }
+    .insp-live-top { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .insp-live-top > div { display: flex; flex-direction: column; gap: 2px; }
+    .insp-live-l { font-size: 11px; color: var(--text-tertiary); }
+    .insp-live-big { font-family: var(--mono); font-size: 24px; font-weight: 700; letter-spacing: -0.02em; color: var(--text-primary); }
+    .insp-live-status { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-secondary); line-height: 1.45; }
+    .insp-live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--neg); flex-shrink: 0; }
+    .insp-live-tag { margin-left: 6px; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; background: var(--neg-bg); color: var(--neg-soft); vertical-align: 1px; }
+    .insp-live-tag.off { background: var(--pos-bg); color: var(--pos-bright); }
     .sim-metric span:first-child { font-size: 10.5px; color: var(--text-tertiary); }
     .sim-metric span:last-child { font-family: var(--mono); font-size: 13px; font-weight: 600; }
 
@@ -1823,7 +1856,7 @@
         <button type="button" class="sb-item" data-nav="court">
           <span class="sb-item-left">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="12" y1="4" x2="12" y2="20"/><circle cx="12" cy="12" r="3"/></svg>
-            <span>My Court</span>
+            <span>My Squad</span>
           </span>
           <span class="sb-count" id="sbSquadCount">0</span>
         </button>
@@ -1852,7 +1885,7 @@
         <button type="button" class="sb-item" data-view="squad">
           <span class="sb-item-left">
             <span class="sb-dot" style="background:var(--text-primary);"></span>
-            <span>My Squad</span>
+            <span>My Players</span>
           </span>
           <span class="sb-count" id="sbViewSquadCount">0</span>
         </button>
@@ -1883,6 +1916,13 @@
             <span>PODs &lt;5%</span>
           </span>
           <span class="sb-count" id="sbViewPodCount">0</span>
+        </button>
+        <button type="button" class="sb-item" data-view="injured">
+          <span class="sb-item-left">
+            <span class="sb-dot" style="background:var(--warn);"></span>
+            <span>Injured</span>
+          </span>
+          <span class="sb-count" id="sbViewInjCount">0</span>
         </button>
         <button type="button" class="sb-item" data-view="watchlist">
           <span class="sb-item-left">
@@ -2052,9 +2092,18 @@
         <div id="marketViewSection" style="display:flex; flex-direction:column; flex:1; overflow:hidden;">
           <div class="context-strip">
             <div class="ctx-metrics">
-              <span class="ctx-stat">Squad <strong id="ctxSquadVal">$0.00M</strong> <span id="ctxSquadCount" class="mono">0/15</span></span>
-              <span class="ctx-stat">Cash Gen <strong id="ctxCashGen">$0</strong></span>
-              <span class="ctx-stat">Top Cow <strong id="ctxTopCow">—</strong> <span id="ctxTopCowMeta" class="mono pos-text"></span></span>
+              <button type="button" class="ctx-tile" data-ctx="squad" data-tip="&lt;div class=&quot;tip-h&quot;&gt;Squad value&lt;/div&gt;&lt;div class=&quot;tip-dim&quot;&gt;What your 15 players are worth now. Click to list them.&lt;/div&gt;">
+                <span class="ctx-l">Squad value</span>
+                <span class="ctx-v"><strong id="ctxSquadVal">$0.00M</strong><span id="ctxSquadCount" class="ctx-sub">0/15</span></span>
+              </button>
+              <button type="button" class="ctx-tile" data-ctx="cash" data-tip="&lt;div class=&quot;tip-h&quot;&gt;Cash generation&lt;/div&gt;&lt;div class=&quot;tip-dim&quot;&gt;How much your squad's value is projected to change after this round. Click to see who's rising and falling.&lt;/div&gt;">
+                <span class="ctx-l">Projected cash gen</span>
+                <span class="ctx-v"><strong id="ctxCashGen">$0</strong></span>
+              </button>
+              <button type="button" class="ctx-tile" data-ctx="cow" data-tip="&lt;div class=&quot;tip-h&quot;&gt;Top cash cow&lt;/div&gt;&lt;div class=&quot;tip-dim&quot;&gt;The player projected to rise most in price this round. Click for details.&lt;/div&gt;">
+                <span class="ctx-l">Top cash cow</span>
+                <span class="ctx-v"><strong id="ctxTopCow">—</strong><span id="ctxTopCowMeta" class="ctx-sub pos-text"></span></span>
+              </button>
             </div>
             <div class="ctx-right">
               <div class="ctx-chips" id="activeFilterChips"></div>
@@ -2088,7 +2137,7 @@
         <div id="tradeLabViewRoot" class="view-body" style="display:none;"></div>
       </div>
 
-      <!-- RIGHT-SIDE LINEAR PLAYER INSPECTOR (Properties + Live BE Simulator) -->
+      <!-- RIGHT-SIDE LINEAR PLAYER INSPECTOR (Properties + live round) -->
       <aside class="inspector" id="playerInspector" aria-label="Player Inspector">
         <div class="insp-inner" id="inspectorInner"></div>
       </aside>
@@ -2227,32 +2276,34 @@
       market: {
         title: "How the Market works",
         bullets: [
-          "<strong>BE</strong> (breakeven) is the round total a player needs over this round's games to hold his price. The small number beside it is projection minus BE.",
-          "Prices move after every round: each game played moves a player 4.15% of the way towards $712k × his points-per-game over the last two rounds. No games, no change.",
-          "Use <strong>+</strong> (Squad) and <strong>☆</strong> (Watchlist) on the left of any player row to track your team.",
-          "Click any player row (or press <strong>Enter</strong>) to open the Inspector with the <strong>Live BE &amp; Cash Simulator</strong>.",
-          "Drag any column header border or the sidebar edge to resize—double-click a border to auto-reset.",
-          "Press <strong>⌘K</strong> (or <strong>/</strong>) anywhere to jump directly to any player or workspace."
+          "<strong>BE</strong> (breakeven) is the round total a player needs over this round's games to hold his price. The small number beside it is his projection minus his BE.",
+          "Prices move after every round: each game played moves a player 4.15% of the way towards $712k × his points per game over the last two rounds. No games, no change.",
+          "<strong>Captain picks</strong> (top of the page) suggest your Captain and Vice-Captain, with each player's chance of top-scoring. <strong>Use C &amp; VC</strong> sets them in My Squad.",
+          "The tiles under the title show your <strong>squad value</strong>, <strong>projected cash generation</strong> and the <strong>top cash cow</strong>. Click one to dig in.",
+          "Use <strong>+</strong> to add a player to your squad and <strong>☆</strong> to watch him (left of each row). Click a row (or press <strong>Enter</strong>) for his profile, including his live score this round.",
+          "Hover any number with a dotted underline, the games boxes or the Form chart for details. Drag a column header edge to resize it; double-click to reset.",
+          "Press <strong>⌘K</strong> / <strong>Ctrl+K</strong> (or <strong>/</strong>) anywhere to jump to a player or page."
         ]
       },
       court: {
-        title: "My Court Guide",
-        tip: "Click any two cards to swap · Click empty slots or + Add Player to edit squad",
+        title: "How My Squad works",
+        tip: "Click two cards to swap them · Add players or Import (top right) to build your squad",
         bullets: [
-          "Lineup totals follow NBA SuperCoach Classic rules: <strong>Best 9 of 10 starters + 2× Captain</strong> (Bench = 0 pts).",
-          "Click <strong>+ Add Player</strong> (or any empty slot) to add players straight to your squad, or click <strong>×</strong> on a card to remove them.",
-          "Click any two cards to swap legal dual-position slots, and pin injured players to Bench with the <strong>Lock</strong> button.",
-          "Hit <strong>Optimise</strong> whenever points are available to compute the exact highest-scoring legal lineup."
+          "Scoring follows NBA SuperCoach rules: your <strong>best 9 of 10 starters</strong> count, your <strong>Captain scores double</strong>, and the bench scores nothing.",
+          "Build your squad with <strong>Add players</strong> or <strong>Import</strong> (a screenshot of your SuperCoach team, or a list of names), top right. Click <strong>×</strong> on a card to remove a player.",
+          "Click two cards to swap them. Use <strong>C</strong> / <strong>VC</strong> on a card to pick your Captain and Vice-Captain, and the lock to pin an injured player to the bench.",
+          "When the green <strong>Optimise lineup</strong> button appears, it shows how many points the best legal lineup would add. Click it to apply that lineup."
         ]
       },
       tradelab: {
-        title: "Trade Lab Guide",
-        tip: "Enter your Available Bank, then duplicate a plan to compare trades side-by-side",
+        title: "How Trade Lab works",
+        tip: "Type your bank into the right-hand panel, then build or compare plans",
         bullets: [
-          "Enter your <strong>Available Bank ($M)</strong> at top right so Trade Lab verifies salary cap legality automatically.",
-          "Pick up to 4 <strong>OUT → IN</strong> trades per plan—supports standard and Trade Boost weeks.",
-          "Click <strong>Duplicate to Compare</strong> or <strong>+ New Plan</strong> to weigh competing moves on both <strong>Best-9 Score Δ</strong> and <strong>Cash Gen Δ</strong>.",
-          "Click <strong>Apply Plan to Squad</strong> once you've decided to sync your roster straight into My Court."
+          "Type your unspent cash into <strong>Your bank</strong> in the right-hand panel (below the plan on phones). Every plan is checked against it.",
+          "The <strong>Trade advisor</strong> ranks trades for your squad by goal (Most points, Balanced, Most cash) for 1 to 4 trades. <strong>+ Add</strong> puts a single swap into your current plan, so you can mix swaps from different suggestions.",
+          "Each plan holds up to 4 <strong>OUT → IN</strong> trades. Use <strong>New plan</strong> or <strong>Duplicate to compare</strong> to see plans side by side in <strong>Compare plans</strong>.",
+          "The banner at the top shows whether trades are open and counts down to the next lockout. Trading opens after each round ends (Monday afternoon) and locks at the first tip-off.",
+          "When you're happy, <strong>Apply to my squad</strong> swaps the players in your saved squad."
         ]
       }
     };
@@ -2618,12 +2669,19 @@
         { val: p.gamesNext, lbl: `R${r + 1}` },
         { val: p.gamesAfter, lbl: `R${r + 2}` }
       ];
-      return `<div class="sched-strip">${cells.map((c) => {
+      const tipRows = cells.map((c, i) => {
+        const v = (c.val === null || c.val === undefined || Number.isNaN(c.val)) ? null : c.val;
+        const cls = v === null ? "tip-dim" : v >= 4 ? "tip-pos" : v <= 2 ? "tip-neg" : "";
+        const label = `Round ${r + i}${i === 0 ? " (this round)" : ""}`;
+        return `<div class="tip-row"><span>${label}</span><b class="${cls}">${v === null ? "not out yet" : `${v} game${v === 1 ? "" : "s"}`}</b></div>`;
+      }).join("");
+      const tip = `<div class="tip-h">${escapeHtml(p.team)} games per round</div>${tipRows}<div class="tip-dim" style="margin-top:4px">More games = more points and bigger price moves.</div>`;
+      return `<div class="sched-strip" data-tip="${escapeHtml(tip)}">${cells.map((c) => {
         if (c.val === null || c.val === undefined || Number.isNaN(c.val)) {
-          return `<span class="sched-box tbd" title="${c.lbl}: Pending">—</span>`;
+          return `<span class="sched-box tbd">—</span>`;
         }
         const cls = c.val >= 4 ? "g4" : (c.val === 2 ? "g2" : (c.val === 0 ? "g0" : ""));
-        return `<span class="sched-box ${cls}" title="${c.lbl}: ${c.val} games">${c.val}</span>`;
+        return `<span class="sched-box ${cls}">${c.val}</span>`;
       }).join("")}</div>`;
     }
 
@@ -2721,6 +2779,11 @@
 
     function loadDataset(data, sourceLabel) {
       const roundNum = data.round ? Number(data.round) : state.round;
+      // Which likely range the data holds (older files: middle 50%) and how often it held in testing
+      const pm = data.projectionModel || {};
+      state.rangeLevel = Number(pm.rangeLevel) || 0.5;
+      state.rangeCoverage = Number(pm.rangeCoverage) || null;
+      if (data.fixtures && typeof data.fixtures === "object") { state.fixtures = data.fixtures; state.fixturesRound = roundNum; }
       const scheduleMap = data.team_schedule || data.teamSchedule || {};
       state.teamScheduleMap = (scheduleMap && typeof scheduleMap === "object") ? scheduleMap : {};
       const list = Array.isArray(data) ? data : (data.players || data.data || []);
@@ -2786,7 +2849,7 @@
         ? (state.maxPriceM > 1000 ? state.maxPriceM : state.maxPriceM * 1000000)
         : null;
 
-      const bypassDnpHide = (state.activeView === "squad" || state.activeView === "watchlist" || q.length > 0);
+      const bypassDnpHide = (state.activeView === "squad" || state.activeView === "watchlist" || state.activeView === "injured" || q.length > 0);
       const applyHideDnps = state.hideDnps && !bypassDnpHide;
 
       return allComputed.filter((p) => {
@@ -2796,6 +2859,7 @@
         if (state.activeView === "fourgames" && p.games < 4) return false;
         if (state.activeView === "pods" && !(p.owned > 0 && p.owned < 5)) return false;
         if (state.activeView === "watchlist" && !p.inWatchlist) return false;
+        if (state.activeView === "injured" && !p.injuryStatus) return false;
 
         if (applyHideDnps && p.isFringeDnp) return false;
         if (state.filterPos !== "ALL") {
@@ -2901,7 +2965,7 @@
     // to hold his current price (dashed line), plus a price line since Round 1.
     function renderFormCell(p) {
       const t = (p.formHistory || []).slice(-5);
-      if (!t.length) return `<span class="dim-text">—</span>`;
+      if (!t.length) return renderFirstRoundCell(p);
       const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
       const holdPpg = p.price / magic;
       const ppg = t.map(([, pts, g]) => (g > 0 ? pts / g : null));
@@ -2956,6 +3020,20 @@
       return `<span class="form-cell">${barsSvg}${priceSvg}<span class="form-delta" style="color:${col}">${formatMoney(delta)}<span class="dim-text"> since R${all[0][0]}</span></span></span>`;
     }
 
+    // No earlier rounds (Round 1, or a brand-new player): just this round's price move
+    function renderFirstRoundCell(p) {
+      if (p.isInactive || !p.newPrice) return `<span class="dim-text">—</span>`;
+      const delta = p.newPrice - p.price;
+      const col = delta > 0 ? "var(--pos-bright)" : delta < 0 ? "var(--neg-soft)" : "var(--text-tertiary)";
+      const H = 24, SW = 64;
+      const y0 = delta > 0 ? H - 4 : delta < 0 ? 4 : H / 2, y1 = delta > 0 ? 4 : delta < 0 ? H - 4 : H / 2;
+      const tipAttr = (html) => `data-tip="${escapeHtml(html)}"`;
+      const dot = (left, top, label, v, proj) => `<span class="fp-dot ${proj ? "proj" : ""}" style="left:${left}%; top:${(top / H) * 100}%; --dot:${col}" ${tipAttr(`<div class="tip-h">${label}</div><div class="tip-row"><span>Price</span><b>${(v / 1e6).toFixed(2)}M</b></div>`)}></span>`;
+      return `<span class="form-cell"><span class="form-none" ${tipAttr(`<div class="tip-h">Round ${state.round}</div><div class="tip-dim">No earlier rounds yet, so no form bars.</div>`)}>first round</span>
+        <span class="form-price"><svg viewBox="-1 0 ${SW + 2} ${H}" preserveAspectRatio="none" aria-label="Price this round"><polyline points="0,${y0} ${SW},${y1}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linecap="round" vector-effect="non-scaling-stroke" /></svg>${dot(0, y0, `Start of Round ${state.round}`, p.price)}${dot(100, y1, `After Round ${state.round}`, p.newPrice, true)}</span>
+        <span class="form-delta" style="color:${col}">${formatMoney(delta)}<span class="dim-text"> this round</span></span></span>`;
+    }
+
     // Tooltip for a projection: the number, its likely range (drawn as a bar), expected games and SuperCoach's figure
     function projTipHtml(p) {
       const head = `<div class="tip-h">Round ${state.round} projection</div>`;
@@ -2978,7 +3056,9 @@
         ${games}
         <div class="tip-row"><span>SuperCoach</span><b class="tip-dim">${p.scProj}</b></div>
         ${why}
-        <div class="tip-dim" style="margin-top:3px">About half of real scores land inside the likely range.</div>`;
+        <div class="tip-dim" style="margin-top:3px">${state.rangeLevel >= 0.8
+          ? `In testing, ${state.rangeCoverage ? Math.round(state.rangeCoverage * 100) : "about 85"}% of real scores landed inside this range.`
+          : "The middle of his likely outcomes: a quarter of scores land above it, a quarter below."}</div>`;
     }
 
     function getColWidth(key) {
@@ -3025,6 +3105,8 @@
       const fourG = allComputed.filter((p) => p.games >= 4 && !p.isFringeDnp);
       const pods = allComputed.filter((p) => p.owned > 0 && p.owned < 5 && !p.isFringeDnp);
       const watch = allComputed.filter((p) => p.inWatchlist);
+      const injured = allComputed.filter((p) => p.injuryStatus);
+      document.getElementById("sbViewInjCount").textContent = String(injured.length);
 
       document.getElementById("sbAllCount").textContent = String(allComputed.filter((p) => !p.isFringeDnp).length);
       document.getElementById("sbSquadCount").textContent = String(squad.length);
@@ -3043,10 +3125,13 @@
       const cgEl = document.getElementById("ctxCashGen");
       cgEl.textContent = formatMoney(squadCash);
       cgEl.className = squadCash > 0 ? "pos-text" : (squadCash < 0 ? "neg-text" : "");
+      document.querySelector('[data-ctx="cash"]').classList.toggle("is-neg", squadCash < 0);
+      document.querySelector('[data-ctx="cash"]').classList.toggle("is-pos", squadCash > 0);
 
       const topCow = [...allComputed].sort((a, b) => b.priceChange - a.priceChange)[0];
       if (topCow) {
         document.getElementById("ctxTopCow").textContent = topCow.name;
+        document.querySelector('[data-ctx="cow"]').dataset.player = topCow.id;
         document.getElementById("ctxTopCowMeta").textContent = formatMoney(topCow.priceChange);
       }
 
@@ -3058,8 +3143,8 @@
       });
 
       const viewNames = {
-        all: "All Players", squad: "My Squad", cows: "Cash Cows",
-        bleeding: "Bleeding", fourgames: "4-Games Round", pods: "PODs <5%", watchlist: "Watchlist"
+        all: "All Players", squad: "My Players", cows: "Cash Cows",
+        bleeding: "Bleeding", fourgames: "4-Games Round", pods: "PODs <5%", injured: "Injured", watchlist: "Watchlist"
       };
       const crumb = document.getElementById("vhCrumb");
       const countEl = document.getElementById("vhCount");
@@ -3074,7 +3159,7 @@
         mktCtrl.style.display = "flex";
         modCtrl.style.display = "none";
       } else if (state.activeNav === "court") {
-        crumb.innerHTML = `My Court`;
+        crumb.innerHTML = `My Squad`;
         countEl.textContent = `${squad.length}/15`;
         mktCtrl.style.display = "none";
         modCtrl.style.display = "flex";
@@ -3098,12 +3183,22 @@
         return;
       }
 
-      const simScore = (state.simScoreById[p.id] !== undefined) ? state.simScoreById[p.id] : (p.proj || 0);
+      // This round, live: his score so far (from the Live tracker) and where it's heading. Only for the live round.
+      const isLiveRound = state.round === state.liveRound;
+      const lv = isLiveRound && window.SchoopsLive ? window.SchoopsLive.player(p.id) : null;
       const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
       const beVal = p.be === null ? 0 : p.be;
-      const ptsDiff = simScore - beVal;
-      const simNewPrice = projectPrice(p, simScore, p.games, magic);
-      const simCash = simNewPrice - p.price;
+      const finish = lv ? lv.finish : (p.proj || 0);
+      const allDone = lv && lv.left === 0 && !lv.now;
+      const gamesForPrice = allDone ? lv.played : p.games;
+      const ptsDiff = finish - beVal;
+      const liveNewPrice = gamesForPrice ? projectPrice(p, finish, gamesForPrice, magic) : p.price;
+      const liveCash = liveNewPrice - p.price;
+      let liveStatus;
+      if (!lv) liveStatus = isLiveRound ? "Live scores appear here once his games tip off. Until then these use his projection." : "";
+      else if (lv.now) liveStatus = `<span class="insp-live-dot"></span>${escapeHtml(lv.now)}${lv.nowLine ? ` · ${escapeHtml(lv.nowLine)}` : " · not on court yet"}`;
+      else if (allDone) liveStatus = `Round done for him: ${lv.played} of ${lv.total} games played.`;
+      else liveStatus = `${lv.done} of ${lv.total} games played · ${lv.left} to go`;
       const r = state.round;
 
       inner.innerHTML = `
@@ -3155,59 +3250,35 @@
           </div>
         </div>
 
-        <div class="insp-section" style="border-bottom:none;">
-          <div class="insp-section-title">Live BE &amp; Cash Simulator</div>
+        ${isLiveRound ? `<div class="insp-section" style="border-bottom:none;">
+          <div class="insp-section-title">Round ${r} live${lv ? ` <span class="insp-live-tag ${lv.official && !lv.now ? "off" : ""}">${lv.official && !lv.now ? "official" : "live"}</span>` : ""}</div>
           <div class="sim-box">
-            <div class="sim-input-row">
-              <label for="inspSimScore">Live Round Score</label>
-              <input type="number" class="pop-input-num" id="inspSimScore" value="${Math.round(simScore)}" step="1" />
+            <div class="insp-live-top">
+              <div><span class="insp-live-l">Scored so far</span><span class="insp-live-big">${lv ? lv.sc : "—"}</span></div>
+              <div><span class="insp-live-l">${allDone ? "Final" : "Projected finish"}</span><span class="insp-live-big">${Math.round(finish)}</span></div>
             </div>
-            <input type="range" class="sim-range" id="inspSimRange" min="0" max="240" value="${Math.min(240, Math.max(0, Math.round(simScore)))}" />
+            ${liveStatus ? `<div class="insp-live-status">${liveStatus}</div>` : ""}
             <div class="sim-grid">
               <div class="sim-metric">
-                <span>Pts vs BE</span>
-                <span id="inspSimDiff" class="${ptsDiff > 0 ? "pos-text" : ptsDiff < 0 ? "neg-text" : "muted-text"}">${ptsDiff > 0 ? "+" : ""}${Math.round(ptsDiff)}</span>
+                <span>vs BE ${p.be === null ? "" : p.be}</span>
+                <span class="${ptsDiff > 0 ? "pos-text" : ptsDiff < 0 ? "neg-text" : "muted-text"}">${ptsDiff > 0 ? "+" : ""}${Math.round(ptsDiff)}</span>
               </div>
               <div class="sim-metric">
-                <span>Est. Cash</span>
-                <span id="inspSimCash" class="${simCash > 0 ? "pos-text" : simCash < 0 ? "neg-text" : "muted-text"}">${formatMoney(simCash)}</span>
+                <span>Est. cash</span>
+                <span class="${liveCash > 0 ? "pos-text" : liveCash < 0 ? "neg-text" : "muted-text"}">${formatMoney(liveCash)}</span>
               </div>
               <div class="sim-metric">
-                <span>New Price</span>
-                <span id="inspSimPrice">${formatPriceM(simNewPrice)}</span>
+                <span>New price</span>
+                <span>${formatPriceM(liveNewPrice)}</span>
               </div>
             </div>
           </div>
-        </div>
+        </div>` : ""}
       `;
 
       panel.classList.add("open");
     }
 
-    function updateInspectorSimUI(scoreVal) {
-      const p = state.inspectorId ? state.computedById[state.inspectorId] : null;
-      if (!p) return;
-      const score = Number(scoreVal) || 0;
-      state.simScoreById[p.id] = score;
-      const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
-      const beVal = p.be === null ? 0 : p.be;
-      const ptsDiff = score - beVal;
-      const simNewPrice = projectPrice(p, score, p.games, magic);
-      const simCash = simNewPrice - p.price;
-
-      const dEl = document.getElementById("inspSimDiff");
-      const cEl = document.getElementById("inspSimCash");
-      const pEl = document.getElementById("inspSimPrice");
-      if (dEl) {
-        dEl.textContent = `${ptsDiff > 0 ? "+" : ""}${Math.round(ptsDiff)}`;
-        dEl.className = ptsDiff > 0 ? "pos-text" : ptsDiff < 0 ? "neg-text" : "muted-text";
-      }
-      if (cEl) {
-        cEl.textContent = formatMoney(simCash);
-        cEl.className = simCash > 0 ? "pos-text" : simCash < 0 ? "neg-text" : "muted-text";
-      }
-      if (pEl) pEl.textContent = formatPriceM(simNewPrice);
-    }
 
     function openInspector(playerId) {
       state.inspectorId = playerId;
@@ -3222,6 +3293,15 @@
       state.inspectorId = null;
       renderInspector();
     }
+
+    // Market stat tiles: squad -> your players; cash -> your players by projected change; cow -> his details
+    document.addEventListener("click", (e) => {
+      const t = e.target.closest && e.target.closest("[data-ctx]");
+      if (!t) return;
+      if (t.dataset.ctx === "cow") { if (t.dataset.player) openInspector(t.dataset.player); return; }
+      if (t.dataset.ctx === "cash") { state.sortKey = "priceChange"; state.sortCol = "priceChange"; state.sortDir = "desc"; }
+      setActiveNav("market", "squad");
+    });
 
     function setActiveNav(navName, optionalView) {
       state.activeNav = navName;
@@ -3478,10 +3558,10 @@
       const q = query.trim().toLowerCase();
       const commands = [
         { type: "cmd", label: "Go to Market", meta: "G M", run: () => setActiveNav("market", "all") },
-        { type: "cmd", label: "Go to My Court", meta: "G C", run: () => setActiveNav("court") },
+        { type: "cmd", label: "Go to My Squad", meta: "G C", run: () => setActiveNav("court") },
         { type: "cmd", label: "Go to Trade Lab", meta: "G T", run: () => setActiveNav("tradelab") },
-        { type: "cmd", label: "Optimise My Court Lineup", meta: "Best 9 + 2× C", run: () => { setActiveNav("court"); setTimeout(() => { const b = document.getElementById("courtOptimiseBtn"); if (b) b.click(); }, 30); } },
-        { type: "cmd", label: "Add Player to My Court", meta: "Squad", run: () => { setActiveNav("court"); setTimeout(() => { const b = document.getElementById("courtAddPlayerBtn"); if (b) b.click(); }, 30); } },
+        { type: "cmd", label: "Optimise My Squad Lineup", meta: "Best 9 + 2× C", run: () => { setActiveNav("court"); setTimeout(() => { const b = document.getElementById("courtOptimiseBtn"); if (b) b.click(); }, 30); } },
+        { type: "cmd", label: "Add Player to My Squad", meta: "Squad", run: () => { setActiveNav("court"); setTimeout(() => { const b = document.getElementById("courtAddPlayerBtn"); if (b) b.click(); }, 30); } },
         { type: "cmd", label: "View: Cash Cows", meta: "Filter", run: () => setActiveNav("market", "cows") },
         { type: "cmd", label: "View: 4-Games Round", meta: "Filter", run: () => setActiveNav("market", "fourgames") },
         { type: "cmd", label: "Open Workspace Settings", meta: "Sync & Code", run: () => openSettingsModal() }
@@ -3617,10 +3697,29 @@
         tip.classList.remove("show");
         current = null;
       }
+      // Plain title="" hovers anywhere on the site become this styled box too (no grey browser tooltips).
+      // "Name: details" titles get a bold heading line.
+      const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+      function titleToTip(el) {
+        const t = el.getAttribute("title");
+        el.removeAttribute("title");
+        if (!t || !t.trim()) return false;
+        if (!el.hasAttribute("aria-label") && !el.textContent.trim()) el.setAttribute("aria-label", t);
+        const m = /^([^:.]{2,42}):s+([sS]+)$/.exec(t);
+        el.setAttribute("data-tip", m ? `<div class="tip-h">${esc(m[1])}</div><div>${esc(m[2])}</div>` : `<div>${esc(t)}</div>`);
+        return true;
+      }
       document.addEventListener("mouseover", (e) => {
-        const el = e.target.closest && e.target.closest("[data-tip]");
+        let el = e.target.closest && e.target.closest("[data-tip], [title]");
+        if (el && !el.hasAttribute("data-tip") && !titleToTip(el)) el = null;
         if (el === current) return;
         if (el) show(el); else hide();
+      });
+      // Keyboard users get the same box on focus
+      document.addEventListener("focusin", (e) => {
+        let el = e.target.closest && e.target.closest("[data-tip], [title]");
+        if (el && !el.hasAttribute("data-tip") && !titleToTip(el)) el = null;
+        if (el && e.target.matches(":focus-visible")) show(el); else hide();
       });
       document.addEventListener("scroll", hide, true);
       window.addEventListener("blur", hide);
@@ -3660,6 +3759,33 @@
       renderSchedStrip,
       renderDismissibleTip,
       getState: () => state,
+      // Trade window: trades lock at the first tip-off of a round. If the live round hasn't tipped off yet,
+      // the window is open now; otherwise it reopens when this round ends (Monday afternoon AEDT).
+      tradeWindow() {
+        const fx = state.fixtures || {};
+        const r = state.fixturesRound || state.liveRound || state.round;
+        const firstTip = (n) => { const g = (fx[String(n)] || [])[0]; return g ? new Date(g.t).getTime() : null; };
+        const lastTip = (n) => { const l = fx[String(n)] || []; return l.length ? new Date(l[l.length - 1].t).getTime() : null; };
+        const now = Date.now();
+        const thisFirst = firstTip(r);
+        if (thisFirst && thisFirst > now) return { open: true, round: r, lockMs: thisFirst };
+        const nextFirst = firstTip(r + 1);
+        const thisLast = lastTip(r);
+        return { open: false, round: r + 1, lockMs: nextFirst, roundEndMs: thisLast ? thisLast + 3 * 3600000 : null };
+      },
+      formatCountdown(ms) {
+        const d = Math.max(0, ms - Date.now());
+        const mins = Math.floor(d / 60000), h = Math.floor(mins / 60), days = Math.floor(h / 24);
+        if (days) return `${days}d ${h % 24}h`;
+        if (h) return `${h}h ${mins % 60}m`;
+        return `${mins}m`;
+      },
+      // Standard deviation of a projection, from its likely range (works for 50% or 80% ranges)
+      projSigma(p) {
+        const z = { 0.5: 1.349, 0.8: 2.563 }[state.rangeLevel] || 2 * 1.2816;
+        if (p.projIsOurs && p.projLo !== null && p.projHi !== null) return Math.max(4, (p.projHi - p.projLo) / z);
+        return Math.max(6, (p.proj || 0) * 0.22);
+      },
       marketExtras: () => marketExtras(),
       savePrefs,
       render,
@@ -3941,19 +4067,13 @@
       if (trBtn) window.SCHOOPS.sendToTradeLab(trBtn.dataset.tradeDir, trBtn.dataset.inspTrade);
     });
 
-    document.getElementById("inspectorInner").addEventListener("input", (e) => {
-      if (e.target.id === "inspSimScore") {
-        const val = Number(e.target.value) || 0;
-        const rng = document.getElementById("inspSimRange");
-        if (rng) rng.value = Math.min(240, Math.max(0, Math.round(val)));
-        updateInspectorSimUI(val);
-      } else if (e.target.id === "inspSimRange") {
-        const val = Number(e.target.value) || 0;
-        const num = document.getElementById("inspSimScore");
-        if (num) num.value = Math.round(val);
-        updateInspectorSimUI(val);
-      }
-    });
+    // Countdowns ([data-countdown] = epoch ms) tick without re-rendering the page
+    setInterval(() => {
+      document.querySelectorAll("[data-countdown]").forEach((el) => { el.textContent = window.SCHOOPS.formatCountdown(Number(el.dataset.countdown)); });
+    }, 20000);
+
+    // New live scores: refresh the open player profile
+    document.addEventListener("schoops:live", () => { if (state.inspectorId) renderInspector(); });
 
     // Command palette
     document.getElementById("openCmdBtn").addEventListener("click", openCommandPalette);
@@ -4134,11 +4254,11 @@
     syncFromGitHub();
   </script>
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
-  <script src="court.js?v=15"></script>
-  <script src="tradelab.js?v=15"></script>
-  <script src="briefing.js?v=4"></script>
-  <script src="captains.js?v=1"></script>
-  <script src="live.js?v=2"></script>
+  <script src="court.js?v=16"></script>
+  <script src="tradelab.js?v=16"></script>
+  <script src="briefing.js?v=5"></script>
+  <script src="captains.js?v=2"></script>
+  <script src="live.js?v=3"></script>
   <script src="importmatch.js?v=1"></script>
   <script src="importer.js?v=2"></script>
 </body>

@@ -2,8 +2,9 @@ name: Weekly SuperCoach Data Sync
 
 on:
   schedule:
-    # Round rollover checks: Monday 08:00 UTC (7 PM AEDT) and 15:00 UTC (2 AM AEDT Tuesday)
-    - cron: '0 8 * * 1'
+    # Round rollover checks: hourly Monday 3 PM-11 PM AEDT (04:00-12:00 UTC Monday), plus 2 AM AEDT Tuesday.
+    # SuperCoach releases next-round prices Monday afternoon AEDT; the scraper switches round as soon as they exist.
+    - cron: '0 4-12 * * 1'
     - cron: '0 15 * * 1'
     # 8 refreshes a day for injuries and projections, bunched before NBA tip-offs (~11 AM-2:30 PM AEDT).
     # Times below are UTC; AEDT = UTC+11 (AEST = UTC+10 from April, so they run an hour earlier locally).

@@ -38,6 +38,8 @@
         display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
       .bf-meta { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
       .bf-right { font-family: var(--mono); font-size: 12px; font-weight: 600; text-align: right; white-space: nowrap; }
+      .bf-link { border: none; background: none; padding: 0; font: inherit; color: var(--text-secondary); cursor: pointer; text-decoration: underline; text-underline-position: from-font; }
+      @media (hover: hover) { .bf-link:hover { color: var(--text-primary); } }
       .bf-empty { padding: 10px 8px; font-size: 12px; color: var(--text-tertiary); line-height: 1.5; }
       .bf-hide { height: 24px; padding: 0 8px; border-radius: 5px; border: 1px solid transparent; background: transparent;
         color: var(--text-tertiary); font-size: 11.5px; cursor: pointer; transition: color 120ms ease, background-color 120ms ease; }
@@ -168,7 +170,7 @@
           ${fallers.map((p) => item(p, p.injuryStatus ? escapeHtml(p.injury) : `Needs ${p.be} over ${p.games} games, projected ${p.proj}.`, money(p.priceChange), "bad")).join("")}
         </div>` : ""}
         <div class="bf-sec">
-          <div class="bf-sec-title">Injury report <span>owned 2%+ or $9M+</span></div>
+          <div class="bf-sec-title">Injury report <span>owned 2%+ or $9M+ · <button type="button" class="bf-link" data-bf-go="injured">See all ${all.filter((p) => p.injuryStatus).length}</button></span></div>
           ${injuries.map((p) => item(p, `${escapeHtml(p.injuryDetail || p.injury)}${returnTxt(p)}`, `<span class="muted-text">${p.owned.toFixed(1)}%</span>`)).join("") || `<div class="bf-empty">No injuries to note.</div>`}
         </div>
         <div class="bf-sec">
@@ -206,6 +208,7 @@
       const b = e.target.closest("[data-bf-player]");
       if (b) window.SCHOOPS.openInspector(b.dataset.bfPlayer);
       if (e.target.closest('[data-bf-go="court"]')) window.SCHOOPS.setActiveNav("court");
+      if (e.target.closest('[data-bf-go="injured"]')) { window.SCHOOPS.setActiveNav("market", "injured"); return; }
       if (e.target.closest('[data-bf-go="import"]') && window.SchoopsImporter) window.SchoopsImporter.open();
     });
     // Screen size decides what fits (briefing, Form column), so re-render the whole Market on resize

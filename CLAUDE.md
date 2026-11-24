@@ -25,6 +25,7 @@ Standing brief from the owner: [docs/BRIEF.md](docs/BRIEF.md). Read it. Roadmap/
 - `court.js` — My Court (lineup board, captaincy, Best-9-of-10 optimiser). `tradelab.js` — Trade Lab.
 - `captains.js` — Captain picks strip above the Market: top 3 C/VC options (My team = starters or squad, Everyone = league), one-line reason, chance of top score (simulation from likely ranges), "Use C & VC" sets them in My Court. Shrinks to one line on phones.
 - `live.js` — Live round tracker (sidebar "Live"): ESPN box scores read in the browser (free, no server), scored with the SC formula; round games = `fixtures` in supercoach_data.json (saved by the scraper) matched to ESPN by time + team. My team total (best 9 of 10 + captain x2, VC doubles if captain plays 0), projected finish, games strip, two-column game view, top scorers. Finished games cached in localStorage (`schoops_live_box_v1`); polls every 30 s only while games are live.
+- `live.js` — Live page: ESPN scoreboard + box scores + play-by-play read in the browser (free, CORS open), scored with the SC formula; SC feed by quarter; switches finished games to SuperCoach's official totals once synced. Exposes `window.SchoopsLive.player(id)` (used by the player profile). ESPN blocks "Headless" user agents, so checks present a normal browser UA.
 - `briefing.js` — Round briefing panel on wide screens (your squad's news, injury report, cash cows). What fits beside the Market (briefing, Form & price column) is decided by `marketExtras()` in index.html.
 - `importer.js` + `importmatch.js` — squad import (screenshot read in-browser by Tesseract.js from jsDelivr, or pasted names) with a review step. `npm run check:import` runs real OCR on generated light/dark team screenshots (expects 13+/15).
 - `scripts/accuracy_report.py` — per finished round: projection miss, price-model miss, breakeven hit rate. Published by the data sync to the PRIVATE repo theebis/schoops-private (README.md) when the `ACCURACY_TOKEN` secret exists; it's the owner's private page until they choose to publish it.
@@ -47,6 +48,7 @@ Standing brief from the owner: [docs/BRIEF.md](docs/BRIEF.md). Read it. Roadmap/
 - `checks.yml` runs tests + data check on every push. Check Actions after pushing: `https://api.github.com/repos/theebis/nba-supercoach-sync/actions/runs`.
 - After going live, check the live site; if broken, `git revert` + push first, then fix.
 - Bump the `?v=N` query on `<script src>` tags in index.html when changing a JS file so browsers don't use a cached copy.
+- **Never rewrite files with Windows PowerShell `Get-Content`/`Set-Content`**: it reads UTF-8 as ANSI and saves mojibake (⌘K became "âŒ˜K"). Use the Edit tool or Node/Python with explicit UTF-8.
 
 ## Data facts and quirks (learned the hard way)
 - Source: SuperCoach public JSON (`/2026/api/nba/classic/v1/players-cf?embed=...&round=N`, `settings`, `real_fixture?round=N`). Needs Chrome impersonation (curl_cffi); plain requests get 403.
