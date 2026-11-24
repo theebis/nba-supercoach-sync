@@ -79,7 +79,46 @@
       .im-count { font-size: 12.5px; color: var(--text-secondary); }
       .im-count strong { color: var(--text-primary); font-family: var(--mono); }
       .im-err { font-size: 12.5px; color: var(--neg-soft); }
+      /* Build-your-15: compact screenshot row, type-ahead search and a 15-slot roster tray */
+      .im-drop.compact { display: flex; align-items: center; gap: 12px; padding: 12px 14px; text-align: left; }
+      .im-drop.compact .im-drop-title { display: block; margin: 0; font-size: 13.5px; }
+      .im-drop.compact .im-drop-text { display: block; margin-top: 2px; font-size: 12px; }
+      .im-search-wrap { position: relative; }
+      .im-search-wrap .im-search { height: 40px; font-size: 14px; padding: 0 12px; }
+      .im-search:focus { border-color: var(--border-strong); }
+      /* Suggestions sit in the flow (not over the tray) so you always see who you've picked */
+      .im-results-pop { margin-top: 6px; background: #1B1B21; border: 1px solid var(--border-subtle);
+        border-radius: 10px; padding: 4px; max-height: 260px; overflow-y: auto; }
+      .im-results-pop .im-result { width: 100%; }
+      .im-result.hi { background: var(--bg-active); }
+      .im-result mark { background: rgba(110, 123, 242, 0.32); color: #fff; border-radius: 2px; padding: 0 1px; }
+      .im-add-hint { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); white-space: nowrap; }
+      .im-tray { border: 1px solid var(--border-subtle); border-radius: 12px; padding: 12px; background: #121216; }
+      .im-tray-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12.5px; color: var(--text-secondary); margin-bottom: 10px; }
+      .im-tray-head strong { color: var(--text-primary); font-family: var(--mono); }
+      .im-pos { display: flex; gap: 4px; }
+      .im-pos span { font-family: var(--mono); font-size: 10.5px; padding: 2px 6px; border-radius: 4px; background: rgba(255, 255, 255, 0.04); color: var(--text-tertiary); }
+      .im-pos span.on { background: var(--pos-bg); color: var(--pos-bright); }
+      .im-slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+      .im-slot { position: relative; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 26px 6px 10px; border-radius: 8px;
+        background: #18181D; border: 1px solid var(--border-subtle); box-shadow: inset 3px 0 0 var(--team-accent, transparent);
+        animation: imSlotIn 180ms var(--ease-out) both; }
+      @keyframes imSlotIn { from { opacity: 0; transform: scale(0.96); } }
+      .im-slot.empty { border-style: dashed; background: transparent; box-shadow: none; justify-content: center; animation: none; padding: 6px; }
+      .im-slot-n { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); opacity: 0.6; }
+      .im-slot-main { min-width: 0; display: flex; flex-direction: column; }
+      .im-slot-name { font-size: 12.5px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .im-slot-x { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 5px; border: none; background: transparent;
+        color: var(--text-tertiary); cursor: pointer; font-size: 14px; line-height: 1; }
+      @media (hover: hover) { .im-slot-x:hover { background: var(--neg-bg); color: var(--neg-soft); } }
+      .im-paste summary { cursor: pointer; font-size: 12px; color: var(--text-tertiary); list-style: none; }
+      .im-paste summary::before { content: "+ "; }
+      .im-paste[open] summary::before { content: "− "; }
+      .im-paste[open] .im-text { margin-top: 8px; }
+      @media (prefers-reduced-motion: reduce) { .im-slot { animation: none; } }
+
       @media (max-width: 760px) {
+        .im-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .im-backdrop { padding: 0; align-items: flex-end; }
         .im-dialog { max-height: 92dvh; border-radius: 14px 14px 0 0; }
         .im-text, .im-search { font-size: 16px; }
@@ -171,6 +210,54 @@
     render();
   }
 
+  // ---------- type-ahead search ----------
+  // "wemb" -> Wembanyama, "jok" -> Jokic, "PHI" -> 76ers players; small typos fall back to fuzzy matching
+  function searchPlayers(q, state, exclude) {
+    const { norm, matchText } = window.SchoopsImportMatch;
+    const nq = norm(q);
+    if (nq.length < 2) return [];
+    const all = Object.values(state.computedById || {}).filter((p) => !exclude.has(p.id));
+    const team = /^[a-z]{3}$/i.test(q.trim()) ? q.trim().toUpperCase() : null;
+    const scored = [];
+    all.forEach((p) => {
+      const n = norm(p.name);
+      const toks = n.split(" ");
+      let s = 0;
+      // First name or surname starting with what you typed rank equally; ownership breaks ties
+      if (n.startsWith(nq) || toks.some((t) => t.startsWith(nq))) s = 3;
+      else if (n.replace(/ /g, "").includes(nq.replace(/ /g, ""))) s = 1.5;
+      if (team && String(p.team).toUpperCase() === team) s = Math.max(s, 2);
+      if (s) scored.push({ p, s });
+    });
+    if (!scored.length) {
+      matchText(q, all).matches.forEach((m) => scored.push({ p: m.player, s: 1 }));
+    }
+    scored.sort((a, b) => b.s - a.s || (b.p.owned || 0) - (a.p.owned || 0) || b.p.proj - a.p.proj);
+    return scored.slice(0, 8).map((x) => x.p);
+  }
+
+  function highlight(name, q) {
+    const esc = window.SCHOOPS.escapeHtml;
+    const needle = String(q || "").trim().toLowerCase();
+    const i = needle ? name.toLowerCase().indexOf(needle) : -1;
+    if (i < 0) return esc(name); // fuzzy/team matches: no highlight
+    return `${esc(name.slice(0, i))}<mark>${esc(name.slice(i, i + needle.length))}</mark>${esc(name.slice(i + needle.length))}`;
+  }
+
+  function pick(id) {
+    const p = window.SCHOOPS.getState().computedById[id];
+    if (!p || ui.picked.some((x) => x.id === id) || ui.picked.length >= SQUAD_SIZE) return;
+    ui.picked.push(p);
+    ui.query = "";
+    ui.hi = 0;
+    render();
+  }
+
+  function savePicked(replace) {
+    ui.rows = ui.picked.map((p) => ({ player: p, confidence: "high", checked: true, alternatives: [], line: "" }));
+    save(replace);
+  }
+
   // ---------- rendering ----------
   function updateProgress() {
     const bar = document.querySelector(".im-progress > span");
@@ -206,6 +293,7 @@
       root.addEventListener("click", onClick);
       root.addEventListener("change", onChange);
       root.addEventListener("input", onInput);
+      root.addEventListener("keydown", onKeyDown);
       root.addEventListener("dragover", (e) => { e.preventDefault(); root.querySelector(".im-drop")?.classList.add("drag"); });
       root.addEventListener("dragleave", () => root.querySelector(".im-drop")?.classList.remove("drag"));
       root.addEventListener("drop", (e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) readScreenshot(f); });
@@ -217,25 +305,62 @@
     let foot = "";
 
     if (ui.step === "choose") {
+      const picked = ui.picked;
+      const value = picked.reduce((s, p) => s + p.price, 0);
+      const posCount = { PG: 0, SG: 0, SF: 0, PF: 0, C: 0 };
+      picked.forEach((p) => String(p.pos).split("/").forEach((x) => { if (posCount[x] !== undefined) posCount[x] += 1; }));
+      const results = searchPlayers(ui.query, state, new Set(picked.map((p) => p.id)));
+      ui.results = results;
+      const slots = Array.from({ length: SQUAD_SIZE }, (_, i) => {
+        const p = picked[i];
+        if (!p) return `<div class="im-slot empty"><span class="im-slot-n">${i + 1}</span></div>`;
+        return `
+          <div class="im-slot" style="--team-accent:${window.SCHOOPS.getTeamColor(p.team)}">
+            ${renderAvatar(p, 26)}
+            <span class="im-slot-main"><span class="im-slot-name">${escapeHtml(p.name)}</span><span class="im-meta">${escapeHtml(p.pos)} · $${(p.price / 1e6).toFixed(2)}M</span></span>
+            <button type="button" class="im-slot-x" data-im-unpick="${escapeHtml(p.id)}" aria-label="Remove ${escapeHtml(p.name)}">×</button>
+          </div>`;
+      }).join("");
       body = `
-        <div class="im-drop" data-im-pick="1" role="button" tabindex="0" aria-label="Choose a screenshot">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" style="color:var(--text-secondary)"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="M21 15l-5-5L5 21"/></svg>
-          ${window.matchMedia("(pointer: coarse)").matches
-            ? `<div class="im-drop-title">Choose a screenshot of your SuperCoach team</div>
-               <div class="im-drop-text">Tap to pick it from your photos</div>`
-            : `<div class="im-drop-title">Drop a screenshot of your SuperCoach team</div>
-               <div class="im-drop-text">or click to choose one · or press <strong>Ctrl+V</strong> to paste it</div>`}
+        <div class="im-drop compact" data-im-pick="1" role="button" tabindex="0" aria-label="Choose a screenshot">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" style="color:var(--text-secondary); flex-shrink:0"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span style="text-align:left">
+            <span class="im-drop-title">${window.matchMedia("(pointer: coarse)").matches ? "Import a screenshot of your team" : "Drop, paste (Ctrl+V) or choose a screenshot"}</span>
+            <span class="im-drop-text">Fills all 15 in one go. Read on this device, never uploaded.</span>
+          </span>
         </div>
         <input type="file" accept="image/*" id="imFile" hidden />
-        <div class="im-note">Your screenshot is read on this device and never uploaded. Any view that shows your players' names works; the list view reads best.</div>
-        <div class="im-or">or</div>
-        <div>
-          <label class="im-label" for="imText">Paste or type your players' names</label>
-          <textarea class="im-text" id="imText" placeholder="One per line, or separated by commas. e.g.&#10;Nikola Jokic&#10;V. Wembanyama&#10;Maxey">${escapeHtml(ui.text)}</textarea>
+        <div class="im-or">or add players yourself</div>
+        <div class="im-search-wrap">
+          <input class="im-search" id="imQuery" value="${escapeHtml(ui.query)}" placeholder="Start typing a name or team… e.g. wemb, jok, PHI" autocomplete="off"
+            role="combobox" aria-expanded="${results.length > 0}" aria-controls="imResults" aria-autocomplete="list" ${picked.length >= SQUAD_SIZE ? "disabled" : ""} />
+          ${results.length ? `<div class="im-results-pop" id="imResults" role="listbox">${results.map((p, i) => `
+            <button type="button" class="im-result ${i === ui.hi ? "hi" : ""}" role="option" aria-selected="${i === ui.hi}" data-im-pickp="${escapeHtml(p.id)}">
+              ${renderAvatar(p, 24)}
+              <span class="im-slot-main"><span class="im-slot-name">${highlight(p.name, ui.query)}</span><span class="im-meta">${escapeHtml(p.team)} · ${escapeHtml(p.pos)} · $${(p.price / 1e6).toFixed(2)}M</span></span>
+              <span class="im-add-hint">${i === ui.hi ? "Enter ↵" : "+"}</span>
+            </button>`).join("")}</div>` : (ui.query.trim().length >= 2 ? `<div class="im-results-pop"><div class="im-note" style="padding:10px">No player matches "${escapeHtml(ui.query)}".</div></div>` : "")}
         </div>
+        <div class="im-tray">
+          <div class="im-tray-head">
+            <span><strong>${picked.length}/${SQUAD_SIZE}</strong> selected · <span class="mono">$${(value / 1e6).toFixed(2)}M</span></span>
+            <span class="im-pos">${Object.entries(posCount).map(([k, v]) => `<span class="${v ? "on" : ""}" title="${v} player${v === 1 ? "" : "s"} who can play ${k}">${k} ${v}</span>`).join("")}</span>
+          </div>
+          <div class="im-slots">${slots}</div>
+        </div>
+        <details class="im-paste" ${ui.pasteOpen ? "open" : ""}>
+          <summary>Paste a list of names instead</summary>
+          <textarea class="im-text" id="imText" placeholder="One per line, or separated by commas. e.g.&#10;Nikola Jokic&#10;V. Wembanyama&#10;Maxey">${escapeHtml(ui.text)}</textarea>
+          <button type="button" class="ghost-btn" id="imFindBtn" style="margin-top:8px">Find these players</button>
+        </details>
         ${ui.error ? `<div class="im-err" role="alert">${escapeHtml(ui.error)}</div>` : ""}`;
-      foot = `<span class="im-note">${current ? `Your squad has ${current} player${current === 1 ? "" : "s"} now.` : "Your squad is empty."}</span>
-        <button type="button" class="primary-btn" id="imFindBtn">Find players</button>`;
+      const ok = picked.length > 0 && picked.length <= SQUAD_SIZE;
+      foot = `
+        <span class="im-note">${current ? `Your saved squad has ${current} player${current === 1 ? "" : "s"}.` : "Nothing is saved until you press Save."}</span>
+        <span style="display:flex; gap:8px; flex-wrap:wrap">
+          ${current ? `<button type="button" class="ghost-btn" id="imPickAddBtn" ${ok && current + picked.length <= SQUAD_SIZE ? "" : "disabled"}>Add to my squad</button>` : ""}
+          <button type="button" class="primary-btn" id="imPickSaveBtn" ${ok ? "" : "disabled"}>${current ? "Replace my squad" : "Save as my squad"}</button>
+        </span>`;
     } else if (ui.step === "reading") {
       body = `
         ${ui.preview ? `<img class="im-preview" src="${ui.preview}" alt="Your screenshot" />` : ""}
@@ -271,6 +396,7 @@
     }
 
     const focusAdd = document.activeElement && document.activeElement.id === "imAdd";
+    const focusQuery = document.activeElement && document.activeElement.id === "imQuery";
     root.innerHTML = `
       <div class="im-backdrop" id="imBackdrop">
         <div class="im-dialog" role="dialog" aria-modal="true" aria-labelledby="imTitle">
@@ -283,6 +409,8 @@
         </div>
       </div>`;
     if (focusAdd) { const a = document.getElementById("imAdd"); a.focus(); a.setSelectionRange(a.value.length, a.value.length); }
+    const qEl = document.getElementById("imQuery");
+    if (qEl && (focusQuery || ui.focusQuery) && !qEl.disabled) { qEl.focus(); qEl.setSelectionRange(qEl.value.length, qEl.value.length); ui.focusQuery = false; }
   }
 
   // ---------- events ----------
@@ -311,6 +439,13 @@
     }
     if (t.closest("#imBackBtn")) { ui.step = "choose"; ui.rows = []; ui.error = ""; render(); return; }
     if (t.closest("#imReplaceBtn")) { save(true); return; }
+    if (t.closest("#imPickSaveBtn")) { savePicked(true); return; }
+    if (t.closest("#imPickAddBtn")) { savePicked(false); return; }
+    const pk = t.closest("[data-im-pickp]");
+    if (pk) { ui.focusQuery = true; pick(pk.dataset.imPickp); return; }
+    const un = t.closest("[data-im-unpick]");
+    if (un) { ui.picked = ui.picked.filter((p) => p.id !== un.dataset.imUnpick); render(); return; }
+    if (t.closest(".im-paste summary")) { ui.pasteOpen = !ui.pasteOpen; return; }
     if (t.closest("#imAddToBtn")) { save(false); return; }
     const swap = t.closest("[data-im-swap]");
     if (swap) {
@@ -336,7 +471,17 @@
     if (chk) { ui.rows[Number(chk.dataset.imCheck)].checked = chk.checked; render(); }
   }
 
+  function onKeyDown(e) {
+    if (e.target.id !== "imQuery") return;
+    const n = (ui.results || []).length;
+    if (e.key === "ArrowDown" && n) { e.preventDefault(); ui.hi = (ui.hi + 1) % n; render(); }
+    else if (e.key === "ArrowUp" && n) { e.preventDefault(); ui.hi = (ui.hi - 1 + n) % n; render(); }
+    else if (e.key === "Enter" && n) { e.preventDefault(); pick(ui.results[ui.hi].id); }
+    else if (e.key === "Escape" && ui.query) { e.preventDefault(); e.stopPropagation(); ui.query = ""; render(); }
+  }
+
   function onInput(e) {
+    if (e.target.id === "imQuery") { ui.query = e.target.value; ui.hi = 0; render(); return; }
     if (e.target.id === "imText") ui.text = e.target.value;
     if (e.target.id === "imAdd") { ui.addQuery = e.target.value; render(); }
   }
@@ -348,7 +493,8 @@
   }
 
   function open() {
-    Object.assign(ui, { open: true, step: "choose", progress: 0, rows: [], unmatched: [], error: "", addQuery: "" });
+    Object.assign(ui, { open: true, step: "choose", progress: 0, rows: [], unmatched: [], error: "", addQuery: "",
+      picked: [], query: "", hi: 0, results: [], pasteOpen: false, focusQuery: !window.matchMedia("(pointer: coarse)").matches });
     render();
   }
   function close() {

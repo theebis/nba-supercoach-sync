@@ -67,6 +67,19 @@ const VIEWS = {
     await page.evaluate(() => window.SchoopsImporter.open());
     await page.waitForTimeout(300);
   },
+  // Type-ahead: "wemb" + Enter, "jok" + Enter, then leave "max" typed so the suggestions show
+  "import-search": async (page) => {
+    await page.evaluate(() => window.SchoopsImporter.open());
+    const q = page.locator("#imQuery");
+    for (const term of ["wemb", "jok"]) {
+      await q.click();
+      await q.pressSequentially(term, { delay: 20 });
+      await page.keyboard.press("Enter");
+    }
+    await q.click();
+    await q.pressSequentially("max", { delay: 20 });
+    await page.waitForTimeout(200);
+  },
   settings: async (page) => {
     await page.evaluate(() => openSettingsModal());
     await page.waitForTimeout(300);
