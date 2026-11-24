@@ -6,30 +6,31 @@
   <title>SCHOOPS — NBA SuperCoach Terminal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "05929d6687524b7aa4a3465a3facb806"}'></script><!-- End Cloudflare Web Analytics -->
   <style>
     :root {
-      --bg: #0B0C10;
-      --surface: #12141A;
-      --surface-elevated: #171A22;
-      --surface-hover: #1B1F29;
-      --border: #222631;
-      --border-strong: #2F3545;
-      --text: #F3F4F8;
-      --text-muted: #9399A8;
-      --text-dim: #5D6372;
+      --bg: #0D1015;
+      --surface: #13171F;
+      --surface-elevated: #1A1F2A;
+      --surface-hover: #1D2330;
+      --border: #222836;
+      --border-strong: #2F374A;
+      --text: #F2F4F8;
+      --text-muted: #949DAD;
+      --text-dim: #5F687A;
       --pos: #10B981;
+      --pos-bright: #34D399;
       --pos-bg: rgba(16, 185, 129, 0.14);
       --neg: #EF4444;
       --neg-bg: rgba(239, 68, 68, 0.14);
       --warn: #F59E0B;
+      --warn-bright: #FBBF24;
       --warn-bg: rgba(245, 158, 11, 0.16);
-      --neutral-bg: #1C2029;
-      --be-bg: rgba(255, 255, 255, 0.028);
-      --be-bg-hover: rgba(255, 255, 255, 0.052);
-      --be-head-bg: #161922;
-      --be-border: #2B3142;
+      --be-border: rgba(52, 211, 153, 0.58);
+      --be-head-bg: rgba(16, 185, 129, 0.085);
+      --be-col-bg: rgba(16, 185, 129, 0.045);
+      --be-col-hover: rgba(16, 185, 129, 0.085);
       --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
       --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
@@ -41,7 +42,7 @@
       color: var(--text);
       font-family: var(--sans);
       font-size: 13px;
-      line-height: 1.45;
+      line-height: 1.4;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -53,59 +54,62 @@
     .container {
       max-width: 1520px;
       margin: 0 auto;
-      padding: 16px 22px 44px;
+      padding: 14px 22px 44px;
+      position: relative;
     }
 
-    /* Clean 3-Zone Header */
+    /* Unified 3-Zone Header: Brand Left | Centered Nav | Round + LIVE BE CALC + Cog Right */
     header {
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      gap: 20px;
+      gap: 16px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border);
+      position: relative;
     }
 
-    @media (max-width: 1080px) {
+    @media (max-width: 1120px) {
       header {
         grid-template-columns: 1fr;
         gap: 10px;
       }
-      .top-nav {
-        justify-content: flex-start !important;
-      }
+      .top-nav { justify-content: flex-start !important; }
+      .header-controls { justify-content: flex-start !important; }
     }
 
     .brand-group {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .logo {
-      font-weight: 700;
-      font-size: 15.5px;
-      letter-spacing: 0.09em;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: 0.05em;
       color: var(--text);
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 5px;
       white-space: nowrap;
+      user-select: none;
     }
 
     .logo-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 2px;
-      background: var(--pos);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--pos-bright);
       display: inline-block;
+      margin-top: -9px;
     }
 
     .top-nav {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 4px;
+      gap: 6px;
     }
 
     .top-nav-btn {
@@ -115,13 +119,13 @@
       color: var(--text-muted);
       padding: 7px 14px;
       font-family: var(--sans);
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 500;
       border-radius: 6px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       transition: color 0.14s, background 0.14s;
       white-space: nowrap;
     }
@@ -134,24 +138,22 @@
     .top-nav-btn.active {
       color: var(--text);
       font-weight: 600;
-      background: var(--surface-elevated);
     }
 
     .top-nav-btn.active::after {
       content: "";
       position: absolute;
-      left: 12px;
-      right: 12px;
+      left: 10px;
+      right: 10px;
       bottom: -13px;
       height: 2px;
       background: var(--text);
       border-radius: 2px 2px 0 0;
     }
 
-    @media (max-width: 1080px) {
-      .top-nav-btn.active::after {
-        display: none;
-      }
+    @media (max-width: 1120px) {
+      .top-nav-btn.active::after { display: none; }
+      .top-nav-btn.active { background: var(--surface-elevated); }
     }
 
     .nav-pill-count {
@@ -160,7 +162,7 @@
       font-weight: 600;
       padding: 1px 5px;
       border-radius: 99px;
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.07);
       color: var(--text-muted);
     }
 
@@ -175,7 +177,15 @@
       letter-spacing: 0.03em;
     }
 
-    /* Custom Dark-Mode Round Dropdown */
+    .header-controls {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: nowrap;
+    }
+
+    /* Extended Round Dropdown */
     .round-dropdown {
       position: relative;
       display: inline-block;
@@ -184,12 +194,12 @@
     .round-trigger {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
       font-family: var(--mono);
       font-size: 11px;
       font-weight: 600;
-      padding: 5px 10px;
-      border-radius: 5px;
+      padding: 6px 11px;
+      border-radius: 99px;
       border: 1px solid var(--border-strong);
       background: var(--surface);
       color: var(--text);
@@ -200,19 +210,12 @@
     }
 
     .round-trigger:hover {
-      border-color: #464E63;
+      border-color: #465169;
       background: var(--surface-hover);
     }
 
-    .round-tag-live {
-      color: var(--pos);
-      font-weight: 700;
-    }
-
-    .round-tag-snap {
-      color: var(--warn);
-      font-weight: 700;
-    }
+    .round-tag-live { color: var(--pos-bright); font-weight: 700; }
+    .round-tag-snap { color: var(--warn-bright); font-weight: 700; }
 
     .round-chevron {
       color: var(--text-dim);
@@ -220,29 +223,25 @@
       transition: transform 0.15s;
     }
 
-    .round-dropdown.open .round-chevron {
-      transform: rotate(180deg);
-    }
+    .round-dropdown.open .round-chevron { transform: rotate(180deg); }
 
     .round-menu {
       position: absolute;
-      top: calc(100% + 5px);
+      top: calc(100% + 6px);
       right: 0;
-      min-width: 310px;
+      min-width: 295px;
       background: var(--surface-elevated);
       border: 1px solid var(--border-strong);
-      border-radius: 6px;
+      border-radius: 8px;
       padding: 4px;
-      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.65);
-      z-index: 90;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.72);
+      z-index: 95;
       display: none;
       flex-direction: column;
       gap: 2px;
     }
 
-    .round-dropdown.open .round-menu {
-      display: flex;
-    }
+    .round-dropdown.open .round-menu { display: flex; }
 
     .round-option {
       display: flex;
@@ -251,7 +250,7 @@
       gap: 12px;
       background: transparent;
       border: none;
-      border-radius: 4px;
+      border-radius: 5px;
       padding: 7px 10px;
       color: var(--text-muted);
       font-family: var(--mono);
@@ -260,45 +259,19 @@
       cursor: pointer;
       text-align: left;
       width: 100%;
-      transition: background 0.1s, color 0.1s;
     }
 
-    .round-option:hover {
-      background: var(--surface-hover);
-      color: var(--text);
-    }
-
-    .round-option.active {
-      background: #232836;
-      color: var(--text);
-      font-weight: 600;
-    }
+    .round-option:hover { background: var(--surface-hover); color: var(--text); }
+    .round-option.active { background: #252C3D; color: var(--text); font-weight: 600; }
 
     .round-opt-pill {
       font-size: 9.5px;
       font-weight: 700;
       padding: 1px 6px;
       border-radius: 3px;
-      letter-spacing: 0.04em;
     }
-
-    .round-opt-pill.live {
-      background: var(--pos-bg);
-      color: var(--pos);
-    }
-
-    .round-opt-pill.snap {
-      background: var(--warn-bg);
-      color: var(--warn);
-    }
-
-    .header-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-    }
+    .round-opt-pill.live { background: var(--pos-bg); color: var(--pos-bright); }
+    .round-opt-pill.snap { background: var(--warn-bg); color: var(--warn-bright); }
 
     .calc-btn {
       display: inline-flex;
@@ -307,8 +280,8 @@
       background: var(--surface);
       border: 1px solid var(--border-strong);
       color: var(--text);
-      padding: 5px 11px;
-      border-radius: 5px;
+      padding: 6px 11px;
+      border-radius: 6px;
       cursor: pointer;
       font-size: 11px;
       font-weight: 600;
@@ -319,17 +292,18 @@
     }
 
     .calc-btn:hover, .calc-btn.active {
-      background: #232836;
-      border-color: #56607A;
+      background: #232A3A;
+      border-color: var(--pos);
+      color: #FFFFFF;
     }
 
     .icon-btn {
       background: var(--surface);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-strong);
       color: var(--text-muted);
-      width: 30px;
-      height: 30px;
-      border-radius: 5px;
+      width: 31px;
+      height: 31px;
+      border-radius: 6px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -340,33 +314,50 @@
 
     .icon-btn:hover {
       color: var(--text);
-      border-color: var(--border-strong);
+      border-color: #4A5570;
       background: var(--surface-hover);
     }
 
-    /* Live Cash Calculator Scratchpad */
-    .scratchpad {
+    /* Floating LIVE BE CALC Popover (anchored under header right, never shifts layout) */
+    .calc-popover {
       display: none;
-      background: var(--surface);
+      position: absolute;
+      top: 56px;
+      right: 22px;
+      width: 440px;
+      max-width: calc(100vw - 28px);
+      background: var(--surface-elevated);
       border: 1px solid var(--border-strong);
-      border-radius: 6px;
-      padding: 12px 14px;
-      margin-top: 12px;
-      gap: 14px;
+      border-radius: 8px;
+      padding: 14px 16px;
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.78);
+      z-index: 98;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .calc-popover.open { display: flex; }
+
+    .calc-pop-head {
+      display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
     }
 
-    .scratchpad.open {
-      display: flex;
+    .calc-pop-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--pos-bright);
     }
 
-    .scratchpad-inputs {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
+    .calc-pop-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
     }
 
     .sp-field {
@@ -388,53 +379,36 @@
       background: var(--bg);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 5px 9px;
-      border-radius: 4px;
+      padding: 6px 9px;
+      border-radius: 5px;
       font-size: 12px;
       outline: none;
+      width: 100%;
     }
 
-    .sp-search {
-      width: 230px;
-      font-family: var(--sans);
-    }
+    .sp-search { font-family: var(--sans); }
+    .sp-num { font-family: var(--mono); text-align: right; }
+    .sp-search:focus, .sp-num:focus { border-color: var(--pos); }
 
-    .sp-search::placeholder {
-      color: var(--text-dim);
-    }
-
-    .sp-num {
-      width: 78px;
-      text-align: right;
-      font-family: var(--mono);
-    }
-
-    .sp-search:focus, .sp-num:focus {
-      border-color: #56607A;
-    }
-
-    /* Autocomplete Dropdown */
     .ac-list {
       position: absolute;
       top: calc(100% + 4px);
       left: 0;
-      width: 280px;
-      max-height: 240px;
+      width: 100%;
+      max-height: 220px;
       overflow-y: auto;
-      background: var(--surface-elevated);
+      background: #141821;
       border: 1px solid var(--border-strong);
       border-radius: 6px;
       padding: 4px;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7);
-      z-index: 95;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.75);
+      z-index: 105;
       display: none;
       flex-direction: column;
       gap: 2px;
     }
 
-    .ac-list.open {
-      display: flex;
-    }
+    .ac-list.open { display: flex; }
 
     .ac-item {
       display: flex;
@@ -452,117 +426,80 @@
       width: 100%;
     }
 
-    .ac-item:hover, .ac-item.active {
-      background: #232836;
-    }
+    .ac-item:hover, .ac-item.active { background: #232A3A; }
+    .ac-meta { font-family: var(--mono); font-size: 10px; color: var(--text-muted); white-space: nowrap; }
 
-    .ac-meta {
-      font-family: var(--mono);
-      font-size: 10.5px;
-      color: var(--text-muted);
-      white-space: nowrap;
-    }
-
-    .scratchpad-results {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    .sp-stat {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .sp-stat-label {
-      font-size: 9.5px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-dim);
-    }
-
-    .sp-stat-val {
-      font-family: var(--mono);
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    /* Shared View Section Wrapper */
-    .view-section {
-      margin-top: 14px;
-    }
-
-    /* Slim KPI Ticker Bar */
-    .kpi-bar {
+    .calc-pop-results {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: var(--border);
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 6px;
-      overflow: hidden;
-      margin-bottom: 12px;
+      padding: 10px 12px;
     }
 
-    @media (max-width: 900px) {
-      .kpi-bar { grid-template-columns: repeat(2, 1fr); }
-    }
+    .sp-stat { display: flex; flex-direction: column; gap: 2px; }
+    .sp-stat-label { font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); }
+    .sp-stat-val { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); }
 
-    .kpi-item {
-      background: var(--surface);
-      padding: 10px 14px;
+    /* Shared View Wrapper */
+    .view-section { margin-top: 10px; }
+
+    /* Option 2 Slim Single-Line KPI Ticker Strip */
+    .kpi-ticker {
       display: flex;
-      flex-direction: column;
-      gap: 2px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 8px 14px;
+      background: #10141B;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 10px;
+      font-size: 11.5px;
     }
 
-    .kpi-label {
+    .ticker-item {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .ticker-lbl {
       font-size: 10px;
       font-weight: 600;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
       color: var(--text-dim);
     }
 
-    .kpi-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .kpi-val {
+    .ticker-val {
       font-family: var(--mono);
-      font-size: 15px;
       font-weight: 700;
       color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 12px;
     }
 
-    .kpi-sub {
+    .ticker-sub {
       font-family: var(--mono);
       font-size: 11px;
       color: var(--text-muted);
-      white-space: nowrap;
     }
 
-    /* Unified Filter Bar */
+    /* Option 2 Sleek Filter Bar with Pill Groups & Toggle Switches */
     .toolbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      padding: 8px 10px;
+      padding: 7px 10px;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 6px;
-      margin-bottom: 12px;
+      border-radius: 7px;
+      margin-bottom: 10px;
       flex-wrap: wrap;
     }
 
@@ -577,7 +514,7 @@
       display: inline-flex;
       background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 5px;
+      border-radius: 6px;
       padding: 2px;
       gap: 2px;
     }
@@ -586,62 +523,39 @@
       background: transparent;
       border: none;
       color: var(--text-muted);
-      padding: 4px 9px;
-      font-size: 11px;
-      font-weight: 600;
+      padding: 5px 10px;
+      font-size: 11.5px;
+      font-weight: 500;
       border-radius: 4px;
       cursor: pointer;
       font-family: var(--sans);
       transition: all 0.12s;
+      white-space: nowrap;
     }
 
     .seg-btn:hover { color: var(--text); }
     .seg-btn.active {
-      background: var(--surface-elevated);
-      color: var(--text);
+      background: #252C3C;
+      color: #FFFFFF;
+      font-weight: 600;
     }
 
-    .toggle-btn {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 5px 9px;
-      font-size: 11px;
-      font-weight: 500;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.12s;
-    }
-
-    .toggle-btn:hover { border-color: var(--border-strong); color: var(--text); }
-    .toggle-btn.active {
-      border-color: #464E63;
-      background: var(--surface-elevated);
-      color: var(--text);
-    }
-
-    /* Max Price Filter Pill */
     .price-filter {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 5px;
-      padding: 3px 8px;
+      border-radius: 6px;
+      padding: 4px 8px;
       font-size: 11px;
       color: var(--text-muted);
-      transition: border-color 0.12s, background 0.12s;
     }
 
-    .price-filter.active {
-      border-color: #464E63;
-      background: var(--surface-elevated);
-      color: var(--text);
-    }
+    .price-filter.active { border-color: #465169; background: var(--surface-elevated); color: var(--text); }
 
     .price-filter input {
-      width: 48px;
+      width: 44px;
       background: transparent;
       border: none;
       color: var(--text);
@@ -652,16 +566,9 @@
       text-align: right;
     }
 
-    .price-filter input::placeholder {
-      color: var(--text-dim);
-      font-weight: 400;
-    }
-
+    .price-filter input::placeholder { color: var(--text-dim); font-weight: 400; }
     .price-filter input::-webkit-outer-spin-button,
-    .price-filter input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+    .price-filter input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
     .price-clear {
       background: transparent;
@@ -674,46 +581,105 @@
       display: none;
     }
 
-    .price-filter.active .price-clear {
-      display: inline-block;
+    .price-filter.active .price-clear { display: inline-block; }
+
+    .search-box {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
     }
 
-    .price-clear:hover { color: var(--text); }
+    .search-box svg {
+      position: absolute;
+      left: 8px;
+      color: var(--text-dim);
+      pointer-events: none;
+    }
 
     .search-input {
       background: var(--bg);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 5px 10px;
-      border-radius: 5px;
+      padding: 5px 10px 5px 27px;
+      border-radius: 6px;
       font-size: 12px;
-      width: 210px;
+      width: 175px;
       outline: none;
     }
 
     .search-input:focus { border-color: var(--border-strong); }
     .search-input::placeholder { color: var(--text-dim); }
 
-    /* Table */
+    /* Option 2 Toggle Switches */
+    .switch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 3px 4px;
+      user-select: none;
+      transition: color 0.12s;
+    }
+
+    .switch-btn:hover { color: var(--text); }
+    .switch-btn.active { color: var(--text); }
+
+    .switch-track {
+      width: 30px;
+      height: 16px;
+      border-radius: 99px;
+      background: #252B3A;
+      border: 1px solid #343D52;
+      position: relative;
+      transition: background 0.15s, border-color 0.15s;
+      flex-shrink: 0;
+    }
+
+    .switch-thumb {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #949DAD;
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    .switch-btn.active .switch-track {
+      background: rgba(16, 185, 129, 0.25);
+      border-color: var(--pos);
+    }
+
+    .switch-btn.active .switch-thumb {
+      transform: translateX(14px);
+      background: var(--pos-bright);
+    }
+
+    /* Option 2 Data Table */
     .table-wrap {
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 8px;
       overflow-x: auto;
       background: var(--surface);
     }
 
     table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       text-align: left;
     }
 
     thead th {
-      position: sticky;
-      top: 0;
-      background: #0E1015;
+      background: #10141C;
       border-bottom: 1px solid var(--border);
-      padding: 9px 10px;
+      padding: 8px 10px;
       font-size: 10px;
       font-weight: 600;
       text-transform: uppercase;
@@ -722,157 +688,101 @@
       cursor: pointer;
       user-select: none;
       white-space: nowrap;
-      z-index: 2;
+      vertical-align: middle;
     }
 
-    thead th:hover { color: var(--text); }
+    thead th.no-sort { cursor: default; }
+    thead th:not(.no-sort):hover { color: var(--text); }
     thead th.num, tbody td.num { text-align: right; }
     thead th.center, tbody td.center { text-align: center; }
 
-    thead th.sort-active {
-      color: var(--text);
+    thead th.sort-active { color: #FFFFFF; }
+    .sort-arrow { font-size: 8.5px; margin-left: 3px; opacity: 0.9; }
+
+    /* Grouped Schedule Header (SCHEDULE -> R6 | R7 | R8) */
+    thead th.sched-group-th {
+      border-bottom: none;
+      padding: 6px 6px 2px;
+      font-size: 9.5px;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      text-align: center;
     }
 
-    .sort-arrow {
-      font-size: 8.5px;
-      margin-left: 3px;
-      opacity: 0.85;
+    thead th.sched-sub-th {
+      padding: 2px 5px 7px;
+      font-size: 10px;
+      text-align: center;
+      width: 40px;
     }
 
-    /* Breakeven Spotlight Column */
+    /* Option 2 Emerald-Bordered Full-Height BREAKEVEN Spotlight Column */
     thead th.col-be {
       background: var(--be-head-bg);
-      color: var(--text);
+      color: #FFFFFF;
       font-weight: 700;
-      border-left: 1px solid var(--be-border);
-      border-right: 1px solid var(--be-border);
-      box-shadow: inset 0 2px 0 var(--pos);
-      padding-left: 12px;
-      padding-right: 12px;
+      border-top: 2px solid var(--be-border);
+      border-left: 1.5px solid var(--be-border);
+      border-right: 1.5px solid var(--be-border);
+      border-bottom: 2px solid var(--be-border);
+      padding: 8px 14px;
+      text-align: center;
     }
 
     tbody td.col-be {
-      background: var(--be-bg);
-      border-left: 1px solid var(--be-border);
-      border-right: 1px solid var(--be-border);
-      padding-left: 12px;
-      padding-right: 12px;
+      background: var(--be-col-bg);
+      border-left: 1.5px solid var(--be-border);
+      border-right: 1.5px solid var(--be-border);
+      padding: 8px 14px;
+      text-align: right;
+    }
+
+    tbody tr:last-child td.col-be {
+      border-bottom: 1.5px solid var(--be-border);
     }
 
     tbody tr:hover td.col-be {
-      background: var(--be-bg-hover);
+      background: var(--be-col-hover);
     }
 
     .be-main {
       font-weight: 700;
-      font-size: 13px;
+      font-size: 13.5px;
       color: #FFFFFF;
     }
 
     .be-dist {
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 600;
       margin-left: 5px;
     }
 
-    tbody tr {
-      border-bottom: 1px solid #1A1D26;
-      transition: background 0.1s, opacity 0.12s;
-    }
-
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: var(--surface-hover); }
-
-    tbody tr.row-out {
-      opacity: 0.86;
-    }
-
-    tbody tr.row-dnp {
-      opacity: 0.56;
-    }
-
-    tbody tr.row-out:hover,
-    tbody tr.row-dnp:hover {
-      opacity: 1;
-    }
-
     tbody td {
-      padding: 8.5px 10px;
+      padding: 9px 10px;
+      border-bottom: 1px solid #1C212E;
       white-space: nowrap;
       vertical-align: middle;
     }
 
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--surface-hover); }
+
+    tbody tr.row-out { opacity: 0.85; }
+    tbody tr.row-dnp { opacity: 0.54; }
+    tbody tr.row-out:hover, tbody tr.row-dnp:hover { opacity: 1; }
+
+    /* Player Cell with Circular Headshot Avatar */
     .player-cell {
       display: flex;
       align-items: center;
-      gap: 9px;
-      min-width: 245px;
-    }
-
-    .status-rail {
-      width: 3px;
-      height: 28px;
-      border-radius: 2px;
-      background: var(--border-strong);
-      flex-shrink: 0;
-    }
-
-    .status-rail.cow { background: var(--pos); }
-    .status-rail.bleed { background: var(--neg); }
-    .status-rail.out { background: var(--warn); }
-    .status-rail.dnp { background: var(--text-dim); opacity: 0.45; }
-
-    /* Single Rolling 3-Week Schedule Box Strip (Green = 4, Yellow = 2, Slate = 3, Red = 0) */
-    .sched-strip {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-family: var(--mono);
-      font-size: 10.5px;
-      font-weight: 700;
-    }
-
-    .sched-cell {
-      min-width: 20px;
-      padding: 2px 5px;
-      border-radius: 4px;
-      text-align: center;
-      background: #222631;
-      color: #C8CDD8;
-      border: 1px solid #303646;
-      line-height: 1.25;
-    }
-
-    .sched-cell.g4 {
-      background: rgba(16, 185, 129, 0.22);
-      color: #34D399;
-      border-color: rgba(16, 185, 129, 0.45);
-    }
-
-    .sched-cell.g2 {
-      background: rgba(245, 158, 11, 0.22);
-      color: #FBBF24;
-      border-color: rgba(245, 158, 11, 0.48);
-    }
-
-    .sched-cell.g0 {
-      background: rgba(239, 68, 68, 0.2);
-      color: #F87171;
-      border-color: rgba(239, 68, 68, 0.42);
-    }
-
-    .sched-cell.tbd {
-      color: var(--text-dim);
-      background: #14171F;
-      border-style: dashed;
-      border-color: #262B38;
-      font-weight: 500;
+      gap: 10px;
+      min-width: 250px;
     }
 
     .row-actions {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       flex-shrink: 0;
     }
 
@@ -880,14 +790,14 @@
       background: transparent;
       border: 1px solid transparent;
       color: var(--text-dim);
-      width: 22px;
+      width: 24px;
       height: 22px;
       border-radius: 4px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: 14px;
       line-height: 1;
       transition: all 0.12s;
     }
@@ -898,55 +808,97 @@
       color: var(--text);
     }
 
-    .action-icon-btn.starred {
-      color: var(--warn);
-    }
+    .action-icon-btn.starred { color: var(--warn-bright); }
 
     .action-icon-btn.in-squad {
-      background: #F3F4F8;
-      color: #0B0C10;
-      border-color: #F3F4F8;
+      background: #2B3345;
+      color: #F2F4F8;
+      border-color: #44506B;
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 9.5px;
       font-weight: 700;
+      width: 28px;
     }
 
     .action-icon-btn.squad-off {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
-      border-color: var(--border);
+      border-color: var(--border-strong);
+      width: 28px;
     }
 
-    .player-name {
-      font-weight: 600;
-      color: var(--text);
-      font-size: 12.5px;
+    /* Circular Headshot + Fallback Initials */
+    .sc-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #1B202C;
+      border: 1.5px solid var(--av-accent, #323B4E);
     }
 
-    .player-meta {
+    .sc-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    .sc-avatar-init {
       font-family: var(--mono);
-      font-size: 10.5px;
-      color: var(--text-dim);
+      font-size: 11px;
+      font-weight: 700;
+      color: #E5E9F2;
+      letter-spacing: 0.02em;
+    }
+
+    .player-name-row {
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .inj-tag {
-      color: var(--warn);
+    .player-name {
       font-weight: 600;
+      color: var(--text);
+      font-size: 13px;
     }
 
-    .dnp-pill {
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .status-dot.cow { background: var(--pos-bright); }
+    .status-dot.bleed { background: var(--neg); }
+    .status-dot.out { background: var(--warn-bright); }
+
+    .player-meta {
       font-family: var(--mono);
-      font-size: 9px;
-      font-weight: 700;
-      padding: 0px 4px;
-      border-radius: 2px;
-      background: #1C2029;
+      font-size: 10.5px;
       color: var(--text-muted);
-      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 1px;
+    }
+
+    .team-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
     }
 
     .out-pill {
@@ -954,10 +906,19 @@
       font-size: 9px;
       font-weight: 700;
       padding: 0px 4px;
-      border-radius: 2px;
+      border-radius: 3px;
       background: var(--warn-bg);
-      color: var(--warn);
-      letter-spacing: 0.04em;
+      color: var(--warn-bright);
+    }
+
+    .dnp-pill {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 0px 4px;
+      border-radius: 3px;
+      background: #1E2430;
+      color: var(--text-dim);
     }
 
     .zero-pill {
@@ -965,32 +926,71 @@
       font-size: 9px;
       font-weight: 700;
       padding: 0px 4px;
-      border-radius: 2px;
+      border-radius: 3px;
       background: var(--neg-bg);
       color: var(--neg);
-      letter-spacing: 0.04em;
     }
 
-    .pos-text { color: var(--pos); }
+    .inj-tag { color: var(--warn-bright); font-weight: 600; }
+
+    /* Option 2 Schedule Heatmap Tiles */
+    .sched-td {
+      padding: 6px 3px !important;
+      text-align: center;
+    }
+
+    .sched-tile {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 28px;
+      border-radius: 5px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      background: #2C3442;
+      color: #DCE2EE;
+    }
+
+    .sched-tile.g4 {
+      background: #3B8258;
+      color: #FFFFFF;
+    }
+
+    .sched-tile.g2 {
+      background: #9B7432;
+      color: #FFFBEB;
+    }
+
+    .sched-tile.g0 {
+      background: #8B2F34;
+      color: #FEE2E2;
+    }
+
+    .sched-tile.tbd {
+      background: #181D27;
+      color: var(--text-dim);
+      border: 1px dashed #2D3546;
+      font-weight: 500;
+    }
+
+    .form-cell {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: var(--text);
+    }
+
+    .form-sep {
+      color: var(--text-dim);
+      margin: 0 3px;
+    }
+
+    .pos-text { color: var(--pos-bright); }
     .neg-text { color: var(--neg); }
-    .warn-text { color: var(--warn); }
+    .warn-text { color: var(--warn-bright); }
     .muted-text { color: var(--text-muted); }
     .dim-text { color: var(--text-dim); }
-
-    .signal-tag {
-      font-family: var(--mono);
-      font-size: 10px;
-      font-weight: 600;
-      padding: 2px 6px;
-      border-radius: 3px;
-      display: inline-block;
-    }
-
-    .signal-buy { background: var(--pos-bg); color: var(--pos); }
-    .signal-sell { background: var(--neg-bg); color: var(--neg); }
-    .signal-out { background: var(--warn-bg); color: var(--warn); }
-    .signal-hold { background: var(--neutral-bg); color: var(--text-muted); }
-    .signal-dnp { background: #181B23; color: var(--text-dim); border: 1px solid var(--border); }
 
     .table-footer {
       display: flex;
@@ -998,12 +998,12 @@
       justify-content: space-between;
       padding: 10px 14px;
       border-top: 1px solid var(--border);
-      background: #0E1015;
+      background: #10141C;
       font-size: 11px;
       color: var(--text-muted);
     }
 
-    /* Trade Lab Placeholder Panel */
+    /* Trade Lab Placeholder */
     .tradelab-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -1014,21 +1014,11 @@
       gap: 10px;
       max-width: 720px;
     }
-
-    .tradelab-card h2 {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .tradelab-card p {
-      color: var(--text-muted);
-      font-size: 12.5px;
-      line-height: 1.55;
-    }
+    .tradelab-card h2 { font-size: 15px; font-weight: 600; color: var(--text); }
+    .tradelab-card p { color: var(--text-muted); font-size: 12.5px; line-height: 1.55; }
 
     .btn {
-      background: var(--surface);
+      background: var(--surface-elevated);
       border: 1px solid var(--border-strong);
       color: var(--text);
       padding: 6px 12px;
@@ -1042,13 +1032,13 @@
       gap: 6px;
     }
 
-    .btn:hover { background: var(--surface-hover); }
-    .btn-primary { background: #F3F4F8; color: #0B0C10; border-color: #F3F4F8; font-weight: 600; }
-    .btn-primary:hover { background: #E2E4EC; }
+    .btn:hover { background: #232A3A; }
+    .btn-primary { background: #F2F4F8; color: #0D1015; border-color: #F2F4F8; font-weight: 600; }
+    .btn-primary:hover { background: #DFE4EE; }
     .btn-danger { color: var(--neg); border-color: rgba(239, 68, 68, 0.35); }
     .btn-danger:hover { background: var(--neg-bg); }
 
-    /* Modal */
+    /* Settings Modal */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -1056,7 +1046,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 100;
+      z-index: 120;
       padding: 16px;
     }
 
@@ -1106,10 +1096,7 @@
       color: var(--text-muted);
       line-height: 1.5;
     }
-
-    .info-box strong {
-      color: var(--text);
-    }
+    .info-box strong { color: var(--text); }
 
     .text-input {
       background: var(--bg);
@@ -1122,31 +1109,22 @@
       width: 100%;
       outline: none;
     }
-
     .text-input:focus { border-color: var(--border-strong); }
 
-    .inline-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
+    .inline-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .btn-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-
     .divider { height: 1px; background: var(--border); }
-
     .hint { font-size: 11px; color: var(--text-dim); }
-    .status-msg { font-size: 11px; font-family: var(--mono); color: var(--pos); }
+    .status-msg { font-size: 11px; font-family: var(--mono); color: var(--pos-bright); }
 
     .sync-dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: var(--pos);
+      background: var(--pos-bright);
       flex-shrink: 0;
     }
-    .sync-dot.loading { background: var(--warn); }
+    .sync-dot.loading { background: var(--warn-bright); }
     .sync-dot.error { background: var(--neg); }
   </style>
 </head>
@@ -1155,7 +1133,7 @@
     <!-- Unified 3-Zone Header -->
     <header>
       <div class="brand-group">
-        <div class="logo"><span class="logo-dot"></span>SCHOOPS</div>
+        <div class="logo">SCHOOPS<span class="logo-dot"></span></div>
       </div>
 
       <nav class="top-nav" id="topNavTabs" aria-label="Primary Views">
@@ -1173,21 +1151,30 @@
       </nav>
 
       <div class="header-controls">
-        <!-- Custom Dark-Mode Round Selector -->
         <div class="round-dropdown" id="roundDropdown">
           <button class="round-trigger" id="roundTrigger" type="button" title="Switch between live round and historical snapshots">
-            <span id="roundTriggerText">ROUND 6 · NOV 24 – NOV 30 (AEDT)</span>
+            <span id="roundTriggerText">ROUND 6 · NOV 24–30</span>
+            <span>·</span>
             <span class="round-tag-live" id="roundTriggerTag">LIVE</span>
-            <span class="round-chevron">▼</span>
+            <span class="round-chevron">▾</span>
           </button>
           <div class="round-menu" id="roundMenu"></div>
         </div>
 
-        <button class="calc-btn" id="toggleCalcBtn" title="Estimate live cash earned from a player's current score and breakeven">
-          <span>LIVE CASH CALC</span>
+        <button class="calc-btn" id="toggleCalcBtn" type="button" title="Live Breakeven & Cash Earned Calculator">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2"/>
+            <line x1="8" y1="6" x2="16" y2="6"/>
+            <line x1="8" y1="10" x2="10" y2="10"/>
+            <line x1="14" y1="10" x2="16" y2="10"/>
+            <line x1="8" y1="14" x2="10" y2="14"/>
+            <line x1="14" y1="14" x2="16" y2="14"/>
+            <line x1="8" y1="18" x2="16" y2="18"/>
+          </svg>
+          <span>LIVE BE CALC</span>
         </button>
 
-        <button class="icon-btn" id="openSettingsBtn" title="Settings, Data Sync & Squad Transfer">
+        <button class="icon-btn" id="openSettingsBtn" type="button" title="Settings, Feed Sync & Squad Transfer">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"></circle>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -1196,80 +1183,73 @@
       </div>
     </header>
 
-    <!-- Temporary Live Cash Calculator -->
-    <div class="scratchpad" id="scratchpadPanel">
-      <div class="scratchpad-inputs">
-        <div class="sp-field">
-          <label>Search Player</label>
-          <input type="text" class="sp-search" id="calcPlayerSearch" placeholder="Type name (e.g. wemb)..." autocomplete="off" />
-          <div class="ac-list" id="calcAcList"></div>
-        </div>
+    <!-- Floating LIVE BE CALC Popover -->
+    <div class="calc-popover" id="scratchpadPanel">
+      <div class="calc-pop-head">
+        <span class="calc-pop-title">LIVE BREAKEVEN &amp; CASH CALCULATOR</span>
+        <button class="icon-btn" id="closeCalcBtn" type="button" style="width:24px; height:24px;" title="Close">✕</button>
+      </div>
+      <div class="sp-field">
+        <label>Search Player</label>
+        <input type="text" class="sp-search" id="calcPlayerSearch" placeholder="Type name (e.g. wemb, bamba)..." autocomplete="off" />
+        <div class="ac-list" id="calcAcList"></div>
+      </div>
+      <div class="calc-pop-grid">
         <div class="sp-field">
           <label>Breakeven</label>
-          <input type="number" class="sp-num" id="calcBeInput" value="-19" step="1" />
+          <input type="number" class="sp-num" id="calcBeInput" value="-11" step="1" />
         </div>
         <div class="sp-field">
           <label>Live Score</label>
-          <input type="number" class="sp-num" id="calcScoreInput" value="51" step="1" />
+          <input type="number" class="sp-num" id="calcScoreInput" value="64" step="1" />
         </div>
         <div class="sp-field">
           <label>Price ($M)</label>
-          <input type="number" class="sp-num" id="calcPriceInput" value="9.23" step="0.01" />
+          <input type="number" class="sp-num" id="calcPriceInput" value="8.05" step="0.01" />
         </div>
       </div>
-
-      <div class="scratchpad-results">
+      <div class="calc-pop-results">
         <div class="sp-stat">
-          <span class="sp-stat-label">Points vs BE</span>
-          <span class="sp-stat-val pos-text" id="calcPtsDiff">+70</span>
+          <span class="sp-stat-label">Pts vs BE</span>
+          <span class="sp-stat-val pos-text" id="calcPtsDiff">+75</span>
         </div>
         <div class="sp-stat">
-          <span class="sp-stat-label">Est. Cash Earned</span>
-          <span class="sp-stat-val pos-text" id="calcCashEarned">+$1.04M</span>
+          <span class="sp-stat-label">Est. Cash</span>
+          <span class="sp-stat-val pos-text" id="calcCashEarned">+$1.11M</span>
         </div>
         <div class="sp-stat">
-          <span class="sp-stat-label">Est. New Price</span>
-          <span class="sp-stat-val" id="calcNewPrice">$10.27M</span>
+          <span class="sp-stat-label">New Price</span>
+          <span class="sp-stat-val" id="calcNewPrice">$9.16M</span>
         </div>
-        <button class="icon-btn" id="closeCalcBtn" title="Close Calculator">✕</button>
       </div>
     </div>
 
-    <!-- MARKET VIEW -->
+    <!-- MARKET VIEW (Option 2) -->
     <div id="marketViewSection" class="view-section">
-      <!-- Slim KPI Summary Bar -->
-      <div class="kpi-bar">
-        <div class="kpi-item">
-          <span class="kpi-label">Squad Value</span>
-          <div class="kpi-row">
-            <span class="kpi-val" id="kpiSquadVal">$0.00M</span>
-            <span class="kpi-sub" id="kpiSquadCount">0 tracked</span>
-          </div>
+      <!-- Slim Single-Line KPI Ticker -->
+      <div class="kpi-ticker">
+        <div class="ticker-item">
+          <span class="ticker-lbl">Squad Value:</span>
+          <span class="ticker-val" id="kpiSquadVal">$0.00M</span>
+          <span class="ticker-sub" id="kpiSquadCount">(0 tracked)</span>
         </div>
-        <div class="kpi-item">
-          <span class="kpi-label">Projected Squad Cash Gen</span>
-          <div class="kpi-row">
-            <span class="kpi-val" id="kpiCashGen">$0</span>
-            <span class="kpi-sub" id="kpiCashSub">Next price change</span>
-          </div>
+        <div class="ticker-item">
+          <span class="ticker-lbl">Projected Squad Cash Gen:</span>
+          <span class="ticker-val" id="kpiCashGen">$0</span>
         </div>
-        <div class="kpi-item">
-          <span class="kpi-label">#1 League Cash Cow</span>
-          <div class="kpi-row">
-            <span class="kpi-val" id="kpiTopCow">—</span>
-            <span class="kpi-sub pos-text" id="kpiTopCowMeta">—</span>
-          </div>
+        <div class="ticker-item">
+          <span class="ticker-lbl">#1 League Cash Cow:</span>
+          <span class="ticker-val" id="kpiTopCow">—</span>
+          <span class="ticker-sub pos-text" id="kpiTopCowMeta">—</span>
         </div>
-        <div class="kpi-item">
-          <span class="kpi-label">Top 4-Game POD (&lt;5% Own)</span>
-          <div class="kpi-row">
-            <span class="kpi-val" id="kpiTopPod">—</span>
-            <span class="kpi-sub pos-text" id="kpiTopPodMeta">—</span>
-          </div>
+        <div class="ticker-item">
+          <span class="ticker-lbl">Top 4-Game POD (&lt;5% Own):</span>
+          <span class="ticker-val" id="kpiTopPod">—</span>
+          <span class="ticker-sub pos-text" id="kpiTopPodMeta">—</span>
         </div>
       </div>
 
-      <!-- Unified Filter Bar -->
+      <!-- Filter Toolbar -->
       <div class="toolbar">
         <div class="toolbar-left">
           <div class="segmented" id="statusTabs">
@@ -1289,46 +1269,63 @@
             <button class="seg-btn" data-pos="C">C</button>
           </div>
 
-          <div class="price-filter" id="priceFilterWrap" title="Filter to players at or under your budget (e.g. type 6 for ≤ $6.00M)">
+          <div class="price-filter" id="priceFilterWrap" title="Filter to players at or under budget (e.g. type 6 for ≤ $6.00M)">
             <span>MAX $</span>
             <input type="number" id="maxPriceInput" placeholder="Any" step="0.5" min="0" />
             <span>M</span>
             <button class="price-clear" id="clearPriceBtn" title="Clear price filter">×</button>
           </div>
 
-          <button class="toggle-btn" id="toggleFourGames">4-Game Only</button>
-          <button class="toggle-btn" id="togglePods">PODs &lt;5%</button>
-          <button class="toggle-btn active" id="toggleHideDnps" title="Hides deep-bench DNPs while keeping injured stars (OUT/INJ) visible. Auto-disabled in Squad, Watchlist, and Search.">Hide DNPs</button>
+          <div class="search-box">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search player or team..." />
+          </div>
         </div>
 
         <div class="toolbar-right">
-          <input type="text" class="search-input" id="searchInput" placeholder="Search player or team..." />
+          <button type="button" class="switch-btn" id="toggleFourGames">
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span>4-Game Only</span>
+          </button>
+          <button type="button" class="switch-btn" id="togglePods">
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span>PODs &lt;5%</span>
+          </button>
+          <button type="button" class="switch-btn active" id="toggleHideDnps" title="Hides deep-bench DNPs while keeping injured stars (OUT/INJ) visible. Auto-disabled in Squad, Watchlist, and Search.">
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span>Hide DNPs</span>
+          </button>
         </div>
       </div>
 
-      <!-- Main Data Table -->
+      <!-- Option 2 Data Table -->
       <div class="table-wrap" id="mainTableWrap">
         <table>
           <thead>
             <tr>
-              <th data-sort="name" data-col="name">Player</th>
-              <th class="num" data-sort="price" data-col="price">Price ($M)</th>
-              <th class="num" data-sort="owned" data-col="owned">Own %</th>
-              <th class="num" data-sort="r_minus_2" data-col="r_minus_2" id="thWkMinus2">Wk 4</th>
-              <th class="num" data-sort="r_minus_1" data-col="r_minus_1" id="thWkMinus1">Wk 5</th>
-              <th class="center" data-sort="games" data-col="games" id="thSched" title="Rolling 3-week schedule (Current · Next · +2). Click to sort by current round games.">SCHED R6-R8</th>
-              <th class="num col-be" data-sort="be" data-col="be" id="thBe">Breakeven</th>
-              <th class="num" data-sort="proj" data-col="proj" id="thProj">Rd 6 Proj</th>
-              <th class="num" data-sort="avg3" data-col="avg3">3-Wk Avg</th>
-              <th class="num" data-sort="avg5" data-col="avg5" title="Reads avg5 / avg_5 / five_week_avg from your JSON">5-Wk Avg</th>
-              <th class="num sort-active" data-sort="priceChange" data-col="priceChange">Proj Chg</th>
-              <th class="num" data-sort="newPrice" data-col="newPrice">New Price</th>
-              <th class="num" data-sort="priceChange" data-col="signal">Signal</th>
+              <th rowspan="2" data-sort="name" data-col="name">Player</th>
+              <th rowspan="2" class="num" data-sort="price" data-col="price">Price ($M)</th>
+              <th rowspan="2" class="num" data-sort="owned" data-col="owned">Own %</th>
+              <th rowspan="2" class="num" data-sort="r_minus_1" data-col="form" id="thForm" title="Last two completed rounds (Wk-2 / Wk-1). Click to sort by most recent score.">Form</th>
+              <th colspan="3" class="sched-group-th no-sort">Schedule</th>
+              <th rowspan="2" class="col-be" data-sort="be" data-col="be" id="thBe">Breakeven</th>
+              <th rowspan="2" class="num" data-sort="proj" data-col="proj" id="thProj">Rd 6 Proj</th>
+              <th rowspan="2" class="num" data-sort="avg3" data-col="avg3">3-Wk Avg</th>
+              <th rowspan="2" class="num" data-sort="avg5" data-col="avg5">5-Wk Avg</th>
+              <th rowspan="2" class="num sort-active" data-sort="priceChange" data-col="priceChange">Proj Chg</th>
+              <th rowspan="2" class="num" data-sort="newPrice" data-col="newPrice">New Price</th>
+            </tr>
+            <tr>
+              <th class="sched-sub-th" data-sort="games" data-col="games" id="thR0">R6</th>
+              <th class="sched-sub-th" data-sort="gamesNext" data-col="gamesNext" id="thR1">R7</th>
+              <th class="sched-sub-th" data-sort="gamesAfter" data-col="gamesAfter" id="thR2">R8</th>
             </tr>
           </thead>
           <tbody id="tableBody">
             <tr>
-              <td colspan="13" style="text-align:center; padding:32px; color:var(--text-dim);">
+              <td colspan="13" style="text-align:center; padding:34px; color:var(--text-dim);">
                 Loading player feed...
               </td>
             </tr>
@@ -1348,7 +1345,7 @@
     <div id="tradeLabViewRoot" class="view-section" style="display:none;">
       <div class="tradelab-card">
         <h2>Trade Lab &amp; Scenario Comparator</h2>
-        <p>Phase 3 will connect your live Squad, salary bank, future round schedules, and Court projections into a side-by-side trade comparator (Points Gained vs. Cash Gen Gained across competing plans).</p>
+        <p>Phase 3 connects your Squad, salary bank, 3-round schedule, and Court optimiser into a side-by-side trade comparator showing projected points gained/lost and cash generation gained/lost across competing plans.</p>
         <div class="btn-row" style="margin-top:4px;">
           <button type="button" class="btn btn-primary" id="jumpToCourtBtn">Open My Court</button>
           <button type="button" class="btn" id="jumpToMarketBtn">Back to Market</button>
@@ -1361,7 +1358,7 @@
   <div class="modal-backdrop" id="settingsModal">
     <div class="modal">
       <div class="modal-header">
-        <h2>Settings, Feed Sync &amp; Squad</h2>
+        <h2>Settings, Data Sync &amp; Squad</h2>
         <button class="icon-btn" id="closeSettingsBtn">✕</button>
       </div>
       <div class="modal-body">
@@ -1380,7 +1377,7 @@
 
         <div class="field-group">
           <label>Squad &amp; Watchlist Transfer Code</label>
-          <span class="hint">Your squad and court lineup save automatically in this browser. Copy your code to load on another device.</span>
+          <span class="hint">Your squad and court lineup save automatically in this browser. Copy your code to transfer to another device.</span>
           <div class="btn-row">
             <button class="btn btn-primary" id="copySquadCodeBtn">Copy Squad Code</button>
             <span class="status-msg" id="squadCodeStatus"></span>
@@ -1428,6 +1425,17 @@
     const RELEVANT_OUT_PRICE = 6500000;
     const RELEVANT_OUT_OWN = 3.0;
 
+    const TEAM_COLORS = {
+      ATL: "#E03A3E", BOS: "#007A33", BKN: "#9BA3B4", CHA: "#1D87B8",
+      CHI: "#CE1141", CLE: "#860038", DAL: "#00538C", DEN: "#FEC524",
+      DET: "#C8102E", GSW: "#1D428A", HOU: "#CE1141", IND: "#FDBB30",
+      LAC: "#C8102E", LAL: "#8B5CF6", MEM: "#5D76A9", MIA: "#98002E",
+      MIL: "#006B2E", MIN: "#78BE20", NOP: "#A38B5F", NYK: "#F58426",
+      OKC: "#007AC1", ORL: "#0077C0", PHI: "#006BB6", PHX: "#E56020",
+      POR: "#E03A3E", SAC: "#7C3AED", SAS: "#C4CED4", TOR: "#CE1141",
+      UTA: "#8E3B52", WAS: "#E31837"
+    };
+
     const state = {
       activeNav: "market",
       liveRound: 6,
@@ -1460,13 +1468,53 @@
       showAll: false
     };
 
-    function getRoundDateRangeAEDT(roundNum) {
+    function getTeamColor(team) {
+      return TEAM_COLORS[String(team || "").toUpperCase()] || "#525D73";
+    }
+
+    function getInitials(name) {
+      const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+      if (parts.length === 0) return "?";
+      if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+    }
+
+    function renderAvatar(player, sizePx) {
+      const sz = sizePx || 34;
+      const accent = getTeamColor(player.team);
+      const init = escapeHtml(getInitials(player.name));
+      const style = `width:${sz}px; height:${sz}px; --av-accent:${accent};`;
+      if (player.photo) {
+        const safeUrl = escapeHtml(player.photo);
+        return `
+          <span class="sc-avatar" style="${style}">
+            <img src="${safeUrl}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';" />
+            <span class="sc-avatar-init" style="display:none;">${init}</span>
+          </span>
+        `;
+      }
+      return `
+        <span class="sc-avatar" style="${style}">
+          <span class="sc-avatar-init">${init}</span>
+        </span>
+      `;
+    }
+
+    function getRoundDateRangeCompact(roundNum) {
       const r = Number(roundNum) || 5;
       const anchorStart = new Date(Date.UTC(2026, 10, 17));
       const start = new Date(anchorStart.getTime() + (r - 5) * 7 * 86400000);
       const end = new Date(start.getTime() + 6 * 86400000);
-      const fmt = (d) => d.toLocaleDateString("en-AU", { month: "short", day: "numeric", timeZone: "UTC" }).toUpperCase();
-      return `${fmt(start)} – ${fmt(end)} (AEDT)`;
+      const sMon = start.toLocaleDateString("en-AU", { month: "short", timeZone: "UTC" }).toUpperCase();
+      const eMon = end.toLocaleDateString("en-AU", { month: "short", timeZone: "UTC" }).toUpperCase();
+      const sDay = start.getUTCDate();
+      const eDay = end.getUTCDate();
+      if (sMon === eMon) return `${sMon} ${sDay}–${eDay}`;
+      return `${sMon} ${sDay}–${eMon} ${eDay}`;
     }
 
     function getHistoryUrl(roundNum) {
@@ -1475,14 +1523,10 @@
     }
 
     function formatFeedTimestamp(isoStr) {
-      if (!isoStr) return { short: "Live Feed", full: "Unknown feed timestamp", rel: "" };
+      if (!isoStr) return { short: "Sync Now", full: "Unknown feed timestamp", rel: "" };
       const dt = new Date(isoStr);
-      if (Number.isNaN(dt.getTime())) {
-        return { short: "Live Feed", full: String(isoStr), rel: "" };
-      }
-
-      const now = new Date();
-      const diffMs = Math.max(0, now.getTime() - dt.getTime());
+      if (Number.isNaN(dt.getTime())) return { short: "Sync Now", full: String(isoStr), rel: "" };
+      const diffMs = Math.max(0, Date.now() - dt.getTime());
       const diffMins = Math.floor(diffMs / 60000);
       let rel = "just now";
       if (diffMins >= 1440) {
@@ -1496,7 +1540,6 @@
       } else if (diffMins >= 1) {
         rel = `${diffMins}m ago`;
       }
-
       return { short: `Synced ${rel}`, full: dt.toLocaleString(), rel };
     }
 
@@ -1541,38 +1584,37 @@
       let gNext = null;
       let gAfter = null;
 
-      if (Array.isArray(p.upcoming_games_list) || Array.isArray(p.games_by_round) || Array.isArray(p.schedule_counts)) {
-        const arr = p.upcoming_games_list || p.games_by_round || p.schedule_counts;
-        if (arr.length > 1 && arr[1] !== undefined && arr[1] !== null && arr[1] !== "") gNext = Number(arr[1]);
-        if (arr.length > 2 && arr[2] !== undefined && arr[2] !== null && arr[2] !== "") gAfter = Number(arr[2]);
-      } else if (p.games_by_round && typeof p.games_by_round === "object") {
-        const r = Number(roundNum) || 6;
-        if (p.games_by_round[String(r + 1)] !== undefined) gNext = Number(p.games_by_round[String(r + 1)]);
-        if (p.games_by_round[String(r + 2)] !== undefined) gAfter = Number(p.games_by_round[String(r + 2)]);
-      }
-
-      if (gNext === null && p.next_round_games !== undefined && p.next_round_games !== null && p.next_round_games !== "") {
+      if (p.next_round_games !== undefined && p.next_round_games !== null && p.next_round_games !== "") {
         gNext = Number(p.next_round_games);
       }
-      if (gAfter === null && p.round_after_games !== undefined && p.round_after_games !== null && p.round_after_games !== "") {
+      if (p.round_after_games !== undefined && p.round_after_games !== null && p.round_after_games !== "") {
         gAfter = Number(p.round_after_games);
+      }
+
+      if (Array.isArray(p.upcoming_games_list) || Array.isArray(p.games_by_round) || Array.isArray(p.schedule_counts)) {
+        const arr = p.upcoming_games_list || p.games_by_round || p.schedule_counts;
+        if (gNext === null && arr.length > 1 && arr[1] !== null && arr[1] !== "") gNext = Number(arr[1]);
+        if (gAfter === null && arr.length > 2 && arr[2] !== null && arr[2] !== "") gAfter = Number(arr[2]);
+      } else if (p.games_by_round && typeof p.games_by_round === "object") {
+        const r = Number(roundNum) || 6;
+        if (gNext === null && p.games_by_round[String(r + 1)] !== undefined && p.games_by_round[String(r + 1)] !== null) gNext = Number(p.games_by_round[String(r + 1)]);
+        if (gAfter === null && p.games_by_round[String(r + 2)] !== undefined && p.games_by_round[String(r + 2)] !== null) gAfter = Number(p.games_by_round[String(r + 2)]);
       }
 
       const teamCode = String(p.team || p.team_abbrev || "").toUpperCase();
       if (teamCode && teamScheduleMap && teamScheduleMap[teamCode]) {
         const tSched = teamScheduleMap[teamCode];
+        const r = Number(roundNum) || 6;
         if (Array.isArray(tSched)) {
           if (gNext === null && tSched[1] !== undefined && tSched[1] !== null) gNext = Number(tSched[1]);
           if (gAfter === null && tSched[2] !== undefined && tSched[2] !== null) gAfter = Number(tSched[2]);
         } else if (typeof tSched === "object") {
-          const r = Number(roundNum) || 6;
-          if (gNext === null && tSched[String(r + 1)] !== undefined) gNext = Number(tSched[String(r + 1)]);
-          if (gAfter === null && tSched[String(r + 2)] !== undefined) gAfter = Number(tSched[String(r + 2)]);
+          if (gNext === null && tSched[String(r + 1)] !== undefined && tSched[String(r + 1)] !== null) gNext = Number(tSched[String(r + 1)]);
+          if (gAfter === null && tSched[String(r + 2)] !== undefined && tSched[String(r + 2)] !== null) gAfter = Number(tSched[String(r + 2)]);
         }
       }
 
       return {
-        gamesCurrent: currentGames,
         gamesNext: (gNext !== null && !Number.isNaN(gNext)) ? gNext : null,
         gamesAfter: (gAfter !== null && !Number.isNaN(gAfter)) ? gAfter : null
       };
@@ -1599,6 +1641,11 @@
 
       const futureGms = extractFutureGames(p, games, roundNum, teamScheduleMap);
 
+      let photo = p.photo || p.headshot || p.avatar || p.image_url || null;
+      if (!photo && p.nba_id) {
+        photo = `https://cdn.nba.com/headshots/nba/latest/260x190/${p.nba_id}.png`;
+      }
+
       return {
         id,
         name: String(p.name || `${p.first_name || ""} ${p.last_name || ""}`.trim() || "Unknown"),
@@ -1614,7 +1661,8 @@
         owned,
         avg5,
         officialBe,
-        injury: p.injury || p.injury_status || null
+        injury: p.injury || p.injury_status || null,
+        photo
       };
     }
 
@@ -1640,7 +1688,6 @@
         inWatchlist
       );
       const isFringeDnp = isInactive && !isRelevantOut;
-      const isDnp = isInactive || isZeroGames;
       const rolling3 = (r2 + r1 + proj) / 3;
 
       const be = isInactive
@@ -1661,12 +1708,6 @@
         else if (priceChange <= BLEED_THRESHOLD) trend = "bleed";
       }
 
-      let signal = "HOLD";
-      if (isRelevantOut) signal = base.injury ? "INJ" : "OUT";
-      else if (isFringeDnp) signal = "DNP";
-      else if (trend === "cow") signal = "CASH COW";
-      else if (trend === "bleed") signal = "BLEEDING";
-
       return {
         ...base,
         price,
@@ -1684,9 +1725,7 @@
         isRelevantOut,
         isFringeDnp,
         isZeroGames,
-        isDnp,
-        trend,
-        signal
+        trend
       };
     }
 
@@ -1702,30 +1741,15 @@
       return `$${(val / 1000000).toFixed(2)}M`;
     }
 
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
-    }
-
-    function renderSchedStrip(p, roundNum) {
-      const r = Number(roundNum) || 6;
-      const cells = [
-        { val: p.games, label: `R${r}` },
-        { val: p.gamesNext, label: `R${r + 1}` },
-        { val: p.gamesAfter, label: `R${r + 2}` }
-      ];
-
-      const html = cells.map((c) => {
-        if (c.val === null || c.val === undefined || Number.isNaN(c.val)) {
-          return `<span class="sched-cell tbd" title="${c.label}: Pending multi-round schedule sync">—</span>`;
-        }
-        let colorCls = "";
-        if (c.val >= 4) colorCls = "g4";
-        else if (c.val === 2) colorCls = "g2";
-        else if (c.val === 0) colorCls = "g0";
-        return `<span class="sched-cell ${colorCls}" title="${c.label}: ${c.val} games">${c.val}</span>`;
-      }).join("");
-
-      return `<div class="sched-strip">${html}</div>`;
+    function renderSchedTile(val, label) {
+      if (val === null || val === undefined || Number.isNaN(val)) {
+        return `<span class="sched-tile tbd" title="${label}: Pending fixture sync">—</span>`;
+      }
+      let cls = "";
+      if (val >= 4) cls = "g4";
+      else if (val === 2) cls = "g2";
+      else if (val === 0) cls = "g0";
+      return `<span class="sched-tile ${cls}" title="${label}: ${val} games">${val}</span>`;
     }
 
     function setSyncStatus(mode, text, tooltip) {
@@ -1785,9 +1809,9 @@
       const triggerTag = document.getElementById("roundTriggerTag");
       const menu = document.getElementById("roundMenu");
 
-      triggerText.textContent = `ROUND ${state.round} · ${getRoundDateRangeAEDT(state.round)}`;
+      triggerText.textContent = `ROUND ${state.round} · ${getRoundDateRangeCompact(state.round)}`;
       if (state.isHistorical) {
-        triggerTag.textContent = "SNAPSHOT";
+        triggerTag.textContent = "SNAP";
         triggerTag.className = "round-tag-snap";
       } else {
         triggerTag.textContent = "LIVE";
@@ -1799,7 +1823,7 @@
         const isActive = Number(r) === Number(state.round);
         return `
           <button type="button" class="round-option ${isActive ? "active" : ""}" data-round="${r}">
-            <span>ROUND ${r} · ${getRoundDateRangeAEDT(r)}</span>
+            <span>ROUND ${r} · ${getRoundDateRangeCompact(r)} (AEDT)</span>
             <span class="round-opt-pill ${isLive ? "live" : "snap"}">${isLive ? "LIVE" : "SNAPSHOT"}</span>
           </button>
         `;
@@ -1827,19 +1851,11 @@
       state.lastUpdated = data.lastUpdated || data.last_updated || data.updated_at || data.timestamp || null;
       const ts = formatFeedTimestamp(state.lastUpdated);
 
-      if (state.isHistorical) {
-        setSyncStatus(
-          "",
-          `Snapshot Rd ${state.round}`,
-          `Historical snapshot for Round ${state.round} · Saved ${ts.full}.`
-        );
-      } else {
-        setSyncStatus(
-          "",
-          ts.short,
-          `Feed updated: ${ts.full}${ts.rel ? ` (${ts.rel})` : ""} · Click to refresh`
-        );
-      }
+      setSyncStatus(
+        "",
+        state.isHistorical ? `Snapshot Rd ${state.round}` : ts.short,
+        `Feed updated: ${ts.full}${ts.rel ? ` (${ts.rel})` : ""} · Click to refresh`
+      );
 
       document.getElementById("syncMetaHint").textContent =
         `${sourceLabel} · ${state.players.length} players · ${ts.full}`;
@@ -1848,7 +1864,7 @@
       render();
     }
 
-    /* Live Cash Calculator Autocomplete & Math */
+    /* LIVE BE CALC Popover Math (0.25 weekly weighting) */
     function recalculateScratchpad() {
       const be = parseFloat(document.getElementById("calcBeInput").value) || 0;
       const score = parseFloat(document.getElementById("calcScoreInput").value) || 0;
@@ -2003,16 +2019,16 @@
         name: "Player",
         price: "Price ($M)",
         owned: "Own %",
-        r_minus_2: `Wk ${Math.max(1, r - 2)}`,
-        r_minus_1: `Wk ${Math.max(1, r - 1)}`,
-        games: `SCHED R${r}-R${r + 2}`,
+        form: `Form (W${Math.max(1, r - 2)}/W${Math.max(1, r - 1)})`,
+        games: `R${r}`,
+        gamesNext: `R${r + 1}`,
+        gamesAfter: `R${r + 2}`,
         be: "Breakeven",
         proj: `Rd ${r} Proj`,
         avg3: "3-Wk Avg",
         avg5: "5-Wk Avg",
         priceChange: "Proj Chg",
-        newPrice: "New Price",
-        signal: "Signal"
+        newPrice: "New Price"
       };
 
       document.querySelectorAll("thead th[data-col]").forEach((th) => {
@@ -2033,27 +2049,26 @@
       if (navCountEl) navCountEl.textContent = String(squad.length);
 
       document.getElementById("kpiSquadVal").textContent = formatPriceM(squadVal);
-      document.getElementById("kpiSquadCount").textContent = `${squad.length} tracked`;
+      document.getElementById("kpiSquadCount").textContent = `(${squad.length} tracked)`;
 
       const cashEl = document.getElementById("kpiCashGen");
       cashEl.textContent = formatMoney(squadCash);
-      cashEl.className = "kpi-val " + (squadCash > 0 ? "pos-text" : squadCash < 0 ? "neg-text" : "");
-      document.getElementById("kpiCashSub").textContent = `Round ${state.round} est.`;
+      cashEl.className = "ticker-val " + (squadCash > 0 ? "pos-text" : squadCash < 0 ? "neg-text" : "");
 
       const sortedCows = [...allComputed].sort((a, b) => b.priceChange - a.priceChange);
       const topCow = sortedCows[0];
       if (topCow) {
         document.getElementById("kpiTopCow").textContent = topCow.name;
-        document.getElementById("kpiTopCowMeta").textContent = `${formatMoney(topCow.priceChange)} · BE ${topCow.be === null ? "—" : topCow.be}`;
+        document.getElementById("kpiTopCowMeta").textContent = `(${formatMoney(topCow.priceChange)} · BE ${topCow.be === null ? "—" : topCow.be})`;
       }
 
       const topPod = sortedCows.find((p) => p.games >= 4 && p.owned > 0 && p.owned < 5);
       if (topPod) {
         document.getElementById("kpiTopPod").textContent = topPod.name;
-        document.getElementById("kpiTopPodMeta").textContent = `${formatMoney(topPod.priceChange)} · ${topPod.owned.toFixed(1)}%`;
+        document.getElementById("kpiTopPodMeta").textContent = `(${formatMoney(topPod.priceChange)} · ${topPod.owned.toFixed(1)}%)`;
       } else {
         document.getElementById("kpiTopPod").textContent = "—";
-        document.getElementById("kpiTopPodMeta").textContent = "No 4G PODs";
+        document.getElementById("kpiTopPodMeta").textContent = "(No 4G PODs)";
       }
 
       const counts = {
@@ -2063,13 +2078,7 @@
         bleeding: allComputed.filter((p) => p.trend === "bleed").length,
         watchlist: allComputed.filter((p) => p.inWatchlist).length
       };
-      const labels = {
-        all: "All",
-        squad: "Squad",
-        cows: "Cows",
-        bleeding: "Bleeding",
-        watchlist: "Watchlist"
-      };
+      const labels = { all: "All", squad: "Squad", cows: "Cows", bleeding: "Bleeding", watchlist: "Watchlist" };
       document.querySelectorAll("#statusTabs .seg-btn").forEach((btn) => {
         const t = btn.dataset.tab;
         btn.textContent = `${labels[t]} (${counts[t]})`;
@@ -2106,33 +2115,29 @@
         const filtered = sortRows(getFilteredRows(allComputed));
         const limit = state.showAll ? filtered.length : Math.min(100, filtered.length);
         const visible = filtered.slice(0, limit);
+        const r = state.round;
 
         const tbody = document.getElementById("tableBody");
         if (visible.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="13" style="text-align:center; padding:32px; color:var(--text-dim);">No players match your current filters.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="13" style="text-align:center; padding:34px; color:var(--text-dim);">No players match your current filters.</td></tr>`;
         } else {
           tbody.innerHTML = visible.map((p) => {
             const chgClass = p.priceChange > 0 ? "pos-text" : p.priceChange < 0 ? "neg-text" : "muted-text";
             const distClass = (p.dist !== null && p.dist >= 0) ? "pos-text" : "neg-text";
             const distSign = (p.dist !== null && p.dist > 0) ? "+" : "";
 
-            const sigClass = p.isRelevantOut
-              ? "signal-out"
-              : (p.isFringeDnp ? "signal-dnp" : (p.trend === "cow" ? "signal-buy" : p.trend === "bleed" ? "signal-sell" : "signal-hold"));
+            const dotCls = p.isRelevantOut ? "out" : (p.trend === "cow" ? "cow" : p.trend === "bleed" ? "bleed" : "");
+            const statusDot = dotCls ? `<span class="status-dot ${dotCls}" title="${dotCls.toUpperCase()}"></span>` : "";
 
             const avg5Cell = (p.avg5 !== null && !Number.isNaN(p.avg5))
               ? `<span class="mono">${p.avg5.toFixed(1)}</span>`
-              : `<span class="mono dim-text" title="Not yet in JSON feed">—</span>`;
+              : `<span class="mono dim-text">—</span>`;
 
-            const railClass = p.isRelevantOut
-              ? "out"
-              : (p.isFringeDnp ? "dnp" : (p.trend === "cow" ? "cow" : p.trend === "bleed" ? "bleed" : ""));
-
-            const statusMetaPill = p.isRelevantOut
-              ? `<span class="out-pill" title="Inactive rotation player / injured star">${p.injury ? "INJ" : "OUT"}</span>`
+            const statusPill = p.isRelevantOut
+              ? `<span class="out-pill">${p.injury ? "INJ" : "OUT"}</span>`
               : (p.isFringeDnp
-                ? `<span class="dnp-pill" title="Inactive deep-bench player">DNP</span>`
-                : (p.isZeroGames ? `<span class="zero-pill" title="0 scheduled games this round">0G</span>` : ""));
+                ? `<span class="dnp-pill">DNP</span>`
+                : (p.isZeroGames ? `<span class="zero-pill">0G</span>` : ""));
 
             const beCellHtml = (p.be === null)
               ? `<span class="dim-text">—</span>`
@@ -2144,18 +2149,22 @@
               <tr class="${rowClass}">
                 <td>
                   <div class="player-cell">
-                    <span class="status-rail ${railClass}" title="${p.signal}"></span>
                     <div class="row-actions">
                       <button class="action-icon-btn ${p.inWatchlist ? "starred" : ""}" data-toggle-watch="${p.id}" title="${p.inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}">${p.inWatchlist ? "★" : "☆"}</button>
                       <button class="action-icon-btn ${p.inSquad ? "in-squad" : "squad-off"}" data-toggle-squad="${p.id}" title="${p.inSquad ? "In Squad (click to remove)" : "Add to Squad"}">${p.inSquad ? "SQ" : "+"}</button>
                     </div>
+                    ${renderAvatar(p, 34)}
                     <div>
-                      <div class="player-name">${escapeHtml(p.name)}</div>
+                      <div class="player-name-row">
+                        <span class="player-name">${escapeHtml(p.name)}</span>
+                        ${statusDot}
+                      </div>
                       <div class="player-meta">
+                        <span class="team-dot" style="background:${getTeamColor(p.team)};"></span>
                         <span>${escapeHtml(p.team)}</span>
                         <span>·</span>
                         <span>${escapeHtml(p.pos)}</span>
-                        ${statusMetaPill}
+                        ${statusPill}
                         ${p.injury ? `<span class="inj-tag">· ${escapeHtml(String(p.injury))}</span>` : ""}
                       </div>
                     </div>
@@ -2163,16 +2172,16 @@
                 </td>
                 <td class="num mono">${(p.price / 1000000).toFixed(2)}</td>
                 <td class="num mono muted-text">${p.owned.toFixed(1)}%</td>
-                <td class="num mono">${p.r_minus_2}</td>
-                <td class="num mono">${p.r_minus_1}</td>
-                <td class="center">${renderSchedStrip(p, state.round)}</td>
+                <td class="num form-cell">${p.r_minus_2}<span class="form-sep">/</span>${p.r_minus_1}</td>
+                <td class="sched-td">${renderSchedTile(p.games, `R${r}`)}</td>
+                <td class="sched-td">${renderSchedTile(p.gamesNext, `R${r + 1}`)}</td>
+                <td class="sched-td">${renderSchedTile(p.gamesAfter, `R${r + 2}`)}</td>
                 <td class="num mono col-be">${beCellHtml}</td>
-                <td class="num mono">${p.proj}</td>
+                <td class="num mono" style="font-weight:600;">${p.proj}</td>
                 <td class="num mono muted-text">${p.avg3.toFixed(1)}</td>
                 <td class="num">${avg5Cell}</td>
-                <td class="num mono ${chgClass}" style="font-weight:600;">${formatMoney(p.priceChange)}</td>
+                <td class="num mono ${chgClass}" style="font-weight:700;">${formatMoney(p.priceChange)}</td>
                 <td class="num mono">${formatPriceM(p.newPrice)}</td>
-                <td class="num"><span class="signal-tag ${sigClass}">${p.signal}</span></td>
               </tr>
             `;
           }).join("");
@@ -2199,6 +2208,9 @@
     }
 
     window.SCHOOPS = {
+      TEAM_COLORS,
+      getTeamColor,
+      renderAvatar,
       getState: () => state,
       savePrefs,
       render,
@@ -2213,15 +2225,14 @@
       }
     };
 
+    /* Navigation */
     document.querySelectorAll("#topNavTabs .top-nav-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        setActiveNav(btn.dataset.nav);
-      });
+      btn.addEventListener("click", () => setActiveNav(btn.dataset.nav));
     });
-
     document.getElementById("jumpToCourtBtn").addEventListener("click", () => setActiveNav("court"));
     document.getElementById("jumpToMarketBtn").addEventListener("click", () => setActiveNav("market"));
 
+    /* Round Dropdown */
     const roundDropdown = document.getElementById("roundDropdown");
     document.getElementById("roundTrigger").addEventListener("click", (e) => {
       e.stopPropagation();
@@ -2233,22 +2244,17 @@
       if (!opt) return;
       const selectedRound = Number(opt.dataset.round);
       roundDropdown.classList.remove("open");
-      if (selectedRound !== state.round) {
-        loadHistoricalRound(selectedRound);
-      }
+      if (selectedRound !== state.round) loadHistoricalRound(selectedRound);
     });
 
-    document.addEventListener("click", (e) => {
-      if (!roundDropdown.contains(e.target)) roundDropdown.classList.remove("open");
-      if (!e.target.closest(".sp-field")) document.getElementById("calcAcList").classList.remove("open");
-    });
-
+    /* Floating LIVE BE CALC Popover */
     const scratchpad = document.getElementById("scratchpadPanel");
     const toggleCalcBtn = document.getElementById("toggleCalcBtn");
     const calcSearchInput = document.getElementById("calcPlayerSearch");
     const calcAcList = document.getElementById("calcAcList");
 
-    toggleCalcBtn.addEventListener("click", () => {
+    toggleCalcBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
       const isOpen = scratchpad.classList.toggle("open");
       toggleCalcBtn.classList.toggle("active", isOpen);
       if (isOpen) calcSearchInput.focus();
@@ -2259,10 +2265,16 @@
       toggleCalcBtn.classList.remove("active");
     });
 
-    calcSearchInput.addEventListener("input", (e) => {
-      renderAutocomplete(e.target.value);
+    document.addEventListener("click", (e) => {
+      if (!roundDropdown.contains(e.target)) roundDropdown.classList.remove("open");
+      if (!scratchpad.contains(e.target) && !toggleCalcBtn.contains(e.target)) {
+        scratchpad.classList.remove("open");
+        toggleCalcBtn.classList.remove("active");
+      }
+      if (!e.target.closest(".sp-field")) calcAcList.classList.remove("open");
     });
 
+    calcSearchInput.addEventListener("input", (e) => renderAutocomplete(e.target.value));
     calcSearchInput.addEventListener("focus", (e) => {
       if (e.target.value.trim()) renderAutocomplete(e.target.value);
     });
@@ -2295,6 +2307,7 @@
       document.getElementById(id).addEventListener("input", recalculateScratchpad);
     });
 
+    /* Table Interactions */
     document.getElementById("tableBody").addEventListener("click", (e) => {
       const watchBtn = e.target.closest("[data-toggle-watch]");
       if (watchBtn) {
@@ -2378,20 +2391,23 @@
     });
 
     document.getElementById("toggleFourGames").addEventListener("click", (e) => {
+      const btn = e.currentTarget;
       state.fourGamesOnly = !state.fourGamesOnly;
-      e.target.classList.toggle("active", state.fourGamesOnly);
+      btn.classList.toggle("active", state.fourGamesOnly);
       render();
     });
 
     document.getElementById("togglePods").addEventListener("click", (e) => {
+      const btn = e.currentTarget;
       state.podsOnly = !state.podsOnly;
-      e.target.classList.toggle("active", state.podsOnly);
+      btn.classList.toggle("active", state.podsOnly);
       render();
     });
 
     document.getElementById("toggleHideDnps").addEventListener("click", (e) => {
+      const btn = e.currentTarget;
       state.hideDnps = !state.hideDnps;
-      e.target.classList.toggle("active", state.hideDnps);
+      btn.classList.toggle("active", state.hideDnps);
       render();
     });
 
@@ -2408,6 +2424,7 @@
 
     document.getElementById("syncBtn").addEventListener("click", syncFromGitHub);
 
+    /* Settings Modal */
     const modal = document.getElementById("settingsModal");
     const squadCodeStatus = document.getElementById("squadCodeStatus");
 
@@ -2439,7 +2456,7 @@
       const code = generateSquadCode();
       try {
         await navigator.clipboard.writeText(code);
-        squadCodeStatus.style.color = "var(--pos)";
+        squadCodeStatus.style.color = "var(--pos-bright)";
         squadCodeStatus.textContent = "Copied to clipboard!";
       } catch (e) {
         document.getElementById("importSquadCodeInput").value = code;
@@ -2452,7 +2469,7 @@
       const val = document.getElementById("importSquadCodeInput").value;
       try {
         const res = applySquadCode(val);
-        squadCodeStatus.style.color = "var(--pos)";
+        squadCodeStatus.style.color = "var(--pos-bright)";
         squadCodeStatus.textContent = `Loaded ${res.squadCount} squad & ${res.watchCount} watchlist!`;
         document.getElementById("importSquadCodeInput").value = "";
       } catch (err) {
@@ -2475,7 +2492,7 @@
     recalculateScratchpad();
     syncFromGitHub();
   </script>
-  <!-- Modular Phase 2: Option A Tactical Court View & Lineup Optimiser -->
-  <script src="court.js?v=8.2"></script>
+  <!-- Modular Phase 2: My Court Tactical Board & Exact Lineup Optimiser -->
+  <script src="court.js?v=9"></script>
 </body>
 </html>
