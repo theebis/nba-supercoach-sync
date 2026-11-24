@@ -863,6 +863,19 @@
   // Public: a player's live round (null until this round's games are loaded or if his team has none)
   window.SchoopsLive = {
     ready: () => live.games.length > 0,
+    // Each of a player's games this round: [{eventId, state, detail, sc, dnp, reason, vs}]
+    games(id) {
+      const state = window.SCHOOPS.getState();
+      const p = state.computedById[id];
+      if (!p || !live.games.length) return [];
+      const { perPlayer } = compute(state);
+      const e = perPlayer[id] || { lines: [] };
+      return teamGames(p.team).map((g) => {
+        const l = e.lines.find((x) => x.game.key === g.key);
+        return { eventId: g.eventId || g.key, state: g.state, detail: g.detail, sc: l && !l.row.dnp ? l.row.sc : 0,
+          dnp: !!(l && l.row.dnp), played: !!(l && !l.row.dnp), reason: l ? l.row.reason : "", vs: g.home === p.team ? g.away : g.home };
+      });
+    },
     round: () => live.round,
     player(id) {
       const state = window.SCHOOPS.getState();
