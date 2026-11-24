@@ -15,9 +15,10 @@ Goal: pilot now, then the go-to hub for NBA SuperCoach. Anyone can use it with n
 - SCHOOPS projection model v2 (form + price + SC blend × expected games, injury-aware, refits each round). Honest test: beats SuperCoach every round (mean miss ~11 vs ~19 pts across all scheduled players; 15 vs 19 median for regulars who played).
 - Trade advisor (1–2 trades, points / balanced / cash, chance-it-helps).
 - Private accuracy report, workflow tests, data checks, UI/OCR checks.
+- Hover tooltips (form bars, price dots, projection likely range).
+- Captain picks on the front page (top 3 C/VC, one-line reason, chance of top score, "Use C & VC"). Shipped 25 Nov 2026, with a fix for squashed Market columns on phones.
 
 ## Agreed next (round 3 answers, 25 Nov 2026)
-1. **Hover tooltips** (form bars, price dots per round, projection with likely range). Preview built on branch `preview/tooltips`; ship when the owner approves.
 2. **Projection v3: use every available source to raise confidence.** Status:
    - Done: all box scores via ESPN (`scripts/fetch_games.py` -> `data/games.json`); SuperCoach scoring verified:
      PTS + REB + AST + 2*STL + 2*BLK - TO - missed FG - missed FT (exact 96%, within 3 pts 100% vs SC round totals).
@@ -27,5 +28,20 @@ Goal: pilot now, then the go-to hub for NBA SuperCoach. Anyone can use it with n
      ESPN fantasy projections, betting player props (check free availability first).
 3. **Multi-round trade planner** (next 3 rounds, NBA Cup R7-8 game counts, "sell before he peaks").
 4. **Share my squad** link + QR, installable phone app (PWA).
-5. **Captain picks on the front page**: top 3 captain and vice-captain picks with a one-line reason each (+ chance of being top scorer). Preview built on branch `preview/captain-picks` (`captains.js`); ship when the owner approves. Also fixes squashed Market columns on phones.
 6. **Public launch prep**: Beta label + feedback button, share with a small group after one more round of private accuracy.
+
+## Round 4 answers (25 Nov 2026)
+Facts from the owner:
+- You can't change captain once his game has started, so no "captain loophole" helper.
+- Trading only opens between rounds (Monday afternoon to Tuesday morning AEDT); no trades during the week.
+- SuperCoach's own site lags well behind real time. Reference sites: supercoachinsight.com.au NBA match centre (live SC per game) and footypig.com live scores (AFL, compact two-column team lists). Build a hybrid with its own look, not a copy.
+
+Agreed, in order:
+1. **Live round tracker** (building now). Free: ESPN public box scores read in the browser, scored with our verified formula; round games from SuperCoach's fixture list (saved by the scraper). Your team's live total (best 9 + captain x2), per-player live score and games left, game cards, per-game player lists, top scorers.
+2. **Round recap** after each round (captain choice gain/loss, best trade you didn't make, value change).
+3. **Trade-advice scorecard** (private repo only): how often the advisor's suggested trades actually gained points/cash.
+4. **Rival compare**: paste a friend's squad, see differences and who's ahead.
+5. **Schedule planner**: games per day for your 15 over the next 3 rounds.
+6. **UI**: bigger player photos, lockout countdown in the header, light mode option.
+7. **Price-rise alarm** and **Who's hot**: wanted, but the home page is full. Plan: show them during the trade window (Mon–Tue), inside Trade Lab / the briefing, not as new home-page blocks.
+8. Undecided: "changed since your last visit" dots (owner unsure of value).
