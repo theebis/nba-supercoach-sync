@@ -6,6 +6,8 @@ on:
     - cron: '0 8 * * 1'
     # Runs Monday at 15:00 UTC (2:00 AM AEDT Tuesday morning)
     - cron: '0 15 * * 1'
+    # Daily at 22:00 UTC (9:00 AM AEDT) to keep ESPN injury statuses current
+    - cron: '0 22 * * *'
   workflow_dispatch: # Allows you to manually click "Run workflow" to test
 
 permissions:

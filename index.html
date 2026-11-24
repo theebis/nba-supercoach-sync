@@ -1224,6 +1224,7 @@
       flex-shrink: 0;
     }
     .micro-tag.out { background: var(--warn-bg); color: var(--warn-bright); }
+    .micro-tag.dtd { background: rgba(255, 196, 0, 0.10); color: #e8c25a; }
     .micro-tag.dnp { background: rgba(255, 255, 255, 0.06); color: var(--text-tertiary); }
     .micro-tag.g0 { background: var(--neg-bg); color: var(--neg-soft); }
 
@@ -1981,10 +1982,10 @@
         <div class="field-group">
           <div class="field-label">Est. Magic Number</div>
           <div class="inline-row">
-            <input type="number" class="text-input" id="magicInput" value="178000" step="1000" style="width:130px;" />
-            <button type="button" class="ghost-btn" id="resetMagicBtn">Reset ($178,000)</button>
+            <input type="number" class="text-input" id="magicInput" value="712000" step="1000" style="width:130px;" />
+            <button type="button" class="ghost-btn" id="resetMagicBtn">Reset ($712,000)</button>
           </div>
-          <div class="field-hint">Converts weekly points into projected price changes and breakevens using the 0.25 weekly weighting formula.</div>
+          <div class="field-hint">Dollars per point-per-game. Each game played moves a player's price 4.15% of the way to magic × his per-game average over the last two rounds; no games, no change. Fitted to 1,231 real SuperCoach price changes. Breakevens are round totals over this round's games.</div>
         </div>
 
         <div class="divider"></div>
@@ -2001,7 +2002,13 @@
 
   <script>
     const DATA_URL = "https://raw.githubusercontent.com/theebis/nba-supercoach-sync/main/supercoach_data.json";
-    const DEFAULT_MAGIC_NUMBER = 178000;
+    // Price model fitted to 1,231 real SuperCoach NBA price changes (2026-27 Rounds 3-5):
+    //   avg       = points per game over last round + this round (total points / total games)
+    //   new price = price + PER_GAME_RATE x games played this round x (MAGIC x avg - price)
+    // A player who plays 0 games in a round keeps his price. Median error ~$50k; direction right 95%.
+    const DEFAULT_MAGIC_NUMBER = 712000;
+    const PER_GAME_RATE = 0.0415;
+    const LEGACY_MAGIC_CUTOFF = 400000; // saved values below this came from the old 0.75/0.25 model
     const STORAGE_KEY = "schoops_terminal_v3";
     const LEGACY_STORAGE_KEY = "schoops_terminal_v2";
     const DEFAULT_SIDEBAR_W = 248;
@@ -2230,7 +2237,7 @@
         }
         if (!raw) return;
         const parsed = JSON.parse(raw);
-        if (parsed.magicNumber) state.magicNumber = Number(parsed.magicNumber) || DEFAULT_MAGIC_NUMBER;
+        if (parsed.magicNumber && Number(parsed.magicNumber) >= LEGACY_MAGIC_CUTOFF) state.magicNumber = Number(parsed.magicNumber);
         if (parsed.squadIds && typeof parsed.squadIds === "object") state.squadIds = parsed.squadIds;
         if (parsed.watchlistIds && typeof parsed.watchlistIds === "object") state.watchlistIds = parsed.watchlistIds;
         if (parsed.court && typeof parsed.court === "object") {
@@ -2327,12 +2334,59 @@
         team: String(p.team || p.team_abbrev || "NBA"),
         pos: Array.isArray(p.positions) ? p.positions.join("/") : String(p.pos || p.position || "UTIL"),
         price, r_minus_2: r2, r_minus_1: r1, proj, games,
+        prevGames: (p.r_minus_1_games !== undefined && p.r_minus_1_games !== null) ? Number(p.r_minus_1_games) : null,
         gamesNext: futureGms.gamesNext,
         gamesAfter: futureGms.gamesAfter,
         owned, avg5, officialBe,
         injury: p.injury || p.injury_status || null,
+        injuryStatus: p.injury_status || (p.injury ? "Injured" : null),
+        injuryDetail: p.injury_detail || null,
+        injuryReturn: p.injury_return || null,
         photo
       };
+    }
+
+    function formatReturnDate(iso) {
+      if (!iso) return "";
+      const d = new Date(`${iso}T00:00:00`);
+      return Number.isNaN(d.getTime()) ? String(iso) : d.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+    }
+
+    function injuryTooltip(p) {
+      const parts = [p.injury, p.injuryDetail, p.injuryReturn ? `Est. return ${formatReturnDate(p.injuryReturn)}` : ""];
+      return parts.filter(Boolean).join(" — ");
+    }
+
+    // OUT / DTD tag from the injury report, shown whether or not the player has been scoring
+    function renderInjuryTag(p) {
+      if (!p.injuryStatus) return "";
+      const s = String(p.injuryStatus).toLowerCase();
+      const label = s.startsWith("out") ? "OUT" : (s.includes("day") ? "DTD" : (s.includes("susp") ? "SUSP" : "INJ"));
+      const cls = label === "DTD" ? "dtd" : "out";
+      return `<span class="micro-tag ${cls}" title="${escapeHtml(injuryTooltip(p))}">${label}</span>`;
+    }
+
+    // Games the player played last round; when unknown (older data files), assume a normal 3-game week
+    function prevRoundGames(base) {
+      if (base.prevGames !== null && base.prevGames !== undefined && !Number.isNaN(base.prevGames)) return base.prevGames;
+      return base.r_minus_1 > 0 ? 3 : 0;
+    }
+
+    // Projected price after this round if the player scores `roundScore` in total over `games` games
+    function projectPrice(base, roundScore, games, magic) {
+      const g = Number(games) || 0;
+      if (g <= 0) return base.price;
+      const gPrev = prevRoundGames(base);
+      const avg = (base.r_minus_1 + Number(roundScore || 0)) / (gPrev + g);
+      const next = base.price + PER_GAME_RATE * g * (magic * avg - base.price);
+      return Math.max(0, Math.round(next / 10000) * 10000);
+    }
+
+    // Breakeven: round total (over this round's games) that leaves the price unchanged
+    function calcBreakeven(base, magic) {
+      const g = Number(base.games) || 0;
+      if (g <= 0) return null;
+      return Math.round((base.price / magic) * (prevRoundGames(base) + g) - base.r_minus_1);
     }
 
     function computeRow(base) {
@@ -2354,12 +2408,15 @@
       const isFringeDnp = isInactive && !isRelevantOut;
       const rolling3 = (r2 + r1 + proj) / 3;
 
-      const be = isInactive
-        ? null
-        : (base.officialBe !== null ? Math.round(base.officialBe) : Math.round((3 * price / magic) - r2 - r1));
-
+      // Games expected this round: 0 if ruled Out (a player who doesn't play keeps his price)
+      const isOut = !!base.injuryStatus && String(base.injuryStatus).toLowerCase().startsWith("out");
+      // No games in either of the last two rounds and no recent average: SuperCoach still projects
+      // a score for many of these, but they almost never play, so assume the price holds.
+      const isLikelyDnp = !isInactive && r1 === 0 && r2 === 0 && !hasRecentAvg5 && (base.prevGames === null || base.prevGames === 0);
+      const gamesThisRound = (isOut || isLikelyDnp) ? 0 : base.games;
+      const be = isInactive ? null : (base.officialBe !== null ? Math.round(base.officialBe) : calcBreakeven(base, magic));
       const dist = (be === null) ? null : (proj - be);
-      const newPrice = isInactive ? price : Math.round((0.75 * price + 0.25 * rolling3 * magic) / 10000) * 10000;
+      const newPrice = isInactive ? price : projectPrice(base, gamesThisRound ? proj : 0, gamesThisRound, magic);
       const priceChange = newPrice - price;
 
       let trend = "neutral";
@@ -2374,7 +2431,7 @@
         avg3: rolling3,
         be, dist, newPrice, priceChange,
         inSquad, inWatchlist,
-        isInactive, isRelevantOut, isFringeDnp, isZeroGames,
+        isInactive, isRelevantOut, isFringeDnp, isZeroGames, isLikelyDnp,
         trend
       };
     }
@@ -2730,8 +2787,8 @@
       const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
       const beVal = p.be === null ? 0 : p.be;
       const ptsDiff = simScore - beVal;
-      const simCash = Math.round((0.25 * ptsDiff * (magic / 3)) / 10000) * 10000;
-      const simNewPrice = Math.max(0, p.price + simCash);
+      const simNewPrice = projectPrice(p, simScore, p.games, magic);
+      const simCash = simNewPrice - p.price;
       const r = state.round;
 
       inner.innerHTML = `
@@ -2748,6 +2805,11 @@
               ${formatPriceM(p.price)} · ${p.owned.toFixed(1)}% owned
               ${p.injury ? ` · <span class="warn-text">${escapeHtml(String(p.injury))}</span>` : ""}
             </div>
+            ${(p.injuryDetail || p.injuryReturn) ? `
+            <div class="insp-sub" style="margin-top:4px; white-space:normal;">
+              ${p.injuryDetail ? escapeHtml(p.injuryDetail) : ""}
+              ${p.injuryReturn ? ` <span class="warn-text">Est. return ${escapeHtml(formatReturnDate(p.injuryReturn))}</span>` : ""}
+            </div>` : ""}
           </div>
         </div>
 
@@ -2813,8 +2875,8 @@
       const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
       const beVal = p.be === null ? 0 : p.be;
       const ptsDiff = score - beVal;
-      const simCash = Math.round((0.25 * ptsDiff * (magic / 3)) / 10000) * 10000;
-      const simNewPrice = Math.max(0, p.price + simCash);
+      const simNewPrice = projectPrice(p, score, p.games, magic);
+      const simCash = simNewPrice - p.price;
 
       const dEl = document.getElementById("inspSimDiff");
       const cEl = document.getElementById("inspSimCash");
@@ -2904,9 +2966,12 @@
             else if (p.isFringeDnp || p.isZeroGames) rowClasses.push("row-dnp");
             if (state.selectedRowId === p.id) rowClasses.push("row-selected");
 
-            const tagHtml = p.isRelevantOut
-              ? `<span class="micro-tag out">${p.injury ? "INJ" : "OUT"}</span>`
-              : (p.isFringeDnp ? `<span class="micro-tag dnp">DNP</span>` : (p.isZeroGames ? `<span class="micro-tag g0">0G</span>` : ""));
+            const injTag = renderInjuryTag(p);
+            const tagHtml = injTag
+              || (p.isRelevantOut ? `<span class="micro-tag out" title="No recent scores">OUT</span>`
+              : (p.isFringeDnp ? `<span class="micro-tag dnp">DNP</span>`
+              : (p.isLikelyDnp ? `<span class="micro-tag dnp" title="No games in the last two rounds, so projected to hold price">DNP</span>`
+              : (p.isZeroGames ? `<span class="micro-tag g0">0G</span>` : ""))));
 
             const cells = cols.map((c) => {
               if (c.key === "name") {
