@@ -34,6 +34,10 @@ permissions:
 jobs:
   update-data:
     runs-on: ubuntu-latest
+    env:
+      # Optional: a fine-grained token that can write ONLY to the private repo theebis/schoops-private.
+      # When it's set, the private accuracy report is published there after each sync.
+      ACCURACY_TOKEN: ${{ secrets.ACCURACY_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -60,3 +64,13 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add supercoach_data.json history/
           git diff --quiet && git diff --staged --quiet || (git commit -m "chore: SuperCoach data refresh" && git pull --rebase && git push)
+
+      - name: Publish private accuracy report (skipped until the ACCURACY_TOKEN secret exists)
+        if: env.ACCURACY_TOKEN != ''
+        run: |
+          python scripts/accuracy_report.py "$RUNNER_TEMP/ACCURACY.md"
+          git clone --depth 1 "https://x-access-token:${ACCURACY_TOKEN}@github.com/theebis/schoops-private.git" "$RUNNER_TEMP/private"
+          cp "$RUNNER_TEMP/ACCURACY.md" "$RUNNER_TEMP/private/README.md"
+          cd "$RUNNER_TEMP/private"
+          git add README.md
+          git diff --staged --quiet || (git commit -m "Accuracy report update" && git push origin HEAD:main)

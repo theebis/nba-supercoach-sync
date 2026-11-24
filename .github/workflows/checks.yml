@@ -23,7 +23,7 @@ jobs:
         run: pip install curl_cffi pytest pyyaml
 
       - name: Price model tests (incl. backtest on real price changes)
-        run: node --test tests/pricing.test.js
+        run: node --test tests/pricing.test.js tests/importmatch.test.js
 
       - name: Scraper unit tests
         run: python -m pytest -q tests
