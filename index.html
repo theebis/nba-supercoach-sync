@@ -1114,7 +1114,36 @@
     .form-cell { display: flex; align-items: center; gap: 16px; width: 100%; }
     .form-cell svg { display: block; overflow: visible; }
     .form-cell .form-bars { width: clamp(62px, 22%, 100px); flex-shrink: 0; }
-    .form-cell .form-price { flex: 1 1 64px; min-width: 64px; max-width: 320px; }
+    .form-cell .form-price { flex: 1 1 64px; min-width: 64px; max-width: 320px; position: relative; display: block; height: 24px; }
+    .form-cell .form-price svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .form-bars .tip-hit { cursor: default; }
+    .fp-dot { position: absolute; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 50%;
+      background: var(--bg-canvas); box-shadow: 0 0 0 1.5px var(--dot); transition: transform 120ms var(--ease-out); }
+    .fp-dot::after { content: ""; position: absolute; inset: -7px; } /* bigger hover target */
+    .fp-dot.proj { background: var(--dot); opacity: 0.8; }
+    @media (hover: hover) { .fp-dot:hover { transform: scale(1.6); } }
+
+    /* SCHOOPS tooltip: one floating box, shown above whatever has data-tip */
+    .sc-tip { position: fixed; z-index: 300; pointer-events: none; min-width: 150px; max-width: 240px; padding: 8px 10px;
+      border-radius: 8px; background: #1E1E24; box-shadow: 0 0 0 1px rgba(255,255,255,0.09), 0 10px 28px rgba(0,0,0,0.55);
+      font-size: 12px; line-height: 1.45; color: var(--text-secondary);
+      opacity: 0; transform: translateY(3px) scale(0.97); transform-origin: bottom center;
+      transition: opacity 120ms ease, transform 160ms var(--ease-out); }
+    .sc-tip.show { opacity: 1; transform: none; }
+    .sc-tip.instant { transition: none; }
+    .sc-tip .tip-h { font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+    .sc-tip .tip-row { display: flex; justify-content: space-between; gap: 14px; }
+    .sc-tip .tip-row b { font-family: var(--mono); font-weight: 600; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+    .sc-tip .tip-pos { color: var(--pos-bright) !important; }
+    .sc-tip .tip-neg { color: var(--neg-soft) !important; }
+    .sc-tip .tip-dim { color: var(--text-tertiary); }
+    .sc-tip div.tip-pos, .sc-tip div.tip-neg { margin-top: 3px; }
+    .sc-tip .tip-range { position: relative; height: 8px; margin: 6px 0 7px; border-radius: 99px; background: rgba(255,255,255,0.06); }
+    .sc-tip .tip-range-band { position: absolute; top: 0; bottom: 0; border-radius: 99px; background: rgba(110, 123, 242, 0.45); }
+    .sc-tip .tip-range-mark { position: absolute; top: -3px; width: 2px; height: 14px; margin-left: -1px; border-radius: 1px; background: #fff; }
+    .sc-tip .tip-range-sc { position: absolute; top: 1px; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; border: 1.5px solid var(--text-tertiary); background: #1E1E24; }
+    .proj-tip { border-bottom: 1px dotted rgba(255,255,255,0.25); cursor: default; }
+    @media (prefers-reduced-motion: reduce) { .sc-tip { transition: opacity 120ms ease; transform: none; } }
     .form-delta { font-family: var(--mono); font-size: 12px; font-weight: 600; white-space: nowrap; }
     .form-delta .dim-text { font-weight: 400; font-size: 11px; }
 
@@ -2828,27 +2857,78 @@
       const ppg = t.map(([, pts, g]) => (g > 0 ? pts / g : null));
       const maxV = Math.max(holdPpg, ...ppg.filter((v) => v !== null), 1) * 1.08;
       const H = 24, BW = 9, GAP = 4;
+      const tipAttr = (html) => `data-tip="${escapeHtml(html)}"`;
       const bars = ppg.map((v, i) => {
         const x = i * (BW + GAP);
-        if (v === null) return `<rect x="${x}" y="${H - 2}" width="${BW}" height="2" rx="1" fill="rgba(255,255,255,0.14)"><title>R${t[i][0]}: did not play</title></rect>`;
+        const [rnd, pts, gp] = t[i];
+        // Full-height invisible hover target so even short bars are easy to hover
+        const hit = (tip) => `<rect x="${x - GAP / 2}" y="0" width="${BW + GAP}" height="${H}" fill="transparent" class="tip-hit" ${tipAttr(tip)} />`;
+        if (v === null) {
+          return `<rect x="${x}" y="${H - 2}" width="${BW}" height="2" rx="1" fill="rgba(255,255,255,0.14)" />`
+            + hit(`<div class="tip-h">Round ${rnd}</div><div class="tip-dim">Didn't play</div>`);
+        }
         const h = Math.max(2, (Math.max(v, 0) / maxV) * H);
-        const fill = v >= holdPpg ? "var(--pos-bright)" : "var(--neg-soft)";
-        return `<rect x="${x}" y="${H - h}" width="${BW}" height="${h}" rx="1.5" fill="${fill}" opacity="0.85"><title>R${t[i][0]}: ${v.toFixed(1)} pts/game over ${t[i][2]} games</title></rect>`;
+        const beat = v >= holdPpg;
+        const fill = beat ? "var(--pos-bright)" : "var(--neg-soft)";
+        const tip = `<div class="tip-h">Round ${rnd}</div>
+          <div class="tip-row"><span>Score</span><b>${pts}</b></div>
+          <div class="tip-row"><span>Per game</span><b>${v.toFixed(1)}</b></div>
+          <div class="tip-row"><span>Games</span><b>${gp}</b></div>
+          <div class="${beat ? "tip-pos" : "tip-neg"}">${beat ? "Above" : "Below"} the ${holdPpg.toFixed(1)}/game his price needs</div>`;
+        return `<rect x="${x}" y="${H - h}" width="${BW}" height="${h}" rx="1.5" fill="${fill}" opacity="0.85" class="form-bar" />` + hit(tip);
       }).join("");
       const bw = ppg.length * (BW + GAP) - GAP;
       const lineY = H - (holdPpg / maxV) * H;
-      const barsSvg = `<svg height="${H}" viewBox="0 0 ${bw} ${H}" preserveAspectRatio="none" class="form-bars" aria-label="Points per game, last ${ppg.length} rounds">${bars}<line x1="-2" x2="${bw + 2}" y1="${lineY}" y2="${lineY}" stroke="rgba(255,255,255,0.55)" stroke-width="1" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"><title>Needs ${holdPpg.toFixed(1)} pts/game to hold $${(p.price / 1e6).toFixed(2)}M</title></line></svg>`;
+      const barsSvg = `<svg height="${H}" viewBox="0 0 ${bw} ${H}" preserveAspectRatio="none" class="form-bars" aria-label="Points per game, last ${ppg.length} rounds">${bars}<line x1="-2" x2="${bw + 2}" y1="${lineY}" y2="${lineY}" stroke="rgba(255,255,255,0.55)" stroke-width="1" stroke-dasharray="2 2" vector-effect="non-scaling-stroke" pointer-events="none" /></svg>`;
 
+      // Price line with a hoverable dot per round (dots are HTML so they stay round when the chart stretches)
       const all = p.formHistory;
       const start = all[0][3];
-      const series = [...all.map((r) => r[3]), p.newPrice];
-      const lo = Math.min(...series), hi = Math.max(...series);
+      const series = [...all.map((r) => ({ label: `After Round ${r[0]}`, v: r[3] })), { label: `Projected after Round ${state.round}`, v: p.newPrice, proj: true }];
+      const vals = series.map((s) => s.v);
+      const lo = Math.min(...vals), hi = Math.max(...vals);
       const SW = 64;
-      const pts = series.map((v, i) => `${(i / Math.max(series.length - 1, 1)) * SW},${hi === lo ? H / 2 : (H - 2) - ((v - lo) / (hi - lo)) * (H - 4)}`).join(" ");
+      const yOf = (v) => (hi === lo ? H / 2 : (H - 3) - ((v - lo) / (hi - lo)) * (H - 6));
+      const xPct = (i) => (i / Math.max(series.length - 1, 1)) * 100;
+      const pts = series.map((s, i) => `${(xPct(i) / 100) * SW},${yOf(s.v)}`).join(" ");
       const delta = p.newPrice - start;
       const col = delta > 0 ? "var(--pos-bright)" : delta < 0 ? "var(--neg-soft)" : "var(--text-tertiary)";
-      const priceSvg = `<svg height="${H}" viewBox="-1 0 ${SW + 2} ${H}" preserveAspectRatio="none" class="form-price" aria-label="Price since Round ${all[0][0]}"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" /><title>Price after R${all[0][0]}: $${(start / 1e6).toFixed(2)}M → projected after this round: $${(p.newPrice / 1e6).toFixed(2)}M</title></svg>`;
+      const dots = series.map((s, i) => {
+        const prev = i > 0 ? series[i - 1].v : null;
+        const ch = prev === null ? null : s.v - prev;
+        const tip = `<div class="tip-h">${s.label}</div>
+          <div class="tip-row"><span>Price</span><b>$${(s.v / 1e6).toFixed(2)}M</b></div>
+          ${ch === null ? `<div class="tip-dim">Starting point</div>` : `<div class="tip-row"><span>Change</span><b class="${ch > 0 ? "tip-pos" : ch < 0 ? "tip-neg" : ""}">${formatMoney(ch)}</b></div>`}
+          ${s.proj ? `<div class="tip-dim">If he scores his projection</div>` : ""}`;
+        return `<span class="fp-dot ${s.proj ? "proj" : ""}" style="left:${xPct(i)}%; top:${(yOf(s.v) / H) * 100}%; --dot:${col}" ${tipAttr(tip)}></span>`;
+      }).join("");
+      const priceSvg = `<span class="form-price"><svg viewBox="-1 0 ${SW + 2} ${H}" preserveAspectRatio="none" aria-label="Price since Round ${all[0][0]}"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" /></svg>${dots}</span>`;
       return `<span class="form-cell">${barsSvg}${priceSvg}<span class="form-delta" style="color:${col}">${formatMoney(delta)}<span class="dim-text"> since R${all[0][0]}</span></span></span>`;
+    }
+
+    // Tooltip for a projection: the number, its likely range (drawn as a bar), expected games and SuperCoach's figure
+    function projTipHtml(p) {
+      const head = `<div class="tip-h">Round ${state.round} projection</div>`;
+      if (!p.projIsOurs || p.projLo === null) {
+        return `${head}<div class="tip-row"><span>SuperCoach</span><b>${p.proj}</b></div><div class="tip-dim">Switch to SCHOOPS projections in Settings for ranges.</div>`;
+      }
+      const lo = p.projLo, hi = Math.max(p.projHi, lo + 1);
+      const scale = Math.max(hi, p.scProj, p.proj) * 1.1 || 1;
+      const pct = (v) => Math.max(0, Math.min(100, (v / scale) * 100));
+      const bar = `<div class="tip-range"><span class="tip-range-band" style="left:${pct(lo)}%; width:${pct(hi) - pct(lo)}%"></span>`
+        + `<span class="tip-range-mark" style="left:${pct(p.proj)}%"></span>`
+        + `<span class="tip-range-sc" style="left:${pct(p.scProj)}%" title="SuperCoach"></span></div>`;
+      const games = p.expGames !== null && p.expGames < p.games
+        ? `<div class="tip-row"><span>Expected games</span><b>${p.expGames} of ${p.games}</b></div>` : `<div class="tip-row"><span>Games</span><b>${p.games}</b></div>`;
+      const why = p.injuryStatus ? `<div class="tip-neg">${escapeHtml(p.injury || p.injuryStatus)}: fewer games expected</div>` : "";
+      return `${head}
+        <div class="tip-row"><span>SCHOOPS</span><b>${p.proj}</b></div>
+        <div class="tip-row"><span>Likely range</span><b>${lo}–${hi}</b></div>
+        ${bar}
+        ${games}
+        <div class="tip-row"><span>SuperCoach</span><b class="tip-dim">${p.scProj}</b></div>
+        ${why}
+        <div class="tip-dim" style="margin-top:3px">About half of real scores land inside the likely range.</div>`;
     }
 
     function getColWidth(key) {
@@ -3195,12 +3275,7 @@
                   : `<span class="be-num">${p.be}</span><span class="be-diff ${distClass}">${distSign}${p.dist}</span>`;
                 return `<td class="num mono col-be-cell">${beHtml}</td>`;
               }
-              if (c.key === "proj") {
-                const tip = p.projIsOurs && p.projLo !== null
-                  ? `Likely ${p.projLo}–${p.projHi} · expects ${p.expGames} of ${p.games} games · SuperCoach: ${p.scProj}`
-                  : `SuperCoach projection`;
-                return `<td class="num mono" title="${tip}">${p.proj}</td>`;
-              }
+              if (c.key === "proj") return `<td class="num mono"><span class="proj-tip" data-tip="${escapeHtml(projTipHtml(p))}">${p.proj}</span></td>`;
               if (c.key === "avg3") return `<td class="num mono muted-text">${p.avg3.toFixed(1)}</td>`;
               if (c.key === "avg5") return `<td class="num mono muted-text">${p.avg5 !== null ? p.avg5.toFixed(1) : "—"}</td>`;
               if (c.key === "priceChange") return `<td class="num mono ${chgClass}" style="font-weight:600;">${formatMoney(p.priceChange)}</td>`;
@@ -3459,6 +3534,48 @@
     }
 
     /* Public Modular Bridge for court.js & tradelab.js */
+    // Tooltips: anything with data-tip="<html>" gets a small floating box above it on hover (or focus).
+    // First one waits a moment (so it doesn't flicker as the mouse passes); moving to the next is instant.
+    (function initTooltips() {
+      const tip = document.createElement("div");
+      tip.className = "sc-tip";
+      tip.setAttribute("role", "tooltip");
+      document.body.appendChild(tip);
+      let current = null, showTimer = null, lastHide = 0;
+      function place(el) {
+        const r = el.getBoundingClientRect();
+        const tw = tip.offsetWidth, th = tip.offsetHeight;
+        let left = r.left + r.width / 2 - tw / 2;
+        left = Math.max(8, Math.min(window.innerWidth - tw - 8, left));
+        let top = r.top - th - 8;
+        if (top < 8) top = r.bottom + 8;
+        tip.style.left = `${left}px`;
+        tip.style.top = `${top}px`;
+      }
+      function show(el) {
+        current = el;
+        tip.innerHTML = el.getAttribute("data-tip");
+        const instant = performance.now() - lastHide < 400;
+        tip.classList.toggle("instant", instant);
+        place(el);
+        clearTimeout(showTimer);
+        showTimer = setTimeout(() => tip.classList.add("show"), instant ? 0 : 220);
+      }
+      function hide() {
+        clearTimeout(showTimer);
+        if (tip.classList.contains("show")) lastHide = performance.now();
+        tip.classList.remove("show");
+        current = null;
+      }
+      document.addEventListener("mouseover", (e) => {
+        const el = e.target.closest && e.target.closest("[data-tip]");
+        if (el === current) return;
+        if (el) show(el); else hide();
+      });
+      document.addEventListener("scroll", hide, true);
+      window.addEventListener("blur", hide);
+    })();
+
     window.SCHOOPS = {
       TEAM_COLORS,
       getTeamColor,

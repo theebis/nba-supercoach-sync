@@ -16,9 +16,16 @@ Goal: pilot now, then the go-to hub for NBA SuperCoach. Anyone can use it with n
 - Trade advisor (1–2 trades, points / balanced / cash, chance-it-helps).
 - Private accuracy report, workflow tests, data checks, UI/OCR checks.
 
-## Next (to be agreed in the current interview round)
-- Projection v3 from game-by-game data (minutes, back-to-backs, rest days) via ESPN box scores.
-- Multi-round trade planning (next 2–3 rounds, incl. NBA Cup rounds 7–8 game counts; when to sell a peaking cash cow).
-- Captain picker with probabilities.
-- Squad on any device (share link / QR, no accounts), installable phone app (PWA), in-app alerts.
-- Public launch prep: Beta label, feedback button, public accuracy page when ready.
+## Agreed next (round 3 answers, 25 Nov 2026)
+1. **Hover tooltips** (form bars, price dots per round, projection with likely range). Preview built on branch `preview/tooltips`; ship when the owner approves.
+2. **Projection v3: use every available source to raise confidence.** Status:
+   - Done: all box scores via ESPN (`scripts/fetch_games.py` -> `data/games.json`); SuperCoach scoring verified:
+     PTS + REB + AST + 2*STL + 2*BLK - TO - missed FG - missed FT (exact 96%, within 3 pts 100% vs SC round totals).
+   - Tested honestly (`projection_v3.py`): minutes-based model 13.9 mean miss (worse than v2's 11.4); v2 + minutes trend +
+     back-to-backs 11.4 (no gain). Not shipped. Re-test as rounds accumulate.
+   - Next sources to try: in-round live projections (actual so far + remaining games), teammate-out minutes redistribution,
+     ESPN fantasy projections, betting player props (check free availability first).
+3. **Multi-round trade planner** (next 3 rounds, NBA Cup R7-8 game counts, "sell before he peaks").
+4. **Share my squad** link + QR, installable phone app (PWA).
+5. **Captain picks on the front page**: top 3 captain and vice-captain picks with a one-line reason each (+ chance of being top scorer).
+6. **Public launch prep**: Beta label + feedback button, share with a small group after one more round of private accuracy.
