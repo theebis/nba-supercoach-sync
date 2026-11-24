@@ -15,7 +15,7 @@
     const style = document.createElement("style");
     style.textContent = `
       .briefing {
-        width: 380px; flex-shrink: 0; border-left: 1px solid var(--border-subtle); background: #0F0F12;
+        width: var(--briefing-w, 380px); flex-shrink: 0; border-left: 1px solid var(--border-subtle); background: #0F0F12;
         display: none; flex-direction: column; overflow: hidden;
       }
       .briefing.show { display: flex; }

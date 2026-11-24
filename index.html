@@ -1110,8 +1110,11 @@
     /* Flexible trailing column (Form & price trend) */
     .market-table td.flex-td { padding-left: 24px; font-size: 12.5px; color: var(--text-secondary); }
     .market-table thead th.flex-th { padding-left: 24px; }
-    .form-cell { display: inline-flex; align-items: center; gap: 16px; vertical-align: middle; }
+    /* Form & price cell stretches with its column: bars and price line grow on wide screens */
+    .form-cell { display: flex; align-items: center; gap: 16px; width: 100%; }
     .form-cell svg { display: block; overflow: visible; }
+    .form-cell .form-bars { width: clamp(62px, 22%, 100px); flex-shrink: 0; }
+    .form-cell .form-price { flex: 1 1 64px; min-width: 64px; max-width: 320px; }
     .form-delta { font-family: var(--mono); font-size: 12px; font-weight: 600; white-space: nowrap; }
     .form-delta .dim-text { font-weight: 400; font-size: 11px; }
 
@@ -2764,10 +2767,33 @@
       const avail = window.innerWidth - (sidebar ? sidebar.offsetWidth : DEFAULT_SIDEBAR_W) - 24;
       const wantBriefing = !state.briefingHidden;
       const wantForm = state.displayCols.trendcol !== false;
-      if (wantBriefing && wantForm && avail >= tableW + BRIEFING_W + FORM_COL_W) return { briefing: true, form: true };
-      if (wantBriefing && avail >= tableW + BRIEFING_W) return { briefing: true, form: false };
-      if (wantForm && avail >= tableW + FORM_COL_W) return { briefing: false, form: true };
-      return { briefing: false, form: false };
+      let res;
+      if (wantBriefing && wantForm && avail >= tableW + BRIEFING_W + FORM_COL_W) res = { briefing: true, form: true };
+      else if (wantBriefing && avail >= tableW + BRIEFING_W) res = { briefing: true, form: false };
+      else if (wantForm && avail >= tableW + FORM_COL_W) res = { briefing: false, form: true };
+      else res = { briefing: false, form: false };
+
+      // Fluid fill: share any spare width so no screen size leaves an empty band.
+      // A bit goes to the briefing, then the number columns spread up to 25%, and the
+      // Form & price column (which stretches its chart) takes the rest.
+      let spare = avail - tableW - (res.briefing ? BRIEFING_W : 0) - (res.form ? FORM_COL_W : 0);
+      res.briefingW = BRIEFING_W;
+      res.scale = 1;
+      if (spare > 0) {
+        if (res.briefing) {
+          const extra = Math.min(100, Math.round(spare * 0.3));
+          res.briefingW += extra;
+          spare -= extra;
+        }
+        const nonName = tableW - getColWidth("name");
+        const customWidths = Object.keys(state.colWidths || {}).length > 0;
+        if (!customWidths && nonName > 0) {
+          // Without the Form column the numbers take all the spare room; with it they share half
+          const share = res.form ? 0.5 : 1;
+          res.scale = 1 + Math.min(0.25, (spare * share) / nonName);
+        }
+      }
+      return res;
     }
 
     // Form & price cell: points-per-game bars for recent rounds against the per-game average needed
@@ -2789,7 +2815,7 @@
       }).join("");
       const bw = ppg.length * (BW + GAP) - GAP;
       const lineY = H - (holdPpg / maxV) * H;
-      const barsSvg = `<svg width="${bw}" height="${H}" viewBox="0 0 ${bw} ${H}" class="form-bars" aria-label="Points per game, last ${ppg.length} rounds">${bars}<line x1="-2" x2="${bw + 2}" y1="${lineY}" y2="${lineY}" stroke="rgba(255,255,255,0.55)" stroke-width="1" stroke-dasharray="2 2"><title>Needs ${holdPpg.toFixed(1)} pts/game to hold $${(p.price / 1e6).toFixed(2)}M</title></line></svg>`;
+      const barsSvg = `<svg height="${H}" viewBox="0 0 ${bw} ${H}" preserveAspectRatio="none" class="form-bars" aria-label="Points per game, last ${ppg.length} rounds">${bars}<line x1="-2" x2="${bw + 2}" y1="${lineY}" y2="${lineY}" stroke="rgba(255,255,255,0.55)" stroke-width="1" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"><title>Needs ${holdPpg.toFixed(1)} pts/game to hold $${(p.price / 1e6).toFixed(2)}M</title></line></svg>`;
 
       const all = p.formHistory;
       const start = all[0][3];
@@ -2799,7 +2825,7 @@
       const pts = series.map((v, i) => `${(i / Math.max(series.length - 1, 1)) * SW},${hi === lo ? H / 2 : (H - 2) - ((v - lo) / (hi - lo)) * (H - 4)}`).join(" ");
       const delta = p.newPrice - start;
       const col = delta > 0 ? "var(--pos-bright)" : delta < 0 ? "var(--neg-soft)" : "var(--text-tertiary)";
-      const priceSvg = `<svg width="${SW}" height="${H}" viewBox="-1 0 ${SW + 2} ${H}" class="form-price" aria-label="Price since Round ${all[0][0]}"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" /><title>Price after R${all[0][0]}: $${(start / 1e6).toFixed(2)}M → projected after this round: $${(p.newPrice / 1e6).toFixed(2)}M</title></svg>`;
+      const priceSvg = `<svg height="${H}" viewBox="-1 0 ${SW + 2} ${H}" preserveAspectRatio="none" class="form-price" aria-label="Price since Round ${all[0][0]}"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" /><title>Price after R${all[0][0]}: $${(start / 1e6).toFixed(2)}M → projected after this round: $${(p.newPrice / 1e6).toFixed(2)}M</title></svg>`;
       return `<span class="form-cell">${barsSvg}${priceSvg}<span class="form-delta" style="color:${col}">${formatMoney(delta)}<span class="dim-text"> since R${all[0][0]}</span></span></span>`;
     }
 
@@ -2819,7 +2845,9 @@
       const cg = document.getElementById("tableColGroup");
       const tbl = document.getElementById("marketTable");
       if (!cg || !tbl) return;
-      const w = (c) => getColWidth(c.key);
+      const fit = marketExtras(cols.filter((c) => !c.flex));
+      document.documentElement.style.setProperty("--briefing-w", `${fit.briefingW}px`);
+      const w = (c) => (c.key === "name" ? getColWidth(c.key) : Math.round(getColWidth(c.key) * fit.scale));
       const fixed = cols.filter((c) => !c.flex);
       const totalPx = fixed.reduce((sum, c) => sum + w(c), 0) + (cols.some((c) => c.flex) ? FORM_COL_W : 0);
       tbl.style.minWidth = `${totalPx}px`;
@@ -3872,6 +3900,6 @@
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
   <script src="court.js?v=13"></script>
   <script src="tradelab.js?v=13"></script>
-  <script src="briefing.js?v=2"></script>
+  <script src="briefing.js?v=3"></script>
 </body>
 </html>
