@@ -20,7 +20,19 @@ from curl_cffi import requests
 
 DATA_FILE = "supercoach_data.json"
 HISTORY_DIR = "history"
-DEFAULT_MAGIC_NUMBER = 178000
+
+# Price model, fitted to 1,231 real SuperCoach NBA price changes (Rounds 3-5, 2026-27):
+#   avg       = points per game over this round + last round (pooled: total points / total games)
+#   new price = price + PER_GAME_RATE * games_played_this_round * (MAGIC_NUMBER * avg - price)
+# Players with 0 games in a round do not change price. Median error ~$50k, direction right 95%.
+DEFAULT_MAGIC_NUMBER = 712000
+PER_GAME_RATE = 0.0415
+PRICE_MODEL = {
+    "magic": DEFAULT_MAGIC_NUMBER,
+    "perGameRate": PER_GAME_RATE,
+    "windowRounds": 2,
+    "calibratedOn": "2026-27 Rounds 3-5 (1,231 price changes)",
+}
 
 BASE_URLS = [
     "https://www.supercoach.com.au/2026/api/nba/classic/v1",
@@ -355,7 +367,7 @@ def collect_price_history(base_url, max_round, out_path="debug/price_history.jso
     round 1..max_round+1, as compact rows. Used to fit the real price formula / magic number.
     """
     report = {"generated": datetime.now(timezone.utc).isoformat(), "fields": ["id", *PRICE_HISTORY_FIELDS], "rounds": {}}
-    for r in range(1, max_round + 2):
+    for r in range(1, max_round + 3):
         try:
             payload = fetch_json(f"{base_url}/players-cf?embed=player_stats&round={r}")
         except Exception as err:
@@ -394,6 +406,21 @@ def extract_supercoach_photo(p):
     return None
 
 
+def next_round_rows_exist(base, round_num):
+    """True when most players already have a player_stats row for `round_num` (its prices are set)."""
+    try:
+        payload = fetch_json(f"{base}/players-cf?embed=player_stats&round={round_num}")
+        players = payload if isinstance(payload, list) else payload.get("players", [])
+        with_row = sum(
+            1 for p in players
+            if any(isinstance(s, dict) and s.get("round") == round_num for s in (p.get("player_stats") or []))
+        )
+        return len(players) >= 50 and with_row >= 0.5 * len(players)
+    except Exception as err:
+        print(f"  -> Could not probe Round {round_num} rows: {err}")
+        return False
+
+
 def detect_working_base_and_round():
     for base in BASE_URLS:
         try:
@@ -416,6 +443,14 @@ def detect_working_base_and_round():
                         f"Connected! Round {curr_round} fully concluded "
                         f"(is_lockout=False, is_partial_lockout=False). Targeting Round {target_round}."
                     )
+                elif next_round > curr_round and next_round_rows_exist(base, next_round):
+                    # SuperCoach's settings flag lags (it still said Round 5 on Tue 24 Nov 2026), but the
+                    # next round's price rows are created as soon as the previous round's prices are final.
+                    target_round = next_round
+                    print(
+                        f"Connected! Settings still say Round {curr_round}, but Round {next_round} price rows "
+                        f"already exist, so Round {curr_round} is final. Targeting Round {target_round}."
+                    )
                 else:
                     target_round = curr_round
                     print(
@@ -432,7 +467,7 @@ def detect_working_base_and_round():
 
 
 def fetch_round_scores(base_url, round_num, cache):
-    """Returns { player_id: points } for a specific completed round (cached)."""
+    """Returns { player_id: {"points": int, "games": int} } for a specific completed round (cached)."""
     if not round_num or round_num < 1:
         return {}
     if round_num in cache:
@@ -446,12 +481,13 @@ def fetch_round_scores(base_url, round_num, cache):
         for p in raw_list:
             pid = str(p.get("id", ""))
             stats = p.get("player_stats") or []
-            pts = 0
+            pts, gms = 0, 0
             for s in stats:
                 if s.get("round") == round_num or len(stats) == 1:
                     pts = int(s.get("points") or 0)
+                    gms = int(s.get("games") or 0)
                     break
-            scores[pid] = pts
+            scores[pid] = {"points": pts, "games": gms}
         print(f"Fetched Round {round_num} scores for {len(scores)} players.")
         cache[round_num] = scores
         return scores
@@ -535,9 +571,13 @@ def parse_player(
     stats = p.get("player_stats") or []
     latest_stat = stats[-1] if stats else {}
 
-    # Exact past 2 round scores
-    r_minus_1 = scores_r1.get(pid, None)
-    r_minus_2 = scores_r2.get(pid, None)
+    # Exact past 2 round scores (round totals) and games played in those rounds
+    prev1 = scores_r1.get(pid)
+    prev2 = scores_r2.get(pid)
+    r_minus_1 = prev1["points"] if prev1 else None
+    r_minus_2 = prev2["points"] if prev2 else None
+    r_minus_1_games = prev1["games"] if prev1 else None
+    r_minus_2_games = prev2["games"] if prev2 else None
 
     if r_minus_1 is None or r_minus_2 is None:
         completed = [s for s in stats if s.get("points") is not None]
@@ -610,6 +650,8 @@ def parse_player(
         "price": price,
         "r_minus_2": int(r_minus_2),
         "r_minus_1": int(r_minus_1),
+        "r_minus_2_games": r_minus_2_games,
+        "r_minus_1_games": r_minus_1_games,
         "proj": proj,
         "avg5": avg5,
         "be": be,
@@ -689,6 +731,7 @@ def build_round_dataset(
     return {
         "round": int(round_num),
         "magicNumber": magic_number,
+        "priceModel": PRICE_MODEL,
         "totalPlayersScraped": len(parsed),
         "lastUpdated": datetime.now(timezone.utc).isoformat(),
         "injurySource": "ESPN" if injury_map else None,
@@ -704,7 +747,8 @@ def main():
     else:
         existing_data = {"round": 5, "magicNumber": DEFAULT_MAGIC_NUMBER, "players": []}
 
-    magic_number = existing_data.get("magicNumber", DEFAULT_MAGIC_NUMBER)
+    # The old 0.75/0.25 model stored a magic number around 178k; the per-game model's is ~712k
+    magic_number = DEFAULT_MAGIC_NUMBER
     existing_status_map = {
         p.get("name", "").lower(): str(p.get("status", "")).lower()
         for p in existing_data.get("players", [])

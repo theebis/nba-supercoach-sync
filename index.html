@@ -1982,10 +1982,10 @@
         <div class="field-group">
           <div class="field-label">Est. Magic Number</div>
           <div class="inline-row">
-            <input type="number" class="text-input" id="magicInput" value="178000" step="1000" style="width:130px;" />
-            <button type="button" class="ghost-btn" id="resetMagicBtn">Reset ($178,000)</button>
+            <input type="number" class="text-input" id="magicInput" value="712000" step="1000" style="width:130px;" />
+            <button type="button" class="ghost-btn" id="resetMagicBtn">Reset ($712,000)</button>
           </div>
-          <div class="field-hint">Converts weekly points into projected price changes and breakevens using the 0.25 weekly weighting formula.</div>
+          <div class="field-hint">Dollars per point-per-game. Each game played moves a player's price 4.15% of the way to magic × his per-game average over the last two rounds; no games, no change. Fitted to 1,231 real SuperCoach price changes. Breakevens are round totals over this round's games.</div>
         </div>
 
         <div class="divider"></div>
@@ -2002,7 +2002,13 @@
 
   <script>
     const DATA_URL = "https://raw.githubusercontent.com/theebis/nba-supercoach-sync/main/supercoach_data.json";
-    const DEFAULT_MAGIC_NUMBER = 178000;
+    // Price model fitted to 1,231 real SuperCoach NBA price changes (2026-27 Rounds 3-5):
+    //   avg       = points per game over last round + this round (total points / total games)
+    //   new price = price + PER_GAME_RATE x games played this round x (MAGIC x avg - price)
+    // A player who plays 0 games in a round keeps his price. Median error ~$50k; direction right 95%.
+    const DEFAULT_MAGIC_NUMBER = 712000;
+    const PER_GAME_RATE = 0.0415;
+    const LEGACY_MAGIC_CUTOFF = 400000; // saved values below this came from the old 0.75/0.25 model
     const STORAGE_KEY = "schoops_terminal_v3";
     const LEGACY_STORAGE_KEY = "schoops_terminal_v2";
     const DEFAULT_SIDEBAR_W = 248;
@@ -2231,7 +2237,7 @@
         }
         if (!raw) return;
         const parsed = JSON.parse(raw);
-        if (parsed.magicNumber) state.magicNumber = Number(parsed.magicNumber) || DEFAULT_MAGIC_NUMBER;
+        if (parsed.magicNumber && Number(parsed.magicNumber) >= LEGACY_MAGIC_CUTOFF) state.magicNumber = Number(parsed.magicNumber);
         if (parsed.squadIds && typeof parsed.squadIds === "object") state.squadIds = parsed.squadIds;
         if (parsed.watchlistIds && typeof parsed.watchlistIds === "object") state.watchlistIds = parsed.watchlistIds;
         if (parsed.court && typeof parsed.court === "object") {
@@ -2328,6 +2334,7 @@
         team: String(p.team || p.team_abbrev || "NBA"),
         pos: Array.isArray(p.positions) ? p.positions.join("/") : String(p.pos || p.position || "UTIL"),
         price, r_minus_2: r2, r_minus_1: r1, proj, games,
+        prevGames: (p.r_minus_1_games !== undefined && p.r_minus_1_games !== null) ? Number(p.r_minus_1_games) : null,
         gamesNext: futureGms.gamesNext,
         gamesAfter: futureGms.gamesAfter,
         owned, avg5, officialBe,
@@ -2359,6 +2366,29 @@
       return `<span class="micro-tag ${cls}" title="${escapeHtml(injuryTooltip(p))}">${label}</span>`;
     }
 
+    // Games the player played last round; when unknown (older data files), assume a normal 3-game week
+    function prevRoundGames(base) {
+      if (base.prevGames !== null && base.prevGames !== undefined && !Number.isNaN(base.prevGames)) return base.prevGames;
+      return base.r_minus_1 > 0 ? 3 : 0;
+    }
+
+    // Projected price after this round if the player scores `roundScore` in total over `games` games
+    function projectPrice(base, roundScore, games, magic) {
+      const g = Number(games) || 0;
+      if (g <= 0) return base.price;
+      const gPrev = prevRoundGames(base);
+      const avg = (base.r_minus_1 + Number(roundScore || 0)) / (gPrev + g);
+      const next = base.price + PER_GAME_RATE * g * (magic * avg - base.price);
+      return Math.max(0, Math.round(next / 10000) * 10000);
+    }
+
+    // Breakeven: round total (over this round's games) that leaves the price unchanged
+    function calcBreakeven(base, magic) {
+      const g = Number(base.games) || 0;
+      if (g <= 0) return null;
+      return Math.round((base.price / magic) * (prevRoundGames(base) + g) - base.r_minus_1);
+    }
+
     function computeRow(base) {
       const price = base.price;
       const r2 = base.r_minus_2;
@@ -2378,12 +2408,12 @@
       const isFringeDnp = isInactive && !isRelevantOut;
       const rolling3 = (r2 + r1 + proj) / 3;
 
-      const be = isInactive
-        ? null
-        : (base.officialBe !== null ? Math.round(base.officialBe) : Math.round((3 * price / magic) - r2 - r1));
-
+      // Games expected this round: 0 if ruled Out (a player who doesn't play keeps his price)
+      const isOut = !!base.injuryStatus && String(base.injuryStatus).toLowerCase().startsWith("out");
+      const gamesThisRound = isOut ? 0 : base.games;
+      const be = isInactive ? null : (base.officialBe !== null ? Math.round(base.officialBe) : calcBreakeven(base, magic));
       const dist = (be === null) ? null : (proj - be);
-      const newPrice = isInactive ? price : Math.round((0.75 * price + 0.25 * rolling3 * magic) / 10000) * 10000;
+      const newPrice = isInactive ? price : projectPrice(base, isOut ? 0 : proj, gamesThisRound, magic);
       const priceChange = newPrice - price;
 
       let trend = "neutral";
@@ -2754,8 +2784,8 @@
       const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
       const beVal = p.be === null ? 0 : p.be;
       const ptsDiff = simScore - beVal;
-      const simCash = Math.round((0.25 * ptsDiff * (magic / 3)) / 10000) * 10000;
-      const simNewPrice = Math.max(0, p.price + simCash);
+      const simNewPrice = projectPrice(p, simScore, p.games, magic);
+      const simCash = simNewPrice - p.price;
       const r = state.round;
 
       inner.innerHTML = `
@@ -2842,8 +2872,8 @@
       const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
       const beVal = p.be === null ? 0 : p.be;
       const ptsDiff = score - beVal;
-      const simCash = Math.round((0.25 * ptsDiff * (magic / 3)) / 10000) * 10000;
-      const simNewPrice = Math.max(0, p.price + simCash);
+      const simNewPrice = projectPrice(p, score, p.games, magic);
+      const simCash = simNewPrice - p.price;
 
       const dEl = document.getElementById("inspSimDiff");
       const cEl = document.getElementById("inspSimCash");
