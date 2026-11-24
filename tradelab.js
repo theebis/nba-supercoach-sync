@@ -185,7 +185,8 @@
       .tl-adv-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
       .tl-adv-ctrls { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
       .tl-adv-lbl { font-size: 11.5px; color: var(--text-tertiary); margin-right: 2px; }
-      .tl-adv-list { padding: 0 8px 4px; }
+      .tl-adv-list { padding: 0 8px 4px; transition: opacity 160ms ease; }
+      .tl-adv-list.is-stale { opacity: 0.55; }
       .tl-adv-row { display: grid; grid-template-columns: 22px minmax(0, 1.3fr) minmax(0, 1fr) auto; align-items: center; gap: 12px;
         padding: 10px 8px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
       .tl-adv-rank { font-family: var(--mono); font-size: 12px; color: var(--text-tertiary); text-align: center; }
@@ -392,7 +393,7 @@
     }
     const chip = (attr, val, label, on) => `<button type="button" class="chip-btn ${on ? "active" : ""}" ${attr}="${val}">${label}</button>`;
     const conf = (p) => (p >= 0.75 ? ["strong", "Strong"] : p >= 0.6 ? ["lean", "Lean"] : ["flip", "Coin flip"]);
-    const rows = advisor.busy || !advisor.results
+    const rows = !advisor.results
       ? `<div class="tl-adv-empty">Checking every trade for your squad…</div>`
       : !advisor.results.length
         ? `<div class="tl-adv-empty">No affordable trades improve your squad on this goal. Try another goal, or add bank.</div>`
@@ -431,7 +432,7 @@
             ${chip("data-adv-n", "2", "2", advisor.n === 2)}
           </div>
         </div>
-        <div class="tl-adv-list">${rows}</div>
+        <div class="tl-adv-list ${advisor.busy && advisor.results ? "is-stale" : ""}" aria-busy="${advisor.busy ? "true" : "false"}">${rows}</div>
         <div class="tl-adv-foot">"Chance" is how often a trade like this ends up scoring more, given how far projections usually miss. Balanced counts $50K of price rise as 1 point.</div>
       </section>`;
   }
@@ -587,6 +588,18 @@
     const root = document.getElementById("tradeLabViewRoot");
     const headerActions = document.getElementById("moduleHeaderActions");
     if (!root || !window.SCHOOPS) return;
+    const active = document.activeElement;
+    const bankTyped = active && active.id === "tlBankInput" ? active.value : null;
+    const scrollTop = root.scrollTop;
+    renderTradeLabInner(root, headerActions);
+    if (root.scrollTop !== scrollTop) root.scrollTop = scrollTop;
+    if (bankTyped !== null) {
+      const inp = root.querySelector("#tlBankInput");
+      if (inp) { inp.value = bankTyped; inp.focus({ preventScroll: true }); }
+    }
+  }
+
+  function renderTradeLabInner(root, headerActions) {
     const state = window.SCHOOPS.getState();
     if (state.activeNav !== "tradelab") return;
 
@@ -677,7 +690,7 @@
           <aside class="tl-summary" aria-label="Plan impact">
             <div class="tl-bank">
               <label for="tlBankInput">Your bank (unspent cash)</label>
-              <span class="tl-bank-in"><span>$</span><input type="number" id="tlBankInput" inputmode="decimal" step="0.01" min="0" value="${bankM.toFixed(2)}" /><span>M</span></span>
+              <span class="tl-bank-in"><span>$</span><input type="text" id="tlBankInput" inputmode="decimal" autocomplete="off" aria-label="Your bank in millions of dollars" value="${bankM.toFixed(2)}" /><span>M</span></span>
             </div>
             ${metricBlock(`Round ${state.round} score (best 9 + 2× C)`, ev.validCount ? baseline.optScore : null, ev.optScore,
               ev.ptsDelta, ev.validCount ? `${ev.ptsDelta > 0 ? "+" : ""}${ev.ptsDelta}` : "", `Captain: ${escapeHtml(ev.captainName)}`)}
@@ -851,15 +864,27 @@
     if (tlUi.openPicker && !e.target.closest(".tl-pop")) { closePicker(); renderTradeLab(); }
   }
 
+  let bankTimer = null;
+  function commitBank(value) {
+    clearTimeout(bankTimer);
+    const state = window.SCHOOPS.getState();
+    const v = Math.max(0, parseFloat(value) || 0);
+    if (v === (Number(state.tradeLab.bankM) || 0)) return;
+    state.tradeLab.bankM = v;
+    save();
+  }
+
   function handleChange(e) {
-    if (e.target.id === "tlBankInput") {
-      const state = window.SCHOOPS.getState();
-      state.tradeLab.bankM = Math.max(0, parseFloat(e.target.value) || 0);
-      save();
-    }
+    if (e.target.id === "tlBankInput") commitBank(e.target.value);
   }
 
   function handleInput(e) {
+    if (e.target.id === "tlBankInput") {
+      const v = e.target.value;
+      clearTimeout(bankTimer);
+      bankTimer = setTimeout(() => commitBank(v), 350);
+      return;
+    }
     if (e.target.matches("[data-in-search]")) {
       tlUi.query = e.target.value;
       renderTradeLab();
@@ -867,6 +892,20 @@
   }
 
   function handleKey(e) {
+    // Bank box: Up/Down step by $50K (Shift: $500K), Enter applies straight away
+    if (e.target.id === "tlBankInput") {
+      if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        e.preventDefault();
+        const step = (e.shiftKey ? 0.5 : 0.05) * (e.key === "ArrowUp" ? 1 : -1);
+        const v = Math.max(0, Math.round(((parseFloat(e.target.value) || 0) + step) * 100) / 100);
+        e.target.value = v.toFixed(2);
+        clearTimeout(bankTimer);
+        bankTimer = setTimeout(() => commitBank(e.target.value), 250);
+      } else if (e.key === "Enter") {
+        commitBank(e.target.value);
+      }
+      return;
+    }
     if (e.key === "Escape" && tlUi.openPicker) { closePicker(); renderTradeLab(); }
     // Plan tabs are spans with role="tab": make Enter/Space work like a click
     if ((e.key === "Enter" || e.key === " ") && e.target.matches("[data-select-plan][role='tab']")) {
