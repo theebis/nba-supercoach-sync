@@ -1,9 +1,20 @@
-/* SCHOOPS Modular Plugin — Phase 2: Squad Court View & Exact Lineup Optimiser
- * Loaded by index.html via <script src="court.js?v=8"></script>
- * Reads/writes strictly through window.SCHOOPS and persists inside schoops_terminal_v3.
+/* SCHOOPS Modular Plugin — Phase 2 (Option A Tactical Board):
+ * Squad Court View & Exact Lineup Optimiser
+ * Loaded by index.html via <script src="court.js?v=8.1"></script>
  */
 (function () {
   "use strict";
+
+  const TEAM_COLORS = {
+    ATL: "#E03A3E", BOS: "#007A33", BKN: "#9BA3B4", CHA: "#1D87B8",
+    CHI: "#CE1141", CLE: "#860038", DAL: "#00538C", DEN: "#FEC524",
+    DET: "#C8102E", GSW: "#1D428A", HOU: "#CE1141", IND: "#FDBB30",
+    LAC: "#C8102E", LAL: "#552583", MEM: "#5D76A9", MIA: "#98002E",
+    MIL: "#00471B", MIN: "#78BE20", NOP: "#85714D", NYK: "#F58426",
+    OKC: "#007AC1", ORL: "#0077C0", PHI: "#006BB6", PHX: "#E56020",
+    POR: "#E03A3E", SAC: "#5A2D81", SAS: "#C4CED4", TOR: "#CE1141",
+    UTA: "#6E2639", WAS: "#E31837"
+  };
 
   const STARTER_SLOTS = [
     { key: "PG1", label: "PG", group: "Point Guards", req: "PG" },
@@ -33,11 +44,20 @@
   const STARTER_KEYS = new Set(STARTER_SLOTS.map((s) => s.key));
   const VALID_POS = new Set(["PG", "SG", "SF", "PF", "C"]);
 
+  const ICON_LOCK_CLOSED = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+  const ICON_LOCK_OPEN = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>`;
+  const ICON_OPTIMISE = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+
   const ui = {
-    selectedSource: null, // { type: "slot", key } | { type: "overflow", playerId }
-    bannerMsg: null,      // { text, tone: "pos" | "warn" | "neg" | "info" }
+    selectedSource: null,
+    bannerMsg: null,
     bannerTimer: null
   };
+
+  function getTeamColor(team) {
+    const code = String(team || "").toUpperCase();
+    return TEAM_COLORS[code] || "#4B5563";
+  }
 
   function injectStyles() {
     if (document.getElementById("schoops-court-styles")) return;
@@ -50,54 +70,60 @@
         gap: 12px;
       }
 
-      .court-topbar {
+      /* Matches Market KPI bar & toolbar cadence smoothly */
+      .court-summary-bar {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 14px;
+        gap: 16px;
         flex-wrap: wrap;
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: 6px;
-        padding: 12px 16px;
+        padding: 10px 14px;
       }
 
-      .court-metrics {
+      .court-stats-group {
         display: flex;
         align-items: center;
-        gap: 22px;
+        gap: 24px;
         flex-wrap: wrap;
       }
 
-      .court-metric {
+      .court-stat {
         display: flex;
         flex-direction: column;
         gap: 2px;
       }
 
-      .court-metric-label {
-        font-size: 9.5px;
+      .court-stat-label {
+        font-size: 10px;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.06em;
         color: var(--text-dim);
       }
 
-      .court-metric-val {
-        font-family: var(--mono);
-        font-size: 18px;
-        font-weight: 700;
-        color: var(--text);
-        line-height: 1.15;
+      .court-stat-row {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
       }
 
-      .court-metric-sub {
+      .court-stat-val {
         font-family: var(--mono);
-        font-size: 10.5px;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .court-stat-sub {
+        font-family: var(--mono);
+        font-size: 11px;
         color: var(--text-muted);
       }
 
-      .court-actions {
+      .court-controls-group {
         display: flex;
         align-items: center;
         gap: 8px;
@@ -109,7 +135,7 @@
         font-size: 11px;
         font-weight: 600;
         padding: 5px 10px;
-        border-radius: 4px;
+        border-radius: 5px;
         border: 1px solid var(--border-strong);
         background: var(--bg);
         color: var(--text-muted);
@@ -140,50 +166,57 @@
         background: var(--pos);
         color: #061A12;
         border: 1px solid #34D399;
-        padding: 7px 14px;
-        border-radius: 4px;
+        padding: 6px 13px;
+        border-radius: 5px;
         font-family: var(--mono);
-        font-size: 11.5px;
+        font-size: 11px;
         font-weight: 700;
         letter-spacing: 0.05em;
         cursor: pointer;
         transition: filter 0.12s, transform 0.08s;
       }
 
-      .court-opt-btn:hover {
-        filter: brightness(1.08);
-      }
-
-      .court-opt-btn:active {
-        transform: translateY(1px);
-      }
+      .court-opt-btn:hover { filter: brightness(1.07); }
+      .court-opt-btn:active { transform: translateY(1px); }
 
       .court-grid {
         display: grid;
-        grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr);
-        gap: 14px;
+        grid-template-columns: minmax(0, 1.72fr) minmax(300px, 1fr);
+        gap: 12px;
         align-items: start;
       }
 
       @media (max-width: 980px) {
-        .court-grid {
-          grid-template-columns: 1fr;
-        }
+        .court-grid { grid-template-columns: 1fr; }
       }
 
       .court-panel {
         background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 16px;
+        border-radius: 6px;
+        padding: 14px 16px;
         position: relative;
         overflow: hidden;
       }
 
-      .court-floor {
-        background:
-          radial-gradient(circle at 50% 48%, rgba(16, 185, 129, 0.045) 0%, transparent 52%),
-          linear-gradient(180deg, #111116 0%, #0D0D11 100%);
+      /* Option A: Subtle Dark Tactical Court Markings */
+      .court-board {
+        background: linear-gradient(180deg, #13161E 0%, #0E1016 100%);
+      }
+
+      .court-lines-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        opacity: 0.055;
+        z-index: 0;
+      }
+
+      .court-panel-inner {
+        position: relative;
+        z-index: 1;
       }
 
       .court-panel-head {
@@ -191,18 +224,18 @@
         align-items: center;
         justify-content: space-between;
         gap: 8px;
-        padding-bottom: 10px;
+        padding-bottom: 9px;
         margin-bottom: 12px;
         border-bottom: 1px solid var(--border);
       }
 
       .court-panel-title {
         font-family: var(--mono);
-        font-size: 11px;
+        font-size: 10.5px;
         font-weight: 700;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--text);
+        color: var(--text-muted);
       }
 
       .court-panel-hint {
@@ -210,140 +243,149 @@
         color: var(--text-dim);
       }
 
-      .court-section {
-        margin-bottom: 14px;
+      .court-lineup-row {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
       }
 
-      .court-section:last-child {
+      .court-lineup-row:last-child {
         margin-bottom: 0;
       }
 
-      .court-section-label {
+      .row-pos-label {
         font-family: var(--mono);
         font-size: 10px;
         font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
         color: var(--text-dim);
         text-align: center;
-        margin-bottom: 7px;
+        letter-spacing: 0.05em;
       }
 
-      .court-row-2 {
+      .court-pair {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
       }
 
-      .court-row-1 {
+      .court-single {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
-        max-width: 50%;
-        margin: 0 auto;
+        max-width: calc(50% - 5px);
       }
 
       @media (max-width: 640px) {
-        .court-row-2 { grid-template-columns: 1fr; }
-        .court-row-1 { max-width: 100%; }
+        .court-lineup-row {
+          grid-template-columns: 1fr;
+          gap: 5px;
+        }
+        .row-pos-label {
+          text-align: left;
+        }
+        .court-pair { grid-template-columns: 1fr; }
+        .court-single { max-width: 100%; }
       }
 
       .bench-stack {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 9px;
       }
 
-      /* Player Card / Slot */
-      .court-slot {
-        background: #141419;
-        border: 1px solid var(--border-strong);
+      /* Option A Clean Player Card (3px Team Accent + Quiet Hover/Active Controls) */
+      .sc-card {
+        background: rgba(18, 20, 27, 0.92);
+        border: 1px solid var(--border);
         border-radius: 6px;
-        padding: 9px 11px;
+        padding: 8px 11px 8px 13px;
         cursor: pointer;
         transition: border-color 0.12s, background 0.12s, box-shadow 0.12s;
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
         gap: 6px;
-        min-height: 76px;
+        min-height: 70px;
         position: relative;
+        overflow: hidden;
         user-select: none;
       }
 
-      .court-slot:hover {
-        background: #191920;
-        border-color: #464654;
+      .sc-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--team-accent, #4B5563);
       }
 
-      .court-slot.is-empty {
-        background: rgba(10, 10, 12, 0.55);
+      .sc-card:hover {
+        background: #1B1F2A;
+        border-color: var(--border-strong);
+      }
+
+      .sc-card.is-empty {
+        background: rgba(11, 12, 16, 0.5);
         border-style: dashed;
-        border-color: #2A2A34;
+        border-color: #252A38;
         align-items: center;
         justify-content: center;
         color: var(--text-dim);
         font-family: var(--mono);
-        font-size: 11px;
+        font-size: 10.5px;
       }
 
-      .court-slot.is-captain {
-        border-color: rgba(245, 158, 11, 0.7);
-        box-shadow: inset 3px 0 0 var(--warn);
+      .sc-card.is-empty::before {
+        display: none;
       }
 
-      .court-slot.is-vc {
-        border-color: rgba(59, 130, 246, 0.65);
-        box-shadow: inset 3px 0 0 #3B82F6;
+      .sc-card.is-captain {
+        border-color: rgba(245, 158, 11, 0.65);
+        background: rgba(245, 158, 11, 0.04);
       }
 
-      .court-slot.is-drop {
-        border-color: #2B2B35;
-        background: #111115;
+      .sc-card.is-vc {
+        border-color: rgba(96, 165, 250, 0.55);
       }
 
-      .court-slot.is-locked-bench {
-        border-color: rgba(245, 158, 11, 0.5);
+      .sc-card.is-drop {
+        opacity: 0.72;
       }
 
-      .court-slot.selected {
-        border-color: #FFFFFF;
-        background: #1E1E28;
-        box-shadow: 0 0 0 2px rgba(244, 244, 246, 0.25);
+      .sc-card.is-locked-bench {
+        border-color: rgba(245, 158, 11, 0.45);
       }
 
-      .court-slot.valid-target {
+      .sc-card.selected {
+        border-color: var(--text);
+        background: #222736;
+        box-shadow: 0 0 0 2px rgba(243, 244, 248, 0.18);
+      }
+
+      .sc-card.valid-target {
         border-color: var(--pos);
         border-style: dashed;
-        background: rgba(16, 185, 129, 0.06);
+        background: rgba(16, 185, 129, 0.07);
       }
 
-      .card-top {
+      .sc-top {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
         justify-content: space-between;
         gap: 8px;
       }
 
-      .card-name-wrap {
+      .sc-identity {
         display: flex;
         align-items: center;
         gap: 6px;
         min-width: 0;
-        flex-wrap: wrap;
       }
 
-      .slot-pos-tag {
-        font-family: var(--mono);
-        font-size: 9px;
-        font-weight: 700;
-        padding: 1px 4px;
-        border-radius: 3px;
-        background: #202029;
-        color: var(--text-muted);
-        border: 1px solid var(--border);
-        flex-shrink: 0;
-      }
-
-      .card-name {
+      .sc-name {
         font-size: 12.5px;
         font-weight: 600;
         color: var(--text);
@@ -352,78 +394,113 @@
         text-overflow: ellipsis;
       }
 
-      .card-pill {
+      .sc-role-badge {
         font-family: var(--mono);
-        font-size: 8.5px;
-        font-weight: 700;
-        padding: 1px 4px;
-        border-radius: 2px;
-        letter-spacing: 0.04em;
-        flex-shrink: 0;
-      }
-
-      .card-pill.drop {
-        background: #23232D;
-        color: var(--text-muted);
-        border: 1px solid var(--border-strong);
-      }
-
-      .card-pill.lock {
-        background: var(--warn-bg);
-        color: var(--warn);
-      }
-
-      .card-pill.out {
-        background: var(--neg-bg);
-        color: var(--neg);
-      }
-
-      .card-controls {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        flex-shrink: 0;
-      }
-
-      .gms-chip {
-        font-family: var(--mono);
-        font-size: 10px;
+        font-size: 9px;
         font-weight: 700;
         padding: 1px 5px;
         border-radius: 3px;
-        background: #1C1C23;
-        color: var(--text-muted);
+        line-height: 1.3;
+        flex-shrink: 0;
+      }
+
+      .sc-role-badge.c {
+        background: var(--warn);
+        color: #0B0C10;
+      }
+
+      .sc-role-badge.vc {
+        background: rgba(96, 165, 250, 0.2);
+        color: #93C5FD;
+        border: 1px solid rgba(96, 165, 250, 0.35);
+      }
+
+      .sc-role-badge.drop {
+        background: #1E222D;
+        color: var(--text-dim);
         border: 1px solid var(--border);
       }
 
-      .gms-chip.g4 {
-        background: var(--pos-bg);
-        color: var(--pos);
-        border-color: rgba(16, 185, 129, 0.3);
-      }
-
-      .gms-chip.g2 {
+      .sc-role-badge.lock {
         background: var(--warn-bg);
         color: var(--warn);
-        border-color: rgba(245, 158, 11, 0.3);
       }
 
-      .gms-chip.g0 {
-        background: var(--neg-bg);
-        color: var(--neg);
-        border-color: rgba(239, 68, 68, 0.3);
+      .sc-right {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        flex-shrink: 0;
       }
 
-      .mini-btn {
-        background: #1A1A22;
-        border: 1px solid var(--border);
-        color: var(--text-dim);
+      .sc-gms-mini {
         font-family: var(--mono);
-        font-size: 9.5px;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-muted);
+      }
+
+      .sc-gms-mini.g4 { color: var(--pos); font-weight: 700; }
+      .sc-gms-mini.g2 { color: var(--warn); }
+      .sc-gms-mini.g0 { color: var(--neg); }
+
+      .sc-pts {
+        font-family: var(--mono);
+        font-size: 14px;
         font-weight: 700;
-        height: 20px;
-        min-width: 22px;
-        padding: 0 4px;
+        color: var(--text);
+        min-width: 28px;
+        text-align: right;
+      }
+
+      .sc-pts.struck {
+        color: var(--text-dim);
+        text-decoration: line-through;
+      }
+
+      .sc-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        min-height: 18px;
+      }
+
+      .sc-submeta {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--text-dim);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      /* Quiet action buttons: revealed cleanly on card hover or when active */
+      .sc-hover-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        opacity: 0;
+        transition: opacity 0.12s;
+      }
+
+      .sc-card:hover .sc-hover-actions,
+      .sc-card.selected .sc-hover-actions,
+      .sc-hover-actions.has-active {
+        opacity: 1;
+      }
+
+      .sc-act-btn {
+        background: #181C26;
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        font-family: var(--mono);
+        font-size: 9px;
+        font-weight: 700;
+        height: 18px;
+        padding: 0 5px;
         border-radius: 3px;
         cursor: pointer;
         display: inline-flex;
@@ -432,74 +509,41 @@
         transition: all 0.1s;
       }
 
-      .mini-btn:hover {
+      .sc-act-btn:hover {
         color: var(--text);
-        border-color: #52525E;
+        border-color: #464E63;
       }
 
-      .mini-btn.cap-on {
+      .sc-act-btn.active-c {
         background: var(--warn);
-        color: #0A0A0C;
+        color: #0B0C10;
         border-color: var(--warn);
+        opacity: 1;
       }
 
-      .mini-btn.vc-on {
-        background: #3B82F6;
+      .sc-act-btn.active-vc {
+        background: #2563EB;
         color: #FFFFFF;
         border-color: #3B82F6;
+        opacity: 1;
       }
 
-      .mini-btn.lock-on {
+      .sc-act-btn.active-lock {
         background: var(--warn-bg);
         color: var(--warn);
-        border-color: rgba(245, 158, 11, 0.55);
-      }
-
-      .card-bottom {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 8px;
-      }
-
-      .card-meta {
-        font-family: var(--mono);
-        font-size: 10.5px;
-        color: var(--text-muted);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex-wrap: wrap;
-      }
-
-      .card-score {
-        font-family: var(--mono);
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--text);
-        white-space: nowrap;
-      }
-
-      .card-score.is-drop-score {
-        color: var(--text-dim);
-        text-decoration: line-through;
-      }
-
-      .card-score-mult {
-        font-size: 10px;
-        color: var(--warn);
-        margin-left: 3px;
+        border-color: rgba(245, 158, 11, 0.5);
+        opacity: 1;
       }
 
       .overflow-box {
-        margin-top: 14px;
-        padding-top: 12px;
+        margin-top: 12px;
+        padding-top: 10px;
         border-top: 1px dashed var(--border-strong);
       }
 
       .overflow-title {
         font-family: var(--mono);
-        font-size: 10px;
+        font-size: 9.5px;
         font-weight: 700;
         color: var(--warn);
         text-transform: uppercase;
@@ -510,7 +554,7 @@
       .court-empty-state {
         background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 8px;
+        border-radius: 6px;
         padding: 36px 20px;
         text-align: center;
         color: var(--text-muted);
@@ -523,6 +567,24 @@
       }
     `;
     document.head.appendChild(style);
+  }
+
+  function renderCourtLinesSvg() {
+    return `
+      <svg class="court-lines-svg" viewBox="0 0 800 520" preserveAspectRatio="none" aria-hidden="true">
+        <rect x="24" y="20" width="752" height="480" rx="8" fill="none" stroke="#F3F4F8" stroke-width="2"/>
+        <line x1="400" y1="20" x2="400" y2="500" stroke="#F3F4F8" stroke-width="2"/>
+        <circle cx="400" cy="260" r="68" fill="none" stroke="#F3F4F8" stroke-width="2"/>
+        <!-- Left key & arc -->
+        <rect x="24" y="165" width="135" height="190" fill="none" stroke="#F3F4F8" stroke-width="2"/>
+        <circle cx="159" cy="260" r="56" fill="none" stroke="#F3F4F8" stroke-width="2"/>
+        <path d="M 24 72 A 210 210 0 0 1 24 448" fill="none" stroke="#F3F4F8" stroke-width="2"/>
+        <!-- Right key & arc -->
+        <rect x="641" y="165" width="135" height="190" fill="none" stroke="#F3F4F8" stroke-width="2"/>
+        <circle cx="641" cy="260" r="56" fill="none" stroke="#F3F4F8" stroke-width="2"/>
+        <path d="M 776 72 A 210 210 0 0 0 776 448" fill="none" stroke="#F3F4F8" stroke-width="2"/>
+      </svg>
+    `;
   }
 
   function getPositions(player) {
@@ -540,7 +602,6 @@
     return getPositions(player).includes(def.req);
   }
 
-  /* Maximum Bipartite Matching (Kuhn's algorithm) for assigning players -> slots */
   function matchPlayersToSlots(players, slotDefs) {
     const nSlots = slotDefs.length;
     const adj = players.map((p) => {
@@ -588,7 +649,6 @@
     return { matched, assignment, assignedIds };
   }
 
-  /* Evaluate SuperCoach Classic Best-9-of-10 + 2x Captain score */
   function evaluateLineup(slots, byId, captainId, viceCaptainId) {
     const starters = [];
     const bench = [];
@@ -621,7 +681,6 @@
     let totalProj = starters.reduce((sum, p) => sum + (p.proj || 0), 0);
 
     if (starters.length === 10) {
-      // Captain always counts; lowest projected non-captain starter is dropped
       const nonCap = starters.filter((p) => !cap || p.id !== cap.id);
       nonCap.sort((a, b) => (a.proj - b.proj) || (a.games - b.games) || (a.price - b.price));
       droppedPlayer = nonCap[0] || null;
@@ -645,21 +704,18 @@
     };
   }
 
-  /* Exact Branch-and-Bound / Combinatorial Optimiser */
   function solveOptimalLineup(squadPlayers, lockedBenchIds) {
     if (!squadPlayers.length) return null;
 
     const lockedSet = new Set(Object.keys(lockedBenchIds || {}).filter((id) => lockedBenchIds[id]));
     const unlocked = squadPlayers.filter((p) => !lockedSet.has(p.id));
-    const locked = squadPlayers.filter((p) => lockedSet.has(p.id));
-
-    // Sort unlocked by proj descending so highest-scoring subsets are explored first
     unlocked.sort((a, b) => (b.proj - a.proj) || (b.games - a.games) || (b.avg3 - a.avg3));
 
     const targetStarters = Math.min(10, unlocked.length);
-    const n = unlocked.length;
+    const pool = unlocked.length > 18 ? unlocked.slice(0, 18) : unlocked;
+    const pLen = pool.length;
+    const k = Math.min(targetStarters, pLen);
 
-    // Score a candidate starter set (exact Best 9 of 10 + 2x Captain)
     function scoreStarterSet(starters) {
       const projs = starters.map((p) => p.proj || 0).sort((a, b) => b - a);
       let main = 0;
@@ -684,12 +740,6 @@
       return false;
     }
 
-    // Generate all combinations of `k` items from `unlocked` (max C(15,10) = 3,003)
-    // If user accidentally tagged > 18 players, cap pool to top 18 by proj to stay instant
-    const pool = n > 18 ? unlocked.slice(0, 18) : unlocked;
-    const pLen = pool.length;
-    const k = Math.min(targetStarters, pLen);
-
     function runSearch(requireFullBench) {
       let bestScore = null;
       let bestResult = null;
@@ -701,14 +751,11 @@
           const candScore = scoreStarterSet(chosen);
           if (!isBetter(candScore, bestScore)) return;
 
-          // Check starter positional legality
           const stMatch = matchPlayersToSlots(chosen, STARTER_SLOTS);
           if (stMatch.matched < k) return;
 
-          // Remaining players go to bench
           const chosenSet = new Set(chosen.map((p) => p.id));
           const benchCandidates = squadPlayers.filter((p) => !chosenSet.has(p.id));
-          // Prioritize locked bench players first when matching bench slots
           benchCandidates.sort((a, b) => {
             const al = lockedSet.has(a.id) ? 0 : 1;
             const bl = lockedSet.has(b.id) ? 0 : 1;
@@ -732,7 +779,6 @@
 
         if (pLen - startIdx < remNeeded) return;
 
-        // Upper-bound pruning: even taking the next `remNeeded` highest-proj players
         if (bestScore) {
           const optimistic = chosen.concat(pool.slice(startIdx, startIdx + remNeeded));
           const optScore = scoreStarterSet(optimistic);
@@ -750,17 +796,14 @@
       return bestResult;
     }
 
-    // Tier 1: Strict official rules (10 legal starters + all bench in legal bench slots)
     let result = runSearch(true);
     let strictMode = true;
 
-    // Tier 2: Relaxed bench (if incomplete squad or mid-trade positional imbalance)
     if (!result) {
       strictMode = false;
       result = runSearch(false);
     }
 
-    // Tier 3: Greedy partial fill (if even k starters can't legally fit, e.g., 5 Centers)
     if (!result) {
       strictMode = false;
       const stMatch = matchPlayersToSlots(pool, STARTER_SLOTS);
@@ -772,22 +815,18 @@
       };
     }
 
-    // Pick optimal Captain (#1 starter proj) and Vice-Captain (#2 starter proj)
     const sortedStarters = [...result.starters].sort(
       (a, b) => (b.proj - a.proj) || (b.games - a.games) || (b.avg3 - a.avg3)
     );
-    const captainId = sortedStarters[0] ? sortedStarters[0].id : null;
-    const viceCaptainId = sortedStarters[1] ? sortedStarters[1].id : null;
 
     return {
       slots: result.slots,
-      captainId,
-      viceCaptainId,
+      captainId: sortedStarters[0] ? sortedStarters[0].id : null,
+      viceCaptainId: sortedStarters[1] ? sortedStarters[1].id : null,
       strictMode
     };
   }
 
-  /* Keep saved court slots synced cleanly when user adds/removes SQ players in table */
   function reconcileCourtState(state, squadPlayers) {
     const byId = {};
     squadPlayers.forEach((p) => { byId[p.id] = p; });
@@ -798,7 +837,6 @@
 
     let changed = false;
 
-    // 1. Prune removed players or duplicates or illegal slot placements
     const seen = new Set();
     ALL_SLOTS.forEach((slot) => {
       const pid = court.slots[slot.key];
@@ -812,7 +850,6 @@
       }
     });
 
-    // Clean stale lock/captain IDs
     Object.keys(court.lockedBenchIds).forEach((pid) => {
       if (!byId[pid]) {
         delete court.lockedBenchIds[pid];
@@ -820,9 +857,7 @@
       }
     });
 
-    // 2. If court is completely empty and we have squad players, auto-seed cleanly via solver
-    const assignedCount = Object.keys(court.slots).length;
-    if (assignedCount === 0 && squadPlayers.length > 0) {
+    if (Object.keys(court.slots).length === 0 && squadPlayers.length > 0) {
       const solved = solveOptimalLineup(squadPlayers, court.lockedBenchIds);
       if (solved) {
         court.slots = solved.slots;
@@ -831,7 +866,6 @@
         changed = true;
       }
     } else {
-      // 3. Auto-place any newly added SQ players into open legal slots
       const unassigned = squadPlayers
         .filter((p) => !seen.has(p.id))
         .sort((a, b) => b.proj - a.proj);
@@ -842,9 +876,7 @@
 
         unassigned.forEach((p) => {
           const isLocked = !!court.lockedBenchIds[p.id];
-          const searchOrder = isLocked
-            ? [...openBench, ...openStarters]
-            : [...openStarters, ...openBench];
+          const searchOrder = isLocked ? [...openBench, ...openStarters] : [...openStarters, ...openBench];
           const matchSlot = searchOrder.find((s) => !court.slots[s.key] && canFillSlot(p, s.key));
           if (matchSlot) {
             court.slots[matchSlot.key] = p.id;
@@ -855,7 +887,6 @@
       }
     }
 
-    // Ensure captain & VC are valid starters
     const starterIds = new Set(STARTER_SLOTS.map((s) => court.slots[s.key]).filter(Boolean));
     if (court.captainId && !starterIds.has(court.captainId)) {
       court.captainId = null;
@@ -887,9 +918,7 @@
       const pA = slots[source.key] ? byId[slots[source.key]] : null;
       const pB = slots[targetSlotKey] ? byId[slots[targetSlotKey]] : null;
       if (!pA && !pB) return false;
-      const okA = !pA || canFillSlot(pA, targetSlotKey);
-      const okB = !pB || canFillSlot(pB, source.key);
-      return okA && okB;
+      return (!pA || canFillSlot(pA, targetSlotKey)) && (!pB || canFillSlot(pB, source.key));
     }
     if (source.type === "overflow") {
       const pA = byId[source.playerId];
@@ -898,18 +927,29 @@
     return false;
   }
 
+  function formatFutureTag(p, roundNum) {
+    const r = Number(roundNum) || 6;
+    if (p.gamesNext !== null && p.gamesAfter !== null) {
+      return `· R${r + 1}:${p.gamesNext} R${r + 2}:${p.gamesAfter}`;
+    }
+    if (p.gamesNext !== null) {
+      return `· R${r + 1}:${p.gamesNext}`;
+    }
+    return "";
+  }
+
   function renderSlotCard(slotDef, player, ctx) {
     const { escapeHtml, formatMoney } = window.SCHOOPS;
     const isSelected = ui.selectedSource && ui.selectedSource.type === "slot" && ui.selectedSource.key === slotDef.key;
     const isTarget = ui.selectedSource && isValidSwap(ui.selectedSource, slotDef.key, ctx.slots, ctx.byId);
 
     if (!player) {
-      const classes = ["court-slot", "is-empty"];
+      const classes = ["sc-card", "is-empty"];
       if (isSelected) classes.push("selected");
       if (isTarget) classes.push("valid-target");
       return `
         <div class="${classes.join(" ")}" data-slot-key="${slotDef.key}">
-          <span>+ EMPTY ${slotDef.label} SLOT</span>
+          <span>+ EMPTY ${slotDef.label}</span>
         </div>
       `;
     }
@@ -920,58 +960,58 @@
     const isDrop = isStarter && ctx.evalRes.droppedPlayer && ctx.evalRes.droppedPlayer.id === player.id;
     const isLockedBench = !!ctx.lockedBenchIds[player.id];
 
-    const classes = ["court-slot"];
+    const classes = ["sc-card"];
     if (isCap) classes.push("is-captain");
     else if (isVc) classes.push("is-vc");
-    else if (isDrop) classes.push("is-drop");
+    if (isDrop) classes.push("is-drop");
     if (isLockedBench) classes.push("is-locked-bench");
     if (isSelected) classes.push("selected");
     if (isTarget) classes.push("valid-target");
 
     const gClass = player.games >= 4 ? "g4" : (player.games === 0 ? "g0" : (player.games <= 2 ? "g2" : ""));
     const beTxt = player.be === null ? "BE —" : `BE ${player.be}`;
-    const beColor = (player.be !== null && player.dist !== null)
-      ? (player.dist >= 0 ? "pos-text" : "neg-text")
-      : "dim-text";
+    const futTxt = formatFutureTag(player, ctx.round);
 
-    const pills = [];
-    if (isDrop) pills.push(`<span class="card-pill drop" title="Lowest projected non-Captain starter (dropped under Best 9 of 10)">DROP</span>`);
-    if (isLockedBench) pills.push(`<span class="card-pill lock" title="Locked to Bench for OPTIMISE">BENCH LOCK</span>`);
-    if (player.isRelevantOut || player.isFringeDnp) pills.push(`<span class="card-pill out">${player.injury ? "INJ" : "OUT"}</span>`);
+    const roleBadges = [];
+    if (isCap) roleBadges.push(`<span class="sc-role-badge c">C</span>`);
+    else if (isVc) roleBadges.push(`<span class="sc-role-badge vc">VC</span>`);
+    if (isDrop) roleBadges.push(`<span class="sc-role-badge drop" title="Lowest starter score dropped under Best 9 of 10">DROP</span>`);
+    if (isLockedBench) roleBadges.push(`<span class="sc-role-badge lock" title="Pinned to Bench for OPTIMISE">LOCKED</span>`);
 
-    const scoreDisplay = isCap
-      ? `${Math.round(player.proj * 2)}<span class="card-score-mult">(2×)</span>`
-      : `${Math.round(player.proj)}`;
+    const hasActiveAction = isCap || isVc || isLockedBench;
+    const displayPts = isCap ? Math.round(player.proj * 2) : Math.round(player.proj);
 
     return `
-      <div class="${classes.join(" ")}" data-slot-key="${slotDef.key}">
-        <div class="card-top">
-          <div class="card-name-wrap">
-            <span class="slot-pos-tag">${slotDef.label}</span>
-            <span class="card-name">${escapeHtml(player.name)}</span>
-            ${pills.join("")}
+      <div class="${classes.join(" ")}" data-slot-key="${slotDef.key}" style="--team-accent:${getTeamColor(player.team)};">
+        <div class="sc-top">
+          <div class="sc-identity">
+            <span class="sc-name">${escapeHtml(player.name)}</span>
+            ${roleBadges.join("")}
           </div>
-          <div class="card-controls">
-            <span class="gms-chip ${gClass}" title="Round ${ctx.round} scheduled games">${player.games}G</span>
-            ${isStarter ? `
-              <button type="button" class="mini-btn ${isCap ? "cap-on" : ""}" data-set-cap="${escapeHtml(player.id)}" title="Set as Captain (2× score)">C</button>
-              <button type="button" class="mini-btn ${isVc ? "vc-on" : ""}" data-set-vc="${escapeHtml(player.id)}" title="Set as Vice-Captain">VC</button>
-            ` : ""}
-            <button type="button" class="mini-btn ${isLockedBench ? "lock-on" : ""}" data-toggle-lock="${escapeHtml(player.id)}" title="${isLockedBench ? "Unlock from Bench" : "Lock to Bench (OPTIMISE keeps on bench)"}">${isLockedBench ? "🔒" : "🔓"}</button>
+          <div class="sc-right">
+            <span class="sc-gms-mini ${gClass}" title="Round ${ctx.round} games">${player.games}G</span>
+            <span class="sc-pts ${isDrop ? "struck" : ""}" title="${isCap ? "Captain 2× projected points" : "Round projected points"}">${displayPts}</span>
           </div>
         </div>
-        <div class="card-bottom">
-          <div class="card-meta">
+        <div class="sc-bottom">
+          <div class="sc-submeta">
             <span>${escapeHtml(player.team)}</span>
             <span>·</span>
             <span>${escapeHtml(player.pos)}</span>
             <span>·</span>
             <span>$${(player.price / 1000000).toFixed(2)}M</span>
             <span>·</span>
-            <span class="${beColor}">${beTxt}</span>
+            <span>${beTxt}</span>
             <span class="${player.priceChange >= 0 ? "pos-text" : "neg-text"}">${formatMoney(player.priceChange)}</span>
+            ${futTxt ? `<span>${escapeHtml(futTxt)}</span>` : ""}
           </div>
-          <div class="card-score ${isDrop ? "is-drop-score" : ""}" title="Round ${ctx.round} projected points">${scoreDisplay}</div>
+          <div class="sc-hover-actions ${hasActiveAction ? "has-active" : ""}">
+            ${isStarter ? `
+              <button type="button" class="sc-act-btn ${isCap ? "active-c" : ""}" data-set-cap="${escapeHtml(player.id)}" title="Set Captain (2×)">C</button>
+              <button type="button" class="sc-act-btn ${isVc ? "active-vc" : ""}" data-set-vc="${escapeHtml(player.id)}" title="Set Vice-Captain">VC</button>
+            ` : ""}
+            <button type="button" class="sc-act-btn ${isLockedBench ? "active-lock" : ""}" data-toggle-lock="${escapeHtml(player.id)}" title="${isLockedBench ? "Unlock Bench pin" : "Pin to Bench for OPTIMISE"}">${isLockedBench ? ICON_LOCK_CLOSED : ICON_LOCK_OPEN}</button>
+          </div>
         </div>
       </div>
     `;
@@ -981,30 +1021,30 @@
     const { escapeHtml } = window.SCHOOPS;
     const isSelected = ui.selectedSource && ui.selectedSource.type === "overflow" && ui.selectedSource.playerId === player.id;
     const isLockedBench = !!ctx.lockedBenchIds[player.id];
-    const gClass = player.games >= 4 ? "g4" : (player.games === 0 ? "g0" : (player.games <= 2 ? "g2" : ""));
 
     return `
-      <div class="court-slot ${isSelected ? "selected" : ""}" data-overflow-id="${escapeHtml(player.id)}">
-        <div class="card-top">
-          <div class="card-name-wrap">
-            <span class="slot-pos-tag">RES</span>
-            <span class="card-name">${escapeHtml(player.name)}</span>
-            ${isLockedBench ? `<span class="card-pill lock">BENCH LOCK</span>` : ""}
+      <div class="sc-card ${isSelected ? "selected" : ""}" data-overflow-id="${escapeHtml(player.id)}" style="--team-accent:${getTeamColor(player.team)};">
+        <div class="sc-top">
+          <div class="sc-identity">
+            <span class="sc-name">${escapeHtml(player.name)}</span>
+            ${isLockedBench ? `<span class="sc-role-badge lock">LOCKED</span>` : ""}
           </div>
-          <div class="card-controls">
-            <span class="gms-chip ${gClass}">${player.games}G</span>
-            <button type="button" class="mini-btn ${isLockedBench ? "lock-on" : ""}" data-toggle-lock="${escapeHtml(player.id)}" title="Lock to Bench">${isLockedBench ? "🔒" : "🔓"}</button>
+          <div class="sc-right">
+            <span class="sc-gms-mini">${player.games}G</span>
+            <span class="sc-pts">${Math.round(player.proj)}</span>
           </div>
         </div>
-        <div class="card-bottom">
-          <div class="card-meta">
+        <div class="sc-bottom">
+          <div class="sc-submeta">
             <span>${escapeHtml(player.team)}</span>
             <span>·</span>
             <span>${escapeHtml(player.pos)}</span>
             <span>·</span>
             <span>$${(player.price / 1000000).toFixed(2)}M</span>
           </div>
-          <div class="card-score">${Math.round(player.proj)}</div>
+          <div class="sc-hover-actions ${isLockedBench ? "has-active" : ""}">
+            <button type="button" class="sc-act-btn ${isLockedBench ? "active-lock" : ""}" data-toggle-lock="${escapeHtml(player.id)}" title="Pin to Bench">${isLockedBench ? ICON_LOCK_CLOSED : ICON_LOCK_OPEN}</button>
+          </div>
         </div>
       </div>
     `;
@@ -1015,14 +1055,17 @@
     if (!root || !window.SCHOOPS) return;
 
     const state = window.SCHOOPS.getState();
-    if (state.activeTab !== "squad" || state.squadViewMode !== "court") return;
+    if (state.activeNav !== "court") return;
 
     const squadPlayers = window.SCHOOPS.getSquadPlayers();
     if (squadPlayers.length === 0) {
       root.innerHTML = `
         <div class="court-empty-state">
           <h3>No Squad Tracked Yet</h3>
-          <p>Switch back to <strong>All</strong> and click the <strong>+</strong> button on your 15 players to tag them into your Squad, then open Court View to visualise and optimise your lineup.</p>
+          <p>Head to <strong>Market</strong> and click <strong>+</strong> on your 15 players to build your squad, then return to <strong>My Court</strong> to set starters, pin bench locks, and optimise.</p>
+          <div style="margin-top:14px;">
+            <button type="button" class="btn btn-primary" data-go-market="1">Go to Market</button>
+          </div>
         </div>
       `;
       return;
@@ -1048,20 +1091,20 @@
       round: state.round
     };
 
-    const groups = [
-      { title: "Point Guards", keys: ["PG1", "PG2"], single: false },
-      { title: "Shooting Guards", keys: ["SG1", "SG2"], single: false },
-      { title: "Centre", keys: ["C1"], single: true },
-      { title: "Small Forwards", keys: ["SF1", "SF2"], single: false },
-      { title: "Power Forwards", keys: ["PF1", "PF2"], single: false },
-      { title: "Flex", keys: ["FLX"], single: true }
+    const rows = [
+      { label: "PG", keys: ["PG1", "PG2"], single: false },
+      { label: "SG", keys: ["SG1", "SG2"], single: false },
+      { label: "C",  keys: ["C1"], single: true },
+      { label: "SF", keys: ["SF1", "SF2"], single: false },
+      { label: "PF", keys: ["PF1", "PF2"], single: false },
+      { label: "FLX", keys: ["FLX"], single: true }
     ];
 
-    const startersHtml = groups.map((g) => `
-      <div class="court-section">
-        <div class="court-section-label">${g.title}</div>
-        <div class="${g.single ? "court-row-1" : "court-row-2"}">
-          ${g.keys.map((k) => renderSlotCard(SLOT_BY_KEY[k], slots[k] ? byId[slots[k]] : null, ctx)).join("")}
+    const startersHtml = rows.map((r) => `
+      <div class="court-lineup-row">
+        <div class="row-pos-label">${r.label}</div>
+        <div class="${r.single ? "court-single" : "court-pair"}">
+          ${r.keys.map((k) => renderSlotCard(SLOT_BY_KEY[k], slots[k] ? byId[slots[k]] : null, ctx)).join("")}
         </div>
       </div>
     `).join("");
@@ -1070,7 +1113,7 @@
 
     const overflowHtml = overflow.length > 0 ? `
       <div class="overflow-box">
-        <div class="overflow-title">Unassigned / Overflow (${overflow.length}) — Click a player then a legal slot to swap</div>
+        <div class="overflow-title">Overflow (${overflow.length}) — Select card then legal slot</div>
         <div class="bench-stack">
           ${overflow.map((p) => renderOverflowCard(p, ctx)).join("")}
         </div>
@@ -1083,59 +1126,74 @@
     } else if (ui.selectedSource) {
       const selId = ui.selectedSource.type === "slot" ? slots[ui.selectedSource.key] : ui.selectedSource.playerId;
       const selName = (selId && byId[selId]) ? byId[selId].name : "Empty Slot";
-      bannerHtml = `<span class="court-banner">Swapping ${window.SCHOOPS.escapeHtml(selName)} — click a highlighted green slot (or click again to cancel)</span>`;
+      bannerHtml = `<span class="court-banner">Swapping ${window.SCHOOPS.escapeHtml(selName)} · click green slot or card again to cancel</span>`;
     }
 
-    const dropSub = evalRes.droppedPlayer
+    const dropText = evalRes.droppedPlayer
       ? `Drop: ${window.SCHOOPS.escapeHtml(evalRes.droppedPlayer.name)} (${Math.round(evalRes.droppedPlayer.proj)})`
-      : `${evalRes.starters.length}/10 starters filled`;
+      : `${evalRes.starters.length}/10 starters`;
+
+    const capText = evalRes.captain
+      ? `C: ${window.SCHOOPS.escapeHtml(evalRes.captain.name)}`
+      : "No Captain";
 
     root.innerHTML = `
       <div class="court-shell">
-        <div class="court-topbar">
-          <div class="court-metrics">
-            <div class="court-metric">
-              <span class="court-metric-label">Rd ${state.round} Proj (Best 9 + 2× C)</span>
-              <span class="court-metric-val pos-text">${evalRes.totalProj.toLocaleString()} PTS</span>
-              <span class="court-metric-sub">${dropSub}</span>
+        <div class="court-summary-bar">
+          <div class="court-stats-group">
+            <div class="court-stat">
+              <span class="court-stat-label">Rd ${state.round} Proj (Best 9 + 2× C)</span>
+              <div class="court-stat-row">
+                <span class="court-stat-val pos-text">${evalRes.totalProj.toLocaleString()} PTS</span>
+                <span class="court-stat-sub">${dropText}</span>
+              </div>
             </div>
-            <div class="court-metric">
-              <span class="court-metric-label">Starter Games</span>
-              <span class="court-metric-val">${evalRes.starterGames} Gms</span>
-              <span class="court-metric-sub">${evalRes.captain ? `C: ${window.SCHOOPS.escapeHtml(evalRes.captain.name)}` : "No Captain"}</span>
+            <div class="court-stat">
+              <span class="court-stat-label">Starter Slate</span>
+              <div class="court-stat-row">
+                <span class="court-stat-val">${evalRes.starterGames} Gms</span>
+                <span class="court-stat-sub">${capText}</span>
+              </div>
             </div>
-            <div class="court-metric">
-              <span class="court-metric-label">Bench Depth</span>
-              <span class="court-metric-val muted-text">${evalRes.benchProj.toLocaleString()} pts</span>
-              <span class="court-metric-sub">0 counted · ${evalRes.bench.length}/5 filled</span>
+            <div class="court-stat">
+              <span class="court-stat-label">Bench</span>
+              <div class="court-stat-row">
+                <span class="court-stat-val muted-text">${evalRes.bench.length}/5</span>
+                <span class="court-stat-sub">${evalRes.benchProj.toLocaleString()} uncounted pts</span>
+              </div>
             </div>
           </div>
 
-          <div class="court-actions">
+          <div class="court-controls-group">
             ${bannerHtml}
             ${lockCount > 0 ? `<button type="button" class="btn" id="courtClearLocksBtn">Clear Locks (${lockCount})</button>` : ""}
-            <button type="button" class="court-opt-btn" id="courtOptimiseBtn" title="Find the mathematically highest-scoring legal lineup (Best 9 of 10 + 2× Captain) respecting Bench Locks">⚡ OPTIMISE</button>
+            <button type="button" class="court-opt-btn" id="courtOptimiseBtn" title="Optimise Best 9 of 10 + 2× Captain while respecting Bench Locks">${ICON_OPTIMISE} OPTIMISE</button>
           </div>
         </div>
 
         <div class="court-grid">
-          <div class="court-panel court-floor">
-            <div class="court-panel-head">
-              <span class="court-panel-title">On-Court Starters (${evalRes.starters.length}/10)</span>
-              <span class="court-panel-hint">Click any two cards to swap · Best 9 of 10 + 2× C count</span>
+          <div class="court-panel court-board">
+            ${renderCourtLinesSvg()}
+            <div class="court-panel-inner">
+              <div class="court-panel-head">
+                <span class="court-panel-title">On-Court Starters (${evalRes.starters.length}/10)</span>
+                <span class="court-panel-hint">Click two cards to swap · Hover card for C / VC / Lock</span>
+              </div>
+              ${startersHtml}
             </div>
-            ${startersHtml}
           </div>
 
           <div class="court-panel">
-            <div class="court-panel-head">
-              <span class="court-panel-title">Bench (${evalRes.bench.length}/5)</span>
-              <span class="court-panel-hint">Use 🔓 to pin injured players to Bench</span>
+            <div class="court-panel-inner">
+              <div class="court-panel-head">
+                <span class="court-panel-title">Bench (${evalRes.bench.length}/5)</span>
+                <span class="court-panel-hint">Pin injured players to Bench</span>
+              </div>
+              <div class="bench-stack">
+                ${benchHtml}
+              </div>
+              ${overflowHtml}
             </div>
-            <div class="bench-stack">
-              ${benchHtml}
-            </div>
-            ${overflowHtml}
           </div>
         </div>
       </div>
@@ -1143,12 +1201,16 @@
   }
 
   function handleCourtClick(e) {
+    if (e.target.closest("[data-go-market]")) {
+      window.SCHOOPS.setActiveNav("market");
+      return;
+    }
+
     const state = window.SCHOOPS.getState();
     const squadPlayers = window.SCHOOPS.getSquadPlayers();
     const byId = {};
     squadPlayers.forEach((p) => { byId[p.id] = p; });
 
-    // 1. OPTIMISE button
     if (e.target.closest("#courtOptimiseBtn")) {
       ui.selectedSource = null;
       const before = evaluateLineup(state.court.slots, byId, state.court.captainId, state.court.viceCaptainId);
@@ -1166,29 +1228,27 @@
       const after = evaluateLineup(state.court.slots, byId, state.court.captainId, state.court.viceCaptainId);
       const diff = after.totalProj - before.totalProj;
       const lockCount = Object.keys(state.court.lockedBenchIds).filter((k) => state.court.lockedBenchIds[k]).length;
-      const lockSuffix = lockCount > 0 ? ` (${lockCount} bench lock${lockCount > 1 ? "s" : ""} respected)` : "";
+      const lockSuffix = lockCount > 0 ? ` (${lockCount} lock${lockCount > 1 ? "s" : ""})` : "";
 
       if (diff > 0) {
-        setBanner(`OPTIMISED: +${diff} PTS (${before.totalProj} → ${after.totalProj})${lockSuffix}`, "pos");
+        setBanner(`+${diff} PTS (${before.totalProj} → ${after.totalProj})${lockSuffix}`, "pos");
       } else if (diff === 0) {
-        setBanner(`ALREADY OPTIMAL: ${after.totalProj} PTS${lockSuffix}`, "pos");
+        setBanner(`Optimal: ${after.totalProj} PTS${lockSuffix}`, "pos");
       } else {
-        setBanner(`OPTIMISED AROUND LOCKS: ${after.totalProj} PTS (${diff} vs unlocked)${lockSuffix}`, "warn");
+        setBanner(`${after.totalProj} PTS (${diff} vs unlocked)${lockSuffix}`, "warn");
       }
       renderCourt();
       return;
     }
 
-    // 2. Clear Locks button
     if (e.target.closest("#courtClearLocksBtn")) {
       state.court.lockedBenchIds = {};
       window.SCHOOPS.savePrefs();
-      setBanner("Cleared all Bench Locks.", "info");
+      setBanner("Cleared bench locks.", "info");
       renderCourt();
       return;
     }
 
-    // 3. Set Captain
     const capBtn = e.target.closest("[data-set-cap]");
     if (capBtn) {
       e.stopPropagation();
@@ -1203,7 +1263,6 @@
       return;
     }
 
-    // 4. Set Vice-Captain
     const vcBtn = e.target.closest("[data-set-vc]");
     if (vcBtn) {
       e.stopPropagation();
@@ -1218,24 +1277,22 @@
       return;
     }
 
-    // 5. Toggle Force Bench Lock
     const lockBtn = e.target.closest("[data-toggle-lock]");
     if (lockBtn) {
       e.stopPropagation();
       const pid = lockBtn.dataset.toggleLock;
       if (state.court.lockedBenchIds[pid]) {
         delete state.court.lockedBenchIds[pid];
-        setBanner(`Unlocked ${byId[pid] ? byId[pid].name : "player"} — eligible to start on OPTIMISE.`, "info");
+        setBanner(`Unlocked ${byId[pid] ? byId[pid].name : "player"}.`, "info");
       } else {
         state.court.lockedBenchIds[pid] = true;
-        setBanner(`Locked ${byId[pid] ? byId[pid].name : "player"} to Bench — hit OPTIMISE to adjust lineup.`, "warn");
+        setBanner(`${byId[pid] ? byId[pid].name : "player"} locked to Bench.`, "warn");
       }
       window.SCHOOPS.savePrefs();
       renderCourt();
       return;
     }
 
-    // 6. Click Overflow card
     const ovCard = e.target.closest("[data-overflow-id]");
     if (ovCard) {
       const pid = ovCard.dataset.overflowId;
@@ -1248,20 +1305,18 @@
       return;
     }
 
-    // 7. Click Court/Bench Slot (select or execute swap)
     const slotEl = e.target.closest("[data-slot-key]");
     if (slotEl) {
       const targetKey = slotEl.dataset.slotKey;
       const slots = state.court.slots;
 
       if (!ui.selectedSource) {
-        if (!slots[targetKey]) return; // Nothing in empty slot to pick up
+        if (!slots[targetKey]) return;
         ui.selectedSource = { type: "slot", key: targetKey };
         renderCourt();
         return;
       }
 
-      // Clicking same slot cancels
       if (ui.selectedSource.type === "slot" && ui.selectedSource.key === targetKey) {
         ui.selectedSource = null;
         renderCourt();
@@ -1273,7 +1328,7 @@
         const pA = srcId ? byId[srcId] : null;
         const targetDef = SLOT_BY_KEY[targetKey];
         setBanner(
-          pA ? `Invalid swap: ${pA.name} (${pA.pos}) cannot swap into ${targetDef.label}.` : "Invalid positional swap.",
+          pA ? `${pA.name} (${pA.pos}) cannot play ${targetDef.label}.` : "Invalid swap.",
           "neg"
         );
         ui.selectedSource = null;
@@ -1292,10 +1347,11 @@
         slots[targetKey] = ui.selectedSource.playerId;
       }
 
-      // If captain or VC moved to bench, clear so evaluateLineup auto-selects valid starter
       const starterIds = new Set(STARTER_SLOTS.map((s) => slots[s.key]).filter(Boolean));
       if (state.court.captainId && !starterIds.has(state.court.captainId)) state.court.captainId = null;
-      if (state.court.viceCaptainId && !starterIds.has(state.court.viceCaptainId)) state.court.viceCaptainId = null;
+      if (state.court.viceCaptainId && (!starterIds.has(state.court.viceCaptainId) || state.court.viceCaptainId === state.court.captainId)) {
+        state.court.viceCaptainId = null;
+      }
 
       window.SCHOOPS.savePrefs();
       ui.selectedSource = null;
