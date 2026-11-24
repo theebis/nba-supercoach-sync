@@ -38,6 +38,12 @@
       .bf-meta { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
       .bf-right { font-family: var(--mono); font-size: 12px; font-weight: 600; text-align: right; white-space: nowrap; }
       .bf-empty { padding: 10px 8px; font-size: 12px; color: var(--text-tertiary); line-height: 1.5; }
+      .bf-start { margin: 2px 0 6px; padding: 14px; border-radius: 10px; border: 1px solid rgba(110, 123, 242, 0.3);
+        background: linear-gradient(180deg, rgba(110, 123, 242, 0.1), rgba(110, 123, 242, 0.03)); }
+      .bf-start-title { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
+      .bf-start-text { font-size: 12px; line-height: 1.5; color: var(--text-secondary); margin: 4px 0 12px; text-wrap: pretty; }
+      .bf-start-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      .bf-start-actions .ghost-btn:disabled { opacity: 0.55; cursor: default; }
       .bf-sev { width: 3px; border-radius: 2px; align-self: stretch; }
       .bf-item.sev-bad { box-shadow: inset 3px 0 0 var(--neg-soft); }
       .bf-item.sev-warn { box-shadow: inset 3px 0 0 var(--warn-bright); }
@@ -116,7 +122,20 @@
     const squadHtml = squad.length
       ? (alerts.length ? alerts.map((a) => item(a.p, a.note, a.right, a.sev)).join("")
         : `<div class="bf-empty">Nothing to flag in your squad this round. No injuries and no big projected price moves.</div>`)
-      : `<div class="bf-empty">Add your squad (the + on any row, or My Court) to see injury and price news about your players here.</div>`;
+      : `<div class="bf-start">
+          <div class="bf-start-title">Make this briefing about your team</div>
+          <div class="bf-start-text">Add your 15 players and this panel tracks their injuries, breakevens and price moves every round. Your squad is saved in this browser only.</div>
+          <div class="bf-start-actions">
+            <button type="button" class="primary-btn" data-bf-go="court">Add my players</button>
+            <button type="button" class="ghost-btn" disabled title="Coming next: upload a screenshot of your SuperCoach team">Import from screenshot · soon</button>
+          </div>
+        </div>`;
+
+    // New users (no squad): the popular players most likely to lose value, useful to anyone
+    const fallers = squad.length ? [] : all
+      .filter((p) => p.owned >= 10 && !p.isInactive)
+      .sort((a, b) => a.priceChange - b.priceChange)
+      .slice(0, 5);
 
     panel.innerHTML = `
       <div class="bf-head">
@@ -128,6 +147,11 @@
           <div class="bf-sec-title">Your squad <span>${squad.length ? `${alerts.length} alert${alerts.length === 1 ? "" : "s"}` : ""}</span></div>
           ${squadHtml}
         </div>
+        ${fallers.length ? `
+        <div class="bf-sec">
+          <div class="bf-sec-title">Popular players about to drop <span>owned 10%+</span></div>
+          ${fallers.map((p) => item(p, p.injuryStatus ? escapeHtml(p.injury) : `Needs ${p.be} over ${p.games} games, projected ${p.proj}.`, money(p.priceChange), "bad")).join("")}
+        </div>` : ""}
         <div class="bf-sec">
           <div class="bf-sec-title">Injury report <span>owned 2%+ or $9M+</span></div>
           ${injuries.map((p) => item(p, `${escapeHtml(p.injuryDetail || p.injury)}${returnTxt(p)}`, `<span class="muted-text">${p.owned.toFixed(1)}%</span>`)).join("") || `<div class="bf-empty">No injuries to note.</div>`}
@@ -152,6 +176,7 @@
     panel.addEventListener("click", (e) => {
       const b = e.target.closest("[data-bf-player]");
       if (b) window.SCHOOPS.openInspector(b.dataset.bfPlayer);
+      if (e.target.closest('[data-bf-go="court"]')) window.SCHOOPS.setActiveNav("court");
     });
     window.addEventListener("resize", render);
     // Opening/closing the Inspector doesn't trigger a full render, so watch it directly
