@@ -1902,10 +1902,10 @@
           </button>
         </div>
         <ul class="sb-about-list">
-          <li><b>Breakevens</b> and next price change for every player</li>
+          <li><b>Breakevens</b> and price projections for every player</li>
           <li><b>Captain picks</b> and a lineup optimiser for your team</li>
-          <li><b>Live scores</b> that beat SuperCoach's own updates</li>
-          <li><b>Trade advice</b> with the chance each trade pays off</li>
+          <li><b>Live scores</b> that update faster than SuperCoach</li>
+          <li><b>Trade advice</b> backed by analytics and internal data</li>
         </ul>
         <div class="sb-about-brag" id="sbAboutBrag" hidden></div>
       </section>
@@ -3646,8 +3646,10 @@
         if (!(ours < sc)) return;
         const first = Math.min(...t.map((r) => r.round)), last = Math.max(...t.map((r) => r.round));
         const brag = document.getElementById("sbAboutBrag");
-        brag.innerHTML = `Our projections miss real scores by <b>${Math.round(ours)} pts</b> on average. SuperCoach's own projections miss by ${Math.round(sc)}.`;
-        brag.title = `Average miss per player per round, tested on Rounds ${first}–${last} (${n.toLocaleString()} player-rounds) without letting the model see the round it was predicting.`;
+        const closer = Math.round(sc - ours);
+        const pct = Math.round(((sc - ours) / sc) * 100);
+        brag.innerHTML = `On average our projections land <b>${closer} pts</b> closer to real scores than SuperCoach's: <b>${pct}%</b> more accurate.`;
+        brag.title = `Tested on Rounds ${first}–${last} (${n.toLocaleString()} player-rounds) without letting the model see the round it was predicting. Average miss per player per round: ours ${ours.toFixed(1)}, SuperCoach's ${sc.toFixed(1)}.`;
         brag.hidden = false;
       }).catch(() => {});
     })();
