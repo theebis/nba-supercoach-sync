@@ -29,6 +29,18 @@ const VIEWS = {
     await page.waitForTimeout(400);
   },
   court: async (page) => openNav(page, "court"),
+  // Court with a deliberately worse captain, so the green "Optimise lineup" button shows
+  "court-optimise": async (page) => {
+    await openNav(page, "court");
+    await page.evaluate(() => {
+      const s = window.SCHOOPS.getState();
+      const starters = Object.entries(s.court.slots).filter(([k]) => !k.startsWith("B_")).map(([, id]) => s.computedById[id]).filter(Boolean);
+      starters.sort((a, b) => a.proj - b.proj);
+      s.court.captainId = starters[0]?.id;
+      window.SCHOOPS.render();
+    });
+    await page.waitForTimeout(300);
+  },
   tradelab: async (page) => openNav(page, "tradelab"),
   settings: async (page) => {
     await page.evaluate(() => openSettingsModal());

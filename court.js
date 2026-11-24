@@ -31,6 +31,7 @@
   ALL_SLOTS.forEach((s) => { SLOT_BY_KEY[s.key] = s; });
 
   const STARTER_KEYS = new Set(STARTER_SLOTS.map((s) => s.key));
+  const SQUAD_SIZE = 15;
   const VALID_POS = new Set(["PG", "SG", "SF", "PF", "C"]);
 
   const ICON_LOCK_CLOSED = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
@@ -50,7 +51,8 @@
     pickerOpen: false,
     pickerTargetSlot: null, // optional slotKey when triggered from an empty slot
     pickerPosFilter: "ALL",
-    pickerQuery: ""
+    pickerQuery: "",
+    pickerFlash: null       // "Added X" confirmation while adding several players in a row
   };
 
   function injectStyles() {
@@ -230,6 +232,16 @@
         font-size: 11.5px;
         color: var(--text-tertiary);
       }
+
+      /* Labels sit on a solid chip so the court lines don't strike through them */
+      .lc-board-card .lc-section-title,
+      .lc-board-card .lc-section-hint {
+        background: #0D0D10;
+        padding: 1px 6px;
+        border-radius: 4px;
+      }
+      .lc-board-card .lc-section-head { margin-left: -6px; margin-right: -6px; }
+      @media (max-width: 760px) { .lc-board-card .lc-section-hint { display: none; } }
 
       .lc-svg {
         position: absolute;
@@ -657,6 +669,111 @@
       @media (max-width: 768px) {
         .lc-picker-input { font-size: 16px; }
       }
+
+      /* ---- Lineup hero bar: projected score + the Optimise call to action ---- */
+      .lc-hero {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 14px 28px;
+        padding: 16px 18px;
+        border-bottom: 1px solid var(--border-subtle);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0));
+      }
+      .lc-hero-score { display: flex; flex-direction: column; gap: 2px; }
+      .lc-hero-label { font-size: 11.5px; color: var(--text-tertiary); }
+      .lc-hero-big {
+        font-family: var(--mono);
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+        color: var(--text-primary);
+        font-variant-numeric: tabular-nums;
+      }
+      .lc-hero-big small { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-left: 4px; letter-spacing: 0; }
+      .lc-hero-meta { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--text-tertiary); }
+      .lc-hero-meta strong { color: var(--text-primary); font-weight: 600; }
+      .lc-hero-squad { display: flex; flex-direction: column; gap: 6px; }
+      .lc-pips { display: flex; gap: 3px; }
+      .lc-pip { width: 11px; height: 5px; border-radius: 2px; background: rgba(255, 255, 255, 0.1); }
+      .lc-pip.on { background: var(--text-primary); }
+      .lc-hero-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+      .lc-hero-msg { flex-basis: 100%; display: flex; }
+
+      .lc-opt-big {
+        height: 40px;
+        padding: 0 16px 0 14px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: transform 160ms var(--ease-out), filter 150ms ease, background-color 150ms ease;
+      }
+      .lc-opt-big:active { transform: scale(0.97); }
+      .lc-opt-big svg { width: 15px; height: 15px; }
+      .lc-opt-big.needs {
+        background: var(--pos);
+        border: 1px solid #4ADEA8;
+        color: #04140D;
+        box-shadow: 0 0 0 4px rgba(34, 197, 139, 0.16), 0 10px 28px rgba(34, 197, 139, 0.22);
+      }
+      .lc-opt-big.locks { background: var(--warn); border: 1px solid #FBBF24; color: #161004; }
+      .lc-opt-big .gain {
+        font-family: var(--mono);
+        font-size: 12.5px;
+        padding: 2px 7px;
+        border-radius: 99px;
+        background: rgba(0, 0, 0, 0.16);
+      }
+      .lc-opt-big.ok {
+        background: var(--pos-bg);
+        border: 1px solid rgba(34, 197, 139, 0.36);
+        color: var(--pos-bright);
+        font-weight: 600;
+        cursor: default;
+      }
+      @media (hover: hover) {
+        .lc-opt-big.needs:hover, .lc-opt-big.locks:hover { filter: brightness(1.07); }
+      }
+
+      /* Card actions are always visible (dimmed) so Remove / Captain are discoverable */
+      .lc-acts { opacity: 0.55; }
+      .lc-act-btn.rem-btn { color: var(--neg-soft); }
+
+      /* Empty slot: clear add target + best available suggestion */
+      .lc-tile.is-empty { gap: 6px; padding: 10px 12px; text-align: center; }
+      .lc-empty-main { display: inline-flex; align-items: center; gap: 8px; font-family: var(--sans); font-size: 13px; font-weight: 500; }
+      .lc-plus {
+        width: 22px; height: 22px; border-radius: 50%;
+        display: inline-flex; align-items: center; justify-content: center;
+        border: 1px solid var(--border-strong); font-size: 14px; line-height: 1;
+      }
+      .lc-tile.is-empty:hover .lc-plus { border-color: var(--pos); }
+      .lc-sugg { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; font-family: var(--sans); font-size: 11.5px; color: var(--text-tertiary); }
+      .lc-sugg b { color: var(--text-secondary); font-weight: 500; }
+      .lc-sugg-add {
+        height: 24px; padding: 0 9px; border-radius: 5px; cursor: pointer;
+        background: var(--pos-bg); border: 1px solid rgba(34, 197, 139, 0.36); color: var(--pos-bright);
+        font-size: 11.5px; font-weight: 600;
+        transition: transform 160ms var(--ease-out), background-color 120ms ease;
+      }
+      .lc-sugg-add:active { transform: scale(0.96); }
+      @media (hover: hover) { .lc-sugg-add:hover { background: rgba(34, 197, 139, 0.24); } }
+
+      .lc-picker-flash { font-size: 12px; color: var(--pos-bright); padding: 0 15px 10px; }
+      .lc-picker-count { font-family: var(--mono); font-size: 11.5px; color: var(--text-tertiary); margin-left: 8px; font-weight: 500; }
+
+      @media (max-width: 760px) {
+        .lc-hero { padding: 12px; gap: 12px 18px; }
+        .lc-hero-actions { margin-left: 0; width: 100%; }
+        .lc-hero-actions .lc-opt-big { flex: 1; justify-content: center; }
+        .lc-grid { padding: 10px; gap: 10px; }
+      }
     `;
     document.head.appendChild(style);
   }
@@ -945,6 +1062,7 @@
 
   function openAddPlayerPicker(slotKey) {
     ui.pickerOpen = true;
+    ui.pickerFlash = null;
     ui.pickerTargetSlot = slotKey || null;
     ui.pickerQuery = "";
     const def = slotKey ? SLOT_BY_KEY[slotKey] : null;
@@ -956,7 +1074,27 @@
     }, 10);
   }
 
+  // Adds a player to the squad (optionally straight into a slot). Returns the player, or null if blocked.
+  function addToSquad(pid, slotKey) {
+    const state = window.SCHOOPS.getState();
+    const p = state.computedById[pid];
+    if (!p) return null;
+    if (window.SCHOOPS.getSquadPlayers().length >= SQUAD_SIZE) {
+      setBanner(`Squad is full (${SQUAD_SIZE}/${SQUAD_SIZE}). Remove someone first.`, "neg");
+      renderCourt();
+      return null;
+    }
+    state.squadIds[pid] = true;
+    if (slotKey && canFillSlot(p, slotKey) && !state.court.slots[slotKey]) state.court.slots[slotKey] = pid;
+    flashMoved([pid]);
+    window.SCHOOPS.savePrefs();
+    setBanner(`Added ${p.name} to your squad`, "pos");
+    window.SCHOOPS.render();
+    return p;
+  }
+
   function closeAddPlayerPicker() {
+    ui.pickerFlash = null;
     ui.pickerOpen = false;
     ui.pickerTargetSlot = null;
     ui.pickerQuery = "";
@@ -968,8 +1106,9 @@
     const { escapeHtml, renderAvatar, formatMoney } = window.SCHOOPS;
     const targetDef = ui.pickerTargetSlot ? SLOT_BY_KEY[ui.pickerTargetSlot] : null;
     const title = targetDef
-      ? `Add Player to ${targetDef.label} Slot`
-      : `Add Player to Squad`;
+      ? `Add a ${targetDef.req === "ANY" ? "flex" : targetDef.label} player`
+      : `Add players`;
+    const squadCount = window.SCHOOPS.getSquadPlayers().length;
 
     const q = ui.pickerQuery.trim().toLowerCase();
     const posF = ui.pickerPosFilter;
@@ -1002,9 +1141,10 @@
       <div class="lc-picker-backdrop" id="lcPickerBackdrop">
         <div class="lc-picker-dialog" role="dialog" aria-modal="true" aria-label="${escapeHtml(title)}">
           <div class="lc-picker-head">
-            <span class="lc-picker-title">${escapeHtml(title)}</span>
-            <button type="button" class="insp-close" id="lcClosePickerBtn" aria-label="Close">✕</button>
+            <span class="lc-picker-title">${escapeHtml(title)}<span class="lc-picker-count">${squadCount}/${SQUAD_SIZE} in squad</span></span>
+            <button type="button" class="${ui.pickerFlash ? "primary-btn" : "insp-close"}" id="lcClosePickerBtn" aria-label="Close">${ui.pickerFlash ? "Done" : "✕"}</button>
           </div>
+          ${ui.pickerFlash ? `<div class="lc-picker-flash" role="status">✓ ${escapeHtml(ui.pickerFlash)}. Pick another or press Done.</div>` : ""}
           <div class="lc-picker-bar">
             <input type="text" class="lc-picker-input" id="lcPickerInput" value="${escapeHtml(ui.pickerQuery)}" placeholder="Search player name or team..." autocomplete="off" />
             <div class="pill-row">${posChips}</div>
@@ -1042,7 +1182,14 @@
       const cls = ["lc-tile", "is-empty"];
       if (isSel) cls.push("selected");
       if (isTarget) cls.push("valid-target");
-      return `<div class="${cls.join(" ")}" data-slot-key="${slotDef.key}" title="Click to add a ${slotDef.label} player">+ Add ${slotDef.label}</div>`;
+      const label = slotDef.req === "ANY" ? "any position" : slotDef.label;
+      const sugg = ctx.suggestFor ? ctx.suggestFor(slotDef) : null;
+      return `
+        <div class="${cls.join(" ")}" data-slot-key="${slotDef.key}" title="Click to choose a ${label} player">
+          <span class="lc-empty-main"><span class="lc-plus" aria-hidden="true">+</span>Add ${escapeHtml(label)}</span>
+          ${sugg ? `<span class="lc-sugg">Top pick <b>${escapeHtml(sugg.name)}</b> ${sugg.proj} pts · $${(sugg.price / 1000000).toFixed(2)}M
+            <button type="button" class="lc-sugg-add" data-quick-add="${escapeHtml(sugg.id)}" data-quick-slot="${slotDef.key}">Add</button></span>` : ""}
+        </div>`;
     }
 
     const isStarter = STARTER_KEYS.has(slotDef.key);
@@ -1065,10 +1212,9 @@
     const gCls = player.games >= 4 ? "g4" : (player.games === 0 ? "g0" : (player.games <= 2 ? "g2" : ""));
     const displayPts = isCap ? Math.round(player.proj * 2) : Math.round(player.proj);
 
+    // C / VC show as the highlighted buttons on the card, so only the "not counted" badge is needed here
     const badges = [];
-    if (isCap) badges.push(`<span class="lc-pill c">C</span>`);
-    else if (isVc) badges.push(`<span class="lc-pill vc">VC</span>`);
-    if (isDrop) badges.push(`<span class="lc-pill drop">DROP</span>`);
+    if (isDrop) badges.push(`<span class="lc-pill drop" title="Lowest of the 10 starters: not counted this round">NOT COUNTED</span>`);
 
     return `
       <div class="${cls.join(" ")}" data-slot-key="${slotDef.key}" style="--team-accent:${accent};">
@@ -1193,50 +1339,73 @@
       optGain = optEval.totalProj - evalRes.totalProj;
     }
 
+    const { escapeHtml } = window.SCHOOPS;
+    const squadFull = squadPlayers.length >= SQUAD_SIZE;
     if (headerActions) {
-      let optBtnHtml = "";
-      if (optGain > 0) {
-        optBtnHtml = `<button type="button" class="opt-cta-btn needs-opt" id="courtOptimiseBtn" title="Apply mathematically optimal Best 9 of 10 + 2× Captain lineup">${ICON_BOLT}<span>Optimise (+${optGain} pts)</span></button>`;
-      } else if (lockedOnStarter) {
-        optBtnHtml = `<button type="button" class="opt-cta-btn apply-locks" id="courtOptimiseBtn" title="Move bench-locked players to bench and re-optimise">${ICON_BOLT}<span>Optimise (Apply Locks)</span></button>`;
-      } else {
-        optBtnHtml = `<button type="button" class="opt-cta-btn is-optimal" id="courtOptimiseBtn" title="Current lineup already achieves maximum projected points">${ICON_CHECK}<span>Optimal</span></button>`;
-      }
-
       headerActions.innerHTML = `
-        <button type="button" class="ghost-btn" id="courtAddPlayerBtn" title="Add a player directly to your squad">${ICON_PLUS}<span>Add Player</span></button>
-        ${lockCount > 0 ? `<button type="button" class="ghost-btn" id="courtClearLocksBtn">Clear Locks (${lockCount})</button>` : ""}
-        ${optBtnHtml}
+        ${lockCount > 0 ? `<button type="button" class="ghost-btn" id="courtClearLocksBtn">Clear locks (${lockCount})</button>` : ""}
+        <button type="button" class="${squadFull ? "ghost-btn" : "primary-btn"}" id="courtAddPlayerBtn" title="Add players to your squad">${ICON_PLUS}<span>Add players</span></button>
       `;
     }
 
+    // The Optimise call to action lives in the hero bar, big and green whenever points are being left out
+    let optBtnHtml;
+    if (optGain > 0) {
+      optBtnHtml = `<button type="button" class="lc-opt-big needs" id="courtOptimiseBtn" title="Apply the best legal lineup: best 9 of 10 starters + 2× captain">${ICON_BOLT}<span>Optimise lineup</span><span class="gain">+${optGain} pts</span></button>`;
+    } else if (lockedOnStarter) {
+      optBtnHtml = `<button type="button" class="lc-opt-big locks" id="courtOptimiseBtn" title="Move bench-locked players to the bench and re-optimise">${ICON_BOLT}<span>Apply bench locks</span></button>`;
+    } else {
+      optBtnHtml = `<span class="lc-opt-big ok" role="status" title="No legal lineup scores more">${ICON_CHECK}<span>Lineup is optimal</span></span>`;
+    }
+
+    // Best available player per empty slot (not already suggested in another slot this render)
+    const suggested = new Set();
+    const pool = Object.values(state.computedById)
+      .filter((p) => !p.inSquad && !p.isInactive && !p.isLikelyDnp && !p.isFringeDnp && p.games > 0
+        && !(p.injuryStatus && String(p.injuryStatus).toLowerCase().startsWith("out")))
+      .sort((a, b) => b.proj - a.proj);
+    const suggestFor = squadFull ? null : (slotDef) => {
+      const pick = pool.find((p) => !suggested.has(p.id) && (slotDef.req === "ANY" || getPositions(p).includes(slotDef.req)));
+      if (pick) suggested.add(pick.id);
+      return pick || null;
+    };
+
     const assignedSet = new Set(Object.values(slots));
     const overflow = squadPlayers.filter((p) => !assignedSet.has(p.id));
-    const ctx = { slots, byId, lockedBenchIds, evalRes, compact: state.density === "compact" };
+    const ctx = { slots, byId, lockedBenchIds, evalRes, compact: state.density === "compact", suggestFor };
     const card = (key) => renderTile(SLOT_BY_KEY[key], slots[key] ? byId[slots[key]] : null, ctx);
 
-    let rightStripHtml = "";
+    let msgHtml = "";
     if (ui.bannerMsg) {
       const undoHtml = ui.bannerMsg.undoPayload
         ? `<button type="button" class="lc-undo-btn" id="lcUndoRemoveBtn">Undo</button>`
         : "";
-      rightStripHtml = `<span class="lc-banner ${ui.bannerMsg.tone}"><span>${window.SCHOOPS.escapeHtml(ui.bannerMsg.text)}</span>${undoHtml}</span>`;
+      msgHtml = `<span class="lc-banner ${ui.bannerMsg.tone}" role="status"><span>${escapeHtml(ui.bannerMsg.text)}</span>${undoHtml}</span>`;
     } else if (ui.selectedSource) {
-      rightStripHtml = `<span class="lc-banner">Select a green dashed slot to swap · Esc to cancel</span>`;
-    } else {
-      rightStripHtml = window.SCHOOPS.renderDismissibleTip("court");
+      msgHtml = `<span class="lc-banner">Now click a highlighted slot to swap · Esc to cancel</span>`;
     }
+
+    const squadValue = squadPlayers.reduce((s, p) => s + p.price, 0);
+    const pips = Array.from({ length: SQUAD_SIZE }, (_, i) => `<span class="lc-pip ${i < squadPlayers.length ? "on" : ""}"></span>`).join("");
 
     root.innerHTML = `
       <div class="lc-wrap">
-        <div class="lc-strip">
-          <div class="lc-metrics">
-            <span class="lc-m">Rd ${state.round} Proj <strong class="pos-text">${evalRes.totalProj.toLocaleString()} pts</strong> ${evalRes.droppedPlayer ? `<span class="mono">· Drop ${window.SCHOOPS.escapeHtml(evalRes.droppedPlayer.name)} (${Math.round(evalRes.droppedPlayer.proj)})</span>` : ""}</span>
-            <span class="lc-m">Games <strong>${evalRes.starterGames}</strong></span>
-            <span class="lc-m">Captain <strong>${evalRes.captain ? window.SCHOOPS.escapeHtml(evalRes.captain.name) : "—"}</strong></span>
-            <span class="lc-m">Bench <strong>${evalRes.bench.length}/5</strong> <span class="mono">(${evalRes.benchProj} pts)</span></span>
+        <div class="lc-hero">
+          <div class="lc-hero-score">
+            <span class="lc-hero-label">Round ${state.round} projected</span>
+            <span class="lc-hero-big">${evalRes.totalProj.toLocaleString()}<small>pts</small></span>
           </div>
-          <div>${rightStripHtml}</div>
+          <div class="lc-hero-meta">
+            <span>Captain <strong>${evalRes.captain ? escapeHtml(evalRes.captain.name) : "—"}</strong></span>
+            <span>Games <strong class="mono">${evalRes.starterGames}</strong></span>
+            ${evalRes.droppedPlayer ? `<span>Not counted <strong>${escapeHtml(evalRes.droppedPlayer.name)}</strong> <span class="mono">(${Math.round(evalRes.droppedPlayer.proj)})</span></span>` : ""}
+          </div>
+          <div class="lc-hero-squad" title="${squadPlayers.length} of ${SQUAD_SIZE} squad spots filled">
+            <span class="lc-hero-label">Squad <strong class="mono" style="color:var(--text-primary)">${squadPlayers.length}/${SQUAD_SIZE}</strong> · <span class="mono">$${(squadValue / 1000000).toFixed(2)}M</span></span>
+            <span class="lc-pips">${pips}</span>
+          </div>
+          <div class="lc-hero-actions">${optBtnHtml}</div>
+          ${msgHtml ? `<div class="lc-hero-msg">${msgHtml}</div>` : ""}
         </div>
 
         <div class="lc-grid">
@@ -1244,7 +1413,7 @@
             ${renderCourtSvg()}
             <div class="lc-section-head">
               <span class="lc-section-title">On-Court Starters (${evalRes.starters.length}/10)</span>
-              <span class="lc-section-hint">Click two cards to swap · Hover for C / VC / Lock / Inspect / Remove</span>
+              <span class="lc-section-hint">Click two cards to swap · C / VC / lock / remove on each card</span>
             </div>
             <div class="lc-formation">
               <div class="lc-pair-row"><div class="lc-pos-lbl">PG</div>${card("PG1")}${card("PG2")}</div>
@@ -1340,21 +1509,30 @@
       return;
     }
 
+    if (e.target.closest("#courtOptimiseBtn")) { runOptimise(); return; }
+
+    // One-tap add from an empty slot's "Top pick" suggestion
+    const quick = e.target.closest("[data-quick-add]");
+    if (quick) {
+      e.stopPropagation();
+      addToSquad(quick.dataset.quickAdd, quick.dataset.quickSlot);
+      return;
+    }
+
     const addPick = e.target.closest("[data-add-squad-id]");
     if (addPick) {
-      const pid = addPick.dataset.addSquadId;
-      const p = state.computedById[pid];
-      state.squadIds[pid] = true;
-      if (ui.pickerTargetSlot && p && canFillSlot(p, ui.pickerTargetSlot) && !state.court.slots[ui.pickerTargetSlot]) {
-        state.court.slots[ui.pickerTargetSlot] = pid;
+      const targeted = !!ui.pickerTargetSlot;
+      const added = addToSquad(addPick.dataset.addSquadId, ui.pickerTargetSlot);
+      // Picking for a specific slot closes the picker; general "Add players" stays open for the next pick
+      if (targeted || !added || window.SCHOOPS.getSquadPlayers().length >= SQUAD_SIZE) {
+        ui.pickerOpen = false;
+        ui.pickerTargetSlot = null;
+      } else {
+        ui.pickerFlash = `Added ${added.name}`;
       }
-      flashMoved([pid]);
-      ui.pickerOpen = false;
-      ui.pickerTargetSlot = null;
       ui.pickerQuery = "";
-      window.SCHOOPS.savePrefs();
-      setBanner(`Added ${p ? p.name : "player"} to Squad`, "pos");
       window.SCHOOPS.render();
+      if (ui.pickerOpen) setTimeout(() => { const inp = document.getElementById("lcPickerInput"); if (inp) inp.focus(); }, 10);
       return;
     }
 
