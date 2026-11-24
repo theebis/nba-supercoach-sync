@@ -13,34 +13,34 @@
       /* Linear 2026 Warm-Neutral Dark Palette */
       --bg-shell: #0A0A0B;
       --bg-canvas: #101012;
-      --bg-elevated: #161619;
-      --bg-hover: rgba(255, 255, 255, 0.042);
-      --bg-active: rgba(255, 255, 255, 0.078);
-      --bg-input: #0D0D0F;
+      --bg-elevated: #16161A;
+      --bg-hover: rgba(255, 255, 255, 0.045);
+      --bg-active: rgba(255, 255, 255, 0.082);
+      --bg-input: #0D0D10;
 
-      --border-subtle: rgba(255, 255, 255, 0.062);
-      --border-default: rgba(255, 255, 255, 0.095);
-      --border-strong: rgba(255, 255, 255, 0.16);
-      --shadow-popover: 0 0 0 1px rgba(255, 255, 255, 0.085), 0 18px 44px rgba(0, 0, 0, 0.72);
+      --border-subtle: rgba(255, 255, 255, 0.068);
+      --border-default: rgba(255, 255, 255, 0.105);
+      --border-strong: rgba(255, 255, 255, 0.18);
+      --shadow-popover: 0 0 0 1px rgba(255, 255, 255, 0.09), 0 20px 48px rgba(0, 0, 0, 0.76);
 
-      --text-primary: #F1F1F3;
-      --text-secondary: #8A8F98;
-      --text-tertiary: #595D66;
+      --text-primary: #F2F2F5;
+      --text-secondary: #9499A3;
+      --text-tertiary: #626670;
 
-      /* Signal Colors — Spent Strictly on Data */
+      /* Signal Colors — Spent Strictly on Data & Primary Action */
       --accent: #6E7BF2;
-      --accent-soft: rgba(110, 123, 242, 0.14);
+      --accent-soft: rgba(110, 123, 242, 0.15);
       --pos: #22C58B;
       --pos-bright: #34D399;
-      --pos-bg: rgba(34, 197, 139, 0.13);
+      --pos-bg: rgba(34, 197, 139, 0.14);
       --neg: #EF4444;
       --neg-soft: #F87171;
-      --neg-bg: rgba(239, 68, 68, 0.13);
+      --neg-bg: rgba(239, 68, 68, 0.14);
       --warn: #E5A032;
       --warn-bright: #FBBF24;
-      --warn-bg: rgba(229, 160, 50, 0.14);
+      --warn-bg: rgba(229, 160, 50, 0.15);
 
-      /* Motion Curves (Emil Design-Eng) */
+      /* Motion Curves */
       --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
       --ease-press: cubic-bezier(0.25, 1, 0.5, 1);
       --dur-fast: 130ms;
@@ -48,8 +48,24 @@
 
       --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-      --sidebar-w: 224px;
-      --inspector-w: 336px;
+
+      /* Comfortable Default Proportions (Stepped up ~15% for effortless desktop legibility) */
+      --sidebar-w: 248px;
+      --inspector-w: 356px;
+      --header-h: 48px;
+      --row-pad-y: 10px;
+      --cell-fs: 13.5px;
+      --name-fs: 14px;
+      --sub-fs: 11.5px;
+      --avatar-sz: 34px;
+    }
+
+    body.density-compact {
+      --row-pad-y: 6.5px;
+      --cell-fs: 12.5px;
+      --name-fs: 13px;
+      --sub-fs: 10.5px;
+      --avatar-sz: 28px;
     }
 
     * {
@@ -64,12 +80,18 @@
       background: var(--bg-shell);
       color: var(--text-primary);
       font-family: var(--sans);
-      font-size: 13px;
-      line-height: 1.4;
+      font-size: 13.5px;
+      line-height: 1.42;
       color-scheme: dark;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
       overflow: hidden;
+    }
+
+    body.is-resizing,
+    body.is-resizing * {
+      cursor: col-resize !important;
+      user-select: none !important;
     }
 
     button, input, select {
@@ -94,7 +116,7 @@
     .dim-text { color: var(--text-tertiary); }
 
     /* =====================================================================
-       INVERTED-L APP SHELL (Recessed Sidebar + Elevated Rounded Canvas)
+       INVERTED-L APP SHELL (Recessed Resizable Sidebar + Rounded Canvas)
        ===================================================================== */
     .app-shell {
       display: flex;
@@ -102,67 +124,100 @@
       width: 100vw;
       background: var(--bg-shell);
       padding: 8px 8px 8px 0;
-      gap: 0;
       overflow: hidden;
     }
 
-    /* Recessed Left Sidebar ("Don't compete for attention you haven't earned") */
+    /* Recessed Left Sidebar — strictly overflow-x: hidden (zero horizontal scrollbar) */
     .sidebar {
       width: var(--sidebar-w);
+      min-width: 204px;
+      max-width: 340px;
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
-      padding: 4px 10px 6px 12px;
+      padding: 6px 10px 8px 14px;
       user-select: none;
       overflow-y: auto;
+      overflow-x: hidden;
       overscroll-behavior: contain;
+    }
+
+    /* Draggable Sidebar Resize Seam */
+    .sidebar-resizer {
+      width: 7px;
+      flex-shrink: 0;
+      cursor: col-resize;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 15;
+    }
+
+    .sidebar-resizer::after {
+      content: "";
+      width: 1.5px;
+      height: 100%;
+      border-radius: 2px;
+      background: transparent;
+      transition: background-color var(--dur-fast) var(--ease-out);
+    }
+
+    .sidebar-resizer:hover::after,
+    .sidebar-resizer.dragging::after {
+      background: rgba(255, 255, 255, 0.24);
     }
 
     .sb-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 34px;
+      height: 36px;
       padding: 0 6px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
+      min-width: 0;
     }
 
     .brand {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      font-size: 13.5px;
-      font-weight: 600;
+      gap: 8px;
+      font-size: 14.5px;
+      font-weight: 700;
       letter-spacing: 0.04em;
       color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
     }
 
     .brand-mark {
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       border-radius: 4px;
-      background: linear-gradient(135deg, #22C58B 0%, #10946A 100%);
+      background: var(--pos);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      color: #071912;
+      color: #061810;
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 800;
+      flex-shrink: 0;
     }
 
     .sb-cmd-btn {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       background: transparent;
       border: 1px solid var(--border-subtle);
       color: var(--text-secondary);
-      height: 24px;
-      padding: 0 7px;
+      height: 26px;
+      padding: 0 8px;
       border-radius: 5px;
-      font-size: 11px;
+      font-size: 11.5px;
       cursor: pointer;
+      flex-shrink: 0;
       transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
     }
 
@@ -176,23 +231,25 @@
 
     .kbd {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 10.5px;
       color: var(--text-tertiary);
     }
 
     .sb-group {
       display: flex;
       flex-direction: column;
-      gap: 1px;
-      margin-bottom: 14px;
+      gap: 2px;
+      margin-bottom: 16px;
+      min-width: 0;
     }
 
     .sb-section-label {
       font-size: 11px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text-tertiary);
-      padding: 4px 8px 5px;
-      letter-spacing: 0.01em;
+      padding: 4px 8px 6px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
     }
 
     .sb-item {
@@ -201,29 +258,37 @@
       justify-content: space-between;
       gap: 8px;
       width: 100%;
-      height: 29px;
-      padding: 0 8px;
+      height: 33px;
+      padding: 0 9px;
       background: transparent;
       border: none;
       border-radius: 6px;
       color: var(--text-secondary);
-      font-size: 12.5px;
+      font-size: 13.5px;
       font-weight: 500;
       cursor: pointer;
       text-align: left;
+      min-width: 0;
       transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
     }
 
     .sb-item-left {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 9px;
       min-width: 0;
+      overflow: hidden;
+    }
+
+    .sb-item-left span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .sb-item svg {
-      width: 14px;
-      height: 14px;
+      width: 15px;
+      height: 15px;
       color: var(--text-tertiary);
       flex-shrink: 0;
       transition: color var(--dur-fast) var(--ease-out);
@@ -245,7 +310,7 @@
 
     .sb-count {
       font-family: var(--mono);
-      font-size: 10.5px;
+      font-size: 11px;
       color: var(--text-tertiary);
       flex-shrink: 0;
     }
@@ -253,8 +318,8 @@
     .sb-item.active .sb-count { color: var(--text-secondary); }
 
     .sb-dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       flex-shrink: 0;
       margin-left: 4px;
@@ -268,13 +333,8 @@
       padding-top: 10px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      position: relative;
-    }
-
-    /* Round Dropdown inside Sidebar Footer */
-    .round-wrap {
-      position: relative;
+      gap: 6px;
+      min-width: 0;
     }
 
     .round-btn {
@@ -283,15 +343,16 @@
       align-items: center;
       justify-content: space-between;
       gap: 6px;
-      height: 30px;
-      padding: 0 8px;
-      background: rgba(255, 255, 255, 0.025);
+      height: 33px;
+      padding: 0 9px;
+      background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--border-subtle);
       border-radius: 6px;
       color: var(--text-primary);
-      font-size: 11.5px;
+      font-size: 12px;
       font-weight: 500;
       cursor: pointer;
+      min-width: 0;
       transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
     }
 
@@ -303,14 +364,14 @@
     .round-btn-left {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       min-width: 0;
       overflow: hidden;
     }
 
     .live-pip {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: var(--pos-bright);
       flex-shrink: 0;
@@ -320,22 +381,21 @@
 
     .round-btn-text {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 11.5px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
+    /* Portal-positioned fixed Round Menu — NEVER affects sidebar scroll width */
     .round-menu {
-      position: absolute;
-      bottom: calc(100% + 6px);
-      left: 0;
-      width: 268px;
+      position: fixed;
+      width: 274px;
       background: var(--bg-elevated);
       border-radius: 8px;
-      padding: 4px;
+      padding: 5px;
       box-shadow: var(--shadow-popover);
-      z-index: 95;
+      z-index: 130;
       display: flex;
       flex-direction: column;
       gap: 2px;
@@ -347,7 +407,7 @@
       transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-mid) var(--ease-out), visibility 0s linear var(--dur-mid);
     }
 
-    .round-wrap.open .round-menu {
+    .round-menu.open {
       opacity: 1;
       transform: translateY(0) scale(1);
       visibility: visible;
@@ -361,13 +421,13 @@
       justify-content: space-between;
       gap: 8px;
       width: 100%;
-      padding: 6px 8px;
+      padding: 7px 9px;
       background: transparent;
       border: none;
       border-radius: 5px;
       color: var(--text-secondary);
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 11.5px;
       cursor: pointer;
       text-align: left;
     }
@@ -376,7 +436,7 @@
     .round-opt.active { background: var(--bg-active); color: var(--text-primary); font-weight: 600; }
 
     .round-tag {
-      font-size: 9px;
+      font-size: 9.5px;
       font-weight: 700;
       padding: 1px 5px;
       border-radius: 3px;
@@ -390,12 +450,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 6px;
       padding: 2px 2px 0;
+      min-width: 0;
     }
 
     .sb-sync-hint {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 10.5px;
       color: var(--text-tertiary);
       padding-left: 6px;
       white-space: nowrap;
@@ -425,15 +487,15 @@
       overflow: hidden;
     }
 
-    /* Consistent 44px Linear View Header */
+    /* Consistent 48px Linear View Header */
     .view-header {
-      height: 44px;
+      height: var(--header-h);
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 0 16px;
+      padding: 0 18px;
       border-bottom: 1px solid var(--border-subtle);
       background: var(--bg-canvas);
     }
@@ -441,14 +503,14 @@
     .vh-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 9px;
       min-width: 0;
     }
 
     .mobile-menu-btn {
       display: none;
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       border-radius: 6px;
       background: transparent;
       border: 1px solid var(--border-subtle);
@@ -461,8 +523,8 @@
     .vh-crumb {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 13px;
+      gap: 7px;
+      font-size: 14.5px;
       font-weight: 600;
       color: var(--text-primary);
       white-space: nowrap;
@@ -475,29 +537,120 @@
 
     .vh-count {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 11.5px;
       color: var(--text-tertiary);
-      padding-left: 2px;
+    }
+
+    /* Contextual '?' Tab Guide Trigger & Popover */
+    .guide-anchor {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .help-icon-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1px solid var(--border-default);
+      color: var(--text-tertiary);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+    }
+
+    .help-icon-btn:hover,
+    .guide-anchor.open .help-icon-btn {
+      background: var(--bg-active);
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+
+    .guide-popover {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      width: 320px;
+      max-width: calc(100vw - 32px);
+      background: var(--bg-elevated);
+      border-radius: 9px;
+      padding: 13px 15px;
+      box-shadow: var(--shadow-popover);
+      z-index: 85;
+      transform-origin: top left;
+      opacity: 0;
+      transform: translateY(-4px) scale(0.97);
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-mid) var(--ease-out), visibility 0s linear var(--dur-mid);
+    }
+
+    .guide-anchor.open .guide-popover {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-mid) var(--ease-out), visibility 0s linear 0s;
+    }
+
+    .guide-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .guide-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .guide-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .guide-list li::before {
+      content: "•";
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+    }
+
+    .guide-list strong {
+      color: var(--text-primary);
+      font-weight: 500;
     }
 
     .vh-right {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       flex-shrink: 0;
     }
 
     .ghost-btn {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      height: 27px;
-      padding: 0 9px;
+      gap: 6px;
+      height: 30px;
+      padding: 0 11px;
       background: transparent;
       border: 1px solid var(--border-default);
       border-radius: 6px;
       color: var(--text-secondary);
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 500;
       cursor: pointer;
       white-space: nowrap;
@@ -518,19 +671,19 @@
       border-color: var(--border-strong);
     }
 
-    .ghost-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .ghost-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
     .primary-btn {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      height: 27px;
-      padding: 0 11px;
+      gap: 6px;
+      height: 30px;
+      padding: 0 13px;
       background: var(--text-primary);
       border: 1px solid var(--text-primary);
       border-radius: 6px;
       color: #0A0A0B;
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
@@ -548,45 +701,45 @@
 
     .inline-search-wrap svg {
       position: absolute;
-      left: 8px;
-      width: 13px;
-      height: 13px;
+      left: 9px;
+      width: 14px;
+      height: 14px;
       color: var(--text-tertiary);
       pointer-events: none;
     }
 
     .inline-search {
-      height: 27px;
-      width: 184px;
-      padding: 0 8px 0 26px;
+      height: 30px;
+      width: 200px;
+      padding: 0 10px 0 29px;
       background: var(--bg-input);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid var(--border-default);
       border-radius: 6px;
       color: var(--text-primary);
-      font-size: 12px;
+      font-size: 12.5px;
       outline: none;
       transition: border-color var(--dur-fast) var(--ease-out), width var(--dur-mid) var(--ease-out);
     }
 
     .inline-search::placeholder { color: var(--text-tertiary); }
-    .inline-search:focus { border-color: var(--border-strong); width: 220px; }
+    .inline-search:focus { border-color: var(--border-strong); width: 240px; }
 
-    /* Popover Controls (Filter & Display — Progressive Disclosure) */
+    /* Popover Controls (Filter & Display) */
     .pop-anchor { position: relative; }
 
     .linear-popover {
       position: absolute;
       top: calc(100% + 6px);
       right: 0;
-      width: 264px;
+      width: 276px;
       background: var(--bg-elevated);
-      border-radius: 8px;
-      padding: 10px;
+      border-radius: 9px;
+      padding: 12px;
       box-shadow: var(--shadow-popover);
       z-index: 80;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 11px;
       transform-origin: top right;
       opacity: 0;
       transform: translateY(-4px) scale(0.97);
@@ -609,26 +762,42 @@
       color: var(--text-tertiary);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
 
     .pill-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: 5px;
+    }
+
+    .seg-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+      padding: 2px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
     }
 
     .chip-btn {
-      height: 24px;
-      padding: 0 8px;
+      height: 26px;
+      padding: 0 9px;
       background: var(--bg-input);
       border: 1px solid var(--border-subtle);
       border-radius: 5px;
       color: var(--text-secondary);
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 500;
       cursor: pointer;
       transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+    }
+
+    .seg-2 .chip-btn {
+      border: none;
+      background: transparent;
+      height: 25px;
     }
 
     .chip-btn:hover { color: var(--text-primary); border-color: var(--border-default); }
@@ -644,20 +813,20 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      font-size: 12px;
+      font-size: 12.5px;
       color: var(--text-secondary);
     }
 
     .pop-input-num {
-      width: 82px;
-      height: 26px;
-      padding: 0 7px;
+      width: 84px;
+      height: 28px;
+      padding: 0 8px;
       background: var(--bg-input);
       border: 1px solid var(--border-default);
       border-radius: 5px;
       color: var(--text-primary);
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 12.5px;
       text-align: right;
       outline: none;
     }
@@ -665,8 +834,8 @@
     .pop-input-num:focus { border-color: var(--border-strong); }
 
     .mini-switch {
-      width: 28px;
-      height: 16px;
+      width: 30px;
+      height: 17px;
       border-radius: 99px;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--border-default);
@@ -681,8 +850,8 @@
       position: absolute;
       top: 1px;
       left: 1px;
-      width: 12px;
-      height: 12px;
+      width: 13px;
+      height: 13px;
       border-radius: 50%;
       background: var(--text-secondary);
       transition: transform var(--dur-mid) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
@@ -694,36 +863,36 @@
     }
 
     .mini-switch.on::after {
-      transform: translateX(12px);
+      transform: translateX(13px);
       background: var(--pos-bright);
     }
 
-    /* Whisper-Quiet Context Bar (Squad Summary + Active Filter Chips) */
+    /* Whisper-Quiet Context Bar + First-Visit Dismissible Tip */
     .context-strip {
-      min-height: 34px;
+      min-height: 38px;
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
       flex-wrap: wrap;
-      padding: 5px 16px;
+      padding: 6px 18px;
       border-bottom: 1px solid var(--border-subtle);
       background: rgba(255, 255, 255, 0.012);
-      font-size: 11.5px;
+      font-size: 12px;
     }
 
     .ctx-metrics {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 18px;
       flex-wrap: wrap;
     }
 
     .ctx-stat {
       display: inline-flex;
       align-items: baseline;
-      gap: 5px;
+      gap: 6px;
       color: var(--text-tertiary);
     }
 
@@ -731,7 +900,14 @@
       font-family: var(--mono);
       font-weight: 600;
       color: var(--text-primary);
-      font-size: 11.5px;
+      font-size: 12.5px;
+    }
+
+    .ctx-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .ctx-chips {
@@ -745,12 +921,12 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      height: 22px;
-      padding: 0 7px;
+      height: 23px;
+      padding: 0 8px;
       background: var(--bg-active);
       border: 1px solid var(--border-default);
-      border-radius: 4px;
-      font-size: 11px;
+      border-radius: 5px;
+      font-size: 11.5px;
       color: var(--text-primary);
     }
 
@@ -759,14 +935,38 @@
       border: none;
       color: var(--text-secondary);
       cursor: pointer;
-      font-size: 12px;
+      font-size: 13px;
       line-height: 1;
     }
 
     .filter-chip button:hover { color: var(--text-primary); }
 
+    .tip-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 24px;
+      padding: 0 9px;
+      background: rgba(255, 255, 255, 0.032);
+      border: 1px solid var(--border-subtle);
+      border-radius: 99px;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+    }
+
+    .tip-pill button {
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    .tip-pill button:hover { color: var(--text-primary); }
+
     /* =====================================================================
-       SCROLLABLE VIEW BODY & SERENE LINEAR LIST TABLE
+       SCROLLABLE VIEW BODY & RESIZABLE LINEAR MARKET TABLE
        ===================================================================== */
     .view-body {
       flex: 1;
@@ -776,8 +976,10 @@
 
     .market-table {
       width: 100%;
+      min-width: 100%;
       border-collapse: collapse;
       text-align: left;
+      table-layout: fixed;
     }
 
     .market-table thead th {
@@ -786,11 +988,13 @@
       z-index: 4;
       background: var(--bg-canvas);
       border-bottom: 1px solid var(--border-subtle);
-      padding: 7px 12px;
-      font-size: 11px;
+      padding: 9px 12px;
+      font-size: 11.5px;
       font-weight: 500;
       color: var(--text-tertiary);
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       cursor: pointer;
       user-select: none;
       transition: color var(--dur-fast) var(--ease-out);
@@ -801,14 +1005,45 @@
     .market-table thead th.num, .market-table tbody td.num { text-align: right; }
     .market-table thead th.center, .market-table tbody td.center { text-align: center; }
 
+    /* Column Drag-Resize Handle */
+    .col-resizer {
+      position: absolute;
+      top: 4px;
+      right: 0;
+      bottom: 4px;
+      width: 7px;
+      cursor: col-resize;
+      z-index: 6;
+      display: flex;
+      justify-content: center;
+    }
+
+    .col-resizer::after {
+      content: "";
+      width: 1.5px;
+      height: 100%;
+      border-radius: 1px;
+      background: transparent;
+      transition: background-color var(--dur-fast) var(--ease-out);
+    }
+
+    .market-table thead th:hover .col-resizer::after {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .col-resizer:hover::after,
+    .col-resizer.dragging::after {
+      background: var(--accent) !important;
+    }
+
     .sort-arrow {
       font-size: 9px;
-      margin-left: 3px;
-      opacity: 0.85;
+      margin-left: 4px;
+      opacity: 0.9;
     }
 
     .market-table tbody tr {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.042);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.045);
       cursor: pointer;
       transition: background-color 90ms var(--ease-out);
     }
@@ -816,24 +1051,26 @@
     .market-table tbody tr:hover { background: var(--bg-hover); }
     .market-table tbody tr.row-selected {
       background: var(--bg-active);
-      box-shadow: inset 2px 0 0 var(--accent);
+      box-shadow: inset 2.5px 0 0 var(--accent);
     }
 
-    .market-table tbody tr.row-out { opacity: 0.8; }
+    .market-table tbody tr.row-out { opacity: 0.82; }
     .market-table tbody tr.row-dnp { opacity: 0.48; }
     .market-table tbody tr.row-out:hover,
     .market-table tbody tr.row-dnp:hover,
     .market-table tbody tr.row-selected { opacity: 1; }
 
     .market-table tbody td {
-      padding: 7px 12px;
+      padding: var(--row-pad-y) 12px;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       vertical-align: middle;
-      font-size: 12.5px;
+      font-size: var(--cell-fs);
     }
 
     .col-be-cell {
-      background: rgba(255, 255, 255, 0.018);
+      background: rgba(255, 255, 255, 0.022);
     }
 
     .be-num {
@@ -842,17 +1079,71 @@
     }
 
     .be-diff {
-      font-size: 10.5px;
-      margin-left: 4px;
+      font-size: 11px;
+      margin-left: 5px;
       opacity: 0.9;
     }
 
-    /* Player Row Identity */
+    /* Player Row Identity + Always-Visible Squad & Watchlist Controls */
     .p-cell {
       display: flex;
       align-items: center;
-      gap: 9px;
-      min-width: 230px;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .row-quick-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .row-btn {
+      height: 25px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
+    }
+
+    .row-btn.star-btn {
+      width: 26px;
+      font-size: 13px;
+    }
+
+    .row-btn.sq-btn {
+      min-width: 34px;
+      padding: 0 6px;
+    }
+
+    .row-btn:hover {
+      background: var(--bg-active);
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+
+    .row-btn:active { transform: scale(0.94); }
+
+    .row-btn.is-sq {
+      background: var(--text-primary);
+      color: #0A0A0B;
+      border-color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .row-btn.is-star {
+      background: var(--warn-bg);
+      color: var(--warn-bright);
+      border-color: rgba(229, 160, 50, 0.42);
     }
 
     .status-dot {
@@ -860,7 +1151,7 @@
       height: 6px;
       border-radius: 50%;
       flex-shrink: 0;
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.14);
     }
     .status-dot.cow { background: var(--pos-bright); }
     .status-dot.bleed { background: var(--neg-soft); }
@@ -873,8 +1164,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: #1B1B1F;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+      background: #1C1C21;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
     }
 
     .sc-avatar img {
@@ -887,13 +1178,14 @@
 
     .sc-avatar-init {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
       color: var(--text-secondary);
     }
 
     .p-meta-wrap {
       min-width: 0;
+      flex: 1;
       display: flex;
       flex-direction: column;
     }
@@ -902,19 +1194,21 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      min-width: 0;
     }
 
     .p-name {
+      font-size: var(--name-fs);
       font-weight: 500;
       color: var(--text-primary);
-      max-width: 190px;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .p-sub {
       font-family: var(--mono);
-      font-size: 10.5px;
+      font-size: var(--sub-fs);
       color: var(--text-tertiary);
       display: flex;
       align-items: center;
@@ -923,97 +1217,60 @@
 
     .micro-tag {
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 9.5px;
       font-weight: 600;
-      padding: 0 4px;
+      padding: 0 5px;
       border-radius: 3px;
+      flex-shrink: 0;
     }
     .micro-tag.out { background: var(--warn-bg); color: var(--warn-bright); }
-    .micro-tag.dnp { background: rgba(255, 255, 255, 0.05); color: var(--text-tertiary); }
+    .micro-tag.dnp { background: rgba(255, 255, 255, 0.06); color: var(--text-tertiary); }
     .micro-tag.g0 { background: var(--neg-bg); color: var(--neg-soft); }
 
-    /* Compact Quiet Schedule Strip (R6 · R7 · R8) */
+    /* Compact Schedule Strip (R6 · R7 · R8) */
     .sched-strip {
       display: inline-flex;
       align-items: center;
-      gap: 3px;
+      gap: 4px;
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 600;
     }
 
     .sched-box {
-      width: 22px;
-      height: 20px;
+      width: 24px;
+      height: 22px;
       border-radius: 4px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255, 255, 255, 0.045);
+      background: rgba(255, 255, 255, 0.05);
       color: var(--text-secondary);
     }
 
     .sched-box.g4 { background: var(--pos-bg); color: var(--pos-bright); }
     .sched-box.g2 { background: var(--warn-bg); color: var(--warn-bright); }
     .sched-box.g0 { background: var(--neg-bg); color: var(--neg-soft); }
-    .sched-box.tbd { background: transparent; border: 1px dashed rgba(255, 255, 255, 0.09); color: var(--text-tertiary); font-weight: 400; }
-
-    /* Quiet Inline Row Actions (SQ & Star) */
-    .row-acts {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      opacity: 0.35;
-      transition: opacity var(--dur-fast) var(--ease-out);
-    }
-
-    .market-table tbody tr:hover .row-acts,
-    .market-table tbody tr.row-selected .row-acts,
-    .row-acts.has-active {
-      opacity: 1;
-    }
-
-    .row-btn {
-      height: 21px;
-      min-width: 22px;
-      padding: 0 5px;
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: 4px;
-      color: var(--text-tertiary);
-      font-family: var(--mono);
-      font-size: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
-    }
-
-    .row-btn:hover { background: var(--bg-active); color: var(--text-primary); border-color: var(--border-default); }
-    .row-btn:active { transform: scale(0.94); }
-    .row-btn.is-sq { background: var(--text-primary); color: #0A0A0B; border-color: var(--text-primary); }
-    .row-btn.is-star { color: var(--warn-bright); }
+    .sched-box.tbd { background: transparent; border: 1px dashed rgba(255, 255, 255, 0.1); color: var(--text-tertiary); font-weight: 400; }
 
     .list-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 16px;
+      padding: 11px 18px;
       border-top: 1px solid var(--border-subtle);
-      font-size: 11.5px;
+      font-size: 12px;
       color: var(--text-tertiary);
     }
 
     /* =====================================================================
-       LINEAR RIGHT-SIDE PLAYER INSPECTOR (Progressive Disclosure Drawer)
+       RIGHT-SIDE LINEAR PLAYER INSPECTOR
        ===================================================================== */
     .inspector {
       width: 0;
       flex-shrink: 0;
       border-left: 0 solid var(--border-subtle);
-      background: #121215;
+      background: #121216;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -1037,25 +1294,25 @@
     }
 
     .insp-head {
-      height: 44px;
+      height: var(--header-h);
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 14px;
+      padding: 0 16px;
       border-bottom: 1px solid var(--border-subtle);
     }
 
     .insp-head-title {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 11.5px;
       color: var(--text-tertiary);
       letter-spacing: 0.02em;
     }
 
     .insp-close {
-      width: 24px;
-      height: 24px;
+      width: 26px;
+      height: 26px;
       border-radius: 5px;
       border: none;
       background: transparent;
@@ -1072,12 +1329,12 @@
       padding: 16px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 13px;
       border-bottom: 1px solid var(--border-subtle);
     }
 
     .insp-name {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 600;
       color: var(--text-primary);
       line-height: 1.25;
@@ -1085,29 +1342,29 @@
 
     .insp-sub {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 11.5px;
       color: var(--text-secondary);
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
     .insp-actions {
-      padding: 10px 16px;
+      padding: 12px 16px;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px;
+      gap: 7px;
       border-bottom: 1px solid var(--border-subtle);
     }
 
     .insp-actions .full { grid-column: 1 / -1; }
 
     .insp-section {
-      padding: 14px 16px;
+      padding: 15px 16px;
       border-bottom: 1px solid var(--border-subtle);
     }
 
     .insp-section-title {
-      font-size: 11px;
-      font-weight: 500;
+      font-size: 11.5px;
+      font-weight: 600;
       color: var(--text-tertiary);
       margin-bottom: 10px;
     }
@@ -1115,7 +1372,7 @@
     .prop-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 9px;
     }
 
     .prop-row {
@@ -1123,18 +1380,17 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      font-size: 12px;
+      font-size: 12.5px;
     }
 
     .prop-key { color: var(--text-secondary); }
     .prop-val { font-family: var(--mono); font-weight: 500; color: var(--text-primary); }
 
-    /* Embedded Live BE Simulator inside Inspector */
     .sim-box {
       background: var(--bg-input);
       border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      padding: 11px 12px;
+      padding: 12px 13px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -1147,41 +1403,20 @@
       gap: 8px;
     }
 
-    .sim-input-row label {
-      font-size: 11.5px;
-      color: var(--text-secondary);
-    }
-
-    .sim-range {
-      width: 100%;
-      accent-color: var(--pos);
-      cursor: pointer;
-    }
+    .sim-input-row label { font-size: 12px; color: var(--text-secondary); }
+    .sim-range { width: 100%; accent-color: var(--pos); cursor: pointer; }
 
     .sim-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 6px;
-      padding-top: 6px;
+      padding-top: 8px;
       border-top: 1px solid var(--border-subtle);
     }
 
-    .sim-metric {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .sim-metric span:first-child {
-      font-size: 10px;
-      color: var(--text-tertiary);
-    }
-
-    .sim-metric span:last-child {
-      font-family: var(--mono);
-      font-size: 12.5px;
-      font-weight: 600;
-    }
+    .sim-metric { display: flex; flex-direction: column; gap: 2px; }
+    .sim-metric span:first-child { font-size: 10.5px; color: var(--text-tertiary); }
+    .sim-metric span:last-child { font-family: var(--mono); font-size: 13px; font-weight: 600; }
 
     /* =====================================================================
        COMMAND PALETTE (⌘K) & SETTINGS MODAL
@@ -1195,7 +1430,7 @@
       display: flex;
       align-items: flex-start;
       justify-content: center;
-      padding: min(14vh, 110px) 16px 24px;
+      padding: min(13vh, 100px) 16px 24px;
       z-index: 140;
       opacity: 0;
       visibility: hidden;
@@ -1212,7 +1447,7 @@
 
     .cmd-dialog {
       width: 100%;
-      max-width: 560px;
+      max-width: 580px;
       background: var(--bg-elevated);
       border-radius: 10px;
       box-shadow: var(--shadow-popover);
@@ -1221,33 +1456,31 @@
       transition: transform var(--dur-mid) var(--ease-out);
     }
 
-    .overlay-backdrop.open .cmd-dialog {
-      transform: translateY(0) scale(1);
-    }
+    .overlay-backdrop.open .cmd-dialog { transform: translateY(0) scale(1); }
 
     .cmd-input-bar {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 12px 14px;
+      padding: 13px 15px;
       border-bottom: 1px solid var(--border-subtle);
     }
 
-    .cmd-input-bar svg { width: 15px; height: 15px; color: var(--text-tertiary); flex-shrink: 0; }
+    .cmd-input-bar svg { width: 16px; height: 16px; color: var(--text-tertiary); flex-shrink: 0; }
 
     .cmd-input {
       flex: 1;
       background: transparent;
       border: none;
       color: var(--text-primary);
-      font-size: 14px;
+      font-size: 14.5px;
       outline: none;
     }
 
     .cmd-input::placeholder { color: var(--text-tertiary); }
 
     .cmd-list {
-      max-height: 360px;
+      max-height: 380px;
       overflow-y: auto;
       padding: 6px;
       overscroll-behavior: contain;
@@ -1255,9 +1488,11 @@
 
     .cmd-group-title {
       font-size: 10.5px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text-tertiary);
-      padding: 6px 8px 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 6px 9px 4px;
     }
 
     .cmd-item {
@@ -1266,12 +1501,12 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      padding: 7px 9px;
+      padding: 8px 10px;
       background: transparent;
       border: none;
       border-radius: 6px;
       color: var(--text-primary);
-      font-size: 12.5px;
+      font-size: 13px;
       cursor: pointer;
       text-align: left;
     }
@@ -1281,21 +1516,20 @@
     .cmd-item-left {
       display: inline-flex;
       align-items: center;
-      gap: 9px;
+      gap: 10px;
       min-width: 0;
     }
 
     .cmd-item-meta {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 11.5px;
       color: var(--text-secondary);
       white-space: nowrap;
     }
 
-    /* Settings Modal */
     .settings-dialog {
       width: 100%;
-      max-width: 480px;
+      max-width: 490px;
       background: var(--bg-elevated);
       border-radius: 10px;
       box-shadow: var(--shadow-popover);
@@ -1312,11 +1546,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 13px 16px;
+      padding: 14px 16px;
       border-bottom: 1px solid var(--border-subtle);
     }
 
-    .dlg-head h2 { font-size: 13.5px; font-weight: 600; }
+    .dlg-head h2 { font-size: 14px; font-weight: 600; }
 
     .dlg-body {
       padding: 16px;
@@ -1326,18 +1560,18 @@
     }
 
     .field-group { display: flex; flex-direction: column; gap: 6px; }
-    .field-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
-    .field-hint { font-size: 11.5px; color: var(--text-tertiary); line-height: 1.45; }
+    .field-label { font-size: 11.5px; font-weight: 600; color: var(--text-secondary); }
+    .field-hint { font-size: 12px; color: var(--text-tertiary); line-height: 1.45; }
 
     .text-input {
-      height: 30px;
-      padding: 0 9px;
+      height: 32px;
+      padding: 0 10px;
       background: var(--bg-input);
       border: 1px solid var(--border-default);
       border-radius: 6px;
       color: var(--text-primary);
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 12.5px;
       width: 100%;
       outline: none;
     }
@@ -1347,8 +1581,8 @@
     .divider { height: 1px; background: var(--border-subtle); }
 
     .sync-dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: var(--pos-bright);
     }
@@ -1370,14 +1604,14 @@
       z-index: 88;
     }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1220px) {
       .inspector.open {
         position: absolute;
         top: 0;
         right: 0;
         bottom: 0;
         z-index: 60;
-        box-shadow: -16px 0 40px rgba(0, 0, 0, 0.65);
+        box-shadow: -16px 0 40px rgba(0, 0, 0, 0.68);
       }
     }
 
@@ -1385,11 +1619,13 @@
       .app-shell { padding: 0; }
       .workspace-frame { border-radius: 0; border: none; }
       .mobile-menu-btn { display: inline-flex; }
+      .sidebar-resizer { display: none; }
       .sidebar {
         position: fixed;
         top: 0;
         left: 0;
         bottom: 0;
+        width: 260px !important;
         z-index: 90;
         background: var(--bg-shell);
         border-right: 1px solid var(--border-default);
@@ -1399,15 +1635,14 @@
       }
       .sidebar.mobile-open { transform: translateX(0); }
       .sb-backdrop.open { display: block; }
-      .inline-search { width: 130px; font-size: 16px; }
-      .inline-search:focus { width: 165px; }
+      .inline-search { width: 136px; font-size: 16px; }
+      .inline-search:focus { width: 170px; }
       .pop-input-num, .text-input, .cmd-input { font-size: 16px; }
-      .inspector.open { width: min(100vw, 350px); }
-      .insp-inner { width: min(100vw, 350px); }
+      .inspector.open { width: min(100vw, 360px); }
+      .insp-inner { width: min(100vw, 360px); }
     }
 
     @media (hover: none), (pointer: coarse) {
-      .row-acts { opacity: 0.9; }
       .market-table tbody tr:hover { background: transparent; }
       .market-table tbody tr.row-selected:hover { background: var(--bg-active); }
     }
@@ -1423,6 +1658,9 @@
 <body>
   <div class="sb-backdrop" id="sbBackdrop"></div>
 
+  <!-- Fixed Portal Round Menu (lives outside sidebar so horizontal scrolling never happens) -->
+  <div class="round-menu" id="roundMenu"></div>
+
   <div class="app-shell">
     <!-- RECESSED LEFT SIDEBAR -->
     <aside class="sidebar" id="sidebar">
@@ -1432,7 +1670,7 @@
           <span>SCHOOPS</span>
         </div>
         <button type="button" class="sb-cmd-btn" id="openCmdBtn" title="Command Menu (⌘K / Ctrl+K)">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <span class="kbd">⌘K</span>
         </button>
       </div>
@@ -1464,7 +1702,7 @@
         </button>
       </div>
 
-      <!-- Smart Views (Replaces Cluttered Multi-Row Filter Toolbar) -->
+      <!-- Smart Views -->
       <div class="sb-group" id="sbSmartViews">
         <div class="sb-section-label">Views</div>
         <button type="button" class="sb-item" data-view="squad">
@@ -1515,37 +1753,43 @@
 
       <!-- Sidebar Footer: Round Switcher & Settings -->
       <div class="sb-footer">
-        <div class="round-wrap" id="roundDropdown">
-          <button type="button" class="round-btn" id="roundTrigger" title="Switch active round or view historical snapshot">
-            <span class="round-btn-left">
-              <span class="live-pip" id="roundPip"></span>
-              <span class="round-btn-text" id="roundTriggerText">Rd 6 · Nov 24–30</span>
-            </span>
-            <span style="color:var(--text-tertiary); font-size:9px;">▾</span>
-          </button>
-          <div class="round-menu" id="roundMenu"></div>
-        </div>
+        <button type="button" class="round-btn" id="roundTrigger" title="Switch active round or view historical snapshot">
+          <span class="round-btn-left">
+            <span class="live-pip" id="roundPip"></span>
+            <span class="round-btn-text" id="roundTriggerText">Rd 6 · Nov 24–30</span>
+          </span>
+          <span style="color:var(--text-tertiary); font-size:10px;">▾</span>
+        </button>
 
         <div class="sb-meta-row">
           <span class="sb-sync-hint" id="sbSyncHint">Loading...</span>
           <button type="button" class="sb-cmd-btn" id="openSettingsBtn" title="Settings, Sync & Squad Code">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           </button>
         </div>
       </div>
     </aside>
 
+    <!-- DRAGGABLE SIDEBAR RESIZER -->
+    <div class="sidebar-resizer" id="sidebarResizer" title="Drag to resize sidebar (double-click to reset)"></div>
+
     <!-- ELEVATED MAIN WORKSPACE + SLIDE-IN PLAYER INSPECTOR -->
     <div class="workspace-frame">
       <div class="main-column">
-        <!-- Unified 44px View Header -->
+        <!-- Unified 48px View Header -->
         <header class="view-header">
           <div class="vh-left">
             <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
             <div class="vh-crumb" id="vhCrumb">Market</div>
             <span class="vh-count" id="vhCount"></span>
+
+            <!-- Unintrusive Contextual '?' Tab Guide -->
+            <div class="guide-anchor" id="guideAnchor">
+              <button type="button" class="help-icon-btn" id="guideBtn" title="How this view works" aria-label="How this view works">?</button>
+              <div class="guide-popover" id="guidePopover"></div>
+            </div>
           </div>
 
           <!-- Market-Only Header Controls -->
@@ -1593,14 +1837,22 @@
               </div>
             </div>
 
-            <!-- Display Options Popover (Progressive Column Disclosure) -->
+            <!-- Display Options Popover (Density + Columns + Column Width Reset) -->
             <div class="pop-anchor" id="displayPopWrap">
               <button type="button" class="ghost-btn" id="displayPopBtn">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
                 <span>Display</span>
               </button>
               <div class="linear-popover" id="displayPopover">
-                <div class="pop-sec-label">Visible Columns</div>
+                <div>
+                  <div class="pop-sec-label">Density</div>
+                  <div class="seg-2" id="densitySeg">
+                    <button type="button" class="chip-btn active" data-density="comfortable">Comfortable</button>
+                    <button type="button" class="chip-btn" data-density="compact">Compact</button>
+                  </div>
+                </div>
+                <div class="divider"></div>
+                <div class="pop-sec-label" style="margin-bottom:0;">Visible Columns</div>
                 <div class="pop-row">
                   <span>Ownership %</span>
                   <button type="button" class="mini-switch on" data-col-toggle="owned"></button>
@@ -1621,6 +1873,8 @@
                   <span>New Price</span>
                   <button type="button" class="mini-switch" data-col-toggle="newPrice"></button>
                 </div>
+                <div class="divider"></div>
+                <button type="button" class="ghost-btn" id="resetColWidthsBtn" style="width:100%; justify-content:center; height:27px; font-size:11.5px;">Reset Column Widths</button>
               </div>
             </div>
           </div>
@@ -1637,11 +1891,15 @@
               <span class="ctx-stat">Cash Gen <strong id="ctxCashGen">$0</strong></span>
               <span class="ctx-stat">Top Cow <strong id="ctxTopCow">—</strong> <span id="ctxTopCowMeta" class="mono pos-text"></span></span>
             </div>
-            <div class="ctx-chips" id="activeFilterChips"></div>
+            <div class="ctx-right">
+              <div class="ctx-chips" id="activeFilterChips"></div>
+              <div id="marketTipSlot"></div>
+            </div>
           </div>
 
           <div class="view-body" id="marketScrollBody">
-            <table class="market-table">
+            <table class="market-table" id="marketTable">
+              <colgroup id="tableColGroup"></colgroup>
               <thead id="tableHead"></thead>
               <tbody id="tableBody">
                 <tr>
@@ -1652,7 +1910,7 @@
               </tbody>
             </table>
             <div class="list-footer">
-              <span id="showingCount">Showing 0 players · Press ↑/↓ to navigate, Enter to inspect, ⌘K to search</span>
+              <span id="showingCount">Showing 0 players · ↑/↓ navigate · Enter inspect · Drag column edges to resize</span>
               <button type="button" class="ghost-btn" id="showAllBtn" style="display:none;">Show All</button>
             </div>
           </div>
@@ -1710,7 +1968,7 @@
           <div class="field-hint">Your squad, court lineup, and trade plans save locally in this browser. Copy your code to transfer across devices.</div>
           <div class="inline-row" style="margin-top:2px;">
             <button type="button" class="primary-btn" id="copySquadCodeBtn">Copy Squad Code</button>
-            <span class="mono pos-text" id="squadCodeStatus" style="font-size:11px;"></span>
+            <span class="mono pos-text" id="squadCodeStatus" style="font-size:11.5px;"></span>
           </div>
           <div class="inline-row" style="margin-top:4px;">
             <input type="text" class="text-input" id="importSquadCodeInput" placeholder="Paste SCH1-... code" style="flex:1;" />
@@ -1746,11 +2004,73 @@
     const DEFAULT_MAGIC_NUMBER = 178000;
     const STORAGE_KEY = "schoops_terminal_v3";
     const LEGACY_STORAGE_KEY = "schoops_terminal_v2";
+    const DEFAULT_SIDEBAR_W = 248;
 
     const COW_THRESHOLD = 350000;
     const BLEED_THRESHOLD = -350000;
     const RELEVANT_OUT_PRICE = 6500000;
     const RELEVANT_OUT_OWN = 3.0;
+
+    const DEFAULT_COL_WIDTHS = {
+      name: 330,
+      price: 88,
+      owned: 84,
+      form: 96,
+      games: 112,
+      be: 118,
+      proj: 86,
+      avg3: 80,
+      avg5: 80,
+      priceChange: 108,
+      newPrice: 102
+    };
+
+    const MIN_COL_WIDTHS = {
+      name: 250,
+      price: 68,
+      owned: 68,
+      form: 76,
+      games: 96,
+      be: 94,
+      proj: 68,
+      avg3: 64,
+      avg5: 64,
+      priceChange: 88,
+      newPrice: 82
+    };
+
+    const TAB_GUIDES = {
+      market: {
+        title: "Market Guide",
+        tip: "Click any row for the Live BE Simulator · Drag column borders to resize",
+        bullets: [
+          "Use <strong>+</strong> (Squad) and <strong>☆</strong> (Watchlist) on the left of any player row to track your team.",
+          "Click any player row (or press <strong>Enter</strong>) to open the right-side Inspector with the <strong>Live BE &amp; Cash Simulator</strong>.",
+          "Drag any column header border or the sidebar edge to resize—double-click a border to auto-reset.",
+          "Press <strong>⌘K</strong> (or <strong>/</strong>) anywhere to jump directly to any player or workspace."
+        ]
+      },
+      court: {
+        title: "My Court Guide",
+        tip: "Click any two cards to swap · Click empty slots or + Add Player to edit squad",
+        bullets: [
+          "Lineup totals follow NBA SuperCoach Classic rules: <strong>Best 9 of 10 starters + 2× Captain</strong> (Bench = 0 pts).",
+          "Click <strong>+ Add Player</strong> (or any empty slot) to add players straight to your squad, or click <strong>×</strong> on a card to remove them.",
+          "Click any two cards to swap legal dual-position slots, and pin injured players to Bench with the <strong>Lock</strong> button.",
+          "Hit <strong>Optimise</strong> whenever points are available to compute the exact highest-scoring legal lineup."
+        ]
+      },
+      tradelab: {
+        title: "Trade Lab Guide",
+        tip: "Enter your Available Bank, then duplicate a plan to compare trades side-by-side",
+        bullets: [
+          "Enter your <strong>Available Bank ($M)</strong> at top right so Trade Lab verifies salary cap legality automatically.",
+          "Pick up to 4 <strong>OUT → IN</strong> trades per plan—supports standard and Trade Boost weeks.",
+          "Click <strong>Duplicate to Compare</strong> or <strong>+ New Plan</strong> to weigh competing moves on both <strong>Best-9 Score Δ</strong> and <strong>Cash Gen Δ</strong>.",
+          "Click <strong>Apply Plan to Squad</strong> once you've decided to sync your roster straight into My Court."
+        ]
+      }
+    };
 
     const TEAM_COLORS = {
       ATL: "#E03A3E", BOS: "#007A33", BKN: "#9BA3B4", CHA: "#1D87B8",
@@ -1764,8 +2084,8 @@
     };
 
     const state = {
-      activeNav: "market",   // "market" | "court" | "tradelab"
-      activeView: "all",     // "all" | "squad" | "cows" | "bleeding" | "fourgames" | "pods" | "watchlist"
+      activeNav: "market",
+      activeView: "all",
       liveRound: 6,
       round: 6,
       availableRounds: [],
@@ -1798,6 +2118,10 @@
         avg5: false,
         newPrice: false
       },
+      density: "comfortable",
+      sidebarWidth: DEFAULT_SIDEBAR_W,
+      colWidths: {},
+      dismissedTips: {},
       filterPos: "ALL",
       maxPriceM: null,
       fourGamesOnly: false,
@@ -1814,7 +2138,7 @@
     };
 
     function getTeamColor(team) {
-      return TEAM_COLORS[String(team || "").toUpperCase()] || "#595D66";
+      return TEAM_COLORS[String(team || "").toUpperCase()] || "#626670";
     }
 
     function getInitials(name) {
@@ -1829,7 +2153,7 @@
     }
 
     function renderAvatar(player, sizePx) {
-      const sz = sizePx || 28;
+      const sz = sizePx || (state.density === "compact" ? 28 : 34);
       const init = escapeHtml(getInitials(player.name));
       const style = `width:${sz}px; height:${sz}px;`;
       if (player.photo) {
@@ -1879,15 +2203,19 @@
       if (Number.isNaN(dt.getTime())) return { short: "Live", full: String(isoStr), rel: "" };
       const diffMins = Math.floor(Math.max(0, Date.now() - dt.getTime()) / 60000);
       let rel = "just now";
-      if (diffMins >= 1440) {
-        const d = Math.floor(diffMins / 1440);
-        rel = `${d}d ago`;
-      } else if (diffMins >= 60) {
-        rel = `${Math.floor(diffMins / 60)}h ago`;
-      } else if (diffMins >= 1) {
-        rel = `${diffMins}m ago`;
-      }
+      if (diffMins >= 1440) rel = `${Math.floor(diffMins / 1440)}d ago`;
+      else if (diffMins >= 60) rel = `${Math.floor(diffMins / 60)}h ago`;
+      else if (diffMins >= 1) rel = `${diffMins}m ago`;
       return { short: `Synced ${rel}`, full: dt.toLocaleString(), rel };
+    }
+
+    function applyDensityAndSidebar() {
+      document.body.classList.toggle("density-compact", state.density === "compact");
+      const w = Math.max(204, Math.min(340, Number(state.sidebarWidth) || DEFAULT_SIDEBAR_W));
+      document.documentElement.style.setProperty("--sidebar-w", `${w}px`);
+      document.querySelectorAll("#densitySeg [data-density]").forEach((b) => {
+        b.classList.toggle("active", b.dataset.density === state.density);
+      });
     }
 
     function loadSavedPrefs() {
@@ -1925,6 +2253,10 @@
         if (parsed.displayCols && typeof parsed.displayCols === "object") {
           state.displayCols = { ...state.displayCols, ...parsed.displayCols };
         }
+        if (parsed.density === "compact" || parsed.density === "comfortable") state.density = parsed.density;
+        if (parsed.sidebarWidth) state.sidebarWidth = Number(parsed.sidebarWidth) || DEFAULT_SIDEBAR_W;
+        if (parsed.colWidths && typeof parsed.colWidths === "object") state.colWidths = parsed.colWidths;
+        if (parsed.dismissedTips && typeof parsed.dismissedTips === "object") state.dismissedTips = parsed.dismissedTips;
       } catch (e) {}
     }
 
@@ -1936,7 +2268,11 @@
           watchlistIds: state.watchlistIds,
           court: state.court,
           tradeLab: state.tradeLab,
-          displayCols: state.displayCols
+          displayCols: state.displayCols,
+          density: state.density,
+          sidebarWidth: state.sidebarWidth,
+          colWidths: state.colWidths,
+          dismissedTips: state.dismissedTips
         }));
       } catch (e) {}
     }
@@ -1990,16 +2326,10 @@
         name: String(p.name || `${p.first_name || ""} ${p.last_name || ""}`.trim() || "Unknown"),
         team: String(p.team || p.team_abbrev || "NBA"),
         pos: Array.isArray(p.positions) ? p.positions.join("/") : String(p.pos || p.position || "UTIL"),
-        price,
-        r_minus_2: r2,
-        r_minus_1: r1,
-        proj,
-        games,
+        price, r_minus_2: r2, r_minus_1: r1, proj, games,
         gamesNext: futureGms.gamesNext,
         gamesAfter: futureGms.gamesAfter,
-        owned,
-        avg5,
-        officialBe,
+        owned, avg5, officialBe,
         injury: p.injury || p.injury_status || null,
         photo
       };
@@ -2065,6 +2395,30 @@
       }).join("")}</div>`;
     }
 
+    function renderDismissibleTip(tabKey) {
+      if (state.dismissedTips[tabKey]) return "";
+      const info = TAB_GUIDES[tabKey];
+      if (!info || !info.tip) return "";
+      return `
+        <span class="tip-pill">
+          <span>${escapeHtml(info.tip)}</span>
+          <button type="button" data-dismiss-tip="${tabKey}" title="Dismiss tip" aria-label="Dismiss tip">×</button>
+        </span>
+      `;
+    }
+
+    function renderGuidePopover() {
+      const info = TAB_GUIDES[state.activeNav] || TAB_GUIDES.market;
+      const pop = document.getElementById("guidePopover");
+      if (!pop) return;
+      pop.innerHTML = `
+        <div class="guide-title">${escapeHtml(info.title)}</div>
+        <ul class="guide-list">
+          ${info.bullets.map((b) => `<li><span>${b}</span></li>`).join("")}
+        </ul>
+      `;
+    }
+
     function setSyncStatus(mode, shortTxt, fullTxt) {
       const dot = document.getElementById("syncDot");
       const btnText = document.getElementById("syncText");
@@ -2083,9 +2437,6 @@
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 
-        // Frontend Round Regression Safeguard:
-        // If supercoach_data.json accidentally regressed to an older round (e.g. Rd 5) while a newer
-        // round snapshot (e.g. Rd 6) already exists in availableRounds, auto-promote the highest round as LIVE.
         const avail = Array.isArray(data.availableRounds) ? data.availableRounds.map(Number).filter(Boolean) : [];
         const dataRound = Number(data.round || 6);
         const maxAvail = avail.length ? Math.max(...avail, dataRound) : dataRound;
@@ -2101,9 +2452,7 @@
               loadDataset(latestData, `Live Feed (Rd ${maxAvail})`);
               return;
             }
-          } catch (innerErr) {
-            console.warn("Could not auto-promote newer round snapshot:", innerErr);
-          }
+          } catch (innerErr) {}
         }
 
         state.liveRound = dataRound;
@@ -2184,6 +2533,19 @@
       }).join("");
     }
 
+    function toggleRoundMenu() {
+      const menu = document.getElementById("roundMenu");
+      const trigger = document.getElementById("roundTrigger");
+      if (menu.classList.contains("open")) {
+        menu.classList.remove("open");
+        return;
+      }
+      const rect = trigger.getBoundingClientRect();
+      menu.style.left = `${Math.max(8, rect.left)}px`;
+      menu.style.bottom = `${window.innerHeight - rect.top + 6}px`;
+      menu.classList.add("open");
+    }
+
     function getFilteredRows(allComputed) {
       const q = state.search.trim().toLowerCase();
       const maxPriceDollars = state.maxPriceM !== null
@@ -2246,8 +2608,30 @@
       if (state.displayCols.avg5) cols.push({ key: "avg5", sort: "avg5", label: "5-Wk", align: "num" });
       cols.push({ key: "priceChange", sort: "priceChange", label: "Proj Chg", align: "num" });
       if (state.displayCols.newPrice) cols.push({ key: "newPrice", sort: "newPrice", label: "New Price", align: "num" });
-      cols.push({ key: "actions", sort: null, label: "", align: "num" });
       return cols;
+    }
+
+    function getColWidth(key) {
+      const saved = Number(state.colWidths[key]);
+      if (saved && !Number.isNaN(saved)) return Math.max(MIN_COL_WIDTHS[key] || 64, saved);
+      return DEFAULT_COL_WIDTHS[key] || 90;
+    }
+
+    function applyTableColumnWidths(cols) {
+      const cg = document.getElementById("tableColGroup");
+      const tbl = document.getElementById("marketTable");
+      if (!cg || !tbl) return;
+      const totalPx = cols.reduce((sum, c) => sum + getColWidth(c.key), 0);
+      tbl.style.minWidth = `${totalPx}px`;
+      cg.innerHTML = cols.map((c, idx) => {
+        const w = getColWidth(c.key);
+        // Let the Name column absorb extra viewport width naturally when user hasn't forced custom widths
+        const hasCustom = Object.keys(state.colWidths).length > 0;
+        if (!hasCustom && idx === 0) {
+          return `<col data-col-key="${c.key}" style="min-width:${w}px;" />`;
+        }
+        return `<col data-col-key="${c.key}" style="width:${w}px;" />`;
+      }).join("");
     }
 
     function renderActiveFilterChips() {
@@ -2259,6 +2643,7 @@
       if (!state.hideDnps) chips.push(`<span class="filter-chip">Showing DNPs <button type="button" data-clear-chip="dnp">×</button></span>`);
       document.getElementById("activeFilterChips").innerHTML = chips.join("");
       document.getElementById("filterPopBtn").classList.toggle("active", chips.length > 0);
+      document.getElementById("marketTipSlot").innerHTML = chips.length === 0 ? renderDismissibleTip("market") : "";
     }
 
     function syncSidebarAndHeader(allComputed, filteredLen) {
@@ -2279,7 +2664,6 @@
       document.getElementById("sbViewPodCount").textContent = String(pods.length);
       document.getElementById("sbViewWatchCount").textContent = String(watch.length);
 
-      // Context Strip Metrics
       const squadVal = squad.reduce((s, p) => s + p.price, 0);
       const squadCash = squad.reduce((s, p) => s + p.priceChange, 0);
       document.getElementById("ctxSquadVal").textContent = formatPriceM(squadVal);
@@ -2294,7 +2678,6 @@
         document.getElementById("ctxTopCowMeta").textContent = formatMoney(topCow.priceChange);
       }
 
-      // Highlight Sidebar Active States
       document.querySelectorAll("#sbPrimaryNav .sb-item").forEach((b) => {
         b.classList.toggle("active", b.dataset.nav === state.activeNav && (state.activeNav !== "market" || state.activeView === "all"));
       });
@@ -2302,15 +2685,9 @@
         b.classList.toggle("active", state.activeNav === "market" && b.dataset.view === state.activeView);
       });
 
-      // Header Breadcrumb & Controls
       const viewNames = {
-        all: "All Players",
-        squad: "My Squad",
-        cows: "Cash Cows",
-        bleeding: "Bleeding",
-        fourgames: "4-Game Slate",
-        pods: "PODs <5%",
-        watchlist: "Watchlist"
+        all: "All Players", squad: "My Squad", cows: "Cash Cows",
+        bleeding: "Bleeding", fourgames: "4-Game Slate", pods: "PODs <5%", watchlist: "Watchlist"
       };
       const crumb = document.getElementById("vhCrumb");
       const countEl = document.getElementById("vhCount");
@@ -2331,10 +2708,12 @@
         modCtrl.style.display = "flex";
       } else {
         crumb.innerHTML = `Trade Lab`;
-        countEl.textContent = `${(state.tradeLab.plans || []).length} plans`;
+        countEl.textContent = `${(state.tradeLab.plans || []).length} plan${(state.tradeLab.plans || []).length === 1 ? "" : "s"}`;
         mktCtrl.style.display = "none";
         modCtrl.style.display = "flex";
       }
+
+      renderGuidePopover();
     }
 
     function renderInspector() {
@@ -2362,7 +2741,7 @@
         </div>
 
         <div class="insp-hero">
-          ${renderAvatar(p, 44)}
+          ${renderAvatar(p, 48)}
           <div style="min-width:0;">
             <div class="insp-name">${escapeHtml(p.name)}</div>
             <div class="insp-sub">
@@ -2468,6 +2847,7 @@
     function setActiveNav(navName, optionalView) {
       state.activeNav = navName;
       if (optionalView) state.activeView = optionalView;
+      document.getElementById("guideAnchor").classList.remove("open");
       closeMobileSidebar();
       render();
     }
@@ -2479,6 +2859,8 @@
     }
 
     function render() {
+      applyDensityAndSidebar();
+
       const allComputed = state.players.map(computeRow);
       state.computedById = {};
       allComputed.forEach((p) => { state.computedById[p.id] = p; });
@@ -2488,22 +2870,25 @@
       syncViewContainers();
       renderActiveFilterChips();
 
-      // Sync Display popover switches
       document.querySelectorAll("[data-col-toggle]").forEach((el) => {
         el.classList.toggle("on", !!state.displayCols[el.dataset.colToggle]);
       });
 
       if (state.activeNav === "market") {
         const cols = getActiveColumns();
-        document.getElementById("tableHead").innerHTML = `<tr>${cols.map((c) => {
+        applyTableColumnWidths(cols);
+
+        document.getElementById("tableHead").innerHTML = `<tr>${cols.map((c, idx) => {
           const active = c.sort && c.key === state.sortCol;
           const arrow = active ? `<span class="sort-arrow">${state.sortDir === "asc" ? "▲" : "▼"}</span>` : "";
-          return `<th class="${c.align} ${active ? "sort-active" : ""}" ${c.sort ? `data-sort="${c.sort}" data-col="${c.key}"` : ""}>${c.label}${arrow}</th>`;
+          const resizer = idx < cols.length - 1 ? `<span class="col-resizer" data-resize-col="${c.key}" title="Drag to resize · Double-click to reset"></span>` : "";
+          return `<th class="${c.align} ${active ? "sort-active" : ""}" ${c.sort ? `data-sort="${c.sort}" data-col="${c.key}"` : ""}>${c.label}${arrow}${resizer}</th>`;
         }).join("")}</tr>`;
 
         const limit = state.showAll ? filtered.length : Math.min(100, filtered.length);
         const visible = filtered.slice(0, limit);
         state.visibleRows = visible;
+        const avatarSz = state.density === "compact" ? 28 : 34;
 
         const tbody = document.getElementById("tableBody");
         if (visible.length === 0) {
@@ -2528,11 +2913,15 @@
                 return `
                   <td>
                     <div class="p-cell">
-                      <span class="status-dot ${dotCls}"></span>
-                      ${renderAvatar(p, 28)}
+                      <div class="row-quick-controls">
+                        <button type="button" class="row-btn star-btn ${p.inWatchlist ? "is-star" : ""}" data-toggle-watch="${escapeHtml(p.id)}" title="${p.inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}">${p.inWatchlist ? "★" : "☆"}</button>
+                        <button type="button" class="row-btn sq-btn ${p.inSquad ? "is-sq" : ""}" data-toggle-squad="${escapeHtml(p.id)}" title="${p.inSquad ? "In Squad (click to remove)" : "Add to Squad"}">${p.inSquad ? "SQ" : "+"}</button>
+                      </div>
+                      ${renderAvatar(p, avatarSz)}
                       <div class="p-meta-wrap">
                         <div class="p-name-line">
                           <span class="p-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</span>
+                          <span class="status-dot ${dotCls}"></span>
                           ${tagHtml}
                         </div>
                         <div class="p-sub">
@@ -2559,15 +2948,6 @@
               if (c.key === "avg5") return `<td class="num mono muted-text">${p.avg5 !== null ? p.avg5.toFixed(1) : "—"}</td>`;
               if (c.key === "priceChange") return `<td class="num mono ${chgClass}" style="font-weight:600;">${formatMoney(p.priceChange)}</td>`;
               if (c.key === "newPrice") return `<td class="num mono muted-text">${formatPriceM(p.newPrice)}</td>`;
-              if (c.key === "actions") {
-                return `
-                  <td class="num">
-                    <div class="row-acts ${p.inSquad || p.inWatchlist ? "has-active" : ""}">
-                      <button type="button" class="row-btn ${p.inWatchlist ? "is-star" : ""}" data-toggle-watch="${escapeHtml(p.id)}" title="Watchlist">${p.inWatchlist ? "★" : "☆"}</button>
-                      <button type="button" class="row-btn ${p.inSquad ? "is-sq" : ""}" data-toggle-squad="${escapeHtml(p.id)}" title="Squad">${p.inSquad ? "SQ" : "+"}</button>
-                    </div>
-                  </td>`;
-              }
               return `<td></td>`;
             }).join("");
 
@@ -2576,7 +2956,7 @@
         }
 
         document.getElementById("showingCount").textContent =
-          `Showing ${visible.length} of ${filtered.length} · ↑/↓ navigate · Enter inspect · ⌘K command menu`;
+          `Showing ${visible.length} of ${filtered.length} · ↑/↓ navigate · Enter inspect · Drag column edges to resize`;
 
         const showAllBtn = document.getElementById("showAllBtn");
         if (filtered.length > 100 && !state.showAll) {
@@ -2592,6 +2972,104 @@
       window.SCHOOPS.onRenderListeners.forEach((fn) => {
         try { fn(); } catch (err) { console.error("Module render error:", err); }
       });
+    }
+
+    /* =====================================================================
+       DRAGGABLE SIDEBAR & TABLE COLUMN RESIZING
+       ===================================================================== */
+    function initResizers() {
+      // 1. Sidebar Resizer
+      const sbHandle = document.getElementById("sidebarResizer");
+      if (sbHandle) {
+        sbHandle.addEventListener("mousedown", (e) => {
+          e.preventDefault();
+          const startX = e.clientX;
+          const startW = document.getElementById("sidebar").getBoundingClientRect().width;
+          sbHandle.classList.add("dragging");
+          document.body.classList.add("is-resizing");
+
+          function onMove(ev) {
+            const nextW = Math.max(204, Math.min(340, Math.round(startW + (ev.clientX - startX))));
+            state.sidebarWidth = nextW;
+            document.documentElement.style.setProperty("--sidebar-w", `${nextW}px`);
+          }
+
+          function onUp() {
+            sbHandle.classList.remove("dragging");
+            document.body.classList.remove("is-resizing");
+            document.removeEventListener("mousemove", onMove);
+            document.removeEventListener("mouseup", onUp);
+            savePrefs();
+          }
+
+          document.addEventListener("mousemove", onMove);
+          document.addEventListener("mouseup", onUp);
+        });
+
+        sbHandle.addEventListener("dblclick", () => {
+          state.sidebarWidth = DEFAULT_SIDEBAR_W;
+          applyDensityAndSidebar();
+          savePrefs();
+        });
+      }
+
+      // 2. Market Table Column Resizers (event delegation on #tableHead)
+      const thead = document.getElementById("tableHead");
+      if (thead) {
+        thead.addEventListener("mousedown", (e) => {
+          const handle = e.target.closest("[data-resize-col]");
+          if (!handle) return;
+          e.preventDefault();
+          e.stopPropagation();
+
+          const colKey = handle.dataset.resizeCol;
+          const th = handle.closest("th");
+          const startX = e.clientX;
+          const startW = th ? th.getBoundingClientRect().width : getColWidth(colKey);
+          const minW = MIN_COL_WIDTHS[colKey] || 64;
+
+          // Lock all current rendered widths on first custom resize so adjacent columns stay stable
+          const cols = getActiveColumns();
+          if (Object.keys(state.colWidths).length === 0) {
+            thead.querySelectorAll("th[data-col]").forEach((el) => {
+              state.colWidths[el.dataset.col] = Math.round(el.getBoundingClientRect().width);
+            });
+          }
+
+          handle.classList.add("dragging");
+          document.body.classList.add("is-resizing");
+
+          function onMove(ev) {
+            const nextW = Math.max(minW, Math.round(startW + (ev.clientX - startX)));
+            state.colWidths[colKey] = nextW;
+            applyTableColumnWidths(cols);
+          }
+
+          function onUp() {
+            handle.classList.remove("dragging");
+            document.body.classList.remove("is-resizing");
+            document.removeEventListener("mousemove", onMove);
+            document.removeEventListener("mouseup", onUp);
+            savePrefs();
+            // Suppress accidental click-sort right after mouseup
+            thead.dataset.justResized = "1";
+            setTimeout(() => { delete thead.dataset.justResized; }, 60);
+          }
+
+          document.addEventListener("mousemove", onMove);
+          document.addEventListener("mouseup", onUp);
+        });
+
+        thead.addEventListener("dblclick", (e) => {
+          const handle = e.target.closest("[data-resize-col]");
+          if (!handle) return;
+          e.stopPropagation();
+          const colKey = handle.dataset.resizeCol;
+          delete state.colWidths[colKey];
+          savePrefs();
+          render();
+        });
+      }
     }
 
     /* =====================================================================
@@ -2616,33 +3094,25 @@
     function renderCommandList(query) {
       const q = query.trim().toLowerCase();
       const commands = [
-        { type: "cmd", id: "nav-market", label: "Go to Market", meta: "G M", run: () => setActiveNav("market", "all") },
-        { type: "cmd", id: "nav-court", label: "Go to My Court", meta: "G C", run: () => setActiveNav("court") },
-        { type: "cmd", id: "nav-trade", label: "Go to Trade Lab", meta: "G T", run: () => setActiveNav("tradelab") },
-        { type: "cmd", id: "opt-court", label: "Optimise My Court Lineup", meta: "Best 9 + 2× C", run: () => { setActiveNav("court"); setTimeout(() => { const b = document.getElementById("courtOptimiseBtn"); if (b) b.click(); }, 30); } },
-        { type: "cmd", id: "view-cows", label: "View: Cash Cows", meta: "Filter", run: () => setActiveNav("market", "cows") },
-        { type: "cmd", id: "view-4g", label: "View: 4-Game Slate", meta: "Filter", run: () => setActiveNav("market", "fourgames") },
-        { type: "cmd", id: "open-settings", label: "Open Workspace Settings", meta: "Sync & Code", run: () => openSettingsModal() }
+        { type: "cmd", label: "Go to Market", meta: "G M", run: () => setActiveNav("market", "all") },
+        { type: "cmd", label: "Go to My Court", meta: "G C", run: () => setActiveNav("court") },
+        { type: "cmd", label: "Go to Trade Lab", meta: "G T", run: () => setActiveNav("tradelab") },
+        { type: "cmd", label: "Optimise My Court Lineup", meta: "Best 9 + 2× C", run: () => { setActiveNav("court"); setTimeout(() => { const b = document.getElementById("courtOptimiseBtn"); if (b) b.click(); }, 30); } },
+        { type: "cmd", label: "Add Player to My Court", meta: "Squad", run: () => { setActiveNav("court"); setTimeout(() => { const b = document.getElementById("courtAddPlayerBtn"); if (b) b.click(); }, 30); } },
+        { type: "cmd", label: "View: Cash Cows", meta: "Filter", run: () => setActiveNav("market", "cows") },
+        { type: "cmd", label: "View: 4-Game Slate", meta: "Filter", run: () => setActiveNav("market", "fourgames") },
+        { type: "cmd", label: "Open Workspace Settings", meta: "Sync & Code", run: () => openSettingsModal() }
       ];
 
-      const matchedCmds = q
-        ? commands.filter((c) => c.label.toLowerCase().includes(q) || c.meta.toLowerCase().includes(q))
-        : commands;
+      const matchedCmds = q ? commands.filter((c) => c.label.toLowerCase().includes(q) || c.meta.toLowerCase().includes(q)) : commands;
 
       const matchedPlayers = q
         ? Object.values(state.computedById)
             .filter((p) => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))
-            .sort((a, b) => {
-              const as = a.name.toLowerCase().startsWith(q) ? 0 : 1;
-              const bs = b.name.toLowerCase().startsWith(q) ? 0 : 1;
-              return (as - bs) || (b.price - a.price);
-            })
+            .sort((a, b) => ((a.name.toLowerCase().startsWith(q) ? 0 : 1) - (b.name.toLowerCase().startsWith(q) ? 0 : 1)) || (b.price - a.price))
             .slice(0, 8)
             .map((p) => ({
-              type: "player",
-              id: p.id,
-              player: p,
-              label: p.name,
+              type: "player", player: p, label: p.name,
               meta: `${p.team} · BE ${p.be === null ? "—" : p.be} · ${formatMoney(p.priceChange)}`,
               run: () => openInspector(p.id)
             }))
@@ -2651,10 +3121,7 @@
             .sort((a, b) => b.proj - a.proj)
             .slice(0, 5)
             .map((p) => ({
-              type: "player",
-              id: p.id,
-              player: p,
-              label: p.name,
+              type: "player", player: p, label: p.name,
               meta: `Squad · BE ${p.be === null ? "—" : p.be} · Proj ${p.proj}`,
               run: () => openInspector(p.id)
             }));
@@ -2673,7 +3140,7 @@
         html += `<div class="cmd-group-title">${q ? "Players" : "Your Squad"}</div>`;
         html += matchedPlayers.map((item, idx) => `
           <button type="button" class="cmd-item ${idx === 0 ? "active" : ""}" data-cmd-idx="${idx}">
-            <span class="cmd-item-left">${renderAvatar(item.player, 22)}<span>${escapeHtml(item.label)}</span></span>
+            <span class="cmd-item-left">${renderAvatar(item.player, 24)}<span>${escapeHtml(item.label)}</span></span>
             <span class="cmd-item-meta">${escapeHtml(item.meta)}</span>
           </button>
         `).join("");
@@ -2739,6 +3206,7 @@
       getTeamColor,
       renderAvatar,
       renderSchedStrip,
+      renderDismissibleTip,
       getState: () => state,
       savePrefs,
       render,
@@ -2786,9 +3254,7 @@
     });
 
     document.querySelectorAll("#sbSmartViews .sb-item").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        setActiveNav("market", btn.dataset.view);
-      });
+      btn.addEventListener("click", () => setActiveNav("market", btn.dataset.view));
     });
 
     document.getElementById("mobileMenuBtn").addEventListener("click", () => {
@@ -2797,38 +3263,60 @@
     });
     document.getElementById("sbBackdrop").addEventListener("click", closeMobileSidebar);
 
-    // Round dropdown
-    const roundWrap = document.getElementById("roundDropdown");
-    document.getElementById("roundTrigger").addEventListener("click", (e) => {
+    // Fixed Portal Round Menu
+    const roundMenuEl = document.getElementById("roundMenu");
+    const roundTriggerEl = document.getElementById("roundTrigger");
+    roundTriggerEl.addEventListener("click", (e) => {
       e.stopPropagation();
-      roundWrap.classList.toggle("open");
+      toggleRoundMenu();
     });
-    document.getElementById("roundMenu").addEventListener("click", (e) => {
+    roundMenuEl.addEventListener("click", (e) => {
       const opt = e.target.closest("[data-round]");
       if (!opt) return;
-      roundWrap.classList.remove("open");
+      roundMenuEl.classList.remove("open");
       const r = Number(opt.dataset.round);
       if (r !== state.round) loadHistoricalRound(r);
     });
 
-    // Filter & Display popovers
+    // Guide, Filter & Display popovers
+    const guideAnchor = document.getElementById("guideAnchor");
     const filterPopWrap = document.getElementById("filterPopWrap");
     const displayPopWrap = document.getElementById("displayPopWrap");
+
+    document.getElementById("guideBtn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      filterPopWrap.classList.remove("open");
+      displayPopWrap.classList.remove("open");
+      roundMenuEl.classList.remove("open");
+      guideAnchor.classList.toggle("open");
+    });
+
     document.getElementById("filterPopBtn").addEventListener("click", (e) => {
       e.stopPropagation();
       displayPopWrap.classList.remove("open");
+      guideAnchor.classList.remove("open");
       filterPopWrap.classList.toggle("open");
     });
+
     document.getElementById("displayPopBtn").addEventListener("click", (e) => {
       e.stopPropagation();
       filterPopWrap.classList.remove("open");
+      guideAnchor.classList.remove("open");
       displayPopWrap.classList.toggle("open");
     });
 
     document.addEventListener("click", (e) => {
-      if (!roundWrap.contains(e.target)) roundWrap.classList.remove("open");
+      if (!roundMenuEl.contains(e.target) && !roundTriggerEl.contains(e.target)) roundMenuEl.classList.remove("open");
       if (!filterPopWrap.contains(e.target)) filterPopWrap.classList.remove("open");
       if (!displayPopWrap.contains(e.target)) displayPopWrap.classList.remove("open");
+      if (!guideAnchor.contains(e.target)) guideAnchor.classList.remove("open");
+
+      const dismissTip = e.target.closest("[data-dismiss-tip]");
+      if (dismissTip) {
+        state.dismissedTips[dismissTip.dataset.dismissTip] = true;
+        savePrefs();
+        render();
+      }
     });
 
     document.getElementById("posPills").addEventListener("click", (e) => {
@@ -2865,11 +3353,26 @@
       render();
     });
 
+    document.getElementById("densitySeg").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-density]");
+      if (!btn) return;
+      state.density = btn.dataset.density;
+      savePrefs();
+      render();
+    });
+
     document.getElementById("displayPopover").addEventListener("click", (e) => {
       const sw = e.target.closest("[data-col-toggle]");
       if (!sw) return;
       const col = sw.dataset.colToggle;
       state.displayCols[col] = !state.displayCols[col];
+      savePrefs();
+      render();
+    });
+
+    document.getElementById("resetColWidthsBtn").addEventListener("click", () => {
+      state.colWidths = {};
+      state.sidebarWidth = DEFAULT_SIDEBAR_W;
       savePrefs();
       render();
     });
@@ -2908,8 +3411,9 @@
       render();
     });
 
-    // Table sorting
+    // Table sorting (guarded against resize mouseup)
     document.getElementById("tableHead").addEventListener("click", (e) => {
+      if (e.target.closest("[data-resize-col]") || e.currentTarget.dataset.justResized) return;
       const th = e.target.closest("th[data-sort]");
       if (!th) return;
       const key = th.dataset.sort;
@@ -2924,7 +3428,6 @@
       render();
     });
 
-    // Table row click (open Inspector) + SQ / Watch quick actions
     document.getElementById("tableBody").addEventListener("click", (e) => {
       const watchBtn = e.target.closest("[data-toggle-watch]");
       if (watchBtn) {
@@ -2956,12 +3459,8 @@
       }
     });
 
-    // Inspector interactions
     document.getElementById("inspectorInner").addEventListener("click", (e) => {
-      if (e.target.closest("#closeInspectorBtn")) {
-        closeInspector();
-        return;
-      }
+      if (e.target.closest("#closeInspectorBtn")) { closeInspector(); return; }
       const sqBtn = e.target.closest("[data-insp-squad]");
       if (sqBtn) {
         const id = sqBtn.dataset.inspSquad;
@@ -2981,9 +3480,7 @@
         return;
       }
       const trBtn = e.target.closest("[data-insp-trade]");
-      if (trBtn) {
-        window.SCHOOPS.sendToTradeLab(trBtn.dataset.tradeDir, trBtn.dataset.inspTrade);
-      }
+      if (trBtn) window.SCHOOPS.sendToTradeLab(trBtn.dataset.tradeDir, trBtn.dataset.inspTrade);
     });
 
     document.getElementById("inspectorInner").addEventListener("input", (e) => {
@@ -3000,7 +3497,7 @@
       }
     });
 
-    // Command palette events
+    // Command palette
     document.getElementById("openCmdBtn").addEventListener("click", openCommandPalette);
     document.getElementById("cmdOverlay").addEventListener("click", (e) => {
       if (e.target.id === "cmdOverlay") closeCommandPalette();
@@ -3079,7 +3576,7 @@
       render();
     });
 
-    /* Linear-Style Keyboard Navigation (⌘K, G+M/C/T, J/K, Enter, Esc) */
+    /* Linear-Style Keyboard Navigation */
     let gPrefixTimer = null;
     let gPrefixActive = false;
 
@@ -3097,9 +3594,10 @@
       if (e.key === "Escape") {
         closeCommandPalette();
         settingsOverlay.classList.remove("open");
-        roundWrap.classList.remove("open");
+        roundMenuEl.classList.remove("open");
         filterPopWrap.classList.remove("open");
         displayPopWrap.classList.remove("open");
+        guideAnchor.classList.remove("open");
         closeMobileSidebar();
         if (!isTyping && state.inspectorId) closeInspector();
         return;
@@ -3160,10 +3658,12 @@
     });
 
     loadSavedPrefs();
+    applyDensityAndSidebar();
+    initResizers();
     syncFromGitHub();
   </script>
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
-  <script src="court.js?v=11"></script>
-  <script src="tradelab.js?v=11"></script>
+  <script src="court.js?v=12"></script>
+  <script src="tradelab.js?v=12"></script>
 </body>
 </html>
