@@ -1106,6 +1106,13 @@
       background: rgba(255, 255, 255, 0.022);
     }
 
+    /* PROTOTYPE "Status & news" column */
+    .market-table td.news-td { padding-left: 20px; font-size: 12.5px; color: var(--text-secondary); }
+    .market-table thead th.news-th { padding-left: 20px; }
+    .news-cell { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+    .news-cell b { color: var(--text-primary); font-weight: 600; font-family: var(--mono); font-size: 12px; }
+    .news-strong { font-weight: 600; }
+
     /* Spare width goes here, so data columns sit right next to the player */
     .market-table .col-fill { padding: 0 !important; cursor: default; }
 
@@ -2724,6 +2731,11 @@
       if (state.displayCols.avg5) cols.push({ key: "avg5", sort: "avg5", label: "5-Wk", align: "num" });
       cols.push({ key: "priceChange", sort: "priceChange", label: "Proj Chg", align: "num" });
       if (state.displayCols.newPrice) cols.push({ key: "newPrice", sort: "newPrice", label: "New Price", align: "num" });
+      // PROTOTYPE (?layout=news / spread / hybrid): a flexible "Status & news" column that absorbs spare width
+      if (/news|spread|hybrid/.test(PROTO_LAYOUT) && !isPhone()) {
+        if (/spread/.test(PROTO_LAYOUT)) cols.push({ key: "newPrice", sort: "newPrice", label: "New price", align: "num" });
+        cols.push({ key: "news", label: "Status & news", align: "news-th", flex: true });
+      }
       // Phone: the decision numbers (BE, projected change) come first so they're visible without scrolling
       if (isPhone()) {
         const order = ["name", "be", "priceChange", "price", "proj", "form", "games", "owned", "avg3", "avg5", "newPrice"];
@@ -2733,6 +2745,22 @@
     }
 
     const isPhone = () => window.matchMedia("(max-width: 760px)").matches;
+    // PROTOTYPE switch for Market layout options: ?layout=briefing | news | spread | hybrid
+    const PROTO_LAYOUT = new URLSearchParams(location.search).get("layout") || "";
+
+    // One-line reason a player matters this round (used by the prototype "Status & news" column)
+    function playerInsight(p) {
+      const esc = escapeHtml;
+      if (p.injuryStatus) {
+        const ret = p.injuryReturn ? ` · back ~${formatReturnDate(p.injuryReturn)}` : "";
+        return `<span class="news-cell"><span class="news-strong ${String(p.injuryStatus).toLowerCase().startsWith("out") ? "neg-text" : "warn-text"}">${esc(p.injury)}</span>${ret} — <span title="${esc(p.injuryDetail || "")}">${esc(p.injuryDetail || "")}</span></span>`;
+      }
+      if (p.isLikelyDnp) return `<span class="news-cell dim-text">No games in the last two rounds. Likely DNP, so price holds.</span>`;
+      if (p.be !== null && p.dist !== null && p.dist <= -20) return `<span class="news-cell">Needs <b>${p.be}</b> over ${p.games} games, projected <b>${p.proj}</b>. <span class="neg-text">Likely to drop.</span></span>`;
+      if (p.be !== null && p.dist !== null && p.dist >= 20) return `<span class="news-cell">Projected <b>${p.proj}</b>, only needs <b>${p.be}</b>. <span class="pos-text">Likely to rise.</span></span>`;
+      if (p.games >= 4) return `<span class="news-cell">4 games this round.</span>`;
+      return `<span class="news-cell dim-text">On track: projected close to breakeven.</span>`;
+    }
 
     function getColWidth(key) {
       const saved = Number(state.colWidths[key]);
@@ -2750,10 +2778,13 @@
       const cg = document.getElementById("tableColGroup");
       const tbl = document.getElementById("marketTable");
       if (!cg || !tbl) return;
-      const totalPx = cols.reduce((sum, c) => sum + getColWidth(c.key), 0);
+      const spread = /spread/.test(PROTO_LAYOUT) ? 1.22 : 1;
+      const w = (c) => (c.key === "name" ? getColWidth(c.key) : Math.round(getColWidth(c.key) * spread));
+      const fixed = cols.filter((c) => !c.flex);
+      const totalPx = fixed.reduce((sum, c) => sum + w(c), 0) + (cols.some((c) => c.flex) ? 280 : 0);
       tbl.style.minWidth = `${totalPx}px`;
-      cg.innerHTML = cols.map((c) => `<col data-col-key="${c.key}" style="width:${getColWidth(c.key)}px;" />`).join("")
-        + `<col class="col-fill" />`;
+      cg.innerHTML = cols.map((c) => (c.flex ? `<col data-col-key="${c.key}" />` : `<col data-col-key="${c.key}" style="width:${w(c)}px;" />`)).join("")
+        + `<col class="col-fill" ${cols.some((c) => c.flex) ? `style="width:0"` : ""} />`;
     }
 
     function renderActiveFilterChips() {
@@ -3077,6 +3108,7 @@
               if (c.key === "avg5") return `<td class="num mono muted-text">${p.avg5 !== null ? p.avg5.toFixed(1) : "—"}</td>`;
               if (c.key === "priceChange") return `<td class="num mono ${chgClass}" style="font-weight:600;">${formatMoney(p.priceChange)}</td>`;
               if (c.key === "newPrice") return `<td class="num mono muted-text">${formatPriceM(p.newPrice)}</td>`;
+              if (c.key === "news") return `<td class="news-td">${playerInsight(p)}</td>`;
               return `<td></td>`;
             }).join("");
 
@@ -3799,5 +3831,6 @@
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
   <script src="court.js?v=13"></script>
   <script src="tradelab.js?v=13"></script>
+  <script src="briefing.js?v=1"></script>
 </body>
 </html>
