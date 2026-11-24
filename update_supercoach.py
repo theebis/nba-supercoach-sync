@@ -158,6 +158,145 @@ def fetch_headshot_map():
     return headshots, compact
 
 
+BE_KEYS = ("be", "breakeven", "break_even", "breakEven", "be_next", "nbe")
+INJURY_KEYS = (
+    "injury_suspension_status_text",
+    "injury_suspension_status",
+    "injury_status",
+    "injury",
+    "injury_text",
+    "suspension",
+)
+HEALTHY_VALUES = ("", "none", "null", "available", "fit", "healthy", "active", "ok", "false", "0")
+
+
+def is_blank(val):
+    return val is None or (isinstance(val, str) and val.strip() == "") or val == [] or val == {}
+
+
+def first_present(sources, keys):
+    """Returns the first non-blank value for any of `keys` across the dicts in `sources`."""
+    for src in sources:
+        if not isinstance(src, dict):
+            continue
+        for key in keys:
+            val = src.get(key)
+            if not is_blank(val):
+                return val
+    return None
+
+
+def describe_injury_value(val):
+    """Flattens an injury field (string, dict or list) into a short readable label, or None if healthy."""
+    if is_blank(val) or val is False:
+        return None
+    if isinstance(val, dict):
+        val = first_present([val], ("text", "status_text", "description", "status", "type", "name"))
+        return describe_injury_value(val)
+    if isinstance(val, list):
+        parts = [describe_injury_value(v) for v in val]
+        parts = [x for x in parts if x]
+        return "; ".join(parts) if parts else None
+    text = str(val).strip()
+    return None if text.lower() in HEALTHY_VALUES else text
+
+
+def extract_injury(p):
+    """Reads injury/suspension status from the player object, falling back to injury-flagged notes."""
+    label = describe_injury_value(first_present([p], INJURY_KEYS))
+    if label:
+        return label
+    notes = p.get("notes")
+    if isinstance(notes, dict):
+        notes = [notes]
+    if isinstance(notes, list):
+        for note in notes:
+            if not isinstance(note, dict):
+                continue
+            kind = str(note.get("type") or note.get("category") or "").lower()
+            if "injur" in kind or "suspen" in kind:
+                text = first_present([note], ("text", "note", "body", "description", "title"))
+                label = describe_injury_value(text) or kind.title()
+                if label:
+                    return label
+    return None
+
+
+def summarize_keys(objs, max_examples=4):
+    """Key inventory for a list of dicts: how often each key is filled, its types and a few example values."""
+    inv = {}
+    for obj in objs:
+        if not isinstance(obj, dict):
+            continue
+        for k, v in obj.items():
+            e = inv.setdefault(k, {"present": 0, "non_blank": 0, "types": set(), "examples": []})
+            e["present"] += 1
+            e["types"].add(type(v).__name__)
+            if not is_blank(v):
+                e["non_blank"] += 1
+                ex = v if isinstance(v, (int, float, bool)) else json.dumps(v, default=str)[:160]
+                if ex not in e["examples"] and len(e["examples"]) < max_examples:
+                    e["examples"].append(ex)
+    for e in inv.values():
+        e["types"] = sorted(e["types"])
+    return dict(sorted(inv.items()))
+
+
+def inspect_feed(base_url, round_num, out_path="debug/feed_inspection.json"):
+    """
+    Diagnostic mode (--inspect): records which fields the live SuperCoach feed actually sends,
+    so breakeven/injury/price field names can be mapped exactly. Never touches the live data files.
+    """
+    settings = fetch_json(f"{base_url}/settings?min=false")
+    comp = settings.get("competition") if isinstance(settings.get("competition"), dict) else {}
+    payload = fetch_json(f"{base_url}/players-cf?embed=notes,odds,player_stats,positions&round={round_num}")
+    players = payload if isinstance(payload, list) else payload.get("players", [])
+
+    all_stats = [s for p in players for s in (p.get("player_stats") or []) if isinstance(s, dict)]
+    all_notes = []
+    for p in players:
+        n = p.get("notes")
+        all_notes.extend(n if isinstance(n, list) else [n] if isinstance(n, dict) else [])
+
+    def scalars(d):
+        return {k: v for k, v in d.items() if isinstance(v, (str, int, float, bool)) or v is None}
+
+    interesting = re.compile(r"(^be$|break|inj|susp|status|note|price|avg|ppts|proj|owned|active|out)", re.I)
+    top_inv = summarize_keys(players)
+    stat_inv = summarize_keys(all_stats)
+
+    by_price = sorted(players, key=lambda p: float(p.get("price") or 0), reverse=True)
+    flagged = [p for p in players if any(not is_blank(p.get(k)) for k in INJURY_KEYS) or p.get("notes")]
+    samples = by_price[:2] + flagged[:3]
+
+    report = {
+        "generated": datetime.now(timezone.utc).isoformat(),
+        "base_url": base_url,
+        "round": round_num,
+        "player_count": len(players),
+        "settings_top_level": scalars(settings),
+        "settings_competition": scalars(comp),
+        "player_stats_rows_per_player": sorted({len(p.get("player_stats") or []) for p in players}),
+        "player_stats_rounds_seen": sorted({s.get("round") for s in all_stats if s.get("round") is not None}),
+        "interesting_player_keys": {k: v for k, v in top_inv.items() if interesting.search(k)},
+        "interesting_stat_keys": {k: v for k, v in stat_inv.items() if interesting.search(k)},
+        "player_keys": top_inv,
+        "player_stats_keys": stat_inv,
+        "notes_keys": summarize_keys(all_notes),
+        "players_with_injury_or_notes": len(flagged),
+        "sample_players": samples,
+    }
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(report, f, indent=2, default=str)
+
+    print(f"Inspection saved to {out_path} ({len(players)} players, {len(all_stats)} stat rows).")
+    print("Player keys:", ", ".join(top_inv))
+    print("Stat keys:", ", ".join(stat_inv))
+    print("Notes keys:", ", ".join(report["notes_keys"]))
+    print(f"Players with injury fields or notes: {len(flagged)}")
+
+
 def extract_supercoach_photo(p):
     """Checks whether the SuperCoach payload already includes a direct photo/headshot URL."""
     for key in ("photo", "headshot", "avatar", "image", "image_url", "portrait_url"):
@@ -337,8 +476,13 @@ def parse_player(
     avg5_raw = latest_stat.get("avg5") or p.get("avg5")
     avg5 = round(float(avg5_raw), 1) if avg5_raw not in (None, "", 0) else None
 
-    be_raw = latest_stat.get("be") or latest_stat.get("breakeven") or p.get("be")
-    be = int(round(float(be_raw))) if be_raw not in (None, "") else None
+    # Official breakeven: check the stat rows newest-first, then the player object itself.
+    # 0 is a valid breakeven, so test for presence rather than truthiness.
+    be_raw = first_present([*reversed(stats), p], BE_KEYS)
+    try:
+        be = int(round(float(be_raw))) if be_raw is not None else None
+    except (TypeError, ValueError):
+        be = None
 
     owned_raw = latest_stat.get("owned")
     if owned_raw is None:
@@ -352,9 +496,7 @@ def parse_player(
     next_round_games = resolve_future_games(team, team_id, team_games_next)
     round_after_games = resolve_future_games(team, team_id, team_games_after)
 
-    injury = p.get("injury_suspension_status") or p.get("injury") or None
-    if isinstance(injury, str) and injury.strip().lower() in ("", "none", "available", "fit"):
-        injury = None
+    injury = extract_injury(p)
 
     saved_status = existing_status_map.get(full_name.lower())
     status = saved_status if saved_status == "squad" else "watchlist"
@@ -479,6 +621,10 @@ def main():
     if not base_url:
         print("ERROR: Could not connect to any SuperCoach API endpoint. Leaving existing JSON untouched.")
         sys.exit(1)
+
+    if "--inspect" in sys.argv:
+        inspect_feed(base_url, active_round or int(existing_data.get("round") or 1))
+        return
 
     existing_round = int(existing_data.get("round") or 0)
     max_history_round = 0

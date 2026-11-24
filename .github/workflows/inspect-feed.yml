@@ -1,0 +1,40 @@
+name: Inspect SuperCoach Feed
+
+# Diagnostic only: records which fields the live SuperCoach feed sends (debug/feed_inspection.json).
+# It never modifies supercoach_data.json or history/.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'fix/**'
+    paths:
+      - 'update_supercoach.py'
+      - '.github/workflows/inspect-feed.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install curl_cffi
+
+      - name: Inspect feed
+        run: python update_supercoach.py --inspect
+
+      - name: Commit inspection report
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add debug/
+          git diff --staged --quiet || (git commit -m "chore: SuperCoach feed inspection report" && git push)
