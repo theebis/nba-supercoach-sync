@@ -58,3 +58,12 @@ Built:
 - Past snapshots carry form + price history; Round 1 shows "first round" + its price move.
 - Round rollover: hourly syncs Monday 3-11 PM AEDT. Not yet proven on a live Monday; check Mon 30 Nov evening that Round 7 + Round 6 snapshot appeared.
 - "How it works" text checked against the real screens for Market, My Squad, Trade Lab, Live.
+- Shipped 25 Nov 2026 (with the command menu removed at the owner's request).
+
+## Round 6 answers (25 Nov 2026)
+- Remove the Cmd/Ctrl+K command menu entirely (done, shipped).
+- No phone push notifications yet. Instead **in-app notifications** (`notify.js`, preview on `preview/notifications`): a bell (sidebar top; header on phones) with unread count and a panel.
+  - Since your last visit: injury changes for squad + watchlist, big projection moves (same round, >= max(10, 20%)), new round started with squad value.
+  - Live while the site is open: squad player "on fire" (>= ppg + 12 and 1.35x), final well above/below projection (>= max(15, 40%)), DNPs. Live ones pop up in the corner for 7 s.
+  - No spam: squad only (watchlist for injuries), one per player per game per kind, catch-up items go to the panel without pop-ups, first-ever visit starts clean, live alerts switch.
+- Ideas still open: phone push alerts (needs the PWA), captain hindsight line on Live, breakeven progress bar in My Squad.
