@@ -480,7 +480,27 @@ def main():
         print("ERROR: Could not connect to any SuperCoach API endpoint. Leaving existing JSON untouched.")
         sys.exit(1)
 
-    target_round = active_round or existing_data.get("round", 5)
+    existing_round = int(existing_data.get("round") or 0)
+    max_history_round = 0
+    if os.path.isdir(HISTORY_DIR):
+        for fname in os.listdir(HISTORY_DIR):
+            if fname.startswith("round_") and fname.endswith(".json"):
+                try:
+                    max_history_round = max(max_history_round, int(fname.replace("round_", "").replace(".json", "")))
+                except ValueError:
+                    pass
+
+    floor_round = max(existing_round, max_history_round)
+    detected_round = active_round or existing_round or 5
+    if detected_round < floor_round:
+        print(
+            f"Monotonic guard: API reported Round {detected_round}, but Round {floor_round} is already active/saved. "
+            f"Keeping target_round = {floor_round} so live data never reverts backwards."
+        )
+        target_round = floor_round
+    else:
+        target_round = detected_round
+
     scores_cache = {}
     fixture_cache = {}
     headshot_map, compact_headshot_map = fetch_headshot_map()
