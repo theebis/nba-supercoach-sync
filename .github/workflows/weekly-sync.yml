@@ -9,6 +9,12 @@ on:
     # Daily at 22:00 UTC (9:00 AM AEDT) to keep ESPN injury statuses current
     - cron: '0 22 * * *'
   workflow_dispatch: # Allows you to manually click "Run workflow" to test
+  # Refresh the data straight away whenever the scraper itself changes on main
+  push:
+    branches:
+      - main
+    paths:
+      - 'update_supercoach.py'
 
 permissions:
   contents: write
