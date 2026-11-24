@@ -1,32 +1,21 @@
-/* SCHOOPS Modular Plugin — Phase 2 (Option A Tactical Board):
- * Squad Court View & Exact Lineup Optimiser
- * Loaded by index.html via <script src="court.js?v=8.1"></script>
+/* SCHOOPS Modular Plugin — Phase 2 (Option A Proportions + Option 2 Palette):
+ * My Court Tactical Board & Exact Lineup Optimiser
+ * Loaded by index.html via <script src="court.js?v=9"></script>
  */
 (function () {
   "use strict";
 
-  const TEAM_COLORS = {
-    ATL: "#E03A3E", BOS: "#007A33", BKN: "#9BA3B4", CHA: "#1D87B8",
-    CHI: "#CE1141", CLE: "#860038", DAL: "#00538C", DEN: "#FEC524",
-    DET: "#C8102E", GSW: "#1D428A", HOU: "#CE1141", IND: "#FDBB30",
-    LAC: "#C8102E", LAL: "#552583", MEM: "#5D76A9", MIA: "#98002E",
-    MIL: "#00471B", MIN: "#78BE20", NOP: "#85714D", NYK: "#F58426",
-    OKC: "#007AC1", ORL: "#0077C0", PHI: "#006BB6", PHX: "#E56020",
-    POR: "#E03A3E", SAC: "#5A2D81", SAS: "#C4CED4", TOR: "#CE1141",
-    UTA: "#6E2639", WAS: "#E31837"
-  };
-
   const STARTER_SLOTS = [
-    { key: "PG1", label: "PG", group: "Point Guards", req: "PG" },
-    { key: "PG2", label: "PG", group: "Point Guards", req: "PG" },
-    { key: "SG1", label: "SG", group: "Shooting Guards", req: "SG" },
-    { key: "SG2", label: "SG", group: "Shooting Guards", req: "SG" },
-    { key: "C1",  label: "C",  group: "Centre", req: "C", single: true },
-    { key: "SF1", label: "SF", group: "Small Forwards", req: "SF" },
-    { key: "SF2", label: "SF", group: "Small Forwards", req: "SF" },
-    { key: "PF1", label: "PF", group: "Power Forwards", req: "PF" },
-    { key: "PF2", label: "PF", group: "Power Forwards", req: "PF" },
-    { key: "FLX", label: "FLX", group: "Flex", req: "ANY", single: true }
+    { key: "PG1", label: "PG", req: "PG" },
+    { key: "PG2", label: "PG", req: "PG" },
+    { key: "SG1", label: "SG", req: "SG" },
+    { key: "SG2", label: "SG", req: "SG" },
+    { key: "C1",  label: "C",  req: "C", single: true },
+    { key: "SF1", label: "SF", req: "SF" },
+    { key: "SF2", label: "SF", req: "SF" },
+    { key: "PF1", label: "PF", req: "PF" },
+    { key: "PF2", label: "PF", req: "PF" },
+    { key: "FLX", label: "FLX", req: "ANY", single: true }
   ];
 
   const BENCH_SLOTS = [
@@ -44,20 +33,15 @@
   const STARTER_KEYS = new Set(STARTER_SLOTS.map((s) => s.key));
   const VALID_POS = new Set(["PG", "SG", "SF", "PF", "C"]);
 
-  const ICON_LOCK_CLOSED = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
-  const ICON_LOCK_OPEN = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>`;
-  const ICON_OPTIMISE = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+  const ICON_LOCK_CLOSED = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+  const ICON_LOCK_OPEN = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>`;
+  const ICON_BOLT = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
 
   const ui = {
     selectedSource: null,
     bannerMsg: null,
     bannerTimer: null
   };
-
-  function getTeamColor(team) {
-    const code = String(team || "").toUpperCase();
-    return TEAM_COLORS[code] || "#4B5563";
-  }
 
   function injectStyles() {
     if (document.getElementById("schoops-court-styles")) return;
@@ -67,63 +51,58 @@
       .court-shell {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 10px;
       }
 
-      /* Matches Market KPI bar & toolbar cadence smoothly */
-      .court-summary-bar {
+      /* Slim Single-Line Summary Bar matching Market KPI Ticker */
+      .court-ticker {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
+        gap: 14px;
         flex-wrap: wrap;
-        background: var(--surface);
+        padding: 8px 14px;
+        background: #10141B;
         border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 10px 14px;
+        border-radius: 7px;
       }
 
-      .court-stats-group {
+      .court-ticker-left {
         display: flex;
         align-items: center;
-        gap: 24px;
+        gap: 20px;
         flex-wrap: wrap;
       }
 
-      .court-stat {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
+      .ct-item {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 6px;
+        white-space: nowrap;
       }
 
-      .court-stat-label {
+      .ct-lbl {
         font-size: 10px;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.05em;
         color: var(--text-dim);
       }
 
-      .court-stat-row {
-        display: flex;
-        align-items: baseline;
-        gap: 8px;
-      }
-
-      .court-stat-val {
+      .ct-val {
         font-family: var(--mono);
-        font-size: 15px;
+        font-size: 13px;
         font-weight: 700;
         color: var(--text);
       }
 
-      .court-stat-sub {
+      .ct-sub {
         font-family: var(--mono);
         font-size: 11px;
         color: var(--text-muted);
       }
 
-      .court-controls-group {
+      .court-ticker-right {
         display: flex;
         align-items: center;
         gap: 8px;
@@ -143,65 +122,97 @@
 
       .court-banner.pos {
         background: var(--pos-bg);
-        color: var(--pos);
-        border-color: rgba(16, 185, 129, 0.35);
+        color: var(--pos-bright);
+        border-color: rgba(16, 185, 129, 0.4);
       }
 
       .court-banner.warn {
         background: var(--warn-bg);
-        color: var(--warn);
-        border-color: rgba(245, 158, 11, 0.35);
+        color: var(--warn-bright);
+        border-color: rgba(245, 158, 11, 0.4);
       }
 
       .court-banner.neg {
         background: var(--neg-bg);
         color: var(--neg);
-        border-color: rgba(239, 68, 68, 0.35);
+        border-color: rgba(239, 68, 68, 0.4);
       }
 
       .court-opt-btn {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: var(--pos);
+        background: #22C58B;
         color: #061A12;
-        border: 1px solid #34D399;
-        padding: 6px 13px;
-        border-radius: 5px;
+        border: 1px solid #4ADEA8;
+        padding: 6px 15px;
+        border-radius: 6px;
         font-family: var(--mono);
-        font-size: 11px;
-        font-weight: 700;
+        font-size: 11.5px;
+        font-weight: 800;
         letter-spacing: 0.05em;
         cursor: pointer;
         transition: filter 0.12s, transform 0.08s;
       }
 
-      .court-opt-btn:hover { filter: brightness(1.07); }
+      .court-opt-btn:hover { filter: brightness(1.08); }
       .court-opt-btn:active { transform: translateY(1px); }
 
+      /* Main 2-Column Layout: Spacious Court Floor + Compact Bench Sidebar */
       .court-grid {
         display: grid;
-        grid-template-columns: minmax(0, 1.72fr) minmax(300px, 1fr);
-        gap: 12px;
+        grid-template-columns: minmax(0, 1fr) 330px;
+        gap: 14px;
         align-items: start;
       }
 
-      @media (max-width: 980px) {
+      @media (max-width: 1060px) {
         .court-grid { grid-template-columns: 1fr; }
       }
 
       .court-panel {
         background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 14px 16px;
+        border-radius: 8px;
+        padding: 14px 18px 18px;
         position: relative;
         overflow: hidden;
       }
 
-      /* Option A: Subtle Dark Tactical Court Markings */
-      .court-board {
-        background: linear-gradient(180deg, #13161E 0%, #0E1016 100%);
+      .court-panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding-bottom: 10px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid var(--border);
+        position: relative;
+        z-index: 2;
+      }
+
+      .court-panel-title {
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text);
+      }
+
+      .court-panel-hint {
+        font-size: 11px;
+        color: var(--text-dim);
+      }
+
+      /* Tactical Court Surface (Visible Geometric Basketball Markings) */
+      .court-floor-box {
+        position: relative;
+        background: radial-gradient(ellipse at 50% 50%, #171D28 0%, #11151E 100%);
+        border: 1px solid #262E3E;
+        border-radius: 7px;
+        padding: 18px 20px;
+        overflow: hidden;
       }
 
       .court-lines-svg {
@@ -210,275 +221,259 @@
         width: 100%;
         height: 100%;
         pointer-events: none;
-        opacity: 0.055;
+        opacity: 0.16;
         z-index: 0;
       }
 
-      .court-panel-inner {
+      /* Centered Compact Formation Grid (True Option A Proportions) */
+      .court-formation {
         position: relative;
         z-index: 1;
+        max-width: 590px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 11px;
       }
 
-      .court-panel-head {
+      .formation-pair-row {
+        display: grid;
+        grid-template-columns: 32px minmax(0, 1fr) minmax(0, 1fr);
+        align-items: center;
+        gap: 12px;
+      }
+
+      .formation-center-row {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        padding-bottom: 9px;
-        margin-bottom: 12px;
-        border-bottom: 1px solid var(--border);
+        justify-content: center;
+        position: relative;
       }
 
-      .court-panel-title {
+      .formation-center-wrap {
+        width: calc(50% - 22px);
+        min-width: 255px;
+        position: relative;
+      }
+
+      .pos-side-label {
         font-family: var(--mono);
         font-size: 10.5px;
         font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--text-muted);
-      }
-
-      .court-panel-hint {
-        font-size: 11px;
         color: var(--text-dim);
-      }
-
-      .court-lineup-row {
-        display: grid;
-        grid-template-columns: 44px minmax(0, 1fr);
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 10px;
-      }
-
-      .court-lineup-row:last-child {
-        margin-bottom: 0;
-      }
-
-      .row-pos-label {
-        font-family: var(--mono);
-        font-size: 10px;
-        font-weight: 700;
-        color: var(--text-dim);
-        text-align: center;
         letter-spacing: 0.05em;
+        text-align: right;
       }
 
-      .court-pair {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
+      .formation-center-wrap .pos-side-label {
+        position: absolute;
+        right: calc(100% + 10px);
+        top: 50%;
+        transform: translateY(-50%);
       }
 
-      .court-single {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        max-width: calc(50% - 5px);
-      }
-
-      @media (max-width: 640px) {
-        .court-lineup-row {
+      @media (max-width: 680px) {
+        .formation-pair-row {
           grid-template-columns: 1fr;
-          gap: 5px;
+          gap: 8px;
         }
-        .row-pos-label {
-          text-align: left;
+        .pos-side-label { text-align: left; }
+        .formation-center-wrap { width: 100%; min-width: 0; }
+        .formation-center-wrap .pos-side-label {
+          position: static;
+          transform: none;
+          display: block;
+          margin-bottom: 5px;
         }
-        .court-pair { grid-template-columns: 1fr; }
-        .court-single { max-width: 100%; }
       }
 
       .bench-stack {
         display: flex;
         flex-direction: column;
-        gap: 9px;
+        gap: 10px;
       }
 
-      /* Option A Clean Player Card (3px Team Accent + Quiet Hover/Active Controls) */
-      .sc-card {
-        background: rgba(18, 20, 27, 0.92);
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 8px 11px 8px 13px;
+      /* Compact Option A Player Card */
+      .mc-card {
+        background: rgba(19, 23, 31, 0.94);
+        border: 1px solid #2A3244;
+        border-radius: 7px;
+        padding: 9px 11px 8px 13px;
         cursor: pointer;
-        transition: border-color 0.12s, background 0.12s, box-shadow 0.12s;
+        transition: border-color 0.12s, background 0.12s, box-shadow 0.12s, transform 0.1s;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
         gap: 6px;
-        min-height: 70px;
+        min-height: 76px;
         position: relative;
         overflow: hidden;
         user-select: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
       }
 
-      .sc-card::before {
+      .mc-card::before {
         content: "";
         position: absolute;
         left: 0;
         top: 0;
         bottom: 0;
-        width: 3px;
-        background: var(--team-accent, #4B5563);
+        width: 3.5px;
+        background: var(--team-accent, #525D73);
       }
 
-      .sc-card:hover {
-        background: #1B1F2A;
-        border-color: var(--border-strong);
+      .mc-card:hover {
+        background: #1B212E;
+        border-color: #414D66;
       }
 
-      .sc-card.is-empty {
-        background: rgba(11, 12, 16, 0.5);
+      .mc-card.is-empty {
+        background: rgba(13, 16, 21, 0.65);
         border-style: dashed;
-        border-color: #252A38;
+        border-color: #2B3345;
         align-items: center;
         justify-content: center;
         color: var(--text-dim);
         font-family: var(--mono);
         font-size: 10.5px;
+        box-shadow: none;
       }
 
-      .sc-card.is-empty::before {
-        display: none;
+      .mc-card.is-empty::before { display: none; }
+
+      .mc-card.is-captain {
+        border-color: rgba(245, 158, 11, 0.72);
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.07) 0%, rgba(19, 23, 31, 0.96) 55%);
       }
 
-      .sc-card.is-captain {
-        border-color: rgba(245, 158, 11, 0.65);
-        background: rgba(245, 158, 11, 0.04);
+      .mc-card.is-vc {
+        border-color: rgba(59, 130, 246, 0.65);
       }
 
-      .sc-card.is-vc {
-        border-color: rgba(96, 165, 250, 0.55);
+      .mc-card.is-drop {
+        opacity: 0.74;
       }
 
-      .sc-card.is-drop {
-        opacity: 0.72;
+      .mc-card.is-locked-bench {
+        border-color: rgba(245, 158, 11, 0.52);
       }
 
-      .sc-card.is-locked-bench {
-        border-color: rgba(245, 158, 11, 0.45);
+      .mc-card.selected {
+        border-color: #FFFFFF;
+        background: #232B3C;
+        box-shadow: 0 0 0 2px rgba(242, 244, 248, 0.24);
       }
 
-      .sc-card.selected {
-        border-color: var(--text);
-        background: #222736;
-        box-shadow: 0 0 0 2px rgba(243, 244, 248, 0.18);
-      }
-
-      .sc-card.valid-target {
-        border-color: var(--pos);
+      .mc-card.valid-target {
+        border-color: var(--pos-bright);
         border-style: dashed;
-        background: rgba(16, 185, 129, 0.07);
+        background: rgba(16, 185, 129, 0.09);
       }
 
-      .sc-top {
+      .mc-top {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 8px;
       }
 
-      .sc-identity {
+      .mc-left {
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 9px;
         min-width: 0;
       }
 
-      .sc-name {
+      .mc-id-col {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .mc-name {
         font-size: 12.5px;
-        font-weight: 600;
-        color: var(--text);
+        font-weight: 700;
+        color: #FFFFFF;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        line-height: 1.25;
       }
 
-      .sc-role-badge {
+      .mc-sub {
         font-family: var(--mono);
-        font-size: 9px;
+        font-size: 10px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 2px;
+      }
+
+      .mc-score-col {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        flex-shrink: 0;
+        gap: 2px;
+      }
+
+      .mc-pts {
+        font-family: var(--mono);
+        font-size: 15px;
+        font-weight: 800;
+        color: #FFFFFF;
+        line-height: 1.1;
+      }
+
+      .mc-pts.cap-pts { color: var(--warn-bright); }
+      .mc-pts.struck { color: var(--text-dim); text-decoration: line-through; }
+
+      .mc-gms-pill {
+        font-family: var(--mono);
+        font-size: 9.5px;
         font-weight: 700;
         padding: 1px 5px;
         border-radius: 3px;
-        line-height: 1.3;
-        flex-shrink: 0;
-      }
-
-      .sc-role-badge.c {
-        background: var(--warn);
-        color: #0B0C10;
-      }
-
-      .sc-role-badge.vc {
-        background: rgba(96, 165, 250, 0.2);
-        color: #93C5FD;
-        border: 1px solid rgba(96, 165, 250, 0.35);
-      }
-
-      .sc-role-badge.drop {
-        background: #1E222D;
-        color: var(--text-dim);
-        border: 1px solid var(--border);
-      }
-
-      .sc-role-badge.lock {
-        background: var(--warn-bg);
-        color: var(--warn);
-      }
-
-      .sc-right {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        flex-shrink: 0;
-      }
-
-      .sc-gms-mini {
-        font-family: var(--mono);
-        font-size: 10px;
-        font-weight: 600;
+        background: #232A38;
         color: var(--text-muted);
       }
 
-      .sc-gms-mini.g4 { color: var(--pos); font-weight: 700; }
-      .sc-gms-mini.g2 { color: var(--warn); }
-      .sc-gms-mini.g0 { color: var(--neg); }
+      .mc-gms-pill.g4 { background: rgba(16, 185, 129, 0.22); color: var(--pos-bright); }
+      .mc-gms-pill.g2 { background: rgba(245, 158, 11, 0.22); color: var(--warn-bright); }
+      .mc-gms-pill.g0 { background: rgba(239, 68, 68, 0.22); color: var(--neg); }
 
-      .sc-pts {
-        font-family: var(--mono);
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--text);
-        min-width: 28px;
-        text-align: right;
-      }
-
-      .sc-pts.struck {
-        color: var(--text-dim);
-        text-decoration: line-through;
-      }
-
-      .sc-bottom {
+      .mc-bottom {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 8px;
-        min-height: 18px;
+        gap: 6px;
+        border-top: 1px solid rgba(255, 255, 255, 0.045);
+        padding-top: 5px;
+        min-height: 22px;
       }
 
-      .sc-submeta {
-        font-family: var(--mono);
-        font-size: 10.5px;
-        color: var(--text-dim);
-        display: flex;
+      .mc-badges {
+        display: inline-flex;
         align-items: center;
-        gap: 5px;
-        white-space: nowrap;
-        overflow: hidden;
+        gap: 4px;
+        flex-shrink: 0;
       }
 
-      /* Quiet action buttons: revealed cleanly on card hover or when active */
-      .sc-hover-actions {
+      .mc-pill {
+        font-family: var(--mono);
+        font-size: 9px;
+        font-weight: 800;
+        padding: 1px 5px;
+        border-radius: 3px;
+        line-height: 1.3;
+      }
+
+      .mc-pill.c { background: var(--warn); color: #0D1015; }
+      .mc-pill.vc { background: #3B82F6; color: #FFFFFF; }
+      .mc-pill.drop { background: #232936; color: var(--text-muted); border: 1px solid #353E52; }
+      .mc-pill.lock { background: var(--warn-bg); color: var(--warn-bright); }
+
+      .mc-hover-btns {
         display: inline-flex;
         align-items: center;
         gap: 3px;
@@ -486,21 +481,22 @@
         transition: opacity 0.12s;
       }
 
-      .sc-card:hover .sc-hover-actions,
-      .sc-card.selected .sc-hover-actions,
-      .sc-hover-actions.has-active {
+      .mc-card:hover .mc-hover-btns,
+      .mc-card.selected .mc-hover-btns,
+      .mc-hover-btns.always-show {
         opacity: 1;
       }
 
-      .sc-act-btn {
-        background: #181C26;
-        border: 1px solid var(--border);
+      .mc-act {
+        background: #1A202C;
+        border: 1px solid #2F384B;
         color: var(--text-muted);
         font-family: var(--mono);
         font-size: 9px;
         font-weight: 700;
-        height: 18px;
-        padding: 0 5px;
+        height: 19px;
+        min-width: 21px;
+        padding: 0 4px;
         border-radius: 3px;
         cursor: pointer;
         display: inline-flex;
@@ -509,35 +505,23 @@
         transition: all 0.1s;
       }
 
-      .sc-act-btn:hover {
-        color: var(--text);
-        border-color: #464E63;
-      }
+      .mc-act:hover { color: #FFFFFF; border-color: #52607D; }
+      .mc-act.on-c { background: var(--warn); color: #0D1015; border-color: var(--warn); }
+      .mc-act.on-vc { background: #3B82F6; color: #FFFFFF; border-color: #3B82F6; }
+      .mc-act.on-lock { background: var(--warn-bg); color: var(--warn-bright); border-color: rgba(245, 158, 11, 0.55); }
 
-      .sc-act-btn.active-c {
-        background: var(--warn);
-        color: #0B0C10;
-        border-color: var(--warn);
-        opacity: 1;
-      }
-
-      .sc-act-btn.active-vc {
-        background: #2563EB;
-        color: #FFFFFF;
-        border-color: #3B82F6;
-        opacity: 1;
-      }
-
-      .sc-act-btn.active-lock {
-        background: var(--warn-bg);
-        color: var(--warn);
-        border-color: rgba(245, 158, 11, 0.5);
-        opacity: 1;
+      .mc-fin {
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .overflow-box {
-        margin-top: 12px;
-        padding-top: 10px;
+        margin-top: 14px;
+        padding-top: 12px;
         border-top: 1px dashed var(--border-strong);
       }
 
@@ -545,7 +529,7 @@
         font-family: var(--mono);
         font-size: 9.5px;
         font-weight: 700;
-        color: var(--warn);
+        color: var(--warn-bright);
         text-transform: uppercase;
         letter-spacing: 0.06em;
         margin-bottom: 8px;
@@ -554,35 +538,36 @@
       .court-empty-state {
         background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 36px 20px;
+        border-radius: 8px;
+        padding: 38px 20px;
         text-align: center;
         color: var(--text-muted);
       }
 
-      .court-empty-state h3 {
-        color: var(--text);
-        font-size: 14px;
-        margin-bottom: 6px;
-      }
+      .court-empty-state h3 { color: var(--text); font-size: 14px; margin-bottom: 6px; }
     `;
     document.head.appendChild(style);
   }
 
   function renderCourtLinesSvg() {
     return `
-      <svg class="court-lines-svg" viewBox="0 0 800 520" preserveAspectRatio="none" aria-hidden="true">
-        <rect x="24" y="20" width="752" height="480" rx="8" fill="none" stroke="#F3F4F8" stroke-width="2"/>
-        <line x1="400" y1="20" x2="400" y2="500" stroke="#F3F4F8" stroke-width="2"/>
-        <circle cx="400" cy="260" r="68" fill="none" stroke="#F3F4F8" stroke-width="2"/>
-        <!-- Left key & arc -->
-        <rect x="24" y="165" width="135" height="190" fill="none" stroke="#F3F4F8" stroke-width="2"/>
-        <circle cx="159" cy="260" r="56" fill="none" stroke="#F3F4F8" stroke-width="2"/>
-        <path d="M 24 72 A 210 210 0 0 1 24 448" fill="none" stroke="#F3F4F8" stroke-width="2"/>
-        <!-- Right key & arc -->
-        <rect x="641" y="165" width="135" height="190" fill="none" stroke="#F3F4F8" stroke-width="2"/>
-        <circle cx="641" cy="260" r="56" fill="none" stroke="#F3F4F8" stroke-width="2"/>
-        <path d="M 776 72 A 210 210 0 0 0 776 448" fill="none" stroke="#F3F4F8" stroke-width="2"/>
+      <svg class="court-lines-svg" viewBox="0 0 900 540" preserveAspectRatio="none" aria-hidden="true">
+        <rect x="22" y="18" width="856" height="504" rx="8" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
+        <line x1="450" y1="18" x2="450" y2="522" stroke="#94A3B8" stroke-width="1.8"/>
+        <circle cx="450" cy="270" r="74" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
+        <circle cx="450" cy="270" r="22" fill="none" stroke="#94A3B8" stroke-width="1.4"/>
+        <!-- Left key, free-throw circle, restricted arc & 3pt arc -->
+        <rect x="22" y="170" width="152" height="200" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
+        <circle cx="174" cy="270" r="60" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
+        <circle cx="62" cy="270" r="10" fill="none" stroke="#94A3B8" stroke-width="1.6"/>
+        <line x1="48" y1="246" x2="48" y2="294" stroke="#94A3B8" stroke-width="2"/>
+        <path d="M 22 68 L 106 68 A 226 226 0 0 1 106 472 L 22 472" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
+        <!-- Right key, free-throw circle, restricted arc & 3pt arc -->
+        <rect x="726" y="170" width="152" height="200" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
+        <circle cx="726" cy="270" r="60" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
+        <circle cx="838" cy="270" r="10" fill="none" stroke="#94A3B8" stroke-width="1.6"/>
+        <line x1="852" y1="246" x2="852" y2="294" stroke="#94A3B8" stroke-width="2"/>
+        <path d="M 878 68 L 794 68 A 226 226 0 0 0 794 472 L 878 472" fill="none" stroke="#94A3B8" stroke-width="1.8"/>
       </svg>
     `;
   }
@@ -797,15 +782,8 @@
     }
 
     let result = runSearch(true);
-    let strictMode = true;
-
+    if (!result) result = runSearch(false);
     if (!result) {
-      strictMode = false;
-      result = runSearch(false);
-    }
-
-    if (!result) {
-      strictMode = false;
       const stMatch = matchPlayersToSlots(pool, STARTER_SLOTS);
       const rest = squadPlayers.filter((p) => !stMatch.assignedIds.has(p.id));
       const bMatch = matchPlayersToSlots(rest, BENCH_SLOTS);
@@ -822,8 +800,7 @@
     return {
       slots: result.slots,
       captainId: sortedStarters[0] ? sortedStarters[0].id : null,
-      viceCaptainId: sortedStarters[1] ? sortedStarters[1].id : null,
-      strictMode
+      viceCaptainId: sortedStarters[1] ? sortedStarters[1].id : null
     };
   }
 
@@ -897,9 +874,7 @@
       changed = true;
     }
 
-    if (changed) {
-      window.SCHOOPS.savePrefs();
-    }
+    if (changed) window.SCHOOPS.savePrefs();
   }
 
   function setBanner(text, tone) {
@@ -927,24 +902,13 @@
     return false;
   }
 
-  function formatFutureTag(p, roundNum) {
-    const r = Number(roundNum) || 6;
-    if (p.gamesNext !== null && p.gamesAfter !== null) {
-      return `· R${r + 1}:${p.gamesNext} R${r + 2}:${p.gamesAfter}`;
-    }
-    if (p.gamesNext !== null) {
-      return `· R${r + 1}:${p.gamesNext}`;
-    }
-    return "";
-  }
-
   function renderSlotCard(slotDef, player, ctx) {
-    const { escapeHtml, formatMoney } = window.SCHOOPS;
+    const { escapeHtml, formatMoney, getTeamColor, renderAvatar } = window.SCHOOPS;
     const isSelected = ui.selectedSource && ui.selectedSource.type === "slot" && ui.selectedSource.key === slotDef.key;
     const isTarget = ui.selectedSource && isValidSwap(ui.selectedSource, slotDef.key, ctx.slots, ctx.byId);
 
     if (!player) {
-      const classes = ["sc-card", "is-empty"];
+      const classes = ["mc-card", "is-empty"];
       if (isSelected) classes.push("selected");
       if (isTarget) classes.push("valid-target");
       return `
@@ -959,8 +923,9 @@
     const isVc = isStarter && ctx.evalRes.viceCaptain && ctx.evalRes.viceCaptain.id === player.id;
     const isDrop = isStarter && ctx.evalRes.droppedPlayer && ctx.evalRes.droppedPlayer.id === player.id;
     const isLockedBench = !!ctx.lockedBenchIds[player.id];
+    const accent = getTeamColor(player.team);
 
-    const classes = ["sc-card"];
+    const classes = ["mc-card"];
     if (isCap) classes.push("is-captain");
     else if (isVc) classes.push("is-vc");
     if (isDrop) classes.push("is-drop");
@@ -970,47 +935,50 @@
 
     const gClass = player.games >= 4 ? "g4" : (player.games === 0 ? "g0" : (player.games <= 2 ? "g2" : ""));
     const beTxt = player.be === null ? "BE —" : `BE ${player.be}`;
-    const futTxt = formatFutureTag(player, ctx.round);
-
-    const roleBadges = [];
-    if (isCap) roleBadges.push(`<span class="sc-role-badge c">C</span>`);
-    else if (isVc) roleBadges.push(`<span class="sc-role-badge vc">VC</span>`);
-    if (isDrop) roleBadges.push(`<span class="sc-role-badge drop" title="Lowest starter score dropped under Best 9 of 10">DROP</span>`);
-    if (isLockedBench) roleBadges.push(`<span class="sc-role-badge lock" title="Pinned to Bench for OPTIMISE">LOCKED</span>`);
-
-    const hasActiveAction = isCap || isVc || isLockedBench;
     const displayPts = isCap ? Math.round(player.proj * 2) : Math.round(player.proj);
+    const ptsClass = isCap ? "cap-pts" : (isDrop ? "struck" : "");
+
+    const pills = [];
+    if (isCap) pills.push(`<span class="mc-pill c">C</span>`);
+    else if (isVc) pills.push(`<span class="mc-pill vc">VC</span>`);
+    if (isDrop) pills.push(`<span class="mc-pill drop" title="Dropped under Best 9 of 10">DROP</span>`);
+    if (isLockedBench && isStarter) pills.push(`<span class="mc-pill lock">LOCK</span>`);
+
+    const showBtnsAlways = !isStarter || isLockedBench;
 
     return `
-      <div class="${classes.join(" ")}" data-slot-key="${slotDef.key}" style="--team-accent:${getTeamColor(player.team)};">
-        <div class="sc-top">
-          <div class="sc-identity">
-            <span class="sc-name">${escapeHtml(player.name)}</span>
-            ${roleBadges.join("")}
+      <div class="${classes.join(" ")}" data-slot-key="${slotDef.key}" style="--team-accent:${accent};">
+        <div class="mc-top">
+          <div class="mc-left">
+            ${renderAvatar(player, 36)}
+            <div class="mc-id-col">
+              <div class="mc-name">${escapeHtml(player.name)}</div>
+              <div class="mc-sub">
+                <span class="team-dot" style="background:${accent};"></span>
+                <span>${escapeHtml(player.team)}</span>
+                <span>·</span>
+                <span>${escapeHtml(player.pos)}</span>
+              </div>
+            </div>
           </div>
-          <div class="sc-right">
-            <span class="sc-gms-mini ${gClass}" title="Round ${ctx.round} games">${player.games}G</span>
-            <span class="sc-pts ${isDrop ? "struck" : ""}" title="${isCap ? "Captain 2× projected points" : "Round projected points"}">${displayPts}</span>
+          <div class="mc-score-col">
+            <span class="mc-pts ${ptsClass}" title="${isCap ? "Captain 2× projected score" : "Round projected score"}">${displayPts}</span>
+            <span class="mc-gms-pill ${gClass}">${player.games}G</span>
           </div>
         </div>
-        <div class="sc-bottom">
-          <div class="sc-submeta">
-            <span>${escapeHtml(player.team)}</span>
-            <span>·</span>
-            <span>${escapeHtml(player.pos)}</span>
-            <span>·</span>
-            <span>$${(player.price / 1000000).toFixed(2)}M</span>
-            <span>·</span>
-            <span>${beTxt}</span>
-            <span class="${player.priceChange >= 0 ? "pos-text" : "neg-text"}">${formatMoney(player.priceChange)}</span>
-            ${futTxt ? `<span>${escapeHtml(futTxt)}</span>` : ""}
+        <div class="mc-bottom">
+          <div class="mc-badges">
+            ${pills.join("")}
+            <div class="mc-hover-btns ${showBtnsAlways ? "always-show" : ""}">
+              ${isStarter ? `
+                <button type="button" class="mc-act ${isCap ? "on-c" : ""}" data-set-cap="${escapeHtml(player.id)}" title="Set Captain (2×)">C</button>
+                <button type="button" class="mc-act ${isVc ? "on-vc" : ""}" data-set-vc="${escapeHtml(player.id)}" title="Set Vice-Captain">VC</button>
+              ` : ""}
+              <button type="button" class="mc-act ${isLockedBench ? "on-lock" : ""}" data-toggle-lock="${escapeHtml(player.id)}" title="${isLockedBench ? "Unlock Bench pin" : "Pin to Bench for OPTIMISE"}">${isLockedBench ? ICON_LOCK_CLOSED : ICON_LOCK_OPEN}</button>
+            </div>
           </div>
-          <div class="sc-hover-actions ${hasActiveAction ? "has-active" : ""}">
-            ${isStarter ? `
-              <button type="button" class="sc-act-btn ${isCap ? "active-c" : ""}" data-set-cap="${escapeHtml(player.id)}" title="Set Captain (2×)">C</button>
-              <button type="button" class="sc-act-btn ${isVc ? "active-vc" : ""}" data-set-vc="${escapeHtml(player.id)}" title="Set Vice-Captain">VC</button>
-            ` : ""}
-            <button type="button" class="sc-act-btn ${isLockedBench ? "active-lock" : ""}" data-toggle-lock="${escapeHtml(player.id)}" title="${isLockedBench ? "Unlock Bench pin" : "Pin to Bench for OPTIMISE"}">${isLockedBench ? ICON_LOCK_CLOSED : ICON_LOCK_OPEN}</button>
+          <div class="mc-fin">
+            $${(player.price / 1000000).toFixed(2)}M · ${beTxt} · <span class="${player.priceChange >= 0 ? "pos-text" : "neg-text"}">${formatMoney(player.priceChange)}</span>
           </div>
         </div>
       </div>
@@ -1018,33 +986,38 @@
   }
 
   function renderOverflowCard(player, ctx) {
-    const { escapeHtml } = window.SCHOOPS;
+    const { escapeHtml, getTeamColor, renderAvatar } = window.SCHOOPS;
     const isSelected = ui.selectedSource && ui.selectedSource.type === "overflow" && ui.selectedSource.playerId === player.id;
     const isLockedBench = !!ctx.lockedBenchIds[player.id];
+    const accent = getTeamColor(player.team);
 
     return `
-      <div class="sc-card ${isSelected ? "selected" : ""}" data-overflow-id="${escapeHtml(player.id)}" style="--team-accent:${getTeamColor(player.team)};">
-        <div class="sc-top">
-          <div class="sc-identity">
-            <span class="sc-name">${escapeHtml(player.name)}</span>
-            ${isLockedBench ? `<span class="sc-role-badge lock">LOCKED</span>` : ""}
+      <div class="mc-card ${isSelected ? "selected" : ""}" data-overflow-id="${escapeHtml(player.id)}" style="--team-accent:${accent};">
+        <div class="mc-top">
+          <div class="mc-left">
+            ${renderAvatar(player, 34)}
+            <div class="mc-id-col">
+              <div class="mc-name">${escapeHtml(player.name)}</div>
+              <div class="mc-sub">
+                <span class="team-dot" style="background:${accent};"></span>
+                <span>${escapeHtml(player.team)}</span>
+                <span>·</span>
+                <span>${escapeHtml(player.pos)}</span>
+              </div>
+            </div>
           </div>
-          <div class="sc-right">
-            <span class="sc-gms-mini">${player.games}G</span>
-            <span class="sc-pts">${Math.round(player.proj)}</span>
+          <div class="mc-score-col">
+            <span class="mc-pts">${Math.round(player.proj)}</span>
+            <span class="mc-gms-pill">${player.games}G</span>
           </div>
         </div>
-        <div class="sc-bottom">
-          <div class="sc-submeta">
-            <span>${escapeHtml(player.team)}</span>
-            <span>·</span>
-            <span>${escapeHtml(player.pos)}</span>
-            <span>·</span>
-            <span>$${(player.price / 1000000).toFixed(2)}M</span>
+        <div class="mc-bottom">
+          <div class="mc-badges">
+            <div class="mc-hover-btns always-show">
+              <button type="button" class="mc-act ${isLockedBench ? "on-lock" : ""}" data-toggle-lock="${escapeHtml(player.id)}" title="Pin to Bench">${isLockedBench ? ICON_LOCK_CLOSED : ICON_LOCK_OPEN}</button>
+            </div>
           </div>
-          <div class="sc-hover-actions ${isLockedBench ? "has-active" : ""}">
-            <button type="button" class="sc-act-btn ${isLockedBench ? "active-lock" : ""}" data-toggle-lock="${escapeHtml(player.id)}" title="Pin to Bench">${isLockedBench ? ICON_LOCK_CLOSED : ICON_LOCK_OPEN}</button>
-          </div>
+          <div class="mc-fin">$${(player.price / 1000000).toFixed(2)}M</div>
         </div>
       </div>
     `;
@@ -1083,37 +1056,50 @@
     const overflow = squadPlayers.filter((p) => !assignedSet.has(p.id));
     const lockCount = Object.keys(lockedBenchIds).filter((k) => lockedBenchIds[k]).length;
 
-    const ctx = {
-      slots,
-      byId,
-      lockedBenchIds,
-      evalRes,
-      round: state.round
-    };
+    const ctx = { slots, byId, lockedBenchIds, evalRes, round: state.round };
 
-    const rows = [
-      { label: "PG", keys: ["PG1", "PG2"], single: false },
-      { label: "SG", keys: ["SG1", "SG2"], single: false },
-      { label: "C",  keys: ["C1"], single: true },
-      { label: "SF", keys: ["SF1", "SF2"], single: false },
-      { label: "PF", keys: ["PF1", "PF2"], single: false },
-      { label: "FLX", keys: ["FLX"], single: true }
-    ];
+    const card = (key) => renderSlotCard(SLOT_BY_KEY[key], slots[key] ? byId[slots[key]] : null, ctx);
 
-    const startersHtml = rows.map((r) => `
-      <div class="court-lineup-row">
-        <div class="row-pos-label">${r.label}</div>
-        <div class="${r.single ? "court-single" : "court-pair"}">
-          ${r.keys.map((k) => renderSlotCard(SLOT_BY_KEY[k], slots[k] ? byId[slots[k]] : null, ctx)).join("")}
+    const formationHtml = `
+      <div class="formation-pair-row">
+        <div class="pos-side-label">PG</div>
+        ${card("PG1")}
+        ${card("PG2")}
+      </div>
+      <div class="formation-pair-row">
+        <div class="pos-side-label">SG</div>
+        ${card("SG1")}
+        ${card("SG2")}
+      </div>
+      <div class="formation-center-row">
+        <div class="formation-center-wrap">
+          <div class="pos-side-label">C</div>
+          ${card("C1")}
         </div>
       </div>
-    `).join("");
+      <div class="formation-pair-row">
+        <div class="pos-side-label">SF</div>
+        ${card("SF1")}
+        ${card("SF2")}
+      </div>
+      <div class="formation-pair-row">
+        <div class="pos-side-label">PF</div>
+        ${card("PF1")}
+        ${card("PF2")}
+      </div>
+      <div class="formation-center-row">
+        <div class="formation-center-wrap">
+          <div class="pos-side-label">FLX</div>
+          ${card("FLX")}
+        </div>
+      </div>
+    `;
 
     const benchHtml = BENCH_SLOTS.map((s) => renderSlotCard(s, slots[s.key] ? byId[slots[s.key]] : null, ctx)).join("");
 
     const overflowHtml = overflow.length > 0 ? `
       <div class="overflow-box">
-        <div class="overflow-title">Overflow (${overflow.length}) — Select card then legal slot</div>
+        <div class="overflow-title">Overflow (${overflow.length}) — Click player then legal slot</div>
         <div class="bench-stack">
           ${overflow.map((p) => renderOverflowCard(p, ctx)).join("")}
         </div>
@@ -1126,74 +1112,66 @@
     } else if (ui.selectedSource) {
       const selId = ui.selectedSource.type === "slot" ? slots[ui.selectedSource.key] : ui.selectedSource.playerId;
       const selName = (selId && byId[selId]) ? byId[selId].name : "Empty Slot";
-      bannerHtml = `<span class="court-banner">Swapping ${window.SCHOOPS.escapeHtml(selName)} · click green slot or card again to cancel</span>`;
+      bannerHtml = `<span class="court-banner">Swapping ${window.SCHOOPS.escapeHtml(selName)} · click dashed green slot</span>`;
     }
 
     const dropText = evalRes.droppedPlayer
-      ? `Drop: ${window.SCHOOPS.escapeHtml(evalRes.droppedPlayer.name)} (${Math.round(evalRes.droppedPlayer.proj)})`
-      : `${evalRes.starters.length}/10 starters`;
+      ? `(Drop: ${window.SCHOOPS.escapeHtml(evalRes.droppedPlayer.name)} ${Math.round(evalRes.droppedPlayer.proj)})`
+      : `(${evalRes.starters.length}/10 starters)`;
 
-    const capText = evalRes.captain
-      ? `C: ${window.SCHOOPS.escapeHtml(evalRes.captain.name)}`
-      : "No Captain";
+    const capText = evalRes.captain ? `C: ${window.SCHOOPS.escapeHtml(evalRes.captain.name)}` : "No Captain";
 
     root.innerHTML = `
       <div class="court-shell">
-        <div class="court-summary-bar">
-          <div class="court-stats-group">
-            <div class="court-stat">
-              <span class="court-stat-label">Rd ${state.round} Proj (Best 9 + 2× C)</span>
-              <div class="court-stat-row">
-                <span class="court-stat-val pos-text">${evalRes.totalProj.toLocaleString()} PTS</span>
-                <span class="court-stat-sub">${dropText}</span>
-              </div>
+        <div class="court-ticker">
+          <div class="court-ticker-left">
+            <div class="ct-item">
+              <span class="ct-lbl">Rd ${state.round} Proj (Best 9 + 2× C):</span>
+              <span class="ct-val pos-text">${evalRes.totalProj.toLocaleString()} PTS</span>
+              <span class="ct-sub">${dropText}</span>
             </div>
-            <div class="court-stat">
-              <span class="court-stat-label">Starter Slate</span>
-              <div class="court-stat-row">
-                <span class="court-stat-val">${evalRes.starterGames} Gms</span>
-                <span class="court-stat-sub">${capText}</span>
-              </div>
+            <div class="ct-item">
+              <span class="ct-lbl">Starter Slate:</span>
+              <span class="ct-val">${evalRes.starterGames} Gms</span>
+              <span class="ct-sub">· ${capText}</span>
             </div>
-            <div class="court-stat">
-              <span class="court-stat-label">Bench</span>
-              <div class="court-stat-row">
-                <span class="court-stat-val muted-text">${evalRes.bench.length}/5</span>
-                <span class="court-stat-sub">${evalRes.benchProj.toLocaleString()} uncounted pts</span>
-              </div>
+            <div class="ct-item">
+              <span class="ct-lbl">Bench:</span>
+              <span class="ct-val muted-text">${evalRes.bench.length}/5</span>
+              <span class="ct-sub">(${evalRes.benchProj.toLocaleString()} uncounted pts)</span>
             </div>
           </div>
 
-          <div class="court-controls-group">
+          <div class="court-ticker-right">
             ${bannerHtml}
             ${lockCount > 0 ? `<button type="button" class="btn" id="courtClearLocksBtn">Clear Locks (${lockCount})</button>` : ""}
-            <button type="button" class="court-opt-btn" id="courtOptimiseBtn" title="Optimise Best 9 of 10 + 2× Captain while respecting Bench Locks">${ICON_OPTIMISE} OPTIMISE</button>
+            <button type="button" class="court-opt-btn" id="courtOptimiseBtn" title="Find optimal Best 9 of 10 + 2× Captain respecting Bench Locks">OPTIMISE ${ICON_BOLT}</button>
           </div>
         </div>
 
         <div class="court-grid">
-          <div class="court-panel court-board">
-            ${renderCourtLinesSvg()}
-            <div class="court-panel-inner">
-              <div class="court-panel-head">
-                <span class="court-panel-title">On-Court Starters (${evalRes.starters.length}/10)</span>
-                <span class="court-panel-hint">Click two cards to swap · Hover card for C / VC / Lock</span>
+          <div class="court-panel">
+            <div class="court-panel-head">
+              <span class="court-panel-title">On-Court Starters (${evalRes.starters.length}/10)</span>
+              <span class="court-panel-hint">Click two cards to swap · Hover card for C / VC / Bench Lock</span>
+            </div>
+            <div class="court-floor-box">
+              ${renderCourtLinesSvg()}
+              <div class="court-formation">
+                ${formationHtml}
               </div>
-              ${startersHtml}
             </div>
           </div>
 
           <div class="court-panel">
-            <div class="court-panel-inner">
-              <div class="court-panel-head">
-                <span class="court-panel-title">Bench (${evalRes.bench.length}/5)</span>
-                <span class="court-panel-hint">Pin injured players to Bench</span>
-              </div>
-              <div class="bench-stack">
-                ${benchHtml}
-              </div>
-              ${overflowHtml}
+            <div class="court-panel-head">
+              <span class="court-panel-title">Bench (${evalRes.bench.length}/5)</span>
+              <span class="court-panel-hint">Lock injured players</span>
             </div>
+            <div class="bench-stack">
+              ${benchHtml}
+            </div>
+            ${overflowHtml}
           </div>
         </div>
       </div>
@@ -1216,7 +1194,7 @@
       const before = evaluateLineup(state.court.slots, byId, state.court.captainId, state.court.viceCaptainId);
       const solved = solveOptimalLineup(squadPlayers, state.court.lockedBenchIds);
       if (!solved) {
-        setBanner("Could not compute lineup — add players to Squad first.", "neg");
+        setBanner("Add players to Squad first.", "neg");
         renderCourt();
         return;
       }
@@ -1230,13 +1208,9 @@
       const lockCount = Object.keys(state.court.lockedBenchIds).filter((k) => state.court.lockedBenchIds[k]).length;
       const lockSuffix = lockCount > 0 ? ` (${lockCount} lock${lockCount > 1 ? "s" : ""})` : "";
 
-      if (diff > 0) {
-        setBanner(`+${diff} PTS (${before.totalProj} → ${after.totalProj})${lockSuffix}`, "pos");
-      } else if (diff === 0) {
-        setBanner(`Optimal: ${after.totalProj} PTS${lockSuffix}`, "pos");
-      } else {
-        setBanner(`${after.totalProj} PTS (${diff} vs unlocked)${lockSuffix}`, "warn");
-      }
+      if (diff > 0) setBanner(`+${diff} PTS (${before.totalProj} → ${after.totalProj})${lockSuffix}`, "pos");
+      else if (diff === 0) setBanner(`Optimal: ${after.totalProj} PTS${lockSuffix}`, "pos");
+      else setBanner(`${after.totalProj} PTS (${diff} vs unlocked)${lockSuffix}`, "warn");
       renderCourt();
       return;
     }
@@ -1253,9 +1227,7 @@
     if (capBtn) {
       e.stopPropagation();
       const pid = capBtn.dataset.setCap;
-      if (state.court.viceCaptainId === pid) {
-        state.court.viceCaptainId = state.court.captainId;
-      }
+      if (state.court.viceCaptainId === pid) state.court.viceCaptainId = state.court.captainId;
       state.court.captainId = pid;
       window.SCHOOPS.savePrefs();
       ui.selectedSource = null;
@@ -1267,9 +1239,7 @@
     if (vcBtn) {
       e.stopPropagation();
       const pid = vcBtn.dataset.setVc;
-      if (state.court.captainId === pid) {
-        state.court.captainId = state.court.viceCaptainId;
-      }
+      if (state.court.captainId === pid) state.court.captainId = state.court.viceCaptainId;
       state.court.viceCaptainId = pid;
       window.SCHOOPS.savePrefs();
       ui.selectedSource = null;
@@ -1327,10 +1297,7 @@
         const srcId = ui.selectedSource.type === "slot" ? slots[ui.selectedSource.key] : ui.selectedSource.playerId;
         const pA = srcId ? byId[srcId] : null;
         const targetDef = SLOT_BY_KEY[targetKey];
-        setBanner(
-          pA ? `${pA.name} (${pA.pos}) cannot play ${targetDef.label}.` : "Invalid swap.",
-          "neg"
-        );
+        setBanner(pA ? `${pA.name} (${pA.pos}) cannot play ${targetDef.label}.` : "Invalid swap.", "neg");
         ui.selectedSource = null;
         renderCourt();
         return;
@@ -1363,9 +1330,7 @@
     if (!window.SCHOOPS) return;
     injectStyles();
     const root = document.getElementById("courtViewRoot");
-    if (root) {
-      root.addEventListener("click", handleCourtClick);
-    }
+    if (root) root.addEventListener("click", handleCourtClick);
     window.SCHOOPS.onRender(renderCourt);
     renderCourt();
   }
