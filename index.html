@@ -3647,8 +3647,7 @@
         const first = Math.min(...t.map((r) => r.round)), last = Math.max(...t.map((r) => r.round));
         const brag = document.getElementById("sbAboutBrag");
         const closer = Math.round(sc - ours);
-        const pct = Math.round(((sc - ours) / sc) * 100);
-        brag.innerHTML = `On average our projections land <b>${closer} pts</b> closer to real scores than SuperCoach's: <b>${pct}%</b> more accurate.`;
+        brag.innerHTML = `On average our projections land <b>${closer} pts</b> closer to real scores than SuperCoach's.`;
         brag.title = `Tested on Rounds ${first}–${last} (${n.toLocaleString()} player-rounds) without letting the model see the round it was predicting. Average miss per player per round: ours ${ours.toFixed(1)}, SuperCoach's ${sc.toFixed(1)}.`;
         brag.hidden = false;
       }).catch(() => {});
