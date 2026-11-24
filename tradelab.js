@@ -1,5 +1,5 @@
 /* SCHOOPS — Linear Edition: Phase 3 Trade Lab & Side-by-Side Scenario Comparator
- * Loaded by index.html via <script src="tradelab.js?v=11"></script>
+ * Loaded by index.html via <script src="tradelab.js?v=12"></script>
  * Uses window.SCHOOPS_SOLVER for exact Best-9-of-10 + 2x Captain trade impact scoring.
  */
 (function () {
@@ -50,7 +50,7 @@
         border: 1px solid transparent;
         border-radius: 5px;
         color: var(--text-secondary);
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 500;
         cursor: pointer;
         transition: background-color 120ms var(--ease-out), color 120ms var(--ease-out), border-color 120ms var(--ease-out);
@@ -100,11 +100,11 @@
       .tl-bank-input:focus { border-color: var(--border-strong); }
 
       .tl-content {
-        padding: 16px;
+        padding: 18px;
         display: flex;
         flex-direction: column;
         gap: 16px;
-        max-width: 1180px;
+        max-width: 1280px;
       }
 
       /* Dual Impact KPI Strip */
@@ -129,7 +129,7 @@
       }
 
       .tl-kpi-lbl {
-        font-size: 11px;
+        font-size: 11.5px;
         color: var(--text-tertiary);
       }
 
@@ -141,7 +141,7 @@
 
       .tl-kpi-val {
         font-family: var(--mono);
-        font-size: 17px;
+        font-size: 19px;
         font-weight: 700;
         color: var(--text-primary);
       }
@@ -220,8 +220,8 @@
 
       .tl-select {
         width: 100%;
-        height: 34px;
-        padding: 0 9px;
+        height: 38px;
+        padding: 0 10px;
         background: #141417;
         border: 1px solid var(--border-default);
         border-radius: 6px;
@@ -242,8 +242,8 @@
         align-items: center;
         justify-content: space-between;
         gap: 8px;
-        height: 34px;
-        padding: 0 8px;
+        height: 38px;
+        padding: 0 10px;
         background: #141417;
         border: 1px solid var(--border-default);
         border-radius: 6px;
@@ -274,8 +274,8 @@
 
       .tl-search-in {
         width: 100%;
-        height: 34px;
-        padding: 0 10px;
+        height: 38px;
+        padding: 0 11px;
         background: #141417;
         border: 1px solid var(--border-default);
         border-radius: 6px;
@@ -357,9 +357,9 @@
       }
 
       .tl-cmp-table td {
-        padding: 10px 14px;
-        font-size: 12.5px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.042);
+        padding: 11px 15px;
+        font-size: 13.5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.045);
         white-space: nowrap;
       }
 
@@ -624,9 +624,12 @@
       <div class="tl-wrap">
         <div class="tl-topbar">
           <div class="tl-plan-tabs">${tabsHtml}</div>
-          <div class="tl-bank-box">
+          <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            ${window.SCHOOPS.renderDismissibleTip("tradelab")}
+            <div class="tl-bank-box">
             <label for="tlBankInput">Available Bank ($M)</label>
             <input type="number" id="tlBankInput" class="tl-bank-input" step="0.01" value="${(Number(state.tradeLab.bankM) || 0).toFixed(2)}" />
+            </div>
           </div>
         </div>
 
