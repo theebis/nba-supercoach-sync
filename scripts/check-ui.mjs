@@ -53,7 +53,9 @@ const VIEWS = {
   // Live round tracker: waits for ESPN scores to load
   live: async (page) => {
     await openNav(page, "live");
-    await page.waitForSelector(".lv-grid, .lv-empty", { timeout: 20000 });
+    await page.waitForSelector(".lv-grid", { timeout: 30000 }).catch(() => {});
+    // Then the opened game's play-by-play
+    await page.waitForSelector(".lv-plays, .lv-feed .lv-pre:not(:empty)", { timeout: 15000 }).catch(() => {});
     await page.waitForTimeout(1500);
   },
   // Trade Lab after clicking "Choose who leaves" and picking the first player: the IN suggestions open

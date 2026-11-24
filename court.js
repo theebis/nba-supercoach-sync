@@ -684,7 +684,7 @@
       .lc-hero-label { font-size: 11.5px; color: var(--text-tertiary); }
       .lc-hero-big {
         font-family: var(--mono);
-        font-size: 28px;
+        font-size: 34px;
         font-weight: 700;
         letter-spacing: -0.02em;
         line-height: 1.05;
@@ -694,7 +694,14 @@
       .lc-hero-big small { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-left: 4px; letter-spacing: 0; }
       .lc-hero-meta { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--text-tertiary); }
       .lc-hero-meta strong { color: var(--text-primary); font-weight: 600; }
-      .lc-hero-squad { display: flex; flex-direction: column; gap: 6px; }
+      .lc-hstat { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding-left: 22px; border-left: 1px solid var(--border-subtle); }
+      .lc-hv { font-size: 18px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; line-height: 1.2; }
+      .lc-hv.mono { font-family: var(--mono); letter-spacing: -0.01em; }
+      .lc-hsub { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; }
+      .lc-hstat-cash .lc-hv { font-size: 22px; }
+      .lc-hstat-cash.pos .lc-hv { color: var(--pos-bright); }
+      .lc-hstat-cash.neg .lc-hv { color: var(--neg-soft); }
+      .lc-hero-squad { gap: 4px; }
       .lc-pips { display: flex; gap: 3px; }
       .lc-pip { width: 11px; height: 5px; border-radius: 2px; background: rgba(255, 255, 255, 0.1); }
       .lc-pip.on { background: var(--text-primary); }
@@ -776,6 +783,9 @@
 
       @media (max-width: 760px) {
         .lc-hero { padding: 12px; gap: 12px 18px; }
+        .lc-hstat { padding-left: 12px; }
+        .lc-hv { font-size: 15px; max-width: 150px; }
+        .lc-hstat-cash .lc-hv { font-size: 18px; }
         .lc-hero-actions { margin-left: 0; width: 100%; }
         .lc-hero-actions .lc-opt-big { flex: 1; justify-content: center; }
         .lc-grid { padding: 10px; gap: 10px; }
@@ -1252,7 +1262,7 @@
                 <button type="button" class="lc-act-btn ${isVc ? "on-vc" : ""}" data-set-vc="${escapeHtml(player.id)}" title="Set Vice-Captain">VC</button>
               ` : ""}
               <button type="button" class="lc-act-btn ${isLocked ? "on-lock" : ""}" data-toggle-lock="${escapeHtml(player.id)}" title="${isLocked ? "Unlock from Bench" : "Pin to Bench"}">${isLocked ? ICON_LOCK_CLOSED : ICON_LOCK_OPEN}</button>
-              <button type="button" class="lc-act-btn" data-inspect-player="${escapeHtml(player.id)}" title="Inspect stats & Live BE simulator">${ICON_INFO}</button>
+              <button type="button" class="lc-act-btn" data-inspect-player="${escapeHtml(player.id)}" title="Open his profile">${ICON_INFO}</button>
               <button type="button" class="lc-act-btn rem-btn" data-remove-squad="${escapeHtml(player.id)}" data-remove-slot="${slotDef.key}" title="Remove from Squad">${ICON_REMOVE}</button>
             </div>
           </div>
@@ -1394,6 +1404,7 @@
     }
 
     const squadValue = squadPlayers.reduce((s, p) => s + p.price, 0);
+    const squadCash = squadPlayers.reduce((s, p) => s + (p.priceChange || 0), 0);
     const pips = Array.from({ length: SQUAD_SIZE }, (_, i) => `<span class="lc-pip ${i < squadPlayers.length ? "on" : ""}"></span>`).join("");
 
     root.innerHTML = `
@@ -1403,14 +1414,30 @@
             <span class="lc-hero-label">Round ${state.round} projected</span>
             <span class="lc-hero-big">${evalRes.totalProj.toLocaleString()}<small>pts</small></span>
           </div>
-          <div class="lc-hero-meta">
-            <span>Captain <strong>${evalRes.captain ? escapeHtml(evalRes.captain.name) : "—"}</strong></span>
-            <span>Games <strong class="mono">${evalRes.starterGames}</strong></span>
-            ${evalRes.droppedPlayer ? `<span>Not counted <strong>${escapeHtml(evalRes.droppedPlayer.name)}</strong> <span class="mono">(${Math.round(evalRes.droppedPlayer.proj)})</span></span>` : ""}
+          <div class="lc-hstat lc-hstat-cash ${squadCash > 0 ? "pos" : squadCash < 0 ? "neg" : ""}">
+            <span class="lc-hero-label">Projected cash gen</span>
+            <span class="lc-hv mono">${window.SCHOOPS.formatMoney(squadCash)}</span>
+            <span class="lc-hsub">all 15 players this round</span>
           </div>
-          <div class="lc-hero-squad" title="${squadPlayers.length} of ${SQUAD_SIZE} squad spots filled">
-            <span class="lc-hero-label">Squad <strong class="mono" style="color:var(--text-primary)">${squadPlayers.length}/${SQUAD_SIZE}</strong> · <span class="mono">$${(squadValue / 1000000).toFixed(2)}M</span></span>
-            <span class="lc-pips">${pips}</span>
+          <div class="lc-hstat">
+            <span class="lc-hero-label">Captain</span>
+            <span class="lc-hv">${evalRes.captain ? escapeHtml(evalRes.captain.name) : "—"}</span>
+            <span class="lc-hsub">${evalRes.captain ? `proj ${Math.round(evalRes.captain.proj)} × 2 = ${Math.round(evalRes.captain.proj * 2)}` : "pick one with C"}</span>
+          </div>
+          <div class="lc-hstat">
+            <span class="lc-hero-label">Starter games</span>
+            <span class="lc-hv mono">${evalRes.starterGames}</span>
+            <span class="lc-hsub">across your 10 starters</span>
+          </div>
+          ${evalRes.droppedPlayer ? `<div class="lc-hstat">
+            <span class="lc-hero-label">Not counted</span>
+            <span class="lc-hv">${escapeHtml(evalRes.droppedPlayer.name)}</span>
+            <span class="lc-hsub">lowest starter · proj ${Math.round(evalRes.droppedPlayer.proj)}</span>
+          </div>` : ""}
+          <div class="lc-hstat lc-hero-squad">
+            <span class="lc-hero-label">Squad ${squadPlayers.length}/${SQUAD_SIZE}</span>
+            <span class="lc-hv mono">$${(squadValue / 1000000).toFixed(2)}M</span>
+            <span class="lc-pips" aria-label="${squadPlayers.length} of ${SQUAD_SIZE} squad spots filled">${pips}</span>
           </div>
           <div class="lc-hero-actions">${optBtnHtml}</div>
           ${msgHtml ? `<div class="lc-hero-msg">${msgHtml}</div>` : ""}

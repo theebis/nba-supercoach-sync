@@ -185,16 +185,43 @@
       .tl-adv-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
       .tl-adv-ctrls { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
       .tl-adv-lbl { font-size: 11.5px; color: var(--text-tertiary); margin-right: 2px; }
-      .tl-adv-list { padding: 0 8px 4px; transition: opacity 160ms ease; }
+      .tl-lock { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 14px 18px 0; padding: 10px 14px; border-radius: 10px;
+        border: 1px solid var(--border-subtle); background: var(--bg-elevated); font-size: 13px; color: var(--text-secondary); }
+      .tl-lock strong { color: var(--text-primary); font-size: 15px; }
+      .tl-lock-pill { padding: 3px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; white-space: nowrap; background: var(--bg-active); color: var(--text-secondary); }
+      .tl-lock.open { border-color: rgba(52, 211, 153, 0.3); background: linear-gradient(180deg in oklab, rgba(52, 211, 153, 0.08), rgba(52, 211, 153, 0.02)), var(--bg-elevated); }
+      .tl-lock.open .tl-lock-pill { background: var(--pos-bg); color: var(--pos-bright); }
+      .tl-lock-txt { min-width: 0; text-wrap: pretty; }
+      @media (max-width: 760px) { .tl-lock { margin: 10px 10px 0; } }
+      .tl-adv-list { transition: opacity 160ms ease; }
       .tl-adv-list.is-stale { opacity: 0.55; }
-      .tl-adv-row { display: grid; grid-template-columns: 22px minmax(0, 1.3fr) minmax(0, 1fr) auto; align-items: center; gap: 12px;
-        padding: 10px 8px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
-      .tl-adv-rank { font-family: var(--mono); font-size: 12px; color: var(--text-tertiary); text-align: center; }
-      .tl-adv-moves { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-      .tl-adv-move { font-size: 13px; font-weight: 500; min-width: 0; }
-      .tl-adv-meta { display: block; font-family: var(--mono); font-size: 11px; font-weight: 400; color: var(--text-tertiary); margin-top: 1px; }
-      .tl-adv-stats { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; font-family: var(--mono); font-size: 12px; }
-      .tl-adv-stats strong { font-size: 14px; }
+      /* Suggestions: cards in a responsive grid */
+      .tl-adv-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 10px; padding: 4px 14px 14px; }
+      .tl-adv-list > .tl-adv-empty { grid-column: 1 / -1; }
+      .tl-sug { display: flex; flex-direction: column; border: 1px solid var(--border-subtle); border-radius: 10px; background: #111115; min-width: 0; }
+      .tl-sug-top { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; padding: 11px 12px 9px; font-family: var(--mono); font-size: 12px; }
+      .tl-sug-rank { width: 20px; height: 20px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; background: var(--bg-active); color: var(--text-tertiary); font-size: 11px; }
+      .tl-sug-pts { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+      .tl-sug-pts small { font-size: 11px; font-weight: 500; margin-left: 3px; }
+      .tl-sug-cash { font-weight: 600; }
+      .tl-sug-bank { margin-left: auto; font-size: 11px; }
+      .tl-sug-swaps { display: flex; flex-direction: column; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+      .tl-sw { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "who add" "meta add"; column-gap: 10px; row-gap: 1px; align-items: center; padding: 8px 12px; }
+      .tl-sw + .tl-sw { border-top: 1px dashed rgba(255, 255, 255, 0.06); }
+      .tl-sw-who { grid-area: who; display: flex; align-items: center; gap: 7px; min-width: 0; font-size: 13px; font-weight: 500; }
+      .tl-sw-out { color: var(--neg-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .tl-sw-in { color: var(--pos-bright); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .tl-sw-arrow { color: var(--text-tertiary); flex-shrink: 0; }
+      .tl-sw-meta { grid-area: meta; font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .tl-sw-add { grid-area: add; height: 28px; padding: 0 11px; border-radius: 7px; border: 1px solid var(--border-default); background: transparent; color: var(--text-secondary);
+        font-size: 12px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease, transform 160ms var(--ease-press); }
+      .tl-sw-add:active { transform: scale(0.97); }
+      @media (hover: hover) { .tl-sw-add:not(:disabled):hover { color: var(--text-primary); border-color: var(--border-strong); background: var(--bg-hover); } }
+      .tl-sw-add.done { border-color: transparent; color: var(--pos-bright); cursor: default; }
+      .tl-sw-add:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+      .tl-sug-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; padding: 10px 12px 12px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+      .tl-sug-actions .primary-btn:disabled { opacity: 0.6; cursor: default; }
+      .tl-adv-flash { margin: 0 14px 8px; padding: 8px 12px; border-radius: 8px; background: var(--pos-bg); color: var(--pos-bright); font-size: 12.5px; }
       .tl-adv-conf { font-family: var(--sans); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px; }
       .tl-adv-conf.strong { background: var(--pos-bg); color: var(--pos-bright); }
       .tl-adv-conf.lean { background: rgba(255, 196, 0, 0.1); color: #e8c25a; }
@@ -204,8 +231,6 @@
 
       @media (max-width: 760px) {
         .tl-adv { margin: 10px 10px 0; }
-        .tl-adv-row { grid-template-columns: 18px minmax(0, 1fr); }
-        .tl-adv-stats, .tl-adv-row > .ghost-btn { grid-column: 2; }
         .tl-plans { padding: 8px 12px; }
         .tl-layout { padding: 10px; gap: 12px; }
         .tl-trade { grid-template-columns: minmax(0, 1fr) 28px; gap: 8px; padding: 10px; }
@@ -306,9 +331,10 @@
   // Ranks this round's trades for your squad. Scores use the exact best-9-of-10 + 2x captain solver.
   // "Chance it helps" = P(trade scores more), from how far projections typically miss (likely ranges).
   const CASH_PER_POINT = 50000; // Balanced goal: $50K of projected price rise counts as 1 point
-  const advisor = { goal: "balanced", n: 1, results: null, key: "", busy: false };
+  const advisor = { goal: "balanced", n: 1, results: null, key: "", busy: false, flash: "", flashTimer: null };
 
   function sigmaOf(p) {
+    if (window.SCHOOPS.projSigma) return window.SCHOOPS.projSigma(p);
     if (p.projIsOurs && p.projLo !== null && p.projHi !== null) return Math.max(4, (p.projHi - p.projLo) / 1.35);
     return Math.max(6, (p.proj || 0) * 0.3);
   }
@@ -320,8 +346,19 @@
   }
   const goalValue = (dPts, dCash) => (advisor.goal === "points" ? dPts : advisor.goal === "cash" ? dCash / CASH_PER_POINT : dPts + dCash / CASH_PER_POINT);
 
+  // Same squad, same answer: the advisor scores many overlapping squads, so remember each one
+  let metricsMemo = { key: "", map: new Map() };
+  function memoMetrics(players, state) {
+    const ctx = [state.projSource, state.round, JSON.stringify(state.court.lockedBenchIds || {})].join("|");
+    if (metricsMemo.key !== ctx) metricsMemo = { key: ctx, map: new Map() };
+    const k = players.map((p) => p.id).sort().join(",");
+    let m = metricsMemo.map.get(k);
+    if (!m) { m = evaluateSquadMetrics(players, state.court.lockedBenchIds); metricsMemo.map.set(k, m); }
+    return m;
+  }
+
   function bestSingles(state, squad, bank, used, limit = 60) {
-    const base = evaluateSquadMetrics(squad, state.court.lockedBenchIds);
+    const base = memoMetrics(squad, state);
     const pool = Object.values(state.computedById).filter((p) => !p.inSquad && !used.has(p.id) && !p.isInactive
       && !p.isLikelyDnp && !p.isFringeDnp && p.games > 0 && !isOut(p) && !squad.some((s) => s.id === p.id));
     const pairs = [];
@@ -335,16 +372,16 @@
     pairs.sort((a, b) => b.proxy - a.proxy);
     return pairs.slice(0, limit).map(({ o, i }) => {
       const sim = squad.filter((p) => p.id !== o.id).concat([i]);
-      const m = evaluateSquadMetrics(sim, state.court.lockedBenchIds);
+      const m = memoMetrics(sim, state);
       const dPts = m.optScore - base.optScore;
       const dCash = m.cashGen - base.cashGen;
       return { trades: [{ o, i }], dPts, dCash, sd: Math.hypot(sigmaOf(i), sigmaOf(o)), bankAfter: bank + o.price - i.price, value: goalValue(dPts, dCash) };
     }).sort((a, b) => b.value - a.value);
   }
 
-  function runAdvisor(state, squad) {
+  async function runAdvisor(state, squad) {
     const bank = Math.round((Number(state.tradeLab.bankM) || 0) * 1000000);
-    const singles = bestSingles(state, squad, bank, new Set());
+    const singles = bestSingles(state, squad, bank, new Set(), advisor.n >= 3 ? 36 : 60);
     let results;
     if (advisor.n === 1) {
       // Variety: at most two ideas per player going out, so one obvious sell doesn't fill the list
@@ -353,29 +390,86 @@
         const id = r.trades[0].o.id;
         perOut[id] = (perOut[id] || 0) + 1;
         return perOut[id] <= 2;
-      }).slice(0, 6);
+      }).slice(0, 10);
     } else {
-      // Two trades: start from each of the best few singles, then find the best follow-up with the new squad and bank
-      results = singles.slice(0, 4).map((first) => {
-        const t = first.trades[0];
-        const squad2 = squad.filter((p) => p.id !== t.o.id).concat([t.i]);
-        const used = new Set([t.o.id, t.i.id]);
-        const second = bestSingles(state, squad2, first.bankAfter, used, 25)[0];
-        if (!second) return first;
-        return {
-          trades: [t, second.trades[0]],
-          dPts: first.dPts + second.dPts, dCash: first.dCash + second.dCash,
-          sd: Math.hypot(first.sd, second.sd), bankAfter: second.bankAfter,
-          value: first.value + second.value
-        };
-      }).sort((a, b) => b.value - a.value);
+      // 2-4 trades: start from each of the best singles, then keep adding the best follow-up
+      // with the updated squad and bank (each step scored with the exact lineup solver)
+      const starts = singles.slice(0, advisor.n >= 3 ? 5 : 8);
+      const follow = advisor.n >= 3 ? 8 : 12;
+      const seen = new Set();
+      results = [];
+      for (const first of starts) {
+        await new Promise((r) => setTimeout(r, 0)); // keep the page responsive between chains
+        let combo = first;
+        let squadNow = squad.filter((p) => p.id !== first.trades[0].o.id).concat([first.trades[0].i]);
+        const used = new Set([first.trades[0].o.id, first.trades[0].i.id]);
+        for (let k = 1; k < advisor.n; k++) {
+          const next = bestSingles(state, squadNow, combo.bankAfter, used, follow)[0];
+          if (!next || next.value <= 0) break;
+          const t = next.trades[0];
+          combo = {
+            trades: combo.trades.concat([t]),
+            dPts: combo.dPts + next.dPts, dCash: combo.dCash + next.dCash,
+            sd: Math.hypot(combo.sd, next.sd), bankAfter: next.bankAfter, value: combo.value + next.value
+          };
+          squadNow = squadNow.filter((p) => p.id !== t.o.id).concat([t.i]);
+          used.add(t.o.id); used.add(t.i.id);
+        }
+        const key = combo.trades.map(({ o, i }) => `${o.id}>${i.id}`).sort().join("|");
+        if (!seen.has(key)) { seen.add(key); results.push(combo); }
+      }
+      results.sort((a, b) => b.value - a.value);
+      results = results.slice(0, 8);
     }
     results.forEach((r) => { r.pBetter = normCdf(r.dPts / r.sd); });
     return results;
   }
 
+  // Put suggested swaps into the plan you're working on (replacing a swap for the same player going out)
+  function addSwapsToPlan(swaps) {
+    const state = window.SCHOOPS.getState();
+    ensureTradeState(state);
+    const plan = state.tradeLab.plans.find((p) => p.id === state.tradeLab.activePlanId) || state.tradeLab.plans[0];
+    let added = 0, full = false;
+    swaps.forEach(({ outId, inId }) => {
+      if (plan.trades.some((t) => t.outId === outId && t.inId === inId)) return;
+      if (plan.trades.some((t) => t.inId === inId)) return;
+      const same = plan.trades.find((t) => t.outId === outId);
+      const empty = plan.trades.find((t) => !t.outId && !t.inId);
+      if (same) { same.inId = inId; added++; }
+      else if (empty) { empty.outId = outId; empty.inId = inId; added++; }
+      else if (plan.trades.length < MAX_TRADES) { plan.trades.push({ outId, inId }); added++; }
+      else full = true;
+    });
+    advisor.flash = full
+      ? `${plan.name} already has ${MAX_TRADES} trades. Remove one to add more.`
+      : added ? `Added ${added} swap${added === 1 ? "" : "s"} to ${plan.name}.` : `Already in ${plan.name}.`;
+    clearTimeout(advisor.flashTimer);
+    advisor.flashTimer = setTimeout(() => { advisor.flash = ""; renderTradeLab(); }, 3500);
+    save();
+  }
+
   function advisorKey(state, squad) {
     return [state.projSource, state.tradeLab.bankM, squad.map((p) => p.id).sort().join(","), advisor.goal, advisor.n, state.round].join("|");
+  }
+
+  // Trade window banner: open (counting down to lockout) or closed (when it reopens)
+  function renderLockout() {
+    const S = window.SCHOOPS;
+    if (!S.tradeWindow) return "";
+    const w = S.tradeWindow();
+    if (!w.lockMs) return "";
+    const when = (ms) => new Date(ms).toLocaleString(undefined, { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+    if (w.open) {
+      return `<div class="tl-lock open" role="status">
+        <span class="tl-lock-pill">Trades open</span>
+        <span class="tl-lock-txt">Round ${w.round} locks in <strong class="mono" data-countdown="${w.lockMs}">${S.formatCountdown(w.lockMs)}</strong> <span class="dim-text">· ${when(w.lockMs)}</span></span>
+      </div>`;
+    }
+    return `<div class="tl-lock" role="status">
+      <span class="tl-lock-pill">Trades closed</span>
+      <span class="tl-lock-txt">Trading reopens after this round ends${w.roundEndMs ? ` (around ${when(w.roundEndMs)})` : ""}. Round ${w.round} locks in <strong class="mono" data-countdown="${w.lockMs}">${S.formatCountdown(w.lockMs)}</strong> <span class="dim-text">· ${when(w.lockMs)}</span></span>
+    </div>`;
   }
 
   function renderAdvisor(state, squad) {
@@ -384,43 +478,67 @@
     if (advisor.key !== key && !advisor.busy) {
       advisor.busy = true;
       advisor.key = key;
-      setTimeout(() => {
-        try { advisor.results = runAdvisor(window.SCHOOPS.getState(), window.SCHOOPS.getSquadPlayers()); }
-        catch (err) { advisor.results = []; console.error("Trade advisor:", err); }
+      setTimeout(async () => {
+        let res;
+        try { res = await runAdvisor(window.SCHOOPS.getState(), window.SCHOOPS.getSquadPlayers()); }
+        catch (err) { res = []; console.error("Trade advisor:", err); }
         advisor.busy = false;
+        // Settings changed while we were working: run again for the new ones
+        const nowKey = advisorKey(window.SCHOOPS.getState(), window.SCHOOPS.getSquadPlayers());
+        if (nowKey === key) advisor.results = res;
+        else advisor.key = "";
         renderTradeLab();
       }, 30);
     }
     const chip = (attr, val, label, on) => `<button type="button" class="chip-btn ${on ? "active" : ""}" ${attr}="${val}">${label}</button>`;
     const conf = (p) => (p >= 0.75 ? ["strong", "Strong"] : p >= 0.6 ? ["lean", "Lean"] : ["flip", "Coin flip"]);
+    const plan = state.tradeLab.plans.find((p) => p.id === state.tradeLab.activePlanId) || state.tradeLab.plans[0];
+    const planName = plan ? plan.name : "your plan";
+    const inPlan = (o, i) => plan && plan.trades.some((t) => t.outId === o.id && t.inId === i.id);
+    const money = (v) => `$${(v / 1e6).toFixed(2)}M`;
     const rows = !advisor.results
       ? `<div class="tl-adv-empty">Checking every trade for your squad…</div>`
       : !advisor.results.length
         ? `<div class="tl-adv-empty">No affordable trades improve your squad on this goal. Try another goal, or add bank.</div>`
         : advisor.results.map((r, idx) => {
           const [cls, label] = conf(r.pBetter);
-          return `
-            <div class="tl-adv-row">
-              <span class="tl-adv-rank">${idx + 1}</span>
-              <span class="tl-adv-moves">${r.trades.map(({ o, i }) => `
-                <span class="tl-adv-move"><span class="neg-text">${escapeHtml(o.name)}</span> <span class="dim-text">→</span> <span class="pos-text">${escapeHtml(i.name)}</span>
-                <span class="tl-adv-meta">${escapeHtml(i.team)} · ${escapeHtml(i.pos)} · $${(i.price / 1e6).toFixed(2)}M · proj ${i.proj} vs ${o.proj}</span></span>`).join("")}
-              </span>
-              <span class="tl-adv-stats">
-                <span class="${r.dPts > 0 ? "pos-text" : r.dPts < 0 ? "neg-text" : "muted-text"}"><strong>${r.dPts > 0 ? "+" : ""}${r.dPts}</strong> pts</span>
-                <span class="tl-adv-conf ${cls}" title="How often a trade like this ends up scoring more this round, given how much projections usually miss">${label} · ${Math.round(r.pBetter * 100)}%</span>
-                <span class="${r.dCash > 0 ? "pos-text" : r.dCash < 0 ? "neg-text" : "muted-text"}">${formatMoney(r.dCash)} price change</span>
-                <span class="dim-text">bank after ${formatMoney(r.bankAfter).replace("+", "")}</span>
-              </span>
-              <button type="button" class="ghost-btn" data-adv-apply="${idx}">Try in a plan</button>
+          const tip = `<div class="tip-h">${label}: ${Math.round(r.pBetter * 100)}% chance it helps</div><div class="tip-row"><span>Projected gain</span><b class="${r.dPts >= 0 ? "tip-pos" : "tip-neg"}">${r.dPts > 0 ? "+" : ""}${r.dPts} pts</b></div><div class="tip-row"><span>Typical swing either way</span><b>±${Math.round(r.sd)} pts</b></div><div class="tip-dim" style="margin-top:4px">How often a trade like this scores more this round, allowing for how much projections usually miss. Strong is 75%+, Lean 60%+.</div>`;
+          const swaps = r.trades.map(({ o, i }, k) => {
+            const done = inPlan(o, i);
+            return `<div class="tl-sw">
+              <div class="tl-sw-who">
+                <span class="tl-sw-out">${escapeHtml(o.name)}</span>
+                <span class="tl-sw-arrow" aria-hidden="true">→</span>
+                <span class="tl-sw-in">${escapeHtml(i.name)}</span>
+              </div>
+              <div class="tl-sw-meta">${escapeHtml(i.team)} · ${escapeHtml(i.pos)} · ${money(i.price)} · proj ${i.proj} vs ${o.proj}</div>
+              ${r.trades.length > 1 ? `<button type="button" class="tl-sw-add ${done ? "done" : ""}" data-adv-swap="${idx}:${k}" ${done ? "disabled" : ""} aria-label="${done ? `Already in ${escapeHtml(planName)}` : `Add ${escapeHtml(o.name)} to ${escapeHtml(i.name)} to ${escapeHtml(planName)}`}">${done ? "✓ In plan" : "+ Add"}</button>` : ""}
             </div>`;
+          }).join("");
+          const allIn = r.trades.every(({ o, i }) => inPlan(o, i));
+          return `
+            <article class="tl-sug">
+              <div class="tl-sug-top">
+                <span class="tl-sug-rank">${idx + 1}</span>
+                <span class="tl-sug-pts ${r.dPts > 0 ? "pos-text" : r.dPts < 0 ? "neg-text" : "muted-text"}">${r.dPts > 0 ? "+" : ""}${r.dPts}<small>pts</small></span>
+                <span class="tl-adv-conf ${cls}" data-tip="${escapeHtml(tip)}">${label} · ${Math.round(r.pBetter * 100)}%</span>
+                <span class="tl-sug-cash ${r.dCash > 0 ? "pos-text" : r.dCash < 0 ? "neg-text" : "muted-text"}">${formatMoney(r.dCash)} <span class="dim-text">price change</span></span>
+                <span class="tl-sug-bank dim-text">bank after ${money(r.bankAfter)}</span>
+              </div>
+              <div class="tl-sug-swaps">${swaps}</div>
+              <div class="tl-sug-actions">
+                ${r.trades.length > 1 || !allIn ? `<button type="button" class="primary-btn tl-sug-main" data-adv-addall="${idx}" ${allIn ? "disabled" : ""}>${allIn ? `✓ All in ${escapeHtml(planName)}` : `Add ${r.trades.length > 1 ? `all ${r.trades.length} ` : ""}to ${escapeHtml(planName)}`}</button>` : ""}
+                <button type="button" class="ghost-btn" data-adv-apply="${idx}">Start a new plan with ${r.trades.length > 1 ? "these" : "this"}</button>
+              </div>
+            </article>`;
         }).join("");
+    const nChips = [1, 2, 3, 4].map((n) => chip("data-adv-n", String(n), String(n), advisor.n === n)).join("");
     return `
       <section class="tl-adv" aria-label="Trade advisor">
         <div class="tl-adv-head">
           <div>
             <div class="tl-adv-title">Trade advisor</div>
-            <div class="tl-adv-sub">Best trades for your squad this round, using ${state.projSource === "sc" ? "SuperCoach's" : "SCHOOPS"} projections and your $${(Number(state.tradeLab.bankM) || 0).toFixed(2)}M bank.</div>
+            <div class="tl-adv-sub">Best trades for your squad this round, using ${state.projSource === "sc" ? "SuperCoach's" : "SCHOOPS"} projections and your $${(Number(state.tradeLab.bankM) || 0).toFixed(2)}M bank. Mix and match: <strong>+ Add</strong> puts one swap into ${escapeHtml(planName)}.</div>
           </div>
           <div class="tl-adv-ctrls">
             <span class="tl-adv-lbl">Goal</span>
@@ -428,12 +546,12 @@
             ${chip("data-adv-goal", "balanced", "Balanced", advisor.goal === "balanced")}
             ${chip("data-adv-goal", "cash", "Most cash", advisor.goal === "cash")}
             <span class="tl-adv-lbl" style="margin-left:8px">Trades</span>
-            ${chip("data-adv-n", "1", "1", advisor.n === 1)}
-            ${chip("data-adv-n", "2", "2", advisor.n === 2)}
+            ${nChips}
           </div>
         </div>
+        ${advisor.flash ? `<div class="tl-adv-flash" role="status">${escapeHtml(advisor.flash)}</div>` : ""}
         <div class="tl-adv-list ${advisor.busy && advisor.results ? "is-stale" : ""}" aria-busy="${advisor.busy ? "true" : "false"}">${rows}</div>
-        <div class="tl-adv-foot">"Chance" is how often a trade like this ends up scoring more, given how far projections usually miss. Balanced counts $50K of price rise as 1 point.</div>
+        <div class="tl-adv-foot">"Chance" is how often a trade like this ends up scoring more, given how far projections usually miss. Balanced counts $50K of price rise as 1 point. 3–4 trade ideas are built one swap at a time, so they're strong but not guaranteed to be the very best combination.</div>
       </section>`;
   }
 
@@ -613,7 +731,7 @@
         <div class="lc-empty-page">
           <h3>Add your squad first</h3>
           <p style="margin-bottom:14px;">Trade Lab tests trades against your real squad: score change, price changes and whether you can afford it.</p>
-          <button type="button" class="primary-btn" data-go-court="1">Add players in My Court</button>
+          <button type="button" class="primary-btn" data-go-court="1">Add players in My Squad</button>
         </div>`;
       return;
     }
@@ -671,6 +789,7 @@
 
     root.innerHTML = `
       <div class="tl-wrap">
+        ${renderLockout()}
         <div class="tl-plans" role="tablist" aria-label="Trade plans">
           ${tabs}
           <button type="button" class="tl-plan-tab tl-plan-new" id="tlNewPlanBtn" title="Start another plan to compare">${ICON_PLUS} New plan</button>
@@ -773,6 +892,19 @@
     if (goalBtn) { advisor.goal = goalBtn.dataset.advGoal; renderTradeLab(); return; }
     const nBtn = e.target.closest("[data-adv-n]");
     if (nBtn) { advisor.n = Number(nBtn.dataset.advN); renderTradeLab(); return; }
+    const swapBtn = e.target.closest("[data-adv-swap]");
+    if (swapBtn && advisor.results) {
+      const [ri, ti] = swapBtn.dataset.advSwap.split(":").map(Number);
+      const t = advisor.results[ri] && advisor.results[ri].trades[ti];
+      if (t) addSwapsToPlan([{ outId: t.o.id, inId: t.i.id }]);
+      return;
+    }
+    const addAll = e.target.closest("[data-adv-addall]");
+    if (addAll && advisor.results) {
+      const r = advisor.results[Number(addAll.dataset.advAddall)];
+      if (r) addSwapsToPlan(r.trades.map(({ o, i }) => ({ outId: o.id, inId: i.id })));
+      return;
+    }
     const applyAdv = e.target.closest("[data-adv-apply]");
     if (applyAdv && advisor.results) {
       const r = advisor.results[Number(applyAdv.dataset.advApply)];

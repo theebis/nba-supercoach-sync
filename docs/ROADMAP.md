@@ -45,3 +45,16 @@ Agreed, in order:
 6. **UI**: bigger player photos, lockout countdown in the header, light mode option.
 7. **Price-rise alarm** and **Who's hot**: wanted, but the home page is full. Plan: show them during the trade window (Mon–Tue), inside Trade Lab / the briefing, not as new home-page blocks.
 8. Undecided: "changed since your last visit" dots (owner unsure of value).
+
+## Round 5 answers (25 Nov 2026), preview on branch `preview/round5`
+Built:
+- Live: SC play-by-play feed per game (every play that moved a score, by quarter, "My players" filter, photos), full box scores (SC, MIN, PTS, REB, AST, STL, BLK, TO, FG, FT). Play scoring verified: 227/227 players match the box score (heaves don't count as missed shots; travelling is a turnover). Game centre beside My team on wide screens.
+- Player profile: the score slider is gone; "Round N live" shows score so far, projected finish, vs BE, est. cash and new price from live scores.
+- My Court renamed **My Squad**; the sidebar filter formerly "My Squad" is now **My Players**. New **Injured** view (all injured players; briefing links "See all").
+- Bigger Market stat tiles (clickable); My Squad header with projected cash gen, captain, games, not-counted, squad value.
+- Trade Lab: lockout countdown banner (trades open/closed, next lockout from the fixture list). Advisor: 1-4 trades, "+ Add" per swap to mix suggestions into the current plan, "Add to Plan X" / "Start a new plan with this", card layout, 4-trade search 0.8 s (was 15 s).
+- Every plain hover is now the styled info box; the games boxes show one clean per-round box; advisor chance box explains the numbers.
+- Likely range widened from middle 50% to middle 80% (held the real score 87% of the time on rounds it wasn't built from). Wording: "In testing, N% of real scores landed inside this range." Trade/captain maths read the range level from the data.
+- Past snapshots carry form + price history; Round 1 shows "first round" + its price move.
+- Round rollover: hourly syncs Monday 3-11 PM AEDT. Not yet proven on a live Monday; check Mon 30 Nov evening that Round 7 + Round 6 snapshot appeared.
+- "How it works" text checked against the real screens for Market, My Squad, Trade Lab, Live.

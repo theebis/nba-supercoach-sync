@@ -26,6 +26,10 @@
     fixtures: [],          // [{t, home, away}] from our data
     games: [],             // fixtures matched to ESPN: {key, t, home, away, eventId, state, detail, period, clock, homeScore, awayScore, logos}
     box: {},               // eventId -> [rows]
+    plays: {},             // eventId -> [{q, clock, text, ev: [{id, v}]}] scoring-relevant plays (not cached)
+    playsPending: {},
+    feedQ: null,           // quarter shown in the play feed (null = latest)
+    feedMine: false,       // play feed: only your players
     cache: {},             // eventId -> rows for finished games (also in localStorage)
     selected: null,        // game key shown in the game view
     lastFetch: null,
@@ -78,14 +82,77 @@
       .lv-g-team.lose { color: var(--text-secondary); }
       .lv-g-team.lose .sc { font-weight: 400; }
 
-      /* Layout */
-      .lv-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 14px; align-items: start; }
-      .lv-side { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
-      @media (min-width: 1900px) {
-        .lv-grid { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(280px, 0.6fr); }
-        .lv-side { display: contents; }
+      /* Layout: My team + Top scorers side by side, game centre full width below */
+      /* Phones / narrow: My team, game, top scorers stacked. Wide: My team + top scorers on the left, game on the right */
+      .lv-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
+      @media (min-width: 1300px) {
+        .lv-grid { grid-template-columns: minmax(400px, 0.8fr) minmax(0, 1.5fr); grid-template-areas: "team game" "top game"; }
+        .lv-grid > .lv-myteam { grid-area: team; }
+        .lv-grid > .lv-gc { grid-area: game; }
+        .lv-grid > .lv-top { grid-area: top; }
       }
-      @media (max-width: 1100px) { .lv-grid { grid-template-columns: minmax(0, 1fr); } }
+
+      /* Game centre sizes itself to its own width (container query), not the screen's */
+      .lv-gc { container-type: inline-size; }
+      .lv-gc-body { display: grid; grid-template-columns: minmax(0, 1fr); }
+      .lv-boxes { display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; align-content: start; }
+      .lv-boxes > .lv-box + .lv-box { border-top: 1px solid var(--border-subtle); }
+      @container (min-width: 980px) {
+        .lv-boxes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .lv-boxes > .lv-box + .lv-box { border-top: none; border-left: 1px solid var(--border-subtle); }
+      }
+      .lv-box { min-width: 0; }
+      .lv-box-h { display: flex; align-items: center; gap: 8px; padding: 10px 12px 6px; font-size: 12.5px; font-weight: 600; }
+      .lv-box-h img { width: 18px; height: 18px; object-fit: contain; }
+      .lv-box-h .dim-text { margin-left: auto; font-family: var(--mono); font-weight: 500; font-size: 11.5px; }
+      .lv-box-scroll { overflow-x: auto; overscroll-behavior-x: contain; }
+      .lv-bt { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
+      .lv-bt th { padding: 5px 6px; font-size: 10.5px; font-weight: 500; color: var(--text-tertiary); text-align: right; white-space: nowrap; border-bottom: 1px solid var(--border-subtle); }
+      .lv-bt td { padding: 4px 6px; text-align: right; font-family: var(--mono); color: var(--text-secondary); white-space: nowrap; border-top: 1px solid rgba(255, 255, 255, 0.03); }
+      .lv-bt .pl { text-align: left; font-family: var(--sans); padding-left: 12px; }
+      .lv-bt td.pl { color: var(--text-primary); font-size: 12.5px; }
+      .lv-bt td.pl > * { vertical-align: middle; }
+      .lv-bt td.pl .sc-avatar { display: inline-flex; margin-right: 7px; }
+      .lv-bt td.pl .nm { display: inline-block; max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
+      .lv-bt td.pl .lv-sq { margin-left: 6px; }
+      .lv-bt .scv { color: var(--text-primary); font-weight: 700; font-size: 13px; background: rgba(110, 123, 242, 0.07); }
+      .lv-bt th.scv { color: #A5AEFF; font-weight: 600; }
+      .lv-bt td.scv.neg { color: var(--neg-soft); }
+      .lv-bt .sh { color: var(--text-tertiary); }
+      .lv-bt tr[data-lv-player] { cursor: pointer; }
+      @media (hover: hover) { .lv-bt tbody tr[data-lv-player]:hover td { background-color: var(--bg-hover); } }
+      .lv-bt tr.mine td { background-color: rgba(110, 123, 242, 0.08); }
+      .lv-bt tr.mine td.pl { box-shadow: inset 2px 0 0 var(--accent); }
+      .lv-bt tr.dnp td { color: var(--text-tertiary); }
+      .lv-bt td.why { text-align: left; font-family: var(--sans); font-size: 11px; }
+      .lv-bt tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+      /* SC feed */
+      .lv-feed { border-top: 1px solid var(--border-subtle); min-width: 0; display: flex; flex-direction: column; }
+      .lv-feed-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 12px 14px 10px; border-bottom: 1px solid var(--border-subtle); }
+      .lv-feed-ctrls { display: flex; align-items: center; gap: 8px; }
+      .lv-seg { display: inline-grid; grid-auto-flow: column; gap: 2px; padding: 2px; border-radius: 7px; background: var(--bg-input); border: 1px solid var(--border-subtle); }
+      .lv-seg button { height: 24px; min-width: 34px; padding: 0 8px; border: none; border-radius: 5px; background: transparent; color: var(--text-tertiary); font-size: 11.5px; font-weight: 600; cursor: pointer; transition: color 120ms ease, background-color 120ms ease; }
+      .lv-seg button.on { background: var(--bg-active); color: var(--text-primary); }
+      @media (hover: hover) { .lv-seg button:hover:not(.on) { color: var(--text-secondary); } }
+      .lv-chip { height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--border-default); background: transparent; color: var(--text-secondary); font-size: 11.5px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease; }
+      .lv-chip.on { background: var(--accent-soft); border-color: rgba(110, 123, 242, 0.5); color: #C7CCFF; }
+      .lv-seg button:focus-visible, .lv-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+      .lv-plays { list-style: none; margin: 0; padding: 0; max-height: 560px; overflow-y: auto; overscroll-behavior: contain; }
+      .lv-play { display: grid; grid-template-columns: 40px 26px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 7px 14px; border-top: 1px solid rgba(255, 255, 255, 0.035); }
+      .lv-play:first-child { border-top: none; }
+      .lv-play[data-lv-player] { cursor: pointer; }
+      @media (hover: hover) { .lv-play[data-lv-player]:hover { background: var(--bg-hover); } }
+      .lv-play.mine { background: rgba(110, 123, 242, 0.07); box-shadow: inset 2px 0 0 var(--accent); }
+      .lv-play-t { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); }
+      .lv-play-txt { font-size: 12.5px; color: var(--text-primary); line-height: 1.4; text-wrap: pretty; min-width: 0; }
+      .lv-play-ev { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+      .lv-ev { display: inline-flex; align-items: baseline; gap: 5px; font-family: var(--mono); font-size: 12.5px; font-weight: 700; white-space: nowrap; }
+      .lv-ev small { font-family: var(--sans); font-size: 10.5px; font-weight: 500; color: var(--text-tertiary); }
+      .lv-ev.pos { color: var(--pos-bright); }
+      .lv-ev.neg { color: var(--neg-soft); }
+      .lv-ev.mine small { color: #A5AEFF; }
+      .lv-pre-cols .lv-prow { grid-template-columns: 22px minmax(0, 1fr) auto; }
 
       .lv-card { border: 1px solid var(--border-subtle); border-radius: 12px; background: #0F0F12; min-width: 0; overflow: hidden; }
       .lv-card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px 10px; border-bottom: 1px solid var(--border-subtle); }
@@ -179,6 +246,10 @@
         .lv-prow { padding: 5px 10px; font-size: 12px; }
         .lv-prow .min { display: none; }
         .lv-gv-team b { font-size: 18px; }
+        .lv-play { grid-template-columns: 34px 22px minmax(0, 1fr) auto; gap: 8px; padding: 7px 12px; }
+        .lv-play-txt { font-size: 12px; }
+        .lv-ev small { display: none; }
+        .lv-feed-head { padding: 10px 12px; }
       }
     `;
     document.head.appendChild(style);
@@ -207,11 +278,40 @@
           const s = { pts: n("PTS"), reb: n("REB"), ast: n("AST"), stl: n("STL"), blk: n("BLK"), to: n("TO") };
           const sc = s.pts + s.reb + s.ast + 2 * s.stl + 2 * s.blk - s.to - (fga - fgm) - (fta - ftm);
           rows.push({ id: String(ath.id || ""), name: ath.displayName || ath.shortName || "", short: ath.shortName || ath.displayName || "",
-            team: abbr, min: n("MIN"), dnp, sc: dnp ? 0 : sc, ...s, reason: a.reason || "" });
+            team: abbr, min: n("MIN"), dnp, sc: dnp ? 0 : sc, ...s, reason: a.reason || "",
+            fg: `${fgm}-${fga}`, ft: `${ftm}-${fta}`, tp: String(rec["3PT"] || "0-0"), pf: n("PF"), starter: !!a.starter });
         });
       });
     });
     return rows;
+  }
+
+  // Play-by-play -> SuperCoach points per player. Same scoring as the box score (checked: 227 of 227
+  // players matched across two nights): made shot +pts (+1 assist), missed shot -1 (end-of-quarter heaves
+  // don't count as attempts), block +2, rebound +1, turnover -1 (steal +2). Fouls score nothing.
+  function parsePlays(summary) {
+    const out = [];
+    ((summary && summary.plays) || []).forEach((p) => {
+      const t = String((p.type && p.type.text) || "").toLowerCase();
+      const txt = String(p.text || "");
+      const low = txt.toLowerCase();
+      const sd = String(p.shortDescription || "").toLowerCase();
+      const a = (p.participants || []).map((x) => String((x.athlete && x.athlete.id) || ""));
+      const ev = [];
+      if (p.shootingPlay) {
+        const ft = t.startsWith("free throw");
+        if (p.scoringPlay) { ev.push({ id: a[0], v: Number(p.scoreValue) || 0 }); if (!ft && a[1]) ev.push({ id: a[1], v: 1, ast: true }); }
+        else { if (!t.includes("heave")) ev.push({ id: a[0], v: -1 }); if (!ft && a[1] && low.includes("block")) ev.push({ id: a[1], v: 2 }); }
+      } else if (t.includes("rebound")) { if (a[0]) ev.push({ id: a[0], v: 1 }); }
+      else if (t.includes("turnover") || sd === "turnover" || t.includes("traveling")) {
+        if (a[0]) ev.push({ id: a[0], v: -1 });
+        if (a[1] && low.includes("steal")) ev.push({ id: a[1], v: 2 });
+      }
+      const real = ev.filter((e) => e.id && e.v);
+      if (!real.length) return;
+      out.push({ q: (p.period && p.period.number) || 0, clock: (p.clock && p.clock.displayValue) || "", text: txt.replace(/\s+/g, " ").trim(), ev: real, seq: Number(p.sequenceNumber) || 0 });
+    });
+    return out;
   }
 
   async function getJson(url) {
@@ -284,7 +384,9 @@
       while (i < todo.length) {
         const g = todo[i++];
         try {
-          const rows = parseSummary(await getJson(`${ESPN}/summary?event=${g.eventId}`));
+          const summary = await getJson(`${ESPN}/summary?event=${g.eventId}`);
+          const rows = parseSummary(summary);
+          live.plays[g.eventId] = parsePlays(summary);
           if (rows.length) {
             live.box[g.eventId] = rows;
             if (g.completed) live.cache[g.eventId] = rows;
@@ -316,6 +418,8 @@
     schedule();
     updateNav();
     if (isOpen()) render();
+    // Let the rest of the site (player profile) pick up new live scores
+    document.dispatchEvent(new CustomEvent("schoops:live"));
   }
 
   // Poll only while it helps: fast while games are live, slow (or until the next tip-off) otherwise
@@ -457,7 +561,7 @@
   function renderMyTeam(state, perPlayer) {
     const squad = Object.values(state.computedById).filter((p) => p.inSquad);
     if (!squad.length) {
-      return `<section class="lv-card"><div class="lv-card-head"><div><div class="lv-card-title">My team</div></div></div>
+      return `<section class="lv-card lv-myteam"><div class="lv-card-head"><div><div class="lv-card-title">My team</div></div></div>
         <div class="lv-empty">Add your players and this panel follows them live: each one's score so far, games left and your team total against the projection.<br>
         <button type="button" class="lv-btn" data-lv-go="court">Add my players</button></div></section>`;
     }
@@ -509,9 +613,9 @@
       </button>`;
     };
     const order = (arr) => [...arr].sort((a, b) => (st[b.id].now ? 1 : 0) - (st[a.id].now ? 1 : 0) || st[b.id].sc - st[a.id].sc);
-    return `<section class="lv-card" aria-label="My team live">
+    return `<section class="lv-card lv-myteam" aria-label="My team live">
       <div class="lv-card-head"><div><div class="lv-card-title">My team</div>
-        <div class="lv-card-sub">${lu.fromCourt ? "Your starting 10 from My Court" : "Best lineup from your squad (set it in My Court)"} · best 9 of 10 + captain ×2</div></div>
+        <div class="lv-card-sub">${lu.fromCourt ? "Your starting 10 from My Squad" : "Best lineup from your squad (set it in My Squad)"} · best 9 of 10 + captain ×2</div></div>
         ${liveNow ? `<span class="lv-card-sub" style="display:inline-flex;align-items:center;gap:6px;color:var(--neg-soft)"><span class="lv-dot pulse"></span>${liveNow} on court</span>` : ""}
       </div>
       <div class="lv-sum">
@@ -549,43 +653,108 @@
     return `<div class="lv-strip-wrap"><div class="lv-strip" id="lvStrip">${days.map((day) => `<div class="lv-day"><div class="lv-day-label">${esc(day.d)}</div><div class="lv-day-games">${day.games.map(card).join("")}</div></div>`).join("")}</div></div>`;
   }
 
+  // Small round photo: SuperCoach player's photo if we know him, else ESPN's headshot, else initials
+  function face(r, size) {
+    if (r && r.p) return window.SCHOOPS.renderAvatar(r.p, size);
+    const id = r && r.id;
+    const init = esc(String((r && r.name) || "?").split(" ").map((w) => w[0]).slice(0, 2).join(""));
+    const img = id ? `<img src="https://a.espncdn.com/i/headshots/nba/players/full/${esc(id)}.png" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" />` : "";
+    return `<span class="sc-avatar" style="width:${size}px;height:${size}px">${img}<span class="sc-avatar-init" style="${id ? "display:none" : ""}">${init}</span></span>`;
+  }
+
   function renderGame(state, perEvent) {
     const g = live.games.find((x) => x.key === live.selected);
     if (!g) return "";
+    ensurePlays(g);
     const rows = perEvent[g.eventId] || [];
-    const col = (code, logo) => {
-      let list = rows.filter((r) => r.team === code);
-      if (!list.length) {
-        // Before tip-off: the SuperCoach players on this team, with their per-game projection
+    const sum = (code) => rows.filter((r) => r.team === code).reduce((s2, r) => s2 + r.sc, 0);
+    const side = (code, logo, score, right) => {
+      const img = logo ? `<img src="${esc(logo)}" alt="" />` : "";
+      const big = g.state === "pre" || score === null ? esc(code) : score;
+      const sub = g.state === "pre" ? "" : `${esc(code)} · ${sum(code)} SC`;
+      return `<div class="lv-gv-team ${right ? "r" : ""}">${right ? "" : img}<div><b>${big}</b><br><span>${sub}</span></div>${right ? img : ""}</div>`;
+    };
+    const mid = g.state === "pre" ? `${esc(dayFmt(g.ms))}<br>${esc(timeFmt(g.ms))}` : gameStatus(g);
+    const head = `<div class="lv-gv-score">${side(g.away, g.awayLogo, g.awayScore, false)}<div class="lv-gv-mid">${mid}</div>${side(g.home, g.homeLogo, g.homeScore, true)}</div>`;
+
+    if (g.state === "pre" || !rows.length) {
+      // Before tip-off: each team's SuperCoach players with their projection per game
+      const col = (code) => {
         const sc = Object.values(state.computedById).filter((p) => p.team === code && !p.isInactive && (p.proj || 0) > 0)
           .sort((a, b) => b.proj / (b.games || 1) - a.proj / (a.games || 1)).slice(0, 12);
-        return `<div><div class="lv-gv-h"><span>${esc(code)}</span><span>proj / game</span></div>
-          ${sc.map((p) => `<button type="button" class="lv-prow ${p.inSquad ? "mine" : ""}" data-lv-player="${esc(p.id)}"><span class="nm"><span>${esc(shortName(p.name))}</span>${p.inSquad ? `<span class="lv-sq">YOURS</span>` : ""}</span><span class="v" style="color:var(--text-secondary);font-weight:500">${Math.round(p.proj / ((p.expGames || p.games) || 1))}</span></button>`).join("") || `<div class="lv-pre">No players listed.</div>`}</div>`;
-      }
-      list = [...list].sort((a, b) => (a.dnp - b.dnp) || (b.sc - a.sc));
-      return `<div><div class="lv-gv-h"><span>${esc(code)}</span><span>min · SC</span></div>
-        ${list.map((r) => {
-          const mine = r.p && r.p.inSquad;
-          const attrs = r.p ? `data-lv-player="${esc(r.p.id)}"` : "";
-          const title = r.dnp ? `${r.name}: did not play${r.reason ? ` (${r.reason})` : ""}` : `${r.name}: ${statLine(r)} in ${r.min} min = ${r.sc} SC`;
-          return `<button type="button" class="lv-prow ${mine ? "mine" : ""} ${r.dnp ? "dnp" : ""}" ${attrs} title="${esc(title)}">
-            <span class="nm"><span>${esc(shortName(r.name))}</span>${mine ? `<span class="lv-sq">YOURS</span>` : ""}</span>
-            <span><span class="min">${r.dnp ? "DNP" : r.min}</span><span class="v">${r.dnp ? "—" : r.sc}</span></span></button>`;
-        }).join("")}</div>`;
+        const items = sc.map((p) => {
+          const per = Math.round(p.proj / ((p.expGames || p.games) || 1));
+          const yours = p.inSquad ? `<span class="lv-sq">YOURS</span>` : "";
+          return `<button type="button" class="lv-prow ${p.inSquad ? "mine" : ""}" data-lv-player="${esc(p.id)}">${window.SCHOOPS.renderAvatar(p, 22)}<span class="nm"><span>${esc(p.name)}</span>${yours}</span><span class="v" style="color:var(--text-secondary);font-weight:500">${per}</span></button>`;
+        }).join("");
+        return `<div><div class="lv-gv-h"><span>${esc(code)}</span><span>proj / game</span></div>${items || `<div class="lv-pre">No players listed.</div>`}</div>`;
+      };
+      return `<section class="lv-card lv-gc" aria-label="Game centre">${head}<div class="lv-gv-cols lv-pre-cols">${col(g.away)}${col(g.home)}</div></section>`;
+    }
+
+    // Box score: one table per team, SC first, then the stats that make it up
+    const table = (code, logo) => {
+      const list = [...rows.filter((r) => r.team === code)].sort((a, b) => (a.dnp - b.dnp) || (b.sc - a.sc));
+      const tr = (r) => {
+        const mine = r.p && r.p.inSquad;
+        const attrs = r.p ? `data-lv-player="${esc(r.p.id)}" tabindex="0" role="button"` : "";
+        const who = `<td class="pl">${face(r, 22)}<span class="nm">${esc(r.name)}</span>${mine ? `<span class="lv-sq">YOURS</span>` : ""}</td>`;
+        if (r.dnp) return `<tr class="dnp" ${attrs}>${who}<td class="scv">—</td><td colspan="9" class="why">DNP${r.reason ? ` · ${esc(r.reason)}` : ""}</td></tr>`;
+        return `<tr class="${mine ? "mine" : ""}" ${attrs}>${who}<td class="scv ${r.sc < 0 ? "neg" : ""}">${r.sc}</td><td>${r.min}</td><td>${r.pts}</td><td>${r.reb}</td><td>${r.ast}</td><td>${r.stl}</td><td>${r.blk}</td><td>${r.to}</td><td class="sh">${esc(r.fg || "")}</td><td class="sh">${esc(r.ft || "")}</td></tr>`;
+      };
+      const img = logo ? `<img src="${esc(logo)}" alt="" />` : "";
+      return `<div class="lv-box">
+        <div class="lv-box-h">${img}<span>${esc(code)}</span><span class="dim-text">${sum(code)} SC</span></div>
+        <div class="lv-box-scroll"><table class="lv-bt">
+          <thead><tr><th class="pl">Player</th><th class="scv">SC</th><th>MIN</th><th>PTS</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th class="sh">FG</th><th class="sh">FT</th></tr></thead>
+          <tbody>${list.map(tr).join("")}</tbody></table></div></div>`;
     };
-    const sum = (code) => rows.filter((r) => r.team === code).reduce((s, r) => s + r.sc, 0);
-    const side = (code, logo, score, right) => `<div class="lv-gv-team ${right ? "r" : ""}">
-      ${right ? "" : (logo ? `<img src="${esc(logo)}" alt="" />` : "")}
-      <div><b>${g.state === "pre" || score === null ? esc(code) : score}</b><br><span>${g.state === "pre" ? "" : `${esc(code)} · ${sum(code)} SC`}</span></div>
-      ${right ? (logo ? `<img src="${esc(logo)}" alt="" />` : "") : ""}</div>`;
-    return `<section class="lv-card" aria-label="Game">
-      <div class="lv-gv-score">
-        ${side(g.away, g.awayLogo, g.awayScore, false)}
-        <div class="lv-gv-mid">${g.state === "pre" ? `${esc(dayFmt(g.ms))}<br>${esc(timeFmt(g.ms))}` : gameStatus(g)}</div>
-        ${side(g.home, g.homeLogo, g.homeScore, true)}
-      </div>
-      <div class="lv-gv-cols">${col(g.away, g.awayLogo)}${col(g.home, g.homeLogo)}</div>
-    </section>`;
+
+    return `<section class="lv-card lv-gc" aria-label="Game centre">${head}
+      <div class="lv-gc-body">
+        <div class="lv-boxes">${table(g.away, g.awayLogo)}${table(g.home, g.homeLogo)}</div>
+        ${renderFeed(state, g, rows)}
+      </div></section>`;
+  }
+
+  // SuperCoach feed: every play that scored or cost SC points, by quarter, newest first
+  function renderFeed(state, g, rows) {
+    const plays = live.plays[g.eventId];
+    const byId = {};
+    rows.forEach((r) => { byId[r.id] = r; });
+    const qLabel = (q) => (q > 4 ? (q === 5 ? "OT" : `OT${q - 4}`) : `Q${q}`);
+    const headHtml = (qs, cur) => {
+      const tabs = qs.map((q) => `<button type="button" class="${q === cur ? "on" : ""}" data-lv-q="${q}" aria-pressed="${q === cur}">${qLabel(q)}</button>`).join("");
+      return `<div class="lv-feed-head">
+        <div><div class="lv-card-title">SC feed</div><div class="lv-card-sub">Every play that moved a SuperCoach score</div></div>
+        <div class="lv-feed-ctrls">
+          <div class="lv-seg" role="group" aria-label="Quarter">${tabs}</div>
+          <button type="button" class="lv-chip ${live.feedMine ? "on" : ""}" data-lv-mine aria-pressed="${live.feedMine}">My players</button>
+        </div></div>`;
+    };
+    if (plays === undefined || live.playsPending[g.eventId]) return `<div class="lv-feed">${headHtml([1, 2, 3, 4], 1)}<div class="lv-pre">Loading plays…</div></div>`;
+    if (!plays || !plays.length) return `<div class="lv-feed">${headHtml([1, 2, 3, 4], 1)}<div class="lv-pre">No play-by-play for this game yet.</div></div>`;
+    const maxQ = Math.max(4, ...plays.map((p) => p.q));
+    const qs = Array.from({ length: maxQ }, (_, i) => i + 1);
+    const latest = Math.max(...plays.map((p) => p.q));
+    const cur = live.feedQ && live.feedQ <= maxQ ? live.feedQ : latest;
+    const mine = (id) => byId[id] && byId[id].p && byId[id].p.inSquad;
+    let list = plays.filter((p) => p.q === cur);
+    if (live.feedMine) list = list.filter((p) => p.ev.some((e) => mine(e.id)));
+    list = [...list].sort((a, b) => b.seq - a.seq);
+    const chip = (e) => {
+      const r = byId[e.id];
+      const nm = r ? shortName(r.name) : "";
+      return `<span class="lv-ev ${e.v > 0 ? "pos" : "neg"} ${mine(e.id) ? "mine" : ""}">${e.v > 0 ? "+" : "−"}${Math.abs(e.v)}<small>${esc(nm)}</small></span>`;
+    };
+    const item = (p) => {
+      const main = byId[p.ev[0].id] || { id: p.ev[0].id, name: "" };
+      const isMine = p.ev.some((e) => mine(e.id));
+      const attrs = main.p ? `data-lv-player="${esc(main.p.id)}"` : "";
+      return `<li class="lv-play ${isMine ? "mine" : ""}" ${attrs}><span class="lv-play-t">${esc(p.clock)}</span>${face(main, 26)}<span class="lv-play-txt">${esc(p.text)}</span><span class="lv-play-ev">${p.ev.map(chip).join("")}</span></li>`;
+    };
+    const empty = live.feedMine ? "None of your players scored in this quarter." : "No scoring plays in this quarter yet.";
+    return `<div class="lv-feed">${headHtml(qs, cur)}${list.length ? `<ol class="lv-plays">${list.map(item).join("")}</ol>` : `<div class="lv-pre">${empty}</div>`}</div>`;
   }
 
   function renderTop(state, perPlayer) {
@@ -599,6 +768,20 @@
           <span><span class="min">${x.e.played}g</span><span class="v">${x.e.sc}</span></span></button>`).join("")
         : `<div class="lv-pre">No games played yet this round.</div>`}
     </section>`;
+  }
+
+  // A finished game's box score comes from the cache, so fetch its plays the first time it's opened
+  async function ensurePlays(g) {
+    if (!g || !g.eventId || g.state === "pre" || live.plays[g.eventId] || live.playsPending[g.eventId]) return;
+    live.playsPending[g.eventId] = true;
+    try {
+      const summary = await getJson(`${ESPN}/summary?event=${g.eventId}`);
+      live.plays[g.eventId] = parsePlays(summary);
+      const rows = parseSummary(summary);
+      if (rows.length) live.box[g.eventId] = rows;
+    } catch (err) { live.plays[g.eventId] = null; }
+    live.playsPending[g.eventId] = false;
+    if (isOpen()) render();
   }
 
   function pickDefaultGame() {
@@ -635,7 +818,8 @@
       ${renderStrip(perEvent, state.squadIds || {})}
       <div class="lv-grid">
         ${renderMyTeam(state, perPlayer)}
-        <div class="lv-side">${renderGame(state, perEvent)}${renderTop(state, perPlayer)}</div>
+        ${renderGame(state, perEvent)}
+        ${renderTop(state, perPlayer)}
       </div>
       <div class="lv-foot">
         <p>Live scores are worked out from ESPN box scores with SuperCoach's scoring formula, so during a game they can be a point or two off SuperCoach's. Once SuperCoach publishes a finished game, its official score replaces ours.</p>
@@ -676,6 +860,23 @@
 
   const isOpen = () => window.SCHOOPS && window.SCHOOPS.getState().activeNav === "live";
 
+  // Public: a player's live round (null until this round's games are loaded or if his team has none)
+  window.SchoopsLive = {
+    ready: () => live.games.length > 0,
+    round: () => live.round,
+    player(id) {
+      const state = window.SCHOOPS.getState();
+      const p = state.computedById[id];
+      if (!p || !live.games.length) return null;
+      const { perPlayer } = compute(state);
+      const s = playerStatus(p, perPlayer);
+      if (!s.total) return null;
+      return { sc: s.sc, official: s.official, played: s.played, total: s.total, left: s.left, finish: s.finish,
+        now: s.now ? s.now.detail : null, nowLine: s.nowLine && !s.nowLine.row.dnp ? statLine(s.nowLine.row) : null,
+        done: s.total - s.left - (s.now ? 1 : 0) };
+    }
+  };
+
   function start() {
     live.started = true;
     refreshAll(false);
@@ -698,14 +899,18 @@
           "Live SuperCoach scores for this round, from ESPN box scores, refreshed every 30 seconds while games are on.",
           "<strong>My team</strong> adds up your starting 10 the SuperCoach way: best 9 of 10 count and your captain scores double.",
           "<strong>Projected finish</strong> = points so far + the rest of tonight's game + his remaining games at his projected points per game.",
-          "Tap a game for both teams' players. Your players are highlighted. Live scores can be a point or two off until SuperCoach publishes them; finished games then show SuperCoach's official score."
+          "Tap a game in the strip at the top to open it: both teams' box scores with SuperCoach points, and the <strong>SC feed</strong> of every play that moved a score, by quarter. <strong>My players</strong> filters the feed to your team.",
+          "Your players are highlighted everywhere. Live scores can be a point or two off until SuperCoach publishes them; finished games then show SuperCoach's official score."
         ]
       };
     }
     root.addEventListener("click", (e) => {
       const g = e.target.closest("[data-lv-game]");
-      if (g) { live.selected = g.dataset.lvGame; render(); return; }
+      if (g) { live.selected = g.dataset.lvGame; live.feedQ = null; render(); return; }
       if (e.target.closest("[data-lv-refresh]")) { refreshAll(false); return; }
+      const q = e.target.closest("[data-lv-q]");
+      if (q) { live.feedQ = Number(q.dataset.lvQ); render(); return; }
+      if (e.target.closest("[data-lv-mine]")) { live.feedMine = !live.feedMine; render(); return; }
       if (e.target.closest('[data-lv-go="court"]')) { window.SCHOOPS.setActiveNav("court"); return; }
       const p = e.target.closest("[data-lv-player]");
       if (p) window.SCHOOPS.openInspector(p.dataset.lvPlayer);

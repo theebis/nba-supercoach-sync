@@ -10,7 +10,7 @@ expected ppg  = a blend of
 expected games = scheduled games x availability, where availability is the player's smoothed share of
   scheduled games actually played so far; for the live round the ESPN injury report overrides it
   (Out for the round -> 0, Day-To-Day -> one game fewer).
-range (likely, middle 50%) = projection x empirical quantiles of actual/projected from the backtest.
+range (likely, middle 80%: 1 in 10 above, 1 in 10 below) = projection x empirical quantiles of actual/projected from the backtest.
 
 Run directly to fit + backtest:  python projection_model.py   (writes model/projection_params.json + prints report)
 The scraper imports project_player() to add proj_v2 / proj_lo / proj_hi / exp_games to the live data.
@@ -120,15 +120,18 @@ def fit(rows):
     return best, best_err
 
 
+RANGE_LO_Q, RANGE_HI_Q = 0.10, 0.90   # likely range = middle 80% of outcomes
+
+
 def range_quantiles(params, rows):
-    """Middle-50% ratios of actual/projected, by projection size bucket."""
+    """Middle-80% ratios of actual/projected, by projection size bucket."""
     buckets = [(0, 40), (40, 80), (80, 10_000)]
     out = []
     for lo, hi in buckets:
         ratios = sorted(x["actual"] / p for x in rows for p in [project(params, x["price"], x["sc"], x["g"], x["past"])[0]] if lo <= p < hi and p > 5)
         if len(ratios) >= 30:
             q = lambda f: ratios[int(f * (len(ratios) - 1))]
-            out.append([lo, round(q(0.25), 3), round(q(0.75), 3)])
+            out.append([lo, round(q(RANGE_LO_Q), 3), round(q(RANGE_HI_Q), 3)])
     return out or DEFAULT_PARAMS["range_q"]
 
 
@@ -202,21 +205,28 @@ def _finish(all_rows, done, cv, verbose):
     # Final model: fit on everything, then measure range coverage
     params, err = fit(all_rows)
     params["range_q"] = range_quantiles(params, all_rows)
-    inside = 0
-    for x in all_rows:
+
+    def inside_range(rq, x):
         p = project(params, x["price"], x["sc"], x["g"], x["past"])[0]
-        lo_r, hi_r = 0.62, 1.30
-        for b_lo, q25, q75 in params["range_q"]:
+        lo_r, hi_r = rq[0][1], rq[0][2]
+        for b_lo, q_lo, q_hi in rq:
             if p >= b_lo:
-                lo_r, hi_r = q25, q75
-        inside += p * lo_r <= x["actual"] <= p * hi_r
+                lo_r, hi_r = q_lo, q_hi
+        return p * lo_r <= x["actual"] <= p * hi_r
+
+    inside = sum(inside_range(params["range_q"], x) for x in all_rows)
+    # Honest check: each round's range built only from the OTHER rounds
+    held = [inside_range(range_quantiles(params, [y for y in all_rows if y["r"] != r]), x)
+            for r in done for x in all_rows if x["r"] == r]
+    range_cv = round(sum(held) / len(held), 3) if held else None
     os.makedirs(os.path.dirname(PARAMS_FILE), exist_ok=True)
     with open(PARAMS_FILE, "w", encoding="utf-8") as f:
         json.dump({"params": params, "fit_rounds": done, "rows": len(all_rows), "honest_test": cv,
-                   "in_sample_mae": round(err, 2), "range_coverage": round(inside / len(all_rows), 3)}, f, indent=2)
+                   "in_sample_mae": round(err, 2), "range_coverage": round(inside / len(all_rows), 3),
+                   "range_coverage_cv": range_cv, "range_level": round(RANGE_HI_Q - RANGE_LO_Q, 2)}, f, indent=2)
     if verbose:
         print(f"Final params: {params}")
-        print(f"Likely range holds the actual score {inside / len(all_rows):.0%} of the time.")
+        print(f"Likely range holds the actual score {inside / len(all_rows):.0%} of the time ({range_cv:.0%} on rounds it wasn't built from).")
     return params
 
 

@@ -109,8 +109,9 @@
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
   }
-  // Spread of a projection: from the likely range (middle 50%) when we have it, else ~22% of the projection
+  // Spread of a projection: from the likely range when we have it, else ~22% of the projection
   function sigmaOf(p) {
+    if (window.SCHOOPS.projSigma) return window.SCHOOPS.projSigma(p);
     if (p.projIsOurs && p.projLo !== null && p.projHi !== null) return Math.max(4, (p.projHi - p.projLo) / 1.35);
     return Math.max(6, (p.proj || 0) * 0.22);
   }
@@ -177,7 +178,10 @@
     else if (ppg !== null && bits.length < 2) bits.push(`${Math.round(ppg)} a game over 3 rounds`);
     if (bits.length < 2 && p.projIsOurs && p.projLo !== null && (p.projHi - p.projLo) <= p.proj * 0.3) bits.push("steady, tight range");
     let s = bits.slice(0, 2).join(", ");
-    if (rank === "vc" && capPick) s = `Backup if ${capPick.name.split(" ").slice(-1)[0]} sits. ${s.charAt(0).toUpperCase()}${s.slice(1)}`;
+    if (rank === "vc" && capPick) {
+      const backup = `Backup if ${capPick.name.split(" ").slice(-1)[0]} sits`;
+      s = s ? `${backup}. ${s.charAt(0).toUpperCase()}${s.slice(1)}` : backup;
+    }
     return s ? `${s.charAt(0).toUpperCase()}${s.slice(1)}.` : `Projected ${p.proj}.`;
   }
 
@@ -244,7 +248,7 @@
             <button type="button" class="${mode === "team" ? "on" : ""}" data-cp-mode="team" aria-pressed="${mode === "team"}">My team</button>
             <button type="button" class="${mode === "all" ? "on" : ""}" data-cp-mode="all" aria-pressed="${mode === "all"}">Everyone</button>
           </div>` : ""}
-          ${canApply ? `<button type="button" class="cp-btn ${alreadySet ? "" : "primary"}" data-cp-apply ${alreadySet ? "disabled" : ""} title="Set these as Captain and Vice-Captain in My Court">${alreadySet ? "Set in My Court" : "Use C & VC"}</button>` : ""}
+          ${canApply ? `<button type="button" class="cp-btn ${alreadySet ? "" : "primary"}" data-cp-apply ${alreadySet ? "disabled" : ""} title="Set these as Captain and Vice-Captain in My Squad">${alreadySet ? "Set in My Squad" : "Use C & VC"}</button>` : ""}
           <button type="button" class="cp-btn quiet" data-cp-toggle aria-expanded="true" title="Shrink to one line">Hide</button>
         </div>
       </div>
