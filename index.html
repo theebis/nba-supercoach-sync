@@ -25,6 +25,10 @@
       --warn: #F59E0B;
       --warn-bg: rgba(245, 158, 11, 0.12);
       --neutral-bg: #1E1E24;
+      --be-bg: rgba(255, 255, 255, 0.032);
+      --be-bg-hover: rgba(255, 255, 255, 0.06);
+      --be-head-bg: #15151B;
+      --be-border: #2B2B35;
       --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
       --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
@@ -270,6 +274,7 @@
       height: 6px;
       border-radius: 50%;
       background: var(--pos);
+      flex-shrink: 0;
     }
 
     .sync-dot.loading { background: var(--warn); }
@@ -668,18 +673,73 @@
       cursor: pointer;
       user-select: none;
       white-space: nowrap;
+      z-index: 2;
     }
 
     thead th:hover { color: var(--text); }
     thead th.num, tbody td.num { text-align: right; }
 
+    thead th.sort-active {
+      color: var(--text);
+    }
+
+    .sort-arrow {
+      font-size: 8.5px;
+      margin-left: 3px;
+      opacity: 0.85;
+    }
+
+    /* Breakeven Spotlight Column */
+    thead th.col-be {
+      background: var(--be-head-bg);
+      color: var(--text);
+      font-weight: 700;
+      border-left: 1px solid var(--be-border);
+      border-right: 1px solid var(--be-border);
+      box-shadow: inset 0 2px 0 var(--pos);
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+
+    tbody td.col-be {
+      background: var(--be-bg);
+      border-left: 1px solid var(--be-border);
+      border-right: 1px solid var(--be-border);
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+
+    tbody tr:hover td.col-be {
+      background: var(--be-bg-hover);
+    }
+
+    .be-main {
+      font-weight: 700;
+      font-size: 13px;
+      color: #FFFFFF;
+    }
+
+    .be-dist {
+      font-size: 10.5px;
+      font-weight: 600;
+      margin-left: 5px;
+    }
+
     tbody tr {
       border-bottom: 1px solid #1A1A20;
-      transition: background 0.1s;
+      transition: background 0.1s, opacity 0.12s;
     }
 
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: var(--surface-hover); }
+
+    tbody tr.row-dnp {
+      opacity: 0.66;
+    }
+
+    tbody tr.row-dnp:hover {
+      opacity: 1;
+    }
 
     tbody td {
       padding: 7px 10px;
@@ -719,6 +779,12 @@
       background: var(--neg-bg);
       color: var(--neg);
       border-color: rgba(239, 68, 68, 0.35);
+    }
+
+    .trend-badge.dnp {
+      background: #1B1B22;
+      color: var(--text-muted);
+      border-color: var(--border-strong);
     }
 
     .row-actions {
@@ -790,6 +856,17 @@
       font-weight: 600;
     }
 
+    .dnp-pill {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 0px 4px;
+      border-radius: 2px;
+      background: var(--neg-bg);
+      color: var(--neg);
+      letter-spacing: 0.04em;
+    }
+
     .pos-text { color: var(--pos); }
     .neg-text { color: var(--neg); }
     .muted-text { color: var(--text-muted); }
@@ -807,6 +884,7 @@
     .signal-buy { background: var(--pos-bg); color: var(--pos); }
     .signal-sell { background: var(--neg-bg); color: var(--neg); }
     .signal-hold { background: var(--neutral-bg); color: var(--text-muted); }
+    .signal-dnp { background: #1B1B22; color: var(--text-dim); border: 1px solid var(--border); }
 
     .table-footer {
       display: flex;
@@ -994,11 +1072,11 @@
         </div>
         <div class="sp-stat">
           <span class="sp-stat-label">Est. Cash Earned</span>
-          <span class="sp-stat-val pos-text" id="calcCashEarned">+$4.15M</span>
+          <span class="sp-stat-val pos-text" id="calcCashEarned">+$1.04M</span>
         </div>
         <div class="sp-stat">
           <span class="sp-stat-label">Est. New Price</span>
-          <span class="sp-stat-val" id="calcNewPrice">$13.38M</span>
+          <span class="sp-stat-val" id="calcNewPrice">$10.27M</span>
         </div>
         <button class="icon-btn" id="closeCalcBtn" title="Close Calculator">✕</button>
       </div>
@@ -1077,19 +1155,19 @@
       <table>
         <thead>
           <tr>
-            <th data-sort="name">Player</th>
-            <th class="num" data-sort="price">Price ($M)</th>
-            <th class="num" data-sort="owned">Own %</th>
-            <th class="num" data-sort="r_minus_2" id="thWkMinus2">Wk 4</th>
-            <th class="num" data-sort="r_minus_1" id="thWkMinus1">Wk 5</th>
-            <th class="num" data-sort="games" id="thGms">Rd 6 Gms</th>
-            <th class="num" data-sort="proj" id="thProj">Rd 6 Proj</th>
-            <th class="num" data-sort="be">Breakeven</th>
-            <th class="num" data-sort="avg3">3-Wk Avg</th>
-            <th class="num" data-sort="avg5" title="Reads avg5 / avg_5 / five_week_avg from your JSON">5-Wk Avg</th>
-            <th class="num" data-sort="priceChange">Proj Chg</th>
-            <th class="num" data-sort="newPrice">New Price</th>
-            <th class="num" data-sort="priceChange">Signal</th>
+            <th data-sort="name" data-col="name">Player</th>
+            <th class="num" data-sort="price" data-col="price">Price ($M)</th>
+            <th class="num" data-sort="owned" data-col="owned">Own %</th>
+            <th class="num" data-sort="r_minus_2" data-col="r_minus_2" id="thWkMinus2">Wk 4</th>
+            <th class="num" data-sort="r_minus_1" data-col="r_minus_1" id="thWkMinus1">Wk 5</th>
+            <th class="num" data-sort="games" data-col="games" id="thGms">Rd 6 Gms</th>
+            <th class="num col-be" data-sort="be" data-col="be" id="thBe">Breakeven</th>
+            <th class="num" data-sort="proj" data-col="proj" id="thProj">Rd 6 Proj</th>
+            <th class="num" data-sort="avg3" data-col="avg3">3-Wk Avg</th>
+            <th class="num" data-sort="avg5" data-col="avg5" title="Reads avg5 / avg_5 / five_week_avg from your JSON">5-Wk Avg</th>
+            <th class="num sort-active" data-sort="priceChange" data-col="priceChange">Proj Chg</th>
+            <th class="num" data-sort="newPrice" data-col="newPrice">New Price</th>
+            <th class="num" data-sort="priceChange" data-col="signal">Signal</th>
           </tr>
         </thead>
         <tbody id="tableBody">
@@ -1151,7 +1229,7 @@
           <div class="btn-row">
             <button class="btn btn-danger" id="clearSquadBtn">Reset My Squad &amp; Watchlist</button>
           </div>
-          <span class="hint" id="syncMetaHint">Last synced: —</span>
+          <span class="hint" id="syncMetaHint">Feed timestamp: —</span>
         </div>
       </div>
     </div>
@@ -1186,6 +1264,7 @@
       podsOnly: false,
       search: "",
       sortKey: "priceChange",
+      sortCol: "priceChange",
       sortDir: "desc",
       showAll: false
     };
@@ -1202,6 +1281,41 @@
     function getHistoryUrl(roundNum) {
       const base = DATA_URL.replace(/\/[^\/]+$/, "");
       return `${base}/history/round_${roundNum}.json`;
+    }
+
+    function formatFeedTimestamp(isoStr) {
+      if (!isoStr) return { short: "Live Feed", full: "Unknown feed timestamp", rel: "" };
+      const dt = new Date(isoStr);
+      if (Number.isNaN(dt.getTime())) {
+        return { short: "Live Feed", full: String(isoStr), rel: "" };
+      }
+
+      const now = new Date();
+      const sameDay = dt.toDateString() === now.toDateString();
+      const timePart = dt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const datePart = dt.toLocaleDateString("en-AU", { day: "numeric", month: "short" });
+      const short = sameDay ? `Data ${timePart}` : `Data ${datePart}, ${timePart}`;
+
+      const diffMs = Math.max(0, now.getTime() - dt.getTime());
+      const diffMins = Math.floor(diffMs / 60000);
+      let rel = "just now";
+      if (diffMins >= 1440) {
+        const d = Math.floor(diffMins / 1440);
+        const h = Math.floor((diffMins % 1440) / 60);
+        rel = h > 0 ? `${d}d ${h}h ago` : `${d}d ago`;
+      } else if (diffMins >= 60) {
+        const h = Math.floor(diffMins / 60);
+        const m = diffMins % 60;
+        rel = m > 0 ? `${h}h ${m}m ago` : `${h}h ago`;
+      } else if (diffMins >= 1) {
+        rel = `${diffMins}m ago`;
+      }
+
+      return {
+        short,
+        full: dt.toLocaleString(),
+        rel
+      };
     }
 
     function loadSavedPrefs() {
@@ -1241,7 +1355,9 @@
       const r2 = Number(p.r_minus_2 ?? p.wk_minus_2 ?? p.score_minus_2 ?? 0) || 0;
       const r1 = Number(p.r_minus_1 ?? p.wk_minus_1 ?? p.last_score ?? 0) || 0;
       const proj = Number(p.proj ?? p.projected_score ?? p.projection ?? 0) || 0;
-      const games = Number(p.games ?? p.upcoming_games ?? p.next_games ?? 3);
+
+      const rawGames = p.games ?? p.upcoming_games ?? p.next_games;
+      const games = (rawGames !== null && rawGames !== undefined && rawGames !== "") ? Number(rawGames) : 3;
       const owned = Number(p.owned ?? p.ownership ?? p.owned_pct ?? 0) || 0;
 
       const avg5Raw = p.avg5 ?? p.avg_5 ?? p.five_week_avg ?? p.avg5_points ?? null;
@@ -1275,6 +1391,8 @@
       const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
 
       const isInactive = (r2 === 0 && r1 === 0 && proj === 0);
+      const isZeroGames = (base.games === 0);
+      const isDnp = isInactive || isZeroGames;
       const rolling3 = (r2 + r1 + proj) / 3;
 
       const be = base.officialBe !== null
@@ -1291,11 +1409,14 @@
       const inWatchlist = !!state.watchlistIds[base.id];
 
       let trend = "neutral";
-      if (priceChange >= COW_THRESHOLD) trend = "cow";
-      else if (priceChange <= BLEED_THRESHOLD) trend = "bleed";
+      if (!isInactive) {
+        if (priceChange >= COW_THRESHOLD) trend = "cow";
+        else if (priceChange <= BLEED_THRESHOLD) trend = "bleed";
+      }
 
       let signal = "HOLD";
-      if (trend === "cow") signal = "CASH COW";
+      if (isInactive) signal = "DNP";
+      else if (trend === "cow") signal = "CASH COW";
       else if (trend === "bleed") signal = "BLEEDING";
 
       return {
@@ -1311,6 +1432,9 @@
         priceChange,
         inSquad,
         inWatchlist,
+        isInactive,
+        isZeroGames,
+        isDnp,
         trend,
         signal
       };
@@ -1328,15 +1452,17 @@
       return `$${(val / 1000000).toFixed(2)}M`;
     }
 
-    function setSyncStatus(mode, text) {
+    function setSyncStatus(mode, text, tooltip) {
       const dot = document.getElementById("syncDot");
       const label = document.getElementById("syncText");
+      const btn = document.getElementById("syncBtn");
       dot.className = "sync-dot" + (mode ? ` ${mode}` : "");
       label.textContent = text;
+      if (tooltip) btn.title = tooltip;
     }
 
     async function syncFromGitHub() {
-      setSyncStatus("loading", "Syncing...");
+      setSyncStatus("loading", "Syncing...", "Fetching latest supercoach_data.json...");
       try {
         const res = await fetch(`${DATA_URL}?cb=${Date.now()}`, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -1345,7 +1471,7 @@
         loadDataset(data, "Live Feed");
       } catch (err) {
         console.error("Sync error:", err);
-        setSyncStatus("error", "Sync Failed");
+        setSyncStatus("error", "Sync Failed", `Error: ${err.message}. Click to retry.`);
         document.getElementById("tableBody").innerHTML = `
           <tr>
             <td colspan="13" style="text-align:center; padding:32px; color:var(--neg);">
@@ -1360,7 +1486,7 @@
         syncFromGitHub();
         return;
       }
-      setSyncStatus("loading", `Loading Rd ${roundNum}...`);
+      setSyncStatus("loading", `Loading Rd ${roundNum}...`, `Loading historical snapshot for Round ${roundNum}...`);
       try {
         const res = await fetch(`${getHistoryUrl(roundNum)}?cb=${Date.now()}`, { cache: "no-store" });
         if (!res.ok) throw new Error(`Snapshot for Round ${roundNum} not found (HTTP ${res.status})`);
@@ -1369,7 +1495,7 @@
         loadDataset(data, `Snapshot Rd ${roundNum}`);
       } catch (err) {
         console.error("Snapshot load error:", err);
-        setSyncStatus("error", `Rd ${roundNum} Missing`);
+        setSyncStatus("error", `Rd ${roundNum} Missing`, `Snapshot missing: ${err.message}`);
         alert(`Could not load Round ${roundNum} snapshot.`);
       }
     }
@@ -1417,18 +1543,31 @@
         state.availableRounds.push(state.round);
       }
 
-      state.lastUpdated = data.lastUpdated || new Date().toISOString();
+      state.lastUpdated = data.lastUpdated || data.last_updated || data.updated_at || data.timestamp || null;
+      const ts = formatFeedTimestamp(state.lastUpdated);
 
-      const timeStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-      setSyncStatus("", state.isHistorical ? `Snapshot Rd ${state.round}` : `Synced ${timeStr}`);
+      if (state.isHistorical) {
+        setSyncStatus(
+          "",
+          `Snapshot Rd ${state.round}`,
+          `Historical snapshot for Round ${state.round} · Saved ${ts.full}. Click to return to live feed.`
+        );
+      } else {
+        setSyncStatus(
+          "",
+          ts.short,
+          `Feed updated: ${ts.full}${ts.rel ? ` (${ts.rel})` : ""} · Click to refresh`
+        );
+      }
+
       document.getElementById("syncMetaHint").textContent =
-        `${sourceLabel} · ${state.players.length} players · Updated ${new Date(state.lastUpdated).toLocaleString()}`;
+        `${sourceLabel} · ${state.players.length} players · Feed updated ${ts.full}${ts.rel ? ` (${ts.rel})` : ""}`;
 
       renderRoundDropdown();
       render();
     }
 
-    /* Live Cash Calculator Autocomplete & Math */
+    /* Live Cash Calculator Autocomplete & Math (includes 0.25 weekly weighting fix) */
     function recalculateScratchpad() {
       const be = parseFloat(document.getElementById("calcBeInput").value) || 0;
       const score = parseFloat(document.getElementById("calcScoreInput").value) || 0;
@@ -1565,6 +1704,33 @@
       });
     }
 
+    function updateSortHeaders() {
+      const r = state.round;
+      const baseLabels = {
+        name: "Player",
+        price: "Price ($M)",
+        owned: "Own %",
+        r_minus_2: `Wk ${Math.max(1, r - 2)}`,
+        r_minus_1: `Wk ${Math.max(1, r - 1)}`,
+        games: `Rd ${r} Gms`,
+        be: "Breakeven",
+        proj: `Rd ${r} Proj`,
+        avg3: "3-Wk Avg",
+        avg5: "5-Wk Avg",
+        priceChange: "Proj Chg",
+        newPrice: "New Price",
+        signal: "Signal"
+      };
+
+      document.querySelectorAll("thead th[data-col]").forEach((th) => {
+        const col = th.dataset.col;
+        const isActive = (col === state.sortCol);
+        th.classList.toggle("sort-active", isActive);
+        const arrow = isActive ? `<span class="sort-arrow">${state.sortDir === "asc" ? "▲" : "▼"}</span>` : "";
+        th.innerHTML = `${baseLabels[col] || th.textContent}${arrow}`;
+      });
+    }
+
     function updateKPIs(allComputed) {
       const squad = allComputed.filter((p) => p.inSquad);
       const squadVal = squad.reduce((s, p) => s + p.price, 0);
@@ -1615,13 +1781,9 @@
     }
 
     function render() {
-      const r = state.round;
       document.getElementById("playerCountBadge").textContent = `${state.players.length} PLAYERS`;
       document.getElementById("magicInput").value = state.magicNumber;
-      document.getElementById("thWkMinus2").textContent = `Wk ${Math.max(1, r - 2)}`;
-      document.getElementById("thWkMinus1").textContent = `Wk ${Math.max(1, r - 1)}`;
-      document.getElementById("thGms").textContent = `Rd ${r} Gms`;
-      document.getElementById("thProj").textContent = `Rd ${r} Proj`;
+      updateSortHeaders();
 
       const allComputed = state.players.map(computeRow);
       state.computedById = {};
@@ -1641,17 +1803,36 @@
           const chgClass = p.priceChange > 0 ? "pos-text" : p.priceChange < 0 ? "neg-text" : "muted-text";
           const distClass = p.dist >= 0 ? "pos-text" : "neg-text";
           const distSign = p.dist > 0 ? "+" : "";
-          const sigClass = p.trend === "cow" ? "signal-buy" : p.trend === "bleed" ? "signal-sell" : "signal-hold";
+
+          const sigClass = p.isInactive
+            ? "signal-dnp"
+            : (p.trend === "cow" ? "signal-buy" : p.trend === "bleed" ? "signal-sell" : "signal-hold");
 
           const avg5Cell = (p.avg5 !== null && !Number.isNaN(p.avg5))
             ? `<span class="mono">${p.avg5.toFixed(1)}</span>`
             : `<span class="mono dim-text" title="Not yet in JSON feed">—</span>`;
 
-          const badgeClass = p.trend === "cow" ? "cow" : p.trend === "bleed" ? "bleed" : "";
-          const badgeText = p.trend === "cow" ? "COW" : p.trend === "bleed" ? "BLEED" : "—";
+          const badgeClass = p.isInactive
+            ? "dnp"
+            : (p.trend === "cow" ? "cow" : p.trend === "bleed" ? "bleed" : "");
+          const badgeText = p.isInactive
+            ? "DNP"
+            : (p.trend === "cow" ? "COW" : p.trend === "bleed" ? "BLEED" : "—");
+
+          const gamesClass = p.games >= 4
+            ? "pos-text"
+            : (p.games === 0 ? "neg-text" : "muted-text");
+
+          const dnpMetaPill = p.isInactive
+            ? `<span class="dnp-pill" title="Inactive — 0 pts in last 2 rounds and 0 projected">DNP</span>`
+            : (p.isZeroGames ? `<span class="dnp-pill" title="0 scheduled games this round">0G</span>` : "");
+
+          const beCellHtml = p.isInactive
+            ? `<span class="dim-text">—</span>`
+            : `<span class="be-main">${p.be}</span><span class="be-dist ${distClass}">(${distSign}${p.dist})</span>`;
 
           return `
-            <tr>
+            <tr class="${p.isDnp ? "row-dnp" : ""}">
               <td>
                 <div class="player-cell">
                   <span class="trend-badge ${badgeClass}">${badgeText}</span>
@@ -1665,6 +1846,7 @@
                       <span>${escapeHtml(p.team)}</span>
                       <span>·</span>
                       <span>${escapeHtml(p.pos)}</span>
+                      ${dnpMetaPill}
                       ${p.injury ? `<span class="inj-tag">· ${escapeHtml(String(p.injury))}</span>` : ""}
                     </div>
                   </div>
@@ -1674,12 +1856,9 @@
               <td class="num mono muted-text">${p.owned.toFixed(1)}%</td>
               <td class="num mono">${p.r_minus_2}</td>
               <td class="num mono">${p.r_minus_1}</td>
-              <td class="num mono ${p.games >= 4 ? "pos-text" : "muted-text"}">${p.games}</td>
+              <td class="num mono ${gamesClass}">${p.games}</td>
+              <td class="num mono col-be">${beCellHtml}</td>
               <td class="num mono">${p.proj}</td>
-              <td class="num mono">
-                <span>${p.be}</span>
-                <span class="${distClass}" style="font-size:10.5px; margin-left:4px;">(${distSign}${p.dist})</span>
-              </td>
               <td class="num mono muted-text">${p.avg3.toFixed(1)}</td>
               <td class="num">${avg5Cell}</td>
               <td class="num mono ${chgClass}" style="font-weight:600;">${formatMoney(p.priceChange)}</td>
@@ -1804,8 +1983,14 @@
     document.querySelectorAll("thead th[data-sort]").forEach((th) => {
       th.addEventListener("click", () => {
         const key = th.dataset.sort;
-        if (state.sortKey === key) state.sortDir = state.sortDir === "desc" ? "asc" : "desc";
-        else { state.sortKey = key; state.sortDir = key === "name" ? "asc" : "desc"; }
+        const col = th.dataset.col || key;
+        if (state.sortKey === key && state.sortCol === col) {
+          state.sortDir = state.sortDir === "desc" ? "asc" : "desc";
+        } else {
+          state.sortKey = key;
+          state.sortCol = col;
+          state.sortDir = (key === "name" || key === "be") ? "asc" : "desc";
+        }
         render();
       });
     });
