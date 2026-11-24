@@ -37,7 +37,7 @@ Facts from the owner:
 - SuperCoach's own site lags well behind real time. Reference sites: supercoachinsight.com.au NBA match centre (live SC per game) and footypig.com live scores (AFL, compact two-column team lists). Build a hybrid with its own look, not a copy.
 
 Agreed, in order:
-1. **Live round tracker** (building now). Free: ESPN public box scores read in the browser, scored with our verified formula; round games from SuperCoach's fixture list (saved by the scraper). Your team's live total (best 9 + captain x2), per-player live score and games left, game cards, per-game player lists, top scorers.
+1. **Live round tracker**: preview built on branch `preview/live-tracker` (`live.js`); ship when the owner approves. Checked: live scores matched SuperCoach exactly for 8/8 players tested. Free: ESPN public box scores read in the browser, scored with our verified formula; round games from SuperCoach's fixture list (saved by the scraper). Your team's live total (best 9 + captain x2), per-player live score and games left, game cards, per-game player lists, top scorers.
 2. **Round recap** after each round (captain choice gain/loss, best trade you didn't make, value change).
 3. **Trade-advice scorecard** (private repo only): how often the advisor's suggested trades actually gained points/cash.
 4. **Rival compare**: paste a friend's squad, see differences and who's ahead.

@@ -72,6 +72,19 @@ def main():
     if live.get("availableRounds") != rounds:
         errors.append(f"availableRounds {live.get('availableRounds')} != snapshot files {rounds}")
 
+    # Round fixtures (tip-off times + teams) feed the Live tracker; the current round must have them.
+    # Older data files without the field are allowed (the site falls back to ESPN's own schedule).
+    fixtures = live.get("fixtures")
+    if fixtures is not None:
+        games = fixtures.get(str(live.get("round"))) or []
+        if len(games) < 20:
+            errors.append(f"fixtures: only {len(games)} games for live round {live.get('round')}")
+        teams = {p.get("team") for p in live.get("players", [])}
+        for g in games:
+            if not g.get("t") or g.get("home") not in teams or g.get("away") not in teams:
+                errors.append(f"fixtures: bad game {g}")
+                break
+
     # Round chaining (only for snapshots built with the newer fields)
     for r in rounds[1:]:
         prev_data, prev = snaps[r - 1] if (r - 1) in snaps else (None, None)
