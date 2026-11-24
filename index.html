@@ -552,6 +552,11 @@
       color: var(--text);
     }
 
+    .squad-view-toggle .seg-btn.active {
+      background: #F4F4F6;
+      color: #0A0A0C;
+    }
+
     .toggle-btn {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -733,10 +738,15 @@
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: var(--surface-hover); }
 
-    tbody tr.row-dnp {
-      opacity: 0.66;
+    tbody tr.row-out {
+      opacity: 0.84;
     }
 
+    tbody tr.row-dnp {
+      opacity: 0.56;
+    }
+
+    tbody tr.row-out:hover,
     tbody tr.row-dnp:hover {
       opacity: 1;
     }
@@ -781,10 +791,16 @@
       border-color: rgba(239, 68, 68, 0.35);
     }
 
+    .trend-badge.out {
+      background: var(--warn-bg);
+      color: var(--warn);
+      border-color: rgba(245, 158, 11, 0.35);
+    }
+
     .trend-badge.dnp {
       background: #1B1B22;
-      color: var(--text-muted);
-      border-color: var(--border-strong);
+      color: var(--text-dim);
+      border-color: var(--border);
     }
 
     .row-actions {
@@ -852,11 +868,33 @@
     }
 
     .inj-tag {
-      color: var(--neg);
+      color: var(--warn);
       font-weight: 600;
     }
 
     .dnp-pill {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 0px 4px;
+      border-radius: 2px;
+      background: #1E1E26;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .out-pill {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 0px 4px;
+      border-radius: 2px;
+      background: var(--warn-bg);
+      color: var(--warn);
+      letter-spacing: 0.04em;
+    }
+
+    .zero-pill {
       font-family: var(--mono);
       font-size: 9px;
       font-weight: 700;
@@ -869,6 +907,7 @@
 
     .pos-text { color: var(--pos); }
     .neg-text { color: var(--neg); }
+    .warn-text { color: var(--warn); }
     .muted-text { color: var(--text-muted); }
     .dim-text { color: var(--text-dim); }
 
@@ -883,6 +922,7 @@
 
     .signal-buy { background: var(--pos-bg); color: var(--pos); }
     .signal-sell { background: var(--neg-bg); color: var(--neg); }
+    .signal-out { background: var(--warn-bg); color: var(--warn); }
     .signal-hold { background: var(--neutral-bg); color: var(--text-muted); }
     .signal-dnp { background: #1B1B22; color: var(--text-dim); border: 1px solid var(--border); }
 
@@ -1125,6 +1165,11 @@
           <button class="seg-btn" data-tab="watchlist">Watchlist</button>
         </div>
 
+        <div class="segmented squad-view-toggle" id="squadViewToggle" style="display:none;">
+          <button class="seg-btn active" data-sqview="table">Table</button>
+          <button class="seg-btn" data-sqview="court">Court</button>
+        </div>
+
         <div class="segmented" id="posTabs">
           <button class="seg-btn active" data-pos="ALL">ALL</button>
           <button class="seg-btn" data-pos="PG">PG</button>
@@ -1143,15 +1188,19 @@
 
         <button class="toggle-btn" id="toggleFourGames">4-Game Only</button>
         <button class="toggle-btn" id="togglePods">PODs &lt;5%</button>
+        <button class="toggle-btn active" id="toggleHideDnps" title="Hides deep-bench DNPs while keeping injured stars (OUT/INJ) visible. Auto-disabled in Squad, Watchlist, and Search.">Hide DNPs</button>
       </div>
 
-      <div class="toolbar-right">
+      <div class="toolbar-right" id="toolbarSearchWrap">
         <input type="text" class="search-input" id="searchInput" placeholder="Search player or team..." />
       </div>
     </div>
 
+    <!-- Modular Squad Court View Mount Point (populated by court.js) -->
+    <div id="courtViewRoot" style="display:none;"></div>
+
     <!-- Main Data Table (Read-only from JSON) -->
-    <div class="table-wrap">
+    <div class="table-wrap" id="mainTableWrap">
       <table>
         <thead>
           <tr>
@@ -1209,7 +1258,7 @@
 
         <div class="divider"></div>
 
-        <!-- Est. Magic Number (Moved out of header) -->
+        <!-- Est. Magic Number -->
         <div class="field-group">
           <label>Est. Magic Number (EST. MN)</label>
           <div class="inline-row">
@@ -1245,6 +1294,8 @@
 
     const COW_THRESHOLD = 350000;
     const BLEED_THRESHOLD = -350000;
+    const RELEVANT_OUT_PRICE = 6500000;
+    const RELEVANT_OUT_OWN = 3.0;
 
     const state = {
       liveRound: 6,
@@ -1257,11 +1308,19 @@
       computedById: {},
       squadIds: {},
       watchlistIds: {},
+      court: {
+        slots: {},
+        captainId: null,
+        viceCaptainId: null,
+        lockedBenchIds: {}
+      },
       activeTab: "all",
+      squadViewMode: "table",
       filterPos: "ALL",
       maxPriceM: null,
       fourGamesOnly: false,
       podsOnly: false,
+      hideDnps: true,
       search: "",
       sortKey: "priceChange",
       sortCol: "priceChange",
@@ -1311,18 +1370,13 @@
         rel = `${diffMins}m ago`;
       }
 
-      return {
-        short,
-        full: dt.toLocaleString(),
-        rel
-      };
+      return { short, full: dt.toLocaleString(), rel };
     }
 
     function loadSavedPrefs() {
       try {
         let raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) {
-          // One-time silent migration from v2 if user had a squad saved there
           const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
           if (legacy) {
             raw = legacy;
@@ -1334,6 +1388,14 @@
         if (parsed.magicNumber) state.magicNumber = Number(parsed.magicNumber) || DEFAULT_MAGIC_NUMBER;
         if (parsed.squadIds && typeof parsed.squadIds === "object") state.squadIds = parsed.squadIds;
         if (parsed.watchlistIds && typeof parsed.watchlistIds === "object") state.watchlistIds = parsed.watchlistIds;
+        if (parsed.court && typeof parsed.court === "object") {
+          state.court = {
+            slots: (parsed.court.slots && typeof parsed.court.slots === "object") ? parsed.court.slots : {},
+            captainId: parsed.court.captainId || null,
+            viceCaptainId: parsed.court.viceCaptainId || null,
+            lockedBenchIds: (parsed.court.lockedBenchIds && typeof parsed.court.lockedBenchIds === "object") ? parsed.court.lockedBenchIds : {}
+          };
+        }
       } catch (e) {}
     }
 
@@ -1342,7 +1404,8 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           magicNumber: state.magicNumber,
           squadIds: state.squadIds,
-          watchlistIds: state.watchlistIds
+          watchlistIds: state.watchlistIds,
+          court: state.court
         }));
       } catch (e) {}
     }
@@ -1390,23 +1453,36 @@
       const proj = base.proj;
       const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
 
+      const inSquad = !!state.squadIds[base.id];
+      const inWatchlist = !!state.watchlistIds[base.id];
+
       const isInactive = (r2 === 0 && r1 === 0 && proj === 0);
       const isZeroGames = (base.games === 0);
+      const hasRecentAvg5 = (base.avg5 !== null && !Number.isNaN(base.avg5) && base.avg5 > 0);
+      const isRelevantOut = isInactive && (
+        hasRecentAvg5 ||
+        price >= RELEVANT_OUT_PRICE ||
+        !!base.injury ||
+        base.owned >= RELEVANT_OUT_OWN ||
+        inSquad ||
+        inWatchlist
+      );
+      const isFringeDnp = isInactive && !isRelevantOut;
       const isDnp = isInactive || isZeroGames;
       const rolling3 = (r2 + r1 + proj) / 3;
 
-      const be = base.officialBe !== null
-        ? Math.round(base.officialBe)
-        : (isInactive ? 0 : Math.round((3 * price / magic) - r2 - r1));
+      // Null Breakeven for inactive players so they ALWAYS sink cleanly to the bottom when sorting
+      const be = isInactive
+        ? null
+        : (base.officialBe !== null
+          ? Math.round(base.officialBe)
+          : Math.round((3 * price / magic) - r2 - r1));
 
-      const dist = proj - be;
+      const dist = (be === null) ? null : (proj - be);
       const newPrice = isInactive
         ? price
         : Math.round((0.75 * price + 0.25 * rolling3 * magic) / 10000) * 10000;
       const priceChange = newPrice - price;
-
-      const inSquad = !!state.squadIds[base.id];
-      const inWatchlist = !!state.watchlistIds[base.id];
 
       let trend = "neutral";
       if (!isInactive) {
@@ -1415,7 +1491,8 @@
       }
 
       let signal = "HOLD";
-      if (isInactive) signal = "DNP";
+      if (isRelevantOut) signal = base.injury ? "INJ" : "OUT";
+      else if (isFringeDnp) signal = "DNP";
       else if (trend === "cow") signal = "CASH COW";
       else if (trend === "bleed") signal = "BLEEDING";
 
@@ -1433,6 +1510,8 @@
         inSquad,
         inWatchlist,
         isInactive,
+        isRelevantOut,
+        isFringeDnp,
         isZeroGames,
         isDnp,
         trend,
@@ -1450,6 +1529,10 @@
 
     function formatPriceM(val) {
       return `$${(val / 1000000).toFixed(2)}M`;
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
     }
 
     function setSyncStatus(mode, text, tooltip) {
@@ -1567,7 +1650,7 @@
       render();
     }
 
-    /* Live Cash Calculator Autocomplete & Math (includes 0.25 weekly weighting fix) */
+    /* Live Cash Calculator Autocomplete & Math */
     function recalculateScratchpad() {
       const be = parseFloat(document.getElementById("calcBeInput").value) || 0;
       const score = parseFloat(document.getElementById("calcScoreInput").value) || 0;
@@ -1624,7 +1707,7 @@
         listEl.innerHTML = acMatches.map((p, i) => `
           <button type="button" class="ac-item ${i === acIndex ? "active" : ""}" data-ac-id="${escapeHtml(p.id)}">
             <span>${escapeHtml(p.name)}</span>
-            <span class="ac-meta">${escapeHtml(p.team)} · BE ${p.be} · $${(p.price / 1000000).toFixed(2)}M</span>
+            <span class="ac-meta">${escapeHtml(p.team)} · BE ${p.be === null ? "—" : p.be} · $${(p.price / 1000000).toFixed(2)}M</span>
           </button>
         `).join("");
       }
@@ -1635,7 +1718,7 @@
       const p = state.computedById[playerId];
       if (!p) return;
       document.getElementById("calcPlayerSearch").value = p.name;
-      document.getElementById("calcBeInput").value = p.be;
+      document.getElementById("calcBeInput").value = p.be === null ? 0 : p.be;
       document.getElementById("calcPriceInput").value = (p.price / 1000000).toFixed(2);
       document.getElementById("calcScoreInput").value = p.proj || 0;
       document.getElementById("calcAcList").classList.remove("open");
@@ -1675,11 +1758,19 @@
         ? (state.maxPriceM > 1000 ? state.maxPriceM : state.maxPriceM * 1000000)
         : null;
 
+      // Never hide DNPs inside Squad, Watchlist, or active Search queries
+      const applyHideDnps = state.hideDnps &&
+        state.activeTab !== "squad" &&
+        state.activeTab !== "watchlist" &&
+        q.length === 0;
+
       return allComputed.filter((p) => {
         if (state.activeTab === "squad" && !p.inSquad) return false;
         if (state.activeTab === "cows" && p.trend !== "cow") return false;
         if (state.activeTab === "bleeding" && p.trend !== "bleed") return false;
         if (state.activeTab === "watchlist" && !p.inWatchlist) return false;
+
+        if (applyHideDnps && p.isFringeDnp) return false;
 
         if (state.filterPos !== "ALL") {
           const parts = p.pos.toUpperCase().split(/[\/,\s]+/);
@@ -1698,8 +1789,14 @@
       const k = state.sortKey;
       return [...rows].sort((a, b) => {
         if (k === "name") return a.name.localeCompare(b.name) * dir;
-        const av = a[k] ?? -999999999;
-        const bv = b[k] ?? -999999999;
+        const av = a[k];
+        const bv = b[k];
+        const aNull = (av === null || av === undefined || Number.isNaN(av));
+        const bNull = (bv === null || bv === undefined || Number.isNaN(bv));
+        if (aNull && bNull) return b.price - a.price;
+        if (aNull) return 1;
+        if (bNull) return -1;
+        if (av === bv) return b.price - a.price;
         return (av - bv) * dir;
       });
     }
@@ -1748,7 +1845,7 @@
       const topCow = sortedCows[0];
       if (topCow) {
         document.getElementById("kpiTopCow").textContent = topCow.name;
-        document.getElementById("kpiTopCowMeta").textContent = `${formatMoney(topCow.priceChange)} · BE ${topCow.be}`;
+        document.getElementById("kpiTopCowMeta").textContent = `${formatMoney(topCow.priceChange)} · BE ${topCow.be === null ? "—" : topCow.be}`;
       }
 
       const topPod = sortedCows.find((p) => p.games >= 4 && p.owned > 0 && p.owned < 5);
@@ -1780,6 +1877,26 @@
       });
     }
 
+    function syncViewVisibility() {
+      const isSquadTab = (state.activeTab === "squad");
+      const showCourt = isSquadTab && state.squadViewMode === "court";
+
+      document.getElementById("squadViewToggle").style.display = isSquadTab ? "inline-flex" : "none";
+      document.getElementById("courtViewRoot").style.display = showCourt ? "block" : "none";
+      document.getElementById("mainTableWrap").style.display = showCourt ? "none" : "block";
+
+      // Hide table-only filter controls while inspecting visual Court View
+      const tableControls = ["posTabs", "priceFilterWrap", "toggleFourGames", "togglePods", "toggleHideDnps", "toolbarSearchWrap"];
+      tableControls.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = showCourt ? "none" : "";
+      });
+
+      document.querySelectorAll("#squadViewToggle .seg-btn").forEach((b) => {
+        b.classList.toggle("active", b.dataset.sqview === state.squadViewMode);
+      });
+    }
+
     function render() {
       document.getElementById("playerCountBadge").textContent = `${state.players.length} PLAYERS`;
       document.getElementById("magicInput").value = state.magicNumber;
@@ -1790,6 +1907,7 @@
       allComputed.forEach((p) => { state.computedById[p.id] = p; });
 
       updateKPIs(allComputed);
+      syncViewVisibility();
 
       const filtered = sortRows(getFilteredRows(allComputed));
       const limit = state.showAll ? filtered.length : Math.min(100, filtered.length);
@@ -1801,38 +1919,42 @@
       } else {
         tbody.innerHTML = visible.map((p) => {
           const chgClass = p.priceChange > 0 ? "pos-text" : p.priceChange < 0 ? "neg-text" : "muted-text";
-          const distClass = p.dist >= 0 ? "pos-text" : "neg-text";
-          const distSign = p.dist > 0 ? "+" : "";
+          const distClass = (p.dist !== null && p.dist >= 0) ? "pos-text" : "neg-text";
+          const distSign = (p.dist !== null && p.dist > 0) ? "+" : "";
 
-          const sigClass = p.isInactive
-            ? "signal-dnp"
-            : (p.trend === "cow" ? "signal-buy" : p.trend === "bleed" ? "signal-sell" : "signal-hold");
+          const sigClass = p.isRelevantOut
+            ? "signal-out"
+            : (p.isFringeDnp ? "signal-dnp" : (p.trend === "cow" ? "signal-buy" : p.trend === "bleed" ? "signal-sell" : "signal-hold"));
 
           const avg5Cell = (p.avg5 !== null && !Number.isNaN(p.avg5))
             ? `<span class="mono">${p.avg5.toFixed(1)}</span>`
             : `<span class="mono dim-text" title="Not yet in JSON feed">—</span>`;
 
-          const badgeClass = p.isInactive
-            ? "dnp"
-            : (p.trend === "cow" ? "cow" : p.trend === "bleed" ? "bleed" : "");
-          const badgeText = p.isInactive
-            ? "DNP"
-            : (p.trend === "cow" ? "COW" : p.trend === "bleed" ? "BLEED" : "—");
+          const badgeClass = p.isRelevantOut
+            ? "out"
+            : (p.isFringeDnp ? "dnp" : (p.trend === "cow" ? "cow" : p.trend === "bleed" ? "bleed" : ""));
+          const badgeText = p.isRelevantOut
+            ? (p.injury ? "INJ" : "OUT")
+            : (p.isFringeDnp ? "DNP" : (p.trend === "cow" ? "COW" : p.trend === "bleed" ? "BLEED" : "—"));
 
           const gamesClass = p.games >= 4
             ? "pos-text"
             : (p.games === 0 ? "neg-text" : "muted-text");
 
-          const dnpMetaPill = p.isInactive
-            ? `<span class="dnp-pill" title="Inactive — 0 pts in last 2 rounds and 0 projected">DNP</span>`
-            : (p.isZeroGames ? `<span class="dnp-pill" title="0 scheduled games this round">0G</span>` : "");
+          const statusMetaPill = p.isRelevantOut
+            ? `<span class="out-pill" title="Inactive rotation player / injured star">${p.injury ? "INJ" : "OUT"}</span>`
+            : (p.isFringeDnp
+              ? `<span class="dnp-pill" title="Inactive deep-bench player">DNP</span>`
+              : (p.isZeroGames ? `<span class="zero-pill" title="0 scheduled games this round">0G</span>` : ""));
 
-          const beCellHtml = p.isInactive
+          const beCellHtml = (p.be === null)
             ? `<span class="dim-text">—</span>`
             : `<span class="be-main">${p.be}</span><span class="be-dist ${distClass}">(${distSign}${p.dist})</span>`;
 
+          const rowClass = p.isRelevantOut ? "row-out" : (p.isFringeDnp || p.isZeroGames ? "row-dnp" : "");
+
           return `
-            <tr class="${p.isDnp ? "row-dnp" : ""}">
+            <tr class="${rowClass}">
               <td>
                 <div class="player-cell">
                   <span class="trend-badge ${badgeClass}">${badgeText}</span>
@@ -1846,7 +1968,7 @@
                       <span>${escapeHtml(p.team)}</span>
                       <span>·</span>
                       <span>${escapeHtml(p.pos)}</span>
-                      ${dnpMetaPill}
+                      ${statusMetaPill}
                       ${p.injury ? `<span class="inj-tag">· ${escapeHtml(String(p.injury))}</span>` : ""}
                     </div>
                   </div>
@@ -1869,7 +1991,12 @@
         }).join("");
       }
 
-      document.getElementById("showingCount").textContent = `Showing ${visible.length} of ${filtered.length} matching players`;
+      const hiddenFringeCount = (state.hideDnps && state.activeTab !== "squad" && state.activeTab !== "watchlist" && state.search.trim().length === 0)
+        ? allComputed.filter((p) => p.isFringeDnp).length
+        : 0;
+      const hiddenNote = hiddenFringeCount > 0 ? ` · ${hiddenFringeCount} deep-bench DNPs hidden` : "";
+      document.getElementById("showingCount").textContent = `Showing ${visible.length} of ${filtered.length} matching players${hiddenNote}`;
+
       const showAllBtn = document.getElementById("showAllBtn");
       if (filtered.length > 100 && !state.showAll) {
         showAllBtn.style.display = "inline-block";
@@ -1877,11 +2004,27 @@
       } else {
         showAllBtn.style.display = "none";
       }
+
+      // Notify modular feature scripts (court.js, future tradelab.js)
+      window.SCHOOPS.onRenderListeners.forEach((fn) => {
+        try { fn(); } catch (err) { console.error("Module render error:", err); }
+      });
     }
 
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
-    }
+    /* Modular Plugin Bridge */
+    window.SCHOOPS = {
+      getState: () => state,
+      savePrefs,
+      render,
+      formatMoney,
+      formatPriceM,
+      escapeHtml,
+      getSquadPlayers: () => Object.values(state.computedById).filter((p) => p.inSquad),
+      onRenderListeners: [],
+      onRender(fn) {
+        this.onRenderListeners.push(fn);
+      }
+    };
 
     /* Custom Round Dropdown Events */
     const roundDropdown = document.getElementById("roundDropdown");
@@ -2005,6 +2148,13 @@
       });
     });
 
+    document.querySelectorAll("#squadViewToggle .seg-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.squadViewMode = btn.dataset.sqview;
+        render();
+      });
+    });
+
     document.querySelectorAll("#posTabs .seg-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         document.querySelectorAll("#posTabs .seg-btn").forEach((b) => b.classList.remove("active"));
@@ -2050,6 +2200,12 @@
     document.getElementById("togglePods").addEventListener("click", (e) => {
       state.podsOnly = !state.podsOnly;
       e.target.classList.toggle("active", state.podsOnly);
+      render();
+    });
+
+    document.getElementById("toggleHideDnps").addEventListener("click", (e) => {
+      state.hideDnps = !state.hideDnps;
+      e.target.classList.toggle("active", state.hideDnps);
       render();
     });
 
@@ -2124,6 +2280,7 @@
       if (!confirm("Reset your saved squad and watchlist in this browser?")) return;
       state.squadIds = {};
       state.watchlistIds = {};
+      state.court = { slots: {}, captainId: null, viceCaptainId: null, lockedBenchIds: {} };
       savePrefs();
       modal.classList.remove("open");
       render();
@@ -2134,5 +2291,7 @@
     recalculateScratchpad();
     syncFromGitHub();
   </script>
+  <!-- Modular Phase 2: Squad Court View & Lineup Optimiser -->
+  <script src="court.js?v=8"></script>
 </body>
 </html>
