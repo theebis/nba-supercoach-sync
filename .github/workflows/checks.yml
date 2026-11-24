@@ -20,7 +20,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install Python packages
-        run: pip install curl_cffi pytest
+        run: pip install curl_cffi pytest pyyaml
 
       - name: Price model tests (incl. backtest on real price changes)
         run: node --test tests/pricing.test.js
