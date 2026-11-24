@@ -1,20 +1,21 @@
-/* SCHOOPS: Round briefing panel (PROTOTYPE, shown with ?layout=briefing or ?layout=hybrid)
+/* SCHOOPS: Round briefing panel
  * Docks on the right of the Market on wide screens when no player is being inspected:
  * news about your squad first, then the league injury report and the best cash cows.
- * Clicking a player opens the Player Inspector in the same spot.
+ * Clicking a player opens the Player Inspector in the same spot. Whether it fits is decided by
+ * SCHOOPS.marketExtras() in index.html; people can hide it (remembered in this browser).
  */
 (function () {
   "use strict";
 
-  const LAYOUT = new URLSearchParams(location.search).get("layout") || "";
-  const ENABLED = /briefing|hybrid/.test(LAYOUT);
-  const MIN_WIDTH = 1400;
+  const HIDE_KEY = "schoops_briefing_hidden";
+  const readHidden = () => { try { return localStorage.getItem(HIDE_KEY) === "1"; } catch (err) { return false; } };
+  const writeHidden = (v) => { try { v ? localStorage.setItem(HIDE_KEY, "1") : localStorage.removeItem(HIDE_KEY); } catch (err) {} };
 
   function injectStyles() {
     const style = document.createElement("style");
     style.textContent = `
       .briefing {
-        width: 400px; flex-shrink: 0; border-left: 1px solid var(--border-subtle); background: #0F0F12;
+        width: 380px; flex-shrink: 0; border-left: 1px solid var(--border-subtle); background: #0F0F12;
         display: none; flex-direction: column; overflow: hidden;
       }
       .briefing.show { display: flex; }
@@ -38,6 +39,9 @@
       .bf-meta { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
       .bf-right { font-family: var(--mono); font-size: 12px; font-weight: 600; text-align: right; white-space: nowrap; }
       .bf-empty { padding: 10px 8px; font-size: 12px; color: var(--text-tertiary); line-height: 1.5; }
+      .bf-hide { height: 24px; padding: 0 8px; border-radius: 5px; border: 1px solid transparent; background: transparent;
+        color: var(--text-tertiary); font-size: 11.5px; cursor: pointer; transition: color 120ms ease, background-color 120ms ease; }
+      @media (hover: hover) { .bf-hide:hover { color: var(--text-primary); background: var(--bg-hover); } }
       .bf-start { margin: 2px 0 6px; padding: 14px; border-radius: 10px; border: 1px solid rgba(110, 123, 242, 0.3);
         background: linear-gradient(180deg, rgba(110, 123, 242, 0.1), rgba(110, 123, 242, 0.03)); }
       .bf-start-title { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
@@ -84,8 +88,16 @@
     const panel = document.getElementById("briefingPanel");
     if (!panel || !window.SCHOOPS) return;
     const state = window.SCHOOPS.getState();
-    const show = ENABLED && state.activeNav === "market" && !state.inspectorId && window.innerWidth >= MIN_WIDTH;
+    const onMarket = state.activeNav === "market";
+    const show = onMarket && !state.inspectorId && window.SCHOOPS.marketExtras().briefing;
     panel.classList.toggle("show", show);
+    // "Briefing" button in the Market header brings it back after hiding (only if it would fit)
+    const reopen = document.getElementById("bfShowBtn");
+    if (reopen) {
+      let fits = false;
+      if (state.briefingHidden) { state.briefingHidden = false; fits = window.SCHOOPS.marketExtras().briefing; state.briefingHidden = true; }
+      reopen.style.display = onMarket && state.briefingHidden && fits ? "inline-flex" : "none";
+    }
     if (!show) return;
 
     const { escapeHtml } = window.SCHOOPS;
@@ -139,7 +151,10 @@
 
     panel.innerHTML = `
       <div class="bf-head">
-        <div class="bf-title">Round ${state.round} briefing</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+          <div class="bf-title">Round ${state.round} briefing</div>
+          <button type="button" class="bf-hide" id="bfHideBtn" title="Hide the briefing (bring it back with the Briefing button)" aria-label="Hide briefing">Hide</button>
+        </div>
         <div class="bf-sub">What matters for your team right now. Click a player for details.</div>
       </div>
       <div class="bf-body">
@@ -163,9 +178,22 @@
       </div>`;
   }
 
+  function setHidden(v) {
+    window.SCHOOPS.getState().briefingHidden = v;
+    writeHidden(v);
+    window.SCHOOPS.render();
+  }
+
   function init() {
-    if (!window.SCHOOPS || !ENABLED) return;
+    if (!window.SCHOOPS) return;
     injectStyles();
+    window.SCHOOPS.getState().briefingHidden = readHidden();
+
+    const ctrls = document.getElementById("marketHeaderControls");
+    if (ctrls) {
+      ctrls.insertAdjacentHTML("afterbegin", `<button type="button" class="ghost-btn" id="bfShowBtn" style="display:none" title="Show the round briefing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="15" y1="4" x2="15" y2="20"/></svg><span>Briefing</span></button>`);
+      document.getElementById("bfShowBtn").addEventListener("click", () => setHidden(false));
+    }
     const frame = document.querySelector(".workspace-frame");
     const insp = document.getElementById("playerInspector");
     const panel = document.createElement("aside");
@@ -174,11 +202,17 @@
     panel.setAttribute("aria-label", "Round briefing");
     frame.insertBefore(panel, insp);
     panel.addEventListener("click", (e) => {
+      if (e.target.closest("#bfHideBtn")) { setHidden(true); return; }
       const b = e.target.closest("[data-bf-player]");
       if (b) window.SCHOOPS.openInspector(b.dataset.bfPlayer);
       if (e.target.closest('[data-bf-go="court"]')) window.SCHOOPS.setActiveNav("court");
     });
-    window.addEventListener("resize", render);
+    // Screen size decides what fits (briefing, Form column), so re-render the whole Market on resize
+    let resizeTimer = null;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => window.SCHOOPS.render(), 120);
+    });
     // Opening/closing the Inspector doesn't trigger a full render, so watch it directly
     new MutationObserver(render).observe(insp, { attributes: true, attributeFilter: ["class"] });
     window.SCHOOPS.onRender(render);

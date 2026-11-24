@@ -14,6 +14,7 @@ Standing brief from the owner: [docs/BRIEF.md](docs/BRIEF.md). Read it. Roadmap/
 ## Layout
 - `index.html` — the whole app shell, styles and Market/Inspector/Settings logic (vanilla JS, no build step).
 - `court.js` — My Court (lineup board, captaincy, Best-9-of-10 optimiser). `tradelab.js` — Trade Lab.
+- `briefing.js` — Round briefing panel on wide screens (your squad's news, injury report, cash cows). What fits beside the Market (briefing, Form & price column) is decided by `marketExtras()` in index.html.
 - `pricing.js` — the price/breakeven model. Shared by the site and `tests/pricing.test.js`.
 - `update_supercoach.py` — scraper → `supercoach_data.json` (live round) + `history/round_N.json`.
 - `debug/` — feed inspection report and `price_history.json` (per-round price rows used to fit/backtest the model).

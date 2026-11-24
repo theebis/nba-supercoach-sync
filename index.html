@@ -1107,11 +1107,9 @@
     }
 
     /* PROTOTYPE "Status & news" column */
-    .market-table td.news-td { padding-left: 20px; font-size: 12.5px; color: var(--text-secondary); }
-    .market-table thead th.news-th { padding-left: 20px; }
-    .news-cell { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
-    .news-cell b { color: var(--text-primary); font-weight: 600; font-family: var(--mono); font-size: 12px; }
-    .news-strong { font-weight: 600; }
+    /* Flexible trailing column (Form & price trend) */
+    .market-table td.flex-td { padding-left: 24px; font-size: 12.5px; color: var(--text-secondary); }
+    .market-table thead th.flex-th { padding-left: 24px; }
     .form-cell { display: inline-flex; align-items: center; gap: 16px; vertical-align: middle; }
     .form-cell svg { display: block; overflow: visible; }
     .form-delta { font-family: var(--mono); font-size: 12px; font-weight: 600; white-space: nowrap; }
@@ -1957,6 +1955,10 @@
                   <span>New Price</span>
                   <button type="button" class="mini-switch" data-col-toggle="newPrice"></button>
                 </div>
+                <div class="pop-row">
+                  <span>Form &amp; price trend (wide screens)</span>
+                  <button type="button" class="mini-switch" data-col-toggle="trendcol"></button>
+                </div>
                 <div class="divider"></div>
                 <button type="button" class="ghost-btn" id="resetColWidthsBtn" style="width:100%; justify-content:center; height:27px; font-size:11.5px;">Reset Column Widths</button>
               </div>
@@ -2211,7 +2213,8 @@
         form: true,
         avg3: false,
         avg5: false,
-        newPrice: false
+        newPrice: false,
+        trendcol: true
       },
       density: "comfortable",
       sidebarWidth: DEFAULT_SIDEBAR_W,
@@ -2736,14 +2739,9 @@
       if (state.displayCols.avg5) cols.push({ key: "avg5", sort: "avg5", label: "5-Wk", align: "num" });
       cols.push({ key: "priceChange", sort: "priceChange", label: "Proj Chg", align: "num" });
       if (state.displayCols.newPrice) cols.push({ key: "newPrice", sort: "newPrice", label: "New Price", align: "num" });
-      // PROTOTYPE (?layout=news / spread / hybrid): a flexible "Status & news" column that absorbs spare width
-      if (/news|spread/.test(PROTO_LAYOUT) && !isPhone()) {
-        if (/spread/.test(PROTO_LAYOUT)) cols.push({ key: "newPrice", sort: "newPrice", label: "New price", align: "num" });
-        cols.push({ key: "news", label: "Status & news", align: "news-th", flex: true });
-      }
-      // PROTOTYPE (?layout=hybrid / form): form bars + price line, absorbing spare width next to the briefing
-      if (/hybrid|form/.test(PROTO_LAYOUT) && !isPhone()) {
-        cols.push({ key: "trendcol", label: "Form (pts/game) · price trend", title: "Bars: points per game in the last 5 rounds (green beat the dashed line, red fell short). Dashed line: points per game needed to hold his price. Line: price since Round 1, ending at this round's projected price.", align: "news-th", flex: true });
+      // Form & price trend: fills spare width on wide screens (see marketExtras)
+      if (!isPhone() && marketExtras(cols).form) {
+        cols.push({ key: "trendcol", label: "Form (pts/game) · price trend", title: "Bars: points per game in the last 5 rounds (green beat the dashed line, red fell short). Dashed line: points per game needed to hold his price. Line: price since Round 1, ending at this round's projected price.", align: "flex-th", flex: true });
       }
       // Phone: the decision numbers (BE, projected change) come first so they're visible without scrolling
       if (isPhone()) {
@@ -2754,8 +2752,23 @@
     }
 
     const isPhone = () => window.matchMedia("(max-width: 760px)").matches;
-    // PROTOTYPE switch for Market layout options: ?layout=briefing | news | spread | hybrid
-    const PROTO_LAYOUT = new URLSearchParams(location.search).get("layout") || "";
+    // What fits next to the Market table, given the screen width (most useful first):
+    // briefing panel (your squad's news) and the Form & price column, then each alone, then neither.
+    const BRIEFING_W = 380;   // keep in sync with .briefing width in briefing.js
+    const FORM_COL_W = 270;
+    function marketExtras(baseCols) {
+      if (isPhone()) return { briefing: false, form: false };
+      const cols = baseCols || getActiveColumns().filter((c) => !c.flex);
+      const tableW = cols.filter((c) => !c.flex).reduce((s, c) => s + getColWidth(c.key), 0);
+      const sidebar = document.getElementById("sidebar");
+      const avail = window.innerWidth - (sidebar ? sidebar.offsetWidth : DEFAULT_SIDEBAR_W) - 24;
+      const wantBriefing = !state.briefingHidden;
+      const wantForm = state.displayCols.trendcol !== false;
+      if (wantBriefing && wantForm && avail >= tableW + BRIEFING_W + FORM_COL_W) return { briefing: true, form: true };
+      if (wantBriefing && avail >= tableW + BRIEFING_W) return { briefing: true, form: false };
+      if (wantForm && avail >= tableW + FORM_COL_W) return { briefing: false, form: true };
+      return { briefing: false, form: false };
+    }
 
     // Form & price cell: points-per-game bars for recent rounds against the per-game average needed
     // to hold his current price (dashed line), plus a price line since Round 1.
@@ -2790,20 +2803,6 @@
       return `<span class="form-cell">${barsSvg}${priceSvg}<span class="form-delta" style="color:${col}">${formatMoney(delta)}<span class="dim-text"> since R${all[0][0]}</span></span></span>`;
     }
 
-    // One-line reason a player matters this round (used by the prototype "Status & news" column)
-    function playerInsight(p) {
-      const esc = escapeHtml;
-      if (p.injuryStatus) {
-        const ret = p.injuryReturn ? ` · back ~${formatReturnDate(p.injuryReturn)}` : "";
-        return `<span class="news-cell"><span class="news-strong ${String(p.injuryStatus).toLowerCase().startsWith("out") ? "neg-text" : "warn-text"}">${esc(p.injury)}</span>${ret} — <span title="${esc(p.injuryDetail || "")}">${esc(p.injuryDetail || "")}</span></span>`;
-      }
-      if (p.isLikelyDnp) return `<span class="news-cell dim-text">No games in the last two rounds. Likely DNP, so price holds.</span>`;
-      if (p.be !== null && p.dist !== null && p.dist <= -20) return `<span class="news-cell">Needs <b>${p.be}</b> over ${p.games} games, projected <b>${p.proj}</b>. <span class="neg-text">Likely to drop.</span></span>`;
-      if (p.be !== null && p.dist !== null && p.dist >= 20) return `<span class="news-cell">Projected <b>${p.proj}</b>, only needs <b>${p.be}</b>. <span class="pos-text">Likely to rise.</span></span>`;
-      if (p.games >= 4) return `<span class="news-cell">4 games this round.</span>`;
-      return `<span class="news-cell dim-text">On track: projected close to breakeven.</span>`;
-    }
-
     function getColWidth(key) {
       const saved = Number(state.colWidths[key]);
       if (saved && !Number.isNaN(saved)) return Math.max(MIN_COL_WIDTHS[key] || 64, saved);
@@ -2820,10 +2819,9 @@
       const cg = document.getElementById("tableColGroup");
       const tbl = document.getElementById("marketTable");
       if (!cg || !tbl) return;
-      const spread = /spread/.test(PROTO_LAYOUT) ? 1.22 : 1;
-      const w = (c) => (c.key === "name" ? getColWidth(c.key) : Math.round(getColWidth(c.key) * spread));
+      const w = (c) => getColWidth(c.key);
       const fixed = cols.filter((c) => !c.flex);
-      const totalPx = fixed.reduce((sum, c) => sum + w(c), 0) + (cols.some((c) => c.flex) ? 280 : 0);
+      const totalPx = fixed.reduce((sum, c) => sum + w(c), 0) + (cols.some((c) => c.flex) ? FORM_COL_W : 0);
       tbl.style.minWidth = `${totalPx}px`;
       cg.innerHTML = cols.map((c) => (c.flex ? `<col data-col-key="${c.key}" />` : `<col data-col-key="${c.key}" style="width:${w(c)}px;" />`)).join("")
         + `<col class="col-fill" ${cols.some((c) => c.flex) ? `style="width:0"` : ""} />`;
@@ -3150,8 +3148,7 @@
               if (c.key === "avg5") return `<td class="num mono muted-text">${p.avg5 !== null ? p.avg5.toFixed(1) : "—"}</td>`;
               if (c.key === "priceChange") return `<td class="num mono ${chgClass}" style="font-weight:600;">${formatMoney(p.priceChange)}</td>`;
               if (c.key === "newPrice") return `<td class="num mono muted-text">${formatPriceM(p.newPrice)}</td>`;
-              if (c.key === "news") return `<td class="news-td">${playerInsight(p)}</td>`;
-              if (c.key === "trendcol") return `<td class="news-td">${renderFormCell(p)}</td>`;
+              if (c.key === "trendcol") return `<td class="flex-td">${renderFormCell(p)}</td>`;
               return `<td></td>`;
             }).join("");
 
@@ -3412,6 +3409,7 @@
       renderSchedStrip,
       renderDismissibleTip,
       getState: () => state,
+      marketExtras: () => marketExtras(),
       savePrefs,
       render,
       setActiveNav,
@@ -3874,6 +3872,6 @@
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
   <script src="court.js?v=13"></script>
   <script src="tradelab.js?v=13"></script>
-  <script src="briefing.js?v=1"></script>
+  <script src="briefing.js?v=2"></script>
 </body>
 </html>
