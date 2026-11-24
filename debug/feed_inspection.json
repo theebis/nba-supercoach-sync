@@ -1,0 +1,1451 @@
+{
+  "generated": "2026-11-24T09:57:08.698934+00:00",
+  "base_url": "https://www.supercoach.com.au/2026/api/nba/classic/v1",
+  "round": 5,
+  "player_count": 643,
+  "settings_top_level": {},
+  "settings_competition": {
+    "current_round": 5,
+    "next_round": 6,
+    "status": "lockout",
+    "is_lockout": true,
+    "is_partial_lockout": true,
+    "lockout_start": "2026-11-24T11:00:00+11:00",
+    "lockout_end": "2026-12-25T11:00:00+11:00",
+    "is_closed": false,
+    "num_users": 23428,
+    "num_leagues": 6441
+  },
+  "player_stats_rows_per_player": [
+    1
+  ],
+  "player_stats_rounds_seen": [
+    5
+  ],
+  "interesting_player_keys": {
+    "active": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "bool"
+      ],
+      "examples": [
+        true
+      ]
+    },
+    "injury_suspension_status": {
+      "present": 643,
+      "non_blank": 0,
+      "types": [
+        "NoneType"
+      ],
+      "examples": []
+    },
+    "injury_suspension_status_text": {
+      "present": 643,
+      "non_blank": 0,
+      "types": [
+        "NoneType"
+      ],
+      "examples": []
+    },
+    "notes": {
+      "present": 643,
+      "non_blank": 0,
+      "types": [
+        "list"
+      ],
+      "examples": []
+    },
+    "played_status": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "dict"
+      ],
+      "examples": [
+        "{\"status\": \"pre\", \"display\": \"Yet to play\"}",
+        "{\"status\": \"post\", \"display\": \"Played\"}"
+      ]
+    }
+  },
+  "interesting_stat_keys": {
+    "avg": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "float",
+        "int"
+      ],
+      "examples": [
+        18.4706,
+        23.1765,
+        9,
+        10.4706
+      ]
+    },
+    "avg3": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "float",
+        "int"
+      ],
+      "examples": [
+        65,
+        85.6667,
+        12,
+        38
+      ]
+    },
+    "avg5": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "float",
+        "int"
+      ],
+      "examples": [
+        62.8,
+        78.8,
+        12,
+        35.6
+      ]
+    },
+    "oppavg": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "float",
+        "int"
+      ],
+      "examples": [
+        42.1111,
+        52.2,
+        22,
+        41
+      ]
+    },
+    "owned": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "float",
+        "int"
+      ],
+      "examples": [
+        0.654014,
+        3.67616,
+        0.0512952,
+        0.769428
+      ]
+    },
+    "ppts": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        58,
+        67,
+        16,
+        27
+      ]
+    },
+    "ppts1": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        33,
+        50,
+        15,
+        19
+      ]
+    },
+    "price": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        13490000,
+        15310000,
+        4460000,
+        6930000
+      ]
+    },
+    "price_change": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        -30000,
+        440000,
+        210000,
+        40000
+      ]
+    },
+    "total_price_change": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        -280000,
+        1110000,
+        210000,
+        340000
+      ]
+    },
+    "venavg": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "float",
+        "int"
+      ],
+      "examples": [
+        46.3333,
+        66.3333,
+        22,
+        38.5333
+      ]
+    }
+  },
+  "player_keys": {
+    "active": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "bool"
+      ],
+      "examples": [
+        true
+      ]
+    },
+    "feed_id": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "str"
+      ],
+      "examples": [
+        "\"1067668\"",
+        "\"1357745\"",
+        "\"1194704\"",
+        "\"1134693\""
+      ]
+    },
+    "first_name": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "str"
+      ],
+      "examples": [
+        "\"Nickeil\"",
+        "\"Dyson\"",
+        "\"RayJ\"",
+        "\"Luguentz\""
+      ]
+    },
+    "hs_url": {
+      "present": 643,
+      "non_blank": 0,
+      "types": [
+        "NoneType"
+      ],
+      "examples": []
+    },
+    "id": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "injury_suspension_status": {
+      "present": 643,
+      "non_blank": 0,
+      "types": [
+        "NoneType"
+      ],
+      "examples": []
+    },
+    "injury_suspension_status_text": {
+      "present": 643,
+      "non_blank": 0,
+      "types": [
+        "NoneType"
+      ],
+      "examples": []
+    },
+    "last_name": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "str"
+      ],
+      "examples": [
+        "\"Alexander-Walker\"",
+        "\"Daniels\"",
+        "\"Dennis\"",
+        "\"Dort\""
+      ]
+    },
+    "locked": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "bool"
+      ],
+      "examples": [
+        false,
+        true
+      ]
+    },
+    "notes": {
+      "present": 643,
+      "non_blank": 0,
+      "types": [
+        "list"
+      ],
+      "examples": []
+    },
+    "played_status": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "dict"
+      ],
+      "examples": [
+        "{\"status\": \"pre\", \"display\": \"Yet to play\"}",
+        "{\"status\": \"post\", \"display\": \"Played\"}"
+      ]
+    },
+    "player_stats": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "list"
+      ],
+      "examples": [
+        "[{\"player_id\": 1, \"round\": 5, \"price\": 13490000, \"price_change\": -30000, \"total_price_change\": -280000, \"points\": 51, \"total_points\": 314, \"position\": 55, \"last",
+        "[{\"player_id\": 2, \"round\": 5, \"price\": 15310000, \"price_change\": 440000, \"total_price_change\": 1110000, \"points\": 83, \"total_points\": 394, \"position\": 19, \"last",
+        "[{\"player_id\": 3, \"round\": 5, \"price\": 4460000, \"price_change\": 210000, \"total_price_change\": 210000, \"points\": 22, \"total_points\": 36, \"position\": 360, \"last_p",
+        "[{\"player_id\": 4, \"round\": 5, \"price\": 6930000, \"price_change\": 40000, \"total_price_change\": 340000, \"points\": 41, \"total_points\": 178, \"position\": 179, \"last_p"
+      ]
+    },
+    "positions": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "list"
+      ],
+      "examples": [
+        "[{\"position\": \"SG\", \"position_long\": \"Shooting Guard\", \"sort\": 2}, {\"position\": \"PG\", \"position_long\": \"Point Guard\", \"sort\": 1}]",
+        "[{\"position\": \"PG\", \"position_long\": \"Point Guard\", \"sort\": 1}]",
+        "[{\"position\": \"SG\", \"position_long\": \"Shooting Guard\", \"sort\": 2}, {\"position\": \"SF\", \"position_long\": \"Small Forward\", \"sort\": 4}]",
+        "[{\"position\": \"PF\", \"position_long\": \"Power Forward\", \"sort\": 5}]"
+      ]
+    },
+    "previous_average": {
+      "present": 643,
+      "non_blank": 628,
+      "types": [
+        "NoneType",
+        "float",
+        "int"
+      ],
+      "examples": [
+        21.07,
+        21.73,
+        4.35,
+        10.09
+      ]
+    },
+    "previous_games": {
+      "present": 643,
+      "non_blank": 628,
+      "types": [
+        "NoneType",
+        "int"
+      ],
+      "examples": [
+        76,
+        74,
+        17,
+        67
+      ]
+    },
+    "previous_total": {
+      "present": 643,
+      "non_blank": 628,
+      "types": [
+        "NoneType",
+        "int"
+      ],
+      "examples": [
+        1601,
+        1608,
+        74,
+        676
+      ]
+    },
+    "team": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "dict"
+      ],
+      "examples": [
+        "{\"id\": 1, \"abbrev\": \"ATL\", \"name\": \"Atlanta\"}",
+        "{\"id\": 5, \"abbrev\": \"CHI\", \"name\": \"Chicago\"}",
+        "{\"id\": 8, \"abbrev\": \"DEN\", \"name\": \"Denver\"}",
+        "{\"id\": 2, \"abbrev\": \"BKN\", \"name\": \"Brooklyn\"}"
+      ]
+    },
+    "team_id": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        1,
+        5,
+        8,
+        2
+      ]
+    }
+  },
+  "player_stats_keys": {
+    "assists": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        11,
+        22,
+        7,
+        1
+      ]
+    },
+    "avg": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "float",
+        "int"
+      ],
+      "examples": [
+        18.4706,
+        23.1765,
+        9,
+        10.4706
+      ]
+    },
+    "avg3": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "float",
+        "int"
+      ],
+      "examples": [
+        65,
+        85.6667,
+        12,
+        38
+      ]
+    },
+    "avg5": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "float",
+        "int"
+      ],
+      "examples": [
+        62.8,
+        78.8,
+        12,
+        35.6
+      ]
+    },
+    "blocks": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        0,
+        4,
+        2,
+        6
+      ]
+    },
+    "games": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        3,
+        2,
+        1,
+        0
+      ]
+    },
+    "last_position": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        45,
+        21,
+        397,
+        181
+      ]
+    },
+    "livegames": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        0,
+        1
+      ]
+    },
+    "livepts": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        0,
+        17,
+        19,
+        13
+      ]
+    },
+    "missed_shots": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        -31,
+        -17,
+        -6,
+        -16
+      ]
+    },
+    "mvp_value": {
+      "present": 643,
+      "non_blank": 465,
+      "types": [
+        "NoneType",
+        "float",
+        "int"
+      ],
+      "examples": [
+        730349.8532803482,
+        660582.9180419821,
+        495555.55555555556,
+        661853.1889290012
+      ]
+    },
+    "opp": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "dict"
+      ],
+      "examples": [
+        "{\"id\": 21, \"abbrev\": \"OKC\", \"name\": \"Oklahoma City\"}",
+        "{\"id\": 6, \"abbrev\": \"CLE\", \"name\": \"Cleveland\"}",
+        "{\"id\": 24, \"abbrev\": \"PHX\", \"name\": \"Phoenix\"}",
+        "{\"id\": 23, \"abbrev\": \"PHI\", \"name\": \"Philadelphia\"}"
+      ]
+    },
+    "opp1": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "dict"
+      ],
+      "examples": [
+        "{\"id\": 3, \"abbrev\": \"BOS\", \"name\": \"Boston\"}",
+        "{\"id\": 6, \"abbrev\": \"CLE\", \"name\": \"Cleveland\"}",
+        "{\"id\": 7, \"abbrev\": \"DAL\", \"name\": \"Dallas\"}",
+        "{\"id\": 18, \"abbrev\": \"MIN\", \"name\": \"Minnesota\"}"
+      ]
+    },
+    "opp1h": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        1,
+        0
+      ]
+    },
+    "opp2": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "dict"
+      ],
+      "examples": [
+        "{\"id\": 16, \"abbrev\": \"MIA\", \"name\": \"Miami\"}",
+        "{\"id\": 20, \"abbrev\": \"NYK\", \"name\": \"New York\"}",
+        "{\"id\": 9, \"abbrev\": \"DET\", \"name\": \"Detroit\"}",
+        "{\"id\": 21, \"abbrev\": \"OKC\", \"name\": \"Oklahoma City\"}"
+      ]
+    },
+    "opp2h": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        1,
+        0
+      ]
+    },
+    "opp3": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "dict"
+      ],
+      "examples": [
+        "{\"id\": 24, \"abbrev\": \"PHX\", \"name\": \"Phoenix\"}",
+        "{\"id\": 16, \"abbrev\": \"MIA\", \"name\": \"Miami\"}",
+        "{\"id\": 25, \"abbrev\": \"POR\", \"name\": \"Portland\"}",
+        "{\"id\": 9, \"abbrev\": \"DET\", \"name\": \"Detroit\"}"
+      ]
+    },
+    "opp3h": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        1,
+        0
+      ]
+    },
+    "oppavg": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "float",
+        "int"
+      ],
+      "examples": [
+        42.1111,
+        52.2,
+        22,
+        41
+      ]
+    },
+    "opph": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        1,
+        0
+      ]
+    },
+    "own_raw": {
+      "present": 643,
+      "non_blank": 642,
+      "types": [
+        "NoneType",
+        "int"
+      ],
+      "examples": [
+        153,
+        860,
+        12,
+        180
+      ]
+    },
+    "owned": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "float",
+        "int"
+      ],
+      "examples": [
+        0.654014,
+        3.67616,
+        0.0512952,
+        0.769428
+      ]
+    },
+    "player_id": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "points": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        51,
+        83,
+        22,
+        41
+      ]
+    },
+    "points_per_min": {
+      "present": 643,
+      "non_blank": 396,
+      "types": [
+        "NoneType",
+        "float",
+        "int"
+      ],
+      "examples": [
+        0.5543478260869565,
+        0.7477477477477478,
+        0.9565217391304348,
+        0.4823529411764706
+      ]
+    },
+    "points_scored": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        63,
+        26,
+        11,
+        34
+      ]
+    },
+    "position": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        55,
+        19,
+        360,
+        179
+      ]
+    },
+    "position_change": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        -10,
+        2,
+        37,
+        -3
+      ]
+    },
+    "position_ranks": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "list"
+      ],
+      "examples": [
+        "[{\"pos_rank\": \"21\", \"pos_rd_rank\": \"32\", \"pos_rank_pos\": \"PG\"}, {\"pos_rank\": \"24\", \"pos_rd_rank\": \"48\", \"pos_rank_pos\": \"SG\"}]",
+        "[{\"pos_rank\": \"6\", \"pos_rd_rank\": \"9\", \"pos_rank_pos\": \"PG\"}, {\"pos_rank\": \"6\", \"pos_rd_rank\": \"13\", \"pos_rank_pos\": \"SG\"}]",
+        "[{\"pos_rank\": \"94\", \"pos_rd_rank\": \"66\", \"pos_rank_pos\": \"PG\"}]",
+        "[{\"pos_rank\": \"64\", \"pos_rd_rank\": \"52\", \"pos_rank_pos\": \"SF\"}, {\"pos_rank\": \"79\", \"pos_rd_rank\": \"63\", \"pos_rank_pos\": \"SG\"}]"
+      ]
+    },
+    "ppts": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        58,
+        67,
+        16,
+        27
+      ]
+    },
+    "ppts1": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        33,
+        50,
+        15,
+        19
+      ]
+    },
+    "price": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        13490000,
+        15310000,
+        4460000,
+        6930000
+      ]
+    },
+    "price_change": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        -30000,
+        440000,
+        210000,
+        40000
+      ]
+    },
+    "rebounds": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        10,
+        32,
+        7,
+        11
+      ]
+    },
+    "round": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        5
+      ]
+    },
+    "round_position": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        118,
+        29,
+        236,
+        150
+      ]
+    },
+    "steals": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        2,
+        22,
+        6,
+        10
+      ]
+    },
+    "total_assists": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        49,
+        99,
+        12,
+        24
+      ]
+    },
+    "total_blocks": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        12,
+        2,
+        8,
+        6
+      ]
+    },
+    "total_games": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        17,
+        4,
+        11,
+        13
+      ]
+    },
+    "total_missed_shots": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        -180,
+        -90,
+        -12,
+        -96
+      ]
+    },
+    "total_points": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        314,
+        394,
+        36,
+        178
+      ]
+    },
+    "total_points_per_min": {
+      "present": 643,
+      "non_blank": 474,
+      "types": [
+        "NoneType",
+        "float",
+        "int"
+      ],
+      "examples": [
+        0.585820895522388,
+        0.7350746268656716,
+        0.8780487804878049,
+        0.42280285035629456
+      ]
+    },
+    "total_points_scored": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        362,
+        159,
+        21,
+        50
+      ]
+    },
+    "total_price_change": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        -280000,
+        1110000,
+        210000,
+        340000
+      ]
+    },
+    "total_rebounds": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        60,
+        136,
+        10,
+        55
+      ]
+    },
+    "total_steals": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        44,
+        102,
+        6,
+        40
+      ]
+    },
+    "total_turnovers": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        -33,
+        -24,
+        -3,
+        -12
+      ]
+    },
+    "turnovers": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "int"
+      ],
+      "examples": [
+        -4,
+        -6,
+        -3,
+        -1
+      ]
+    },
+    "updated_at": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "str"
+      ],
+      "examples": [
+        "\"2026-11-23T04:39:27+11:00\"",
+        "\"2026-11-23T04:39:28+11:00\"",
+        "\"2026-11-23T04:39:29+11:00\"",
+        "\"2026-11-23T04:39:31+11:00\""
+      ]
+    },
+    "ven": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "dict"
+      ],
+      "examples": [
+        "{\"id\": 153, \"name\": \"Paycom Center\", \"display_name\": \"Paycom Center\", \"short_name\": \"Paycom Center\", \"abbrev\": \"PAY\"}",
+        "{\"id\": 151, \"name\": \"Rocket Arena\", \"display_name\": \"Rocket Arena\", \"short_name\": \"Rocket Arena\", \"abbrev\": \"RA\"}",
+        "{\"id\": 150, \"name\": \"Ball Arena\", \"display_name\": \"Ball Arena\", \"short_name\": \"Ball Arena\", \"abbrev\": \"BAL\"}",
+        "{\"id\": 130, \"name\": \"Barclays Center\", \"display_name\": \"Barclays Center\", \"short_name\": \"Barclays Center\", \"abbrev\": \"BC\"}"
+      ]
+    },
+    "ven1": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "dict"
+      ],
+      "examples": [
+        "{\"id\": 125, \"name\": \"TD Garden\", \"display_name\": \"TD Garden\", \"short_name\": \"TD Garden\", \"abbrev\": \"TDG\"}",
+        "{\"id\": 147, \"name\": \"United Center\", \"display_name\": \"United Center\", \"short_name\": \"United Center\", \"abbrev\": \"UC\"}",
+        "{\"id\": 150, \"name\": \"Ball Arena\", \"display_name\": \"Ball Arena\", \"short_name\": \"Ball Arena\", \"abbrev\": \"BAL\"}",
+        "{\"id\": 134, \"name\": \"Target Center\", \"display_name\": \"Target Center\", \"short_name\": \"Target Center\", \"abbrev\": \"TAR\"}"
+      ]
+    },
+    "ven2": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "dict"
+      ],
+      "examples": [
+        "{\"id\": 132, \"name\": \"FTX Arena\", \"display_name\": \"Kaseya Center\", \"short_name\": \"Kaseya\", \"abbrev\": \"KAS\"}",
+        "{\"id\": 147, \"name\": \"United Center\", \"display_name\": \"United Center\", \"short_name\": \"United Center\", \"abbrev\": \"UC\"}",
+        "{\"id\": 127, \"name\": \"Little Caesars Arena\", \"display_name\": \"Little Caesars Arena\", \"short_name\": \"Little Caesars Arena\", \"abbrev\": \"LCA\"}",
+        "{\"id\": 130, \"name\": \"Barclays Center\", \"display_name\": \"Barclays Center\", \"short_name\": \"Barclays Center\", \"abbrev\": \"BC\"}"
+      ]
+    },
+    "ven3": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "dict"
+      ],
+      "examples": [
+        "{\"id\": 137, \"name\": \"Mortgage Matchup Center\", \"display_name\": \"Mortgage Matchup Center\", \"short_name\": \"Mortgage Matchup\", \"abbrev\": \"MMC\"}",
+        "{\"id\": 147, \"name\": \"United Center\", \"display_name\": \"United Center\", \"short_name\": \"United Center\", \"abbrev\": \"UC\"}",
+        "{\"id\": 269, \"name\": \"Moda Center at the Rose Quarter\", \"display_name\": \"Moda Center at the Rose Quarter\", \"short_name\": \"Moda Center at the Rose Quarter\", \"abbr",
+        "{\"id\": 127, \"name\": \"Little Caesars Arena\", \"display_name\": \"Little Caesars Arena\", \"short_name\": \"Little Caesars Arena\", \"abbrev\": \"LCA\"}"
+      ]
+    },
+    "venavg": {
+      "present": 643,
+      "non_blank": 643,
+      "types": [
+        "float",
+        "int"
+      ],
+      "examples": [
+        46.3333,
+        66.3333,
+        22,
+        38.5333
+      ]
+    }
+  },
+  "notes_keys": {},
+  "players_with_injury_or_notes": 0,
+  "sample_players": [
+    {
+      "id": 1,
+      "first_name": "Nickeil",
+      "last_name": "Alexander-Walker",
+      "team_id": 1,
+      "previous_games": 76,
+      "previous_average": 21.07,
+      "previous_total": 1601,
+      "feed_id": "1067668",
+      "hs_url": null,
+      "injury_suspension_status": null,
+      "injury_suspension_status_text": null,
+      "locked": false,
+      "played_status": {
+        "status": "pre",
+        "display": "Yet to play"
+      },
+      "active": true,
+      "team": {
+        "id": 1,
+        "abbrev": "ATL",
+        "name": "Atlanta"
+      },
+      "player_stats": [
+        {
+          "player_id": 1,
+          "round": 5,
+          "price": 13490000,
+          "price_change": -30000,
+          "total_price_change": -280000,
+          "points": 51,
+          "total_points": 314,
+          "position": 55,
+          "last_position": 45,
+          "round_position": 118,
+          "games": 3,
+          "total_games": 17,
+          "updated_at": "2026-11-23T04:39:27+11:00",
+          "points_scored": 63,
+          "total_points_scored": 362,
+          "missed_shots": -31,
+          "total_missed_shots": -180,
+          "rebounds": 10,
+          "total_rebounds": 60,
+          "assists": 11,
+          "total_assists": 49,
+          "blocks": 0,
+          "total_blocks": 12,
+          "steals": 2,
+          "total_steals": 44,
+          "turnovers": -4,
+          "total_turnovers": -33,
+          "avg5": 62.8,
+          "own_raw": 153,
+          "avg": 18.4706,
+          "avg3": 65,
+          "ppts1": 33,
+          "opp": {
+            "id": 21,
+            "abbrev": "OKC",
+            "name": "Oklahoma City"
+          },
+          "oppavg": 42.1111,
+          "opph": 1,
+          "opp1": {
+            "id": 3,
+            "abbrev": "BOS",
+            "name": "Boston"
+          },
+          "opp1h": 1,
+          "opp2": {
+            "id": 16,
+            "abbrev": "MIA",
+            "name": "Miami"
+          },
+          "opp2h": 1,
+          "opp3": {
+            "id": 24,
+            "abbrev": "PHX",
+            "name": "Phoenix"
+          },
+          "opp3h": 1,
+          "ven": {
+            "id": 153,
+            "name": "Paycom Center",
+            "display_name": "Paycom Center",
+            "short_name": "Paycom Center",
+            "abbrev": "PAY"
+          },
+          "venavg": 46.3333,
+          "ven1": {
+            "id": 125,
+            "name": "TD Garden",
+            "display_name": "TD Garden",
+            "short_name": "TD Garden",
+            "abbrev": "TDG"
+          },
+          "ven2": {
+            "id": 132,
+            "name": "FTX Arena",
+            "display_name": "Kaseya Center",
+            "short_name": "Kaseya",
+            "abbrev": "KAS"
+          },
+          "ven3": {
+            "id": 137,
+            "name": "Mortgage Matchup Center",
+            "display_name": "Mortgage Matchup Center",
+            "short_name": "Mortgage Matchup",
+            "abbrev": "MMC"
+          },
+          "livepts": 0,
+          "livegames": 0,
+          "owned": 0.654014,
+          "ppts": 58,
+          "points_per_min": 0.5543478260869565,
+          "total_points_per_min": 0.585820895522388,
+          "mvp_value": 730349.8532803482,
+          "position_change": -10,
+          "position_ranks": [
+            {
+              "pos_rank": "21",
+              "pos_rd_rank": "32",
+              "pos_rank_pos": "PG"
+            },
+            {
+              "pos_rank": "24",
+              "pos_rd_rank": "48",
+              "pos_rank_pos": "SG"
+            }
+          ]
+        }
+      ],
+      "positions": [
+        {
+          "position": "SG",
+          "position_long": "Shooting Guard",
+          "sort": 2
+        },
+        {
+          "position": "PG",
+          "position_long": "Point Guard",
+          "sort": 1
+        }
+      ],
+      "notes": []
+    },
+    {
+      "id": 2,
+      "first_name": "Dyson",
+      "last_name": "Daniels",
+      "team_id": 1,
+      "previous_games": 74,
+      "previous_average": 21.73,
+      "previous_total": 1608,
+      "feed_id": "1357745",
+      "hs_url": null,
+      "injury_suspension_status": null,
+      "injury_suspension_status_text": null,
+      "locked": false,
+      "played_status": {
+        "status": "pre",
+        "display": "Yet to play"
+      },
+      "active": true,
+      "team": {
+        "id": 1,
+        "abbrev": "ATL",
+        "name": "Atlanta"
+      },
+      "player_stats": [
+        {
+          "player_id": 2,
+          "round": 5,
+          "price": 15310000,
+          "price_change": 440000,
+          "total_price_change": 1110000,
+          "points": 83,
+          "total_points": 394,
+          "position": 19,
+          "last_position": 21,
+          "round_position": 29,
+          "games": 3,
+          "total_games": 17,
+          "updated_at": "2026-11-23T04:39:27+11:00",
+          "points_scored": 26,
+          "total_points_scored": 159,
+          "missed_shots": -17,
+          "total_missed_shots": -90,
+          "rebounds": 32,
+          "total_rebounds": 136,
+          "assists": 22,
+          "total_assists": 99,
+          "blocks": 4,
+          "total_blocks": 12,
+          "steals": 22,
+          "total_steals": 102,
+          "turnovers": -6,
+          "total_turnovers": -24,
+          "avg5": 78.8,
+          "own_raw": 860,
+          "avg": 23.1765,
+          "avg3": 85.6667,
+          "ppts1": 50,
+          "opp": {
+            "id": 21,
+            "abbrev": "OKC",
+            "name": "Oklahoma City"
+          },
+          "oppavg": 52.2,
+          "opph": 1,
+          "opp1": {
+            "id": 3,
+            "abbrev": "BOS",
+            "name": "Boston"
+          },
+          "opp1h": 1,
+          "opp2": {
+            "id": 16,
+            "abbrev": "MIA",
+            "name": "Miami"
+          },
+          "opp2h": 1,
+          "opp3": {
+            "id": 24,
+            "abbrev": "PHX",
+            "name": "Phoenix"
+          },
+          "opp3h": 1,
+          "ven": {
+            "id": 153,
+            "name": "Paycom Center",
+            "display_name": "Paycom Center",
+            "short_name": "Paycom Center",
+            "abbrev": "PAY"
+          },
+          "venavg": 66.3333,
+          "ven1": {
+            "id": 125,
+            "name": "TD Garden",
+            "display_name": "TD Garden",
+            "short_name": "TD Garden",
+            "abbrev": "TDG"
+          },
+          "ven2": {
+            "id": 132,
+            "name": "FTX Arena",
+            "display_name": "Kaseya Center",
+            "short_name": "Kaseya",
+            "abbrev": "KAS"
+          },
+          "ven3": {
+            "id": 137,
+            "name": "Mortgage Matchup Center",
+            "display_name": "Mortgage Matchup Center",
+            "short_name": "Mortgage Matchup",
+            "abbrev": "MMC"
+          },
+          "livepts": 0,
+          "livegames": 0,
+          "owned": 3.67616,
+          "ppts": 67,
+          "points_per_min": 0.7477477477477478,
+          "total_points_per_min": 0.7350746268656716,
+          "mvp_value": 660582.9180419821,
+          "position_change": 2,
+          "position_ranks": [
+            {
+              "pos_rank": "6",
+              "pos_rd_rank": "9",
+              "pos_rank_pos": "PG"
+            },
+            {
+              "pos_rank": "6",
+              "pos_rd_rank": "13",
+              "pos_rank_pos": "SG"
+            }
+          ]
+        }
+      ],
+      "positions": [
+        {
+          "position": "SG",
+          "position_long": "Shooting Guard",
+          "sort": 2
+        },
+        {
+          "position": "PG",
+          "position_long": "Point Guard",
+          "sort": 1
+        }
+      ],
+      "notes": []
+    }
+  ]
+}
