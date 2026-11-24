@@ -32,6 +32,12 @@ jobs:
       - name: Inspect feed
         run: python update_supercoach.py --inspect
 
+      - name: Dry-run full sync (result saved to debug/, live data restored)
+        run: |
+          python update_supercoach.py
+          cp supercoach_data.json debug/sync_preview.json
+          git checkout -- supercoach_data.json history/
+
       - name: Commit inspection report
         run: |
           git config --global user.name "github-actions[bot]"

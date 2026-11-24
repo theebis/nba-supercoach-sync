@@ -1224,6 +1224,7 @@
       flex-shrink: 0;
     }
     .micro-tag.out { background: var(--warn-bg); color: var(--warn-bright); }
+    .micro-tag.dtd { background: rgba(255, 196, 0, 0.10); color: #e8c25a; }
     .micro-tag.dnp { background: rgba(255, 255, 255, 0.06); color: var(--text-tertiary); }
     .micro-tag.g0 { background: var(--neg-bg); color: var(--neg-soft); }
 
@@ -2331,8 +2332,31 @@
         gamesAfter: futureGms.gamesAfter,
         owned, avg5, officialBe,
         injury: p.injury || p.injury_status || null,
+        injuryStatus: p.injury_status || (p.injury ? "Injured" : null),
+        injuryDetail: p.injury_detail || null,
+        injuryReturn: p.injury_return || null,
         photo
       };
+    }
+
+    function formatReturnDate(iso) {
+      if (!iso) return "";
+      const d = new Date(`${iso}T00:00:00`);
+      return Number.isNaN(d.getTime()) ? String(iso) : d.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+    }
+
+    function injuryTooltip(p) {
+      const parts = [p.injury, p.injuryDetail, p.injuryReturn ? `Est. return ${formatReturnDate(p.injuryReturn)}` : ""];
+      return parts.filter(Boolean).join(" — ");
+    }
+
+    // OUT / DTD tag from the injury report, shown whether or not the player has been scoring
+    function renderInjuryTag(p) {
+      if (!p.injuryStatus) return "";
+      const s = String(p.injuryStatus).toLowerCase();
+      const label = s.startsWith("out") ? "OUT" : (s.includes("day") ? "DTD" : (s.includes("susp") ? "SUSP" : "INJ"));
+      const cls = label === "DTD" ? "dtd" : "out";
+      return `<span class="micro-tag ${cls}" title="${escapeHtml(injuryTooltip(p))}">${label}</span>`;
     }
 
     function computeRow(base) {
@@ -2748,6 +2772,11 @@
               ${formatPriceM(p.price)} · ${p.owned.toFixed(1)}% owned
               ${p.injury ? ` · <span class="warn-text">${escapeHtml(String(p.injury))}</span>` : ""}
             </div>
+            ${(p.injuryDetail || p.injuryReturn) ? `
+            <div class="insp-sub" style="margin-top:4px; white-space:normal;">
+              ${p.injuryDetail ? escapeHtml(p.injuryDetail) : ""}
+              ${p.injuryReturn ? ` <span class="warn-text">Est. return ${escapeHtml(formatReturnDate(p.injuryReturn))}</span>` : ""}
+            </div>` : ""}
           </div>
         </div>
 
@@ -2904,9 +2933,10 @@
             else if (p.isFringeDnp || p.isZeroGames) rowClasses.push("row-dnp");
             if (state.selectedRowId === p.id) rowClasses.push("row-selected");
 
-            const tagHtml = p.isRelevantOut
-              ? `<span class="micro-tag out">${p.injury ? "INJ" : "OUT"}</span>`
-              : (p.isFringeDnp ? `<span class="micro-tag dnp">DNP</span>` : (p.isZeroGames ? `<span class="micro-tag g0">0G</span>` : ""));
+            const injTag = renderInjuryTag(p);
+            const tagHtml = injTag
+              || (p.isRelevantOut ? `<span class="micro-tag out" title="No recent scores">OUT</span>`
+              : (p.isFringeDnp ? `<span class="micro-tag dnp">DNP</span>` : (p.isZeroGames ? `<span class="micro-tag g0">0G</span>` : "")));
 
             const cells = cols.map((c) => {
               if (c.key === "name") {

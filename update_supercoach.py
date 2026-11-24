@@ -42,6 +42,9 @@ ESPN_ATHLETES_URLS = [
 
 ESPN_TEAMS_URL = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams?limit=40"
 
+# SuperCoach's NBA feed has injury fields but leaves them empty, so injuries come from ESPN.
+ESPN_INJURIES_URL = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries"
+
 
 def fetch_json(url, extra_headers=None, timeout=25):
     hdrs = dict(HEADERS)
@@ -156,6 +159,49 @@ def fetch_headshot_map():
             print(f"ESPN team rosters fallback skipped: {err}")
 
     return headshots, compact
+
+
+def fetch_injury_map():
+    """
+    Builds { normalized_name: injury_dict } from ESPN's public NBA injury report.
+    Also returns a compact-key map. Never raises: returns empty maps if ESPN is unreachable.
+    """
+    injuries, compact = {}, {}
+    try:
+        payload = fetch_json(
+            ESPN_INJURIES_URL,
+            extra_headers={"Origin": "https://www.espn.com", "Referer": "https://www.espn.com/"},
+            timeout=20,
+        )
+        for team_block in payload.get("injuries") or []:
+            for item in team_block.get("injuries") or []:
+                ath = item.get("athlete") or {}
+                name = ath.get("displayName") or f"{ath.get('firstName', '')} {ath.get('lastName', '')}".strip()
+                status = str(item.get("status") or "").strip()
+                if not name or not status or status.lower() in HEALTHY_VALUES:
+                    continue
+                details = item.get("details") or {}
+                entry = {
+                    "status": status,
+                    "type": details.get("type") or None,
+                    "detail": item.get("shortComment") or None,
+                    "return_date": details.get("returnDate") or None,
+                    "updated": item.get("date") or None,
+                }
+                k, ck = normalize_name_key(name), normalize_compact_key(name)
+                injuries.setdefault(k, entry)
+                compact.setdefault(ck, entry)
+        print(f"Loaded {len(injuries)} injury reports from ESPN.")
+    except Exception as err:
+        print(f"ESPN injury report fetch note: {err}")
+    return injuries, compact
+
+
+def short_injury_label(entry):
+    """'Out · Hip' / 'Day-To-Day · Ankle' style label for the site's injury text."""
+    if not entry:
+        return None
+    return " · ".join(x for x in (entry.get("status"), entry.get("type")) if x)
 
 
 BE_KEYS = ("be", "breakeven", "break_even", "breakEven", "be_next", "nbe")
@@ -431,6 +477,8 @@ def parse_player(
     team_games_after,
     headshot_map,
     compact_headshot_map,
+    injury_map=None,
+    compact_injury_map=None,
 ):
     pid = str(p.get("id", ""))
     first_name = str(p.get("first_name", "")).strip()
@@ -496,7 +544,11 @@ def parse_player(
     next_round_games = resolve_future_games(team, team_id, team_games_next)
     round_after_games = resolve_future_games(team, team_id, team_games_after)
 
-    injury = extract_injury(p)
+    # Injury: ESPN report first (SuperCoach leaves its own fields empty), SuperCoach fields as fallback
+    inj_entry = (injury_map or {}).get(normalize_name_key(full_name)) or (compact_injury_map or {}).get(
+        normalize_compact_key(full_name)
+    )
+    injury = short_injury_label(inj_entry) or extract_injury(p)
 
     saved_status = existing_status_map.get(full_name.lower())
     status = saved_status if saved_status == "squad" else "watchlist"
@@ -529,6 +581,9 @@ def parse_player(
         "round_after_games": round_after_games,
         "owned": round(owned, 2),
         "injury": injury,
+        "injury_status": (inj_entry or {}).get("status") or (injury and "Injured") or None,
+        "injury_detail": (inj_entry or {}).get("detail"),
+        "injury_return": (inj_entry or {}).get("return_date"),
         "photo": photo,
         "status": status,
     }
@@ -544,6 +599,8 @@ def build_round_dataset(
     fixture_cache,
     headshot_map,
     compact_headshot_map,
+    injury_map=None,
+    compact_injury_map=None,
 ):
     players_url = f"{base_url}/players-cf?embed=notes,odds,player_stats,positions&round={round_num}"
     print(f"Fetching Round {round_num} player pool: {players_url}")
@@ -570,12 +627,17 @@ def build_round_dataset(
             team_games_after,
             headshot_map,
             compact_headshot_map,
+            injury_map,
+            compact_injury_map,
         )
         for p in raw_list
     ]
 
     matched_photos = sum(1 for x in parsed if x.get("photo"))
     print(f"Round {round_num}: matched headshots for {matched_photos}/{len(parsed)} players.")
+    if injury_map:
+        matched_inj = sum(1 for x in parsed if x.get("injury"))
+        print(f"Round {round_num}: matched injuries for {matched_inj}/{len(injury_map)} ESPN reports.")
 
     # Compact team_schedule map by team abbreviation
     team_schedule = {}
@@ -592,6 +654,7 @@ def build_round_dataset(
         "magicNumber": magic_number,
         "totalPlayersScraped": len(parsed),
         "lastUpdated": datetime.now(timezone.utc).isoformat(),
+        "injurySource": "ESPN" if injury_map else None,
         "team_schedule": team_schedule,
         "players": parsed,
     }
@@ -650,6 +713,8 @@ def main():
     scores_cache = {}
     fixture_cache = {}
     headshot_map, compact_headshot_map = fetch_headshot_map()
+    # Injuries are a live report, so they only go on the live round (not on backfilled history)
+    injury_map, compact_injury_map = fetch_injury_map()
 
     # 1. Build live target round dataset
     try:
@@ -663,6 +728,8 @@ def main():
             fixture_cache,
             headshot_map,
             compact_headshot_map,
+            injury_map,
+            compact_injury_map,
         )
     except Exception as err:
         print(f"ERROR: {err}. Aborting without modifying JSON.")
