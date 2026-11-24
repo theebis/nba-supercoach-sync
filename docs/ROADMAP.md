@@ -27,5 +27,5 @@ Goal: pilot now, then the go-to hub for NBA SuperCoach. Anyone can use it with n
      ESPN fantasy projections, betting player props (check free availability first).
 3. **Multi-round trade planner** (next 3 rounds, NBA Cup R7-8 game counts, "sell before he peaks").
 4. **Share my squad** link + QR, installable phone app (PWA).
-5. **Captain picks on the front page**: top 3 captain and vice-captain picks with a one-line reason each (+ chance of being top scorer).
+5. **Captain picks on the front page**: top 3 captain and vice-captain picks with a one-line reason each (+ chance of being top scorer). Preview built on branch `preview/captain-picks` (`captains.js`); ship when the owner approves. Also fixes squashed Market columns on phones.
 6. **Public launch prep**: Beta label + feedback button, share with a small group after one more round of private accuracy.

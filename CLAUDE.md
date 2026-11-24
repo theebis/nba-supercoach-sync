@@ -23,6 +23,7 @@ Standing brief from the owner: [docs/BRIEF.md](docs/BRIEF.md). Read it. Roadmap/
 ## Layout
 - `index.html` — the whole app shell, styles and Market/Inspector/Settings logic (vanilla JS, no build step).
 - `court.js` — My Court (lineup board, captaincy, Best-9-of-10 optimiser). `tradelab.js` — Trade Lab.
+- `captains.js` — Captain picks strip above the Market: top 3 C/VC options (My team = starters or squad, Everyone = league), one-line reason, chance of top score (simulation from likely ranges), "Use C & VC" sets them in My Court. Shrinks to one line on phones.
 - `briefing.js` — Round briefing panel on wide screens (your squad's news, injury report, cash cows). What fits beside the Market (briefing, Form & price column) is decided by `marketExtras()` in index.html.
 - `importer.js` + `importmatch.js` — squad import (screenshot read in-browser by Tesseract.js from jsDelivr, or pasted names) with a review step. `npm run check:import` runs real OCR on generated light/dark team screenshots (expects 13+/15).
 - `scripts/accuracy_report.py` — per finished round: projection miss, price-model miss, breakeven hit rate. Published by the data sync to the PRIVATE repo theebis/schoops-private (README.md) when the `ACCURACY_TOKEN` secret exists; it's the owner's private page until they choose to publish it.
