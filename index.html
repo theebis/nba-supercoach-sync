@@ -3,41 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SCHOOPS — NBA SuperCoach Terminal</title>
+  <title>SCHOOPS — NBA SuperCoach</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "05929d6687524b7aa4a3465a3facb806"}'></script><!-- End Cloudflare Web Analytics -->
   <style>
     :root {
-      --bg: #0B0E14;
-      --surface: #12161F;
-      --surface-elevated: #181D29;
-      --surface-hover: #1C2230;
-      --border: rgba(255, 255, 255, 0.075);
-      --border-strong: rgba(255, 255, 255, 0.13);
-      --ring-elevated: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 18px 40px rgba(0, 0, 0, 0.68);
+      /* Linear 2026 Warm-Neutral Dark Palette */
+      --bg-shell: #0A0A0B;
+      --bg-canvas: #101012;
+      --bg-elevated: #161619;
+      --bg-hover: rgba(255, 255, 255, 0.042);
+      --bg-active: rgba(255, 255, 255, 0.078);
+      --bg-input: #0D0D0F;
+
+      --border-subtle: rgba(255, 255, 255, 0.062);
+      --border-default: rgba(255, 255, 255, 0.095);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --shadow-popover: 0 0 0 1px rgba(255, 255, 255, 0.085), 0 18px 44px rgba(0, 0, 0, 0.72);
+
+      --text-primary: #F1F1F3;
+      --text-secondary: #8A8F98;
+      --text-tertiary: #595D66;
+
+      /* Signal Colors — Spent Strictly on Data */
+      --accent: #6E7BF2;
+      --accent-soft: rgba(110, 123, 242, 0.14);
+      --pos: #22C58B;
+      --pos-bright: #34D399;
+      --pos-bg: rgba(34, 197, 139, 0.13);
+      --neg: #EF4444;
+      --neg-soft: #F87171;
+      --neg-bg: rgba(239, 68, 68, 0.13);
+      --warn: #E5A032;
+      --warn-bright: #FBBF24;
+      --warn-bg: rgba(229, 160, 50, 0.14);
+
+      /* Motion Curves (Emil Design-Eng) */
       --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
       --ease-press: cubic-bezier(0.25, 1, 0.5, 1);
-      --dur-fast: 140ms;
+      --dur-fast: 130ms;
       --dur-mid: 180ms;
-      --text: #F2F4F8;
-      --text-muted: #949DAD;
-      --text-dim: #5F687A;
-      --pos: #10B981;
-      --pos-bright: #34D399;
-      --pos-bg: rgba(16, 185, 129, 0.14);
-      --neg: #EF4444;
-      --neg-bg: rgba(239, 68, 68, 0.14);
-      --warn: #F59E0B;
-      --warn-bright: #FBBF24;
-      --warn-bg: rgba(245, 158, 11, 0.16);
-      --be-border: rgba(52, 211, 153, 0.58);
-      --be-head-bg: rgba(16, 185, 129, 0.085);
-      --be-col-bg: rgba(16, 185, 129, 0.045);
-      --be-col-hover: rgba(16, 185, 129, 0.085);
-      --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
       --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --sidebar-w: 224px;
+      --inspector-w: 336px;
     }
 
     * {
@@ -47,29 +59,27 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    html {
-      color-scheme: dark;
-      background: var(--bg);
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
+    html, body {
+      height: 100%;
+      background: var(--bg-shell);
+      color: var(--text-primary);
       font-family: var(--sans);
       font-size: 13px;
       line-height: 1.4;
-      min-height: 100dvh;
+      color-scheme: dark;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
+      overflow: hidden;
     }
 
-    button, input {
+    button, input, select {
+      font-family: inherit;
       touch-action: manipulation;
     }
 
     :focus-visible {
-      outline: 2px solid var(--pos-bright);
-      outline-offset: 2px;
+      outline: 1.5px solid var(--accent);
+      outline-offset: 1px;
     }
 
     .mono {
@@ -77,204 +87,267 @@
       font-variant-numeric: tabular-nums;
     }
 
-    .container {
-      max-width: 1520px;
-      margin: 0 auto;
-      padding: 14px max(22px, env(safe-area-inset-right)) max(44px, env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left));
-      position: relative;
+    .pos-text { color: var(--pos-bright); }
+    .neg-text { color: var(--neg-soft); }
+    .warn-text { color: var(--warn-bright); }
+    .muted-text { color: var(--text-secondary); }
+    .dim-text { color: var(--text-tertiary); }
+
+    /* =====================================================================
+       INVERTED-L APP SHELL (Recessed Sidebar + Elevated Rounded Canvas)
+       ===================================================================== */
+    .app-shell {
+      display: flex;
+      height: 100dvh;
+      width: 100vw;
+      background: var(--bg-shell);
+      padding: 8px 8px 8px 0;
+      gap: 0;
+      overflow: hidden;
     }
 
-    /* Unified 3-Zone Header: Brand Left | Centered Nav | Round + LIVE BE CALC + Cog Right */
-    header {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-      position: relative;
+    /* Recessed Left Sidebar ("Don't compete for attention you haven't earned") */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 4px 10px 6px 12px;
+      user-select: none;
+      overflow-y: auto;
+      overscroll-behavior: contain;
     }
 
-    @media (max-width: 1120px) {
-      header {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
-      .top-nav { justify-content: flex-start !important; }
-      .header-controls { justify-content: flex-start !important; }
-    }
-
-    .brand-group {
+    .sb-top {
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: space-between;
+      height: 34px;
+      padding: 0 6px;
+      margin-bottom: 6px;
     }
 
-    .logo {
-      font-weight: 800;
-      font-size: 18px;
-      letter-spacing: 0.05em;
-      color: var(--text);
+    .brand {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      white-space: nowrap;
-      user-select: none;
+      gap: 7px;
+      font-size: 13.5px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
     }
 
-    .logo-dot {
+    .brand-mark {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, #22C58B 0%, #10946A 100%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #071912;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .sb-cmd-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      height: 24px;
+      padding: 0 7px;
+      border-radius: 5px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
+    }
+
+    .sb-cmd-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+      border-color: var(--border-default);
+    }
+
+    .sb-cmd-btn:active { transform: scale(0.96); }
+
+    .kbd {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-tertiary);
+    }
+
+    .sb-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      margin-bottom: 14px;
+    }
+
+    .sb-section-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      padding: 4px 8px 5px;
+      letter-spacing: 0.01em;
+    }
+
+    .sb-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      height: 29px;
+      padding: 0 8px;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+    }
+
+    .sb-item-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .sb-item svg {
+      width: 14px;
+      height: 14px;
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+      transition: color var(--dur-fast) var(--ease-out);
+    }
+
+    .sb-item:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .sb-item:hover svg { color: var(--text-secondary); }
+
+    .sb-item.active {
+      background: var(--bg-active);
+      color: var(--text-primary);
+    }
+
+    .sb-item.active svg { color: var(--text-primary); }
+
+    .sb-count {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+    }
+
+    .sb-item.active .sb-count { color: var(--text-secondary); }
+
+    .sb-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-left: 4px;
+      margin-right: 4px;
+    }
+
+    .sb-spacer { flex: 1; }
+
+    .sb-footer {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+    }
+
+    /* Round Dropdown inside Sidebar Footer */
+    .round-wrap {
+      position: relative;
+    }
+
+    .round-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      height: 30px;
+      padding: 0 8px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+    }
+
+    .round-btn:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-default);
+    }
+
+    .round-btn-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .live-pip {
       width: 6px;
       height: 6px;
       border-radius: 50%;
       background: var(--pos-bright);
-      display: inline-block;
-      margin-top: -9px;
+      flex-shrink: 0;
     }
 
-    .top-nav {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
+    .live-pip.snap { background: var(--warn-bright); }
 
-    .top-nav-btn {
-      position: relative;
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      padding: 7px 14px;
-      font-family: var(--sans);
-      font-size: 13.5px;
-      font-weight: 500;
-      border-radius: 6px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
-      white-space: nowrap;
-    }
-
-    .top-nav-btn:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .top-nav-btn.active {
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    .top-nav-btn.active::after {
-      content: "";
-      position: absolute;
-      left: 10px;
-      right: 10px;
-      bottom: -13px;
-      height: 2px;
-      background: var(--text);
-      border-radius: 2px 2px 0 0;
-    }
-
-    @media (max-width: 1120px) {
-      .top-nav-btn.active::after { display: none; }
-      .top-nav-btn.active { background: var(--surface-elevated); }
-    }
-
-    .nav-pill-count {
-      font-family: var(--mono);
-      font-size: 10px;
-      font-weight: 600;
-      padding: 1px 5px;
-      border-radius: 99px;
-      background: rgba(255, 255, 255, 0.07);
-      color: var(--text-muted);
-    }
-
-    .nav-pill-soon {
-      font-family: var(--mono);
-      font-size: 9px;
-      font-weight: 600;
-      padding: 1px 5px;
-      border-radius: 3px;
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text-dim);
-      letter-spacing: 0.03em;
-    }
-
-    .header-controls {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 8px;
-      flex-wrap: nowrap;
-    }
-
-    /* Extended Round Dropdown */
-    .round-dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .round-trigger {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+    .round-btn-text {
       font-family: var(--mono);
       font-size: 11px;
-      font-weight: 600;
-      padding: 6px 11px;
-      border-radius: 99px;
-      border: 1px solid var(--border-strong);
-      background: var(--surface);
-      color: var(--text);
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      transition: border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-
-    .round-trigger:hover {
-      border-color: #465169;
-      background: var(--surface-hover);
-    }
-
-    .round-tag-live { color: var(--pos-bright); font-weight: 700; }
-    .round-tag-snap { color: var(--warn-bright); font-weight: 700; }
-
-    .round-chevron {
-      color: var(--text-dim);
-      font-size: 8.5px;
-      transition: transform var(--dur-fast) var(--ease-out);
-    }
-
-    .round-dropdown.open .round-chevron { transform: rotate(180deg); }
 
     .round-menu {
       position: absolute;
-      top: calc(100% + 6px);
-      right: 0;
-      min-width: 295px;
-      background: var(--surface-elevated);
-      border: none;
+      bottom: calc(100% + 6px);
+      left: 0;
+      width: 268px;
+      background: var(--bg-elevated);
       border-radius: 8px;
-      padding: 5px;
-      box-shadow: var(--ring-elevated);
+      padding: 4px;
+      box-shadow: var(--shadow-popover);
       z-index: 95;
       display: flex;
       flex-direction: column;
       gap: 2px;
-      overscroll-behavior: contain;
-      transform-origin: top right;
+      transform-origin: bottom left;
       opacity: 0;
-      transform: translateY(-4px) scale(0.96);
+      transform: translateY(4px) scale(0.97);
       visibility: hidden;
       pointer-events: none;
       transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-mid) var(--ease-out), visibility 0s linear var(--dur-mid);
     }
 
-    .round-dropdown.open .round-menu {
+    .round-wrap.open .round-menu {
       opacity: 1;
       transform: translateY(0) scale(1);
       visibility: visible;
@@ -282,107 +355,247 @@
       transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-mid) var(--ease-out), visibility 0s linear 0s;
     }
 
-    .round-option {
+    .round-opt {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      padding: 6px 8px;
+      background: transparent;
+      border: none;
+      border-radius: 5px;
+      color: var(--text-secondary);
+      font-family: var(--mono);
+      font-size: 11px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .round-opt:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .round-opt.active { background: var(--bg-active); color: var(--text-primary); font-weight: 600; }
+
+    .round-tag {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 3px;
+      letter-spacing: 0.04em;
+    }
+
+    .round-tag.live { background: var(--pos-bg); color: var(--pos-bright); }
+    .round-tag.snap { background: var(--warn-bg); color: var(--warn-bright); }
+
+    .sb-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 2px 0;
+    }
+
+    .sb-sync-hint {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-tertiary);
+      padding-left: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* =====================================================================
+       MAIN ELEVATED ROUNDED CANVAS
+       ===================================================================== */
+    .workspace-frame {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .main-column {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Consistent 44px Linear View Header */
+    .view-header {
+      height: 44px;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      background: transparent;
-      border: none;
-      border-radius: 5px;
-      padding: 7px 10px;
-      color: var(--text-muted);
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 500;
-      cursor: pointer;
-      text-align: left;
-      width: 100%;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: var(--bg-canvas);
     }
 
-    .round-option:hover { background: var(--surface-hover); color: var(--text); }
-    .round-option.active { background: #252C3D; color: var(--text); font-weight: 600; }
-
-    .round-opt-pill {
-      font-size: 9.5px;
-      font-weight: 700;
-      padding: 1px 6px;
-      border-radius: 3px;
-    }
-    .round-opt-pill.live { background: var(--pos-bg); color: var(--pos-bright); }
-    .round-opt-pill.snap { background: var(--warn-bg); color: var(--warn-bright); }
-
-    .calc-btn {
-      display: inline-flex;
+    .vh-left {
+      display: flex;
       align-items: center;
-      gap: 6px;
-      background: var(--surface);
-      border: 1px solid var(--border-strong);
-      color: var(--text);
-      padding: 6px 11px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 600;
-      font-family: var(--mono);
-      letter-spacing: 0.02em;
-      transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
-      white-space: nowrap;
+      gap: 8px;
+      min-width: 0;
     }
 
-    .calc-btn:hover, .calc-btn.active {
-      background: #232A3A;
-      border-color: var(--pos);
-      color: #FFFFFF;
-    }
-
-    .icon-btn {
-      background: var(--surface);
-      border: 1px solid var(--border-strong);
-      color: var(--text-muted);
-      width: 31px;
-      height: 31px;
+    .mobile-menu-btn {
+      display: none;
+      width: 28px;
+      height: 28px;
       border-radius: 6px;
-      cursor: pointer;
-      display: inline-flex;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
       align-items: center;
       justify-content: center;
-      transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
+      cursor: pointer;
+    }
+
+    .vh-crumb {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .vh-crumb-sep { color: var(--text-tertiary); font-weight: 400; }
+    .vh-crumb-sub { color: var(--text-secondary); font-weight: 500; }
+
+    .vh-count {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-tertiary);
+      padding-left: 2px;
+    }
+
+    .vh-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       flex-shrink: 0;
     }
 
-    .icon-btn:hover {
-      color: var(--text);
-      border-color: #4A5570;
-      background: var(--surface-hover);
+    .ghost-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      height: 27px;
+      padding: 0 9px;
+      background: transparent;
+      border: 1px solid var(--border-default);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
     }
 
-    /* Floating LIVE BE CALC Popover (anchored under header right, never shifts layout) */
-    .calc-popover {
-      display: flex;
+    .ghost-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+
+    .ghost-btn:active { transform: scale(0.97); }
+
+    .ghost-btn.active {
+      background: var(--bg-active);
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+
+    .ghost-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      height: 27px;
+      padding: 0 11px;
+      background: var(--text-primary);
+      border: 1px solid var(--text-primary);
+      border-radius: 6px;
+      color: #0A0A0B;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
+    }
+
+    .primary-btn:hover { opacity: 0.9; }
+    .primary-btn:active { transform: scale(0.97); }
+
+    .inline-search-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .inline-search-wrap svg {
       position: absolute;
-      top: 56px;
-      right: max(22px, env(safe-area-inset-right));
-      width: 440px;
-      max-width: calc(100vw - 28px);
-      background: var(--surface-elevated);
-      border: none;
-      border-radius: 9px;
-      padding: 14px 16px;
-      box-shadow: var(--ring-elevated);
-      z-index: 98;
+      left: 8px;
+      width: 13px;
+      height: 13px;
+      color: var(--text-tertiary);
+      pointer-events: none;
+    }
+
+    .inline-search {
+      height: 27px;
+      width: 184px;
+      padding: 0 8px 0 26px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 12px;
+      outline: none;
+      transition: border-color var(--dur-fast) var(--ease-out), width var(--dur-mid) var(--ease-out);
+    }
+
+    .inline-search::placeholder { color: var(--text-tertiary); }
+    .inline-search:focus { border-color: var(--border-strong); width: 220px; }
+
+    /* Popover Controls (Filter & Display — Progressive Disclosure) */
+    .pop-anchor { position: relative; }
+
+    .linear-popover {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      width: 264px;
+      background: var(--bg-elevated);
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: var(--shadow-popover);
+      z-index: 80;
+      display: flex;
       flex-direction: column;
-      gap: 12px;
-      overscroll-behavior: contain;
+      gap: 10px;
       transform-origin: top right;
       opacity: 0;
-      transform: translateY(-6px) scale(0.96);
+      transform: translateY(-4px) scale(0.97);
       visibility: hidden;
       pointer-events: none;
       transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-mid) var(--ease-out), visibility 0s linear var(--dur-mid);
     }
 
-    .calc-popover.open {
+    .pop-anchor.open .linear-popover {
       opacity: 1;
       transform: translateY(0) scale(1);
       visibility: visible;
@@ -390,509 +603,278 @@
       transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-mid) var(--ease-out), visibility 0s linear 0s;
     }
 
-    .calc-pop-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 8px;
-    }
-
-    .calc-pop-title {
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      color: var(--pos-bright);
-    }
-
-    .calc-pop-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    .sp-field {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      position: relative;
-    }
-
-    .sp-field label {
-      font-size: 9.5px;
+    .pop-sec-label {
+      font-size: 10.5px;
       font-weight: 600;
+      color: var(--text-tertiary);
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-dim);
-    }
-
-    .sp-search, .sp-num {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 6px 9px;
-      border-radius: 5px;
-      font-size: 12px;
-      outline: none;
-      width: 100%;
-    }
-
-    .sp-search { font-family: var(--sans); }
-    .sp-num { font-family: var(--mono); text-align: right; }
-    .sp-search:focus, .sp-num:focus { border-color: var(--pos); }
-
-    .ac-list {
-      position: absolute;
-      top: calc(100% + 4px);
-      left: 0;
-      width: 100%;
-      max-height: 220px;
-      overflow-y: auto;
-      background: #141821;
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
-      padding: 4px;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.75);
-      z-index: 105;
-      display: none;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .ac-list.open { display: flex; }
-
-    .ac-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      background: transparent;
-      border: none;
-      border-radius: 4px;
-      padding: 6px 8px;
-      color: var(--text);
-      font-size: 12px;
-      cursor: pointer;
-      text-align: left;
-      width: 100%;
-    }
-
-    .ac-item:hover, .ac-item.active { background: #232A3A; }
-    .ac-meta { font-family: var(--mono); font-size: 10px; color: var(--text-muted); white-space: nowrap; }
-
-    .calc-pop-results {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px 12px;
-    }
-
-    .sp-stat { display: flex; flex-direction: column; gap: 2px; }
-    .sp-stat-label { font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim); }
-    .sp-stat-val { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); }
-
-    /* Shared View Wrapper */
-    .view-section { margin-top: 10px; }
-
-    /* Option 2 Slim Single-Line KPI Ticker Strip */
-    .kpi-ticker {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      padding: 8px 14px;
-      background: #10141B;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      margin-bottom: 10px;
-      font-size: 11.5px;
-    }
-
-    .ticker-item {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 6px;
-      white-space: nowrap;
-    }
-
-    .ticker-lbl {
-      font-size: 10px;
-      font-weight: 600;
       letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--text-dim);
+      margin-bottom: 5px;
     }
 
-    .ticker-val {
-      font-family: var(--mono);
-      font-weight: 700;
-      color: var(--text);
-      font-size: 12px;
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
     }
 
-    .ticker-sub {
-      font-family: var(--mono);
+    .chip-btn {
+      height: 24px;
+      padding: 0 8px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 5px;
+      color: var(--text-secondary);
       font-size: 11px;
-      color: var(--text-muted);
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
     }
 
-    /* Option 2 Sleek Filter Bar with Pill Groups & Toggle Switches */
-    .toolbar {
+    .chip-btn:hover { color: var(--text-primary); border-color: var(--border-default); }
+    .chip-btn.active {
+      background: var(--bg-active);
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+      font-weight: 600;
+    }
+
+    .pop-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      padding: 7px 10px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
-
-    .toolbar-left, .toolbar-right {
-      display: flex;
-      align-items: center;
       gap: 8px;
-      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--text-secondary);
     }
 
-    .segmented {
-      display: inline-flex;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 2px;
-      gap: 2px;
-    }
-
-    .seg-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      padding: 5px 10px;
-      font-size: 11.5px;
-      font-weight: 500;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: var(--sans);
-      transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
-      white-space: nowrap;
-    }
-
-    .seg-btn:hover { color: var(--text); }
-    .seg-btn.active {
-      background: #252C3C;
-      color: #FFFFFF;
-      font-weight: 600;
-    }
-
-    .price-filter {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 4px 8px;
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .price-filter.active { border-color: #465169; background: var(--surface-elevated); color: var(--text); }
-
-    .price-filter input {
-      width: 44px;
-      background: transparent;
-      border: none;
-      color: var(--text);
+    .pop-input-num {
+      width: 82px;
+      height: 26px;
+      padding: 0 7px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-default);
+      border-radius: 5px;
+      color: var(--text-primary);
       font-family: var(--mono);
-      font-size: 11.5px;
-      font-weight: 600;
-      outline: none;
+      font-size: 12px;
       text-align: right;
-    }
-
-    .price-filter input::placeholder { color: var(--text-dim); font-weight: 400; }
-    .price-filter input::-webkit-outer-spin-button,
-    .price-filter input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-
-    .price-clear {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 12px;
-      line-height: 1;
-      padding: 0 2px;
-      display: none;
-    }
-
-    .price-filter.active .price-clear { display: inline-block; }
-
-    .search-box {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .search-box svg {
-      position: absolute;
-      left: 8px;
-      color: var(--text-dim);
-      pointer-events: none;
-    }
-
-    .search-input {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 5px 10px 5px 27px;
-      border-radius: 6px;
-      font-size: 12px;
-      width: 175px;
       outline: none;
     }
 
-    .search-input:focus { border-color: var(--border-strong); }
-    .search-input::placeholder { color: var(--text-dim); }
+    .pop-input-num:focus { border-color: var(--border-strong); }
 
-    /* Option 2 Toggle Switches */
-    .switch-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 11.5px;
-      font-weight: 500;
-      cursor: pointer;
-      padding: 3px 4px;
-      user-select: none;
-      transition: color 0.12s;
-    }
-
-    .switch-btn:hover { color: var(--text); }
-    .switch-btn.active { color: var(--text); }
-
-    .switch-track {
-      width: 30px;
+    .mini-switch {
+      width: 28px;
       height: 16px;
       border-radius: 99px;
-      background: #252B3A;
-      border: 1px solid #343D52;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-default);
       position: relative;
-      transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+      cursor: pointer;
       flex-shrink: 0;
+      transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
     }
 
-    .switch-thumb {
+    .mini-switch::after {
+      content: "";
       position: absolute;
       top: 1px;
       left: 1px;
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      background: #949DAD;
+      background: var(--text-secondary);
       transition: transform var(--dur-mid) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
     }
 
-    .switch-btn.active .switch-track {
-      background: rgba(16, 185, 129, 0.25);
+    .mini-switch.on {
+      background: var(--pos-bg);
       border-color: var(--pos);
     }
 
-    .switch-btn.active .switch-thumb {
-      transform: translateX(14px);
+    .mini-switch.on::after {
+      transform: translateX(12px);
       background: var(--pos-bright);
     }
 
-    /* Option 2 Data Table */
-    .table-wrap {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow-x: auto;
-      background: var(--surface);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      text-align: left;
-    }
-
-    thead th {
-      background: #10141C;
-      border-bottom: 1px solid var(--border);
-      padding: 8px 10px;
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-muted);
-      cursor: pointer;
-      user-select: none;
-      white-space: nowrap;
-      vertical-align: middle;
-    }
-
-    thead th.no-sort { cursor: default; }
-    thead th:not(.no-sort):hover { color: var(--text); }
-    thead th.num, tbody td.num { text-align: right; }
-    thead th.center, tbody td.center { text-align: center; }
-
-    thead th.sort-active { color: #FFFFFF; }
-    .sort-arrow { font-size: 8.5px; margin-left: 3px; opacity: 0.9; }
-
-    /* Grouped Schedule Header (SCHEDULE -> R6 | R7 | R8) */
-    thead th.sched-group-th {
-      border-bottom: none;
-      padding: 6px 6px 2px;
-      font-size: 9.5px;
-      letter-spacing: 0.08em;
-      color: var(--text-dim);
-      text-align: center;
-    }
-
-    thead th.sched-sub-th {
-      padding: 2px 5px 7px;
-      font-size: 10px;
-      text-align: center;
-      width: 40px;
-    }
-
-    /* Option 2 Emerald-Bordered Full-Height BREAKEVEN Spotlight Column */
-    thead th.col-be {
-      background: var(--be-head-bg);
-      color: #FFFFFF;
-      font-weight: 700;
-      border-top: 2px solid var(--be-border);
-      border-left: 1.5px solid var(--be-border);
-      border-right: 1.5px solid var(--be-border);
-      border-bottom: 2px solid var(--be-border);
-      padding: 8px 14px;
-      text-align: center;
-    }
-
-    tbody td.col-be {
-      background: var(--be-col-bg);
-      border-left: 1.5px solid var(--be-border);
-      border-right: 1.5px solid var(--be-border);
-      padding: 8px 14px;
-      text-align: right;
-    }
-
-    tbody tr:last-child td.col-be {
-      border-bottom: 1.5px solid var(--be-border);
-    }
-
-    tbody tr:hover td.col-be {
-      background: var(--be-col-hover);
-    }
-
-    .be-main {
-      font-weight: 700;
-      font-size: 13.5px;
-      color: #FFFFFF;
-    }
-
-    .be-dist {
-      font-size: 11px;
-      font-weight: 600;
-      margin-left: 5px;
-    }
-
-    tbody td {
-      padding: 9px 10px;
-      border-bottom: 1px solid #1C212E;
-      white-space: nowrap;
-      vertical-align: middle;
-    }
-
-    tbody tr:last-child td { border-bottom: none; }
-    tbody tr:hover { background: var(--surface-hover); }
-
-    tbody tr.row-out { opacity: 0.85; }
-    tbody tr.row-dnp { opacity: 0.54; }
-    tbody tr.row-out:hover, tbody tr.row-dnp:hover { opacity: 1; }
-
-    /* Player Cell with Circular Headshot Avatar */
-    .player-cell {
+    /* Whisper-Quiet Context Bar (Squad Summary + Active Filter Chips) */
+    .context-strip {
+      min-height: 34px;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
-      gap: 10px;
-      min-width: 250px;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 5px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.012);
+      font-size: 11.5px;
     }
 
-    .row-actions {
+    .ctx-metrics {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .ctx-stat {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 5px;
+      color: var(--text-tertiary);
+    }
+
+    .ctx-stat strong {
+      font-family: var(--mono);
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 11.5px;
+    }
+
+    .ctx-chips {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      flex-shrink: 0;
-    }
-
-    .action-icon-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      color: var(--text-dim);
-      width: 24px;
       height: 22px;
+      padding: 0 7px;
+      background: var(--bg-active);
+      border: 1px solid var(--border-default);
       border-radius: 4px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      line-height: 1;
-      transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
-    }
-
-    .action-icon-btn:hover {
-      background: var(--bg);
-      border-color: var(--border-strong);
-      color: var(--text);
-    }
-
-    .action-icon-btn.starred { color: var(--warn-bright); }
-
-    .action-icon-btn.in-squad {
-      background: #2B3345;
-      color: #F2F4F8;
-      border-color: #44506B;
-      font-family: var(--mono);
-      font-size: 9.5px;
-      font-weight: 700;
-      width: 28px;
-    }
-
-    .action-icon-btn.squad-off {
-      font-family: var(--mono);
       font-size: 11px;
-      font-weight: 600;
-      border-color: var(--border-strong);
-      width: 28px;
+      color: var(--text-primary);
     }
 
-    /* Circular Headshot + Fallback Initials */
+    .filter-chip button {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .filter-chip button:hover { color: var(--text-primary); }
+
+    /* =====================================================================
+       SCROLLABLE VIEW BODY & SERENE LINEAR LIST TABLE
+       ===================================================================== */
+    .view-body {
+      flex: 1;
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+
+    .market-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .market-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      background: var(--bg-canvas);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 7px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      transition: color var(--dur-fast) var(--ease-out);
+    }
+
+    .market-table thead th:hover { color: var(--text-primary); }
+    .market-table thead th.sort-active { color: var(--text-primary); font-weight: 600; }
+    .market-table thead th.num, .market-table tbody td.num { text-align: right; }
+    .market-table thead th.center, .market-table tbody td.center { text-align: center; }
+
+    .sort-arrow {
+      font-size: 9px;
+      margin-left: 3px;
+      opacity: 0.85;
+    }
+
+    .market-table tbody tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.042);
+      cursor: pointer;
+      transition: background-color 90ms var(--ease-out);
+    }
+
+    .market-table tbody tr:hover { background: var(--bg-hover); }
+    .market-table tbody tr.row-selected {
+      background: var(--bg-active);
+      box-shadow: inset 2px 0 0 var(--accent);
+    }
+
+    .market-table tbody tr.row-out { opacity: 0.8; }
+    .market-table tbody tr.row-dnp { opacity: 0.48; }
+    .market-table tbody tr.row-out:hover,
+    .market-table tbody tr.row-dnp:hover,
+    .market-table tbody tr.row-selected { opacity: 1; }
+
+    .market-table tbody td {
+      padding: 7px 12px;
+      white-space: nowrap;
+      vertical-align: middle;
+      font-size: 12.5px;
+    }
+
+    .col-be-cell {
+      background: rgba(255, 255, 255, 0.018);
+    }
+
+    .be-num {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .be-diff {
+      font-size: 10.5px;
+      margin-left: 4px;
+      opacity: 0.9;
+    }
+
+    /* Player Row Identity */
+    .p-cell {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 230px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .status-dot.cow { background: var(--pos-bright); }
+    .status-dot.bleed { background: var(--neg-soft); }
+    .status-dot.out { background: var(--warn-bright); }
+
     .sc-avatar {
-      width: 34px;
-      height: 34px;
       border-radius: 50%;
       overflow: hidden;
       flex-shrink: 0;
-      position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: #1B202C;
-      border: 1.5px solid var(--av-accent, #323B4E);
+      background: #1B1B1F;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
     }
 
     .sc-avatar img {
@@ -905,671 +887,854 @@
 
     .sc-avatar-init {
       font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 700;
-      color: #E5E9F2;
-      letter-spacing: 0.02em;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-secondary);
     }
 
-    .player-name-row {
+    .p-meta-wrap {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .p-name-line {
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .player-name {
-      font-weight: 600;
-      color: var(--text);
-      font-size: 13px;
+    .p-name {
+      font-weight: 500;
+      color: var(--text-primary);
+      max-width: 190px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      display: inline-block;
-      flex-shrink: 0;
-    }
-
-    .status-dot.cow { background: var(--pos-bright); }
-    .status-dot.bleed { background: var(--neg); }
-    .status-dot.out { background: var(--warn-bright); }
-
-    .player-meta {
+    .p-sub {
       font-family: var(--mono);
       font-size: 10.5px;
-      color: var(--text-muted);
+      color: var(--text-tertiary);
       display: flex;
       align-items: center;
       gap: 5px;
-      margin-top: 1px;
     }
 
-    .team-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      display: inline-block;
-      flex-shrink: 0;
-    }
-
-    .out-pill {
+    .micro-tag {
       font-family: var(--mono);
       font-size: 9px;
-      font-weight: 700;
-      padding: 0px 4px;
+      font-weight: 600;
+      padding: 0 4px;
       border-radius: 3px;
-      background: var(--warn-bg);
-      color: var(--warn-bright);
     }
+    .micro-tag.out { background: var(--warn-bg); color: var(--warn-bright); }
+    .micro-tag.dnp { background: rgba(255, 255, 255, 0.05); color: var(--text-tertiary); }
+    .micro-tag.g0 { background: var(--neg-bg); color: var(--neg-soft); }
 
-    .dnp-pill {
+    /* Compact Quiet Schedule Strip (R6 · R7 · R8) */
+    .sched-strip {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
       font-family: var(--mono);
-      font-size: 9px;
-      font-weight: 700;
-      padding: 0px 4px;
-      border-radius: 3px;
-      background: #1E2430;
-      color: var(--text-dim);
+      font-size: 11px;
+      font-weight: 600;
     }
 
-    .zero-pill {
-      font-family: var(--mono);
-      font-size: 9px;
-      font-weight: 700;
-      padding: 0px 4px;
-      border-radius: 3px;
-      background: var(--neg-bg);
-      color: var(--neg);
-    }
-
-    .inj-tag { color: var(--warn-bright); font-weight: 600; }
-
-    /* Option 2 Schedule Heatmap Tiles */
-    .sched-td {
-      padding: 6px 3px !important;
-      text-align: center;
-    }
-
-    .sched-tile {
+    .sched-box {
+      width: 22px;
+      height: 20px;
+      border-radius: 4px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 32px;
-      height: 28px;
-      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.045);
+      color: var(--text-secondary);
+    }
+
+    .sched-box.g4 { background: var(--pos-bg); color: var(--pos-bright); }
+    .sched-box.g2 { background: var(--warn-bg); color: var(--warn-bright); }
+    .sched-box.g0 { background: var(--neg-bg); color: var(--neg-soft); }
+    .sched-box.tbd { background: transparent; border: 1px dashed rgba(255, 255, 255, 0.09); color: var(--text-tertiary); font-weight: 400; }
+
+    /* Quiet Inline Row Actions (SQ & Star) */
+    .row-acts {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0.35;
+      transition: opacity var(--dur-fast) var(--ease-out);
+    }
+
+    .market-table tbody tr:hover .row-acts,
+    .market-table tbody tr.row-selected .row-acts,
+    .row-acts.has-active {
+      opacity: 1;
+    }
+
+    .row-btn {
+      height: 21px;
+      min-width: 22px;
+      padding: 0 5px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      color: var(--text-tertiary);
       font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 700;
-      background: #2C3442;
-      color: #DCE2EE;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
     }
 
-    .sched-tile.g4 {
-      background: #3B8258;
-      color: #FFFFFF;
-    }
+    .row-btn:hover { background: var(--bg-active); color: var(--text-primary); border-color: var(--border-default); }
+    .row-btn:active { transform: scale(0.94); }
+    .row-btn.is-sq { background: var(--text-primary); color: #0A0A0B; border-color: var(--text-primary); }
+    .row-btn.is-star { color: var(--warn-bright); }
 
-    .sched-tile.g2 {
-      background: #9B7432;
-      color: #FFFBEB;
-    }
-
-    .sched-tile.g0 {
-      background: #8B2F34;
-      color: #FEE2E2;
-    }
-
-    .sched-tile.tbd {
-      background: #181D27;
-      color: var(--text-dim);
-      border: 1px dashed #2D3546;
-      font-weight: 500;
-    }
-
-    .form-cell {
-      font-family: var(--mono);
-      font-size: 12.5px;
-      color: var(--text);
-    }
-
-    .form-sep {
-      color: var(--text-dim);
-      margin: 0 3px;
-    }
-
-    .pos-text { color: var(--pos-bright); }
-    .neg-text { color: var(--neg); }
-    .warn-text { color: var(--warn-bright); }
-    .muted-text { color: var(--text-muted); }
-    .dim-text { color: var(--text-dim); }
-
-    .table-footer {
+    .list-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 14px;
-      border-top: 1px solid var(--border);
-      background: #10141C;
-      font-size: 11px;
-      color: var(--text-muted);
+      padding: 10px 16px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 11.5px;
+      color: var(--text-tertiary);
     }
 
-    /* Trade Lab Placeholder */
-    .tradelab-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+    /* =====================================================================
+       LINEAR RIGHT-SIDE PLAYER INSPECTOR (Progressive Disclosure Drawer)
+       ===================================================================== */
+    .inspector {
+      width: 0;
+      flex-shrink: 0;
+      border-left: 0 solid var(--border-subtle);
+      background: #121215;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      opacity: 0;
+      transition: width var(--dur-mid) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+    }
+
+    .inspector.open {
+      width: var(--inspector-w);
+      border-left-width: 1px;
+      opacity: 1;
+    }
+
+    .insp-inner {
+      width: var(--inspector-w);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .insp-head {
+      height: 44px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .insp-head-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.02em;
+    }
+
+    .insp-close {
+      width: 24px;
+      height: 24px;
+      border-radius: 5px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .insp-close:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+    .insp-hero {
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .insp-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.25;
+    }
+
+    .insp-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .insp-actions {
+      padding: 10px 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .insp-actions .full { grid-column: 1 / -1; }
+
+    .insp-section {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .insp-section-title {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      margin-bottom: 10px;
+    }
+
+    .prop-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .prop-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .prop-key { color: var(--text-secondary); }
+    .prop-val { font-family: var(--mono); font-weight: 500; color: var(--text-primary); }
+
+    /* Embedded Live BE Simulator inside Inspector */
+    .sim-box {
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      padding: 28px 24px;
+      padding: 11px 12px;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      max-width: 720px;
-    }
-    .tradelab-card h2 { font-size: 15px; font-weight: 600; color: var(--text); }
-    .tradelab-card p { color: var(--text-muted); font-size: 12.5px; line-height: 1.55; }
-
-    .btn {
-      background: var(--surface-elevated);
-      border: 1px solid var(--border-strong);
-      color: var(--text);
-      padding: 6px 12px;
-      border-radius: 5px;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
     }
 
-    .btn:hover { background: #232A3A; }
-    .btn-primary { background: #F2F4F8; color: #0D1015; border-color: #F2F4F8; font-weight: 600; }
-    .btn-primary:hover { background: #DFE4EE; }
-    .btn-danger { color: var(--neg); border-color: rgba(239, 68, 68, 0.35); }
-    .btn-danger:hover { background: var(--neg-bg); }
-
-    /* Settings Modal */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(6, 8, 12, 0.74);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 120;
-      padding: 16px;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity var(--dur-mid) var(--ease-out), visibility 0s linear var(--dur-mid);
-    }
-
-    .modal-backdrop.open {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transition: opacity var(--dur-mid) var(--ease-out), visibility 0s linear 0s;
-    }
-
-    .modal {
-      background: var(--surface-elevated);
-      border: none;
-      border-radius: 10px;
-      box-shadow: var(--ring-elevated);
-      width: 100%;
-      max-width: 500px;
-      max-height: calc(100dvh - 32px);
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      transform: translateY(6px) scale(0.97);
-      transition: transform 200ms var(--ease-out);
-    }
-
-    .modal-backdrop.open .modal {
-      transform: translateY(0) scale(1);
-    }
-
-    .modal-header {
+    .sim-input-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
+      gap: 8px;
     }
 
-    .modal-header h2 { font-size: 14px; font-weight: 600; }
+    .sim-input-row label {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+    }
 
-    .modal-body {
+    .sim-range {
+      width: 100%;
+      accent-color: var(--pos);
+      cursor: pointer;
+    }
+
+    .sim-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding-top: 6px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .sim-metric {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .sim-metric span:first-child {
+      font-size: 10px;
+      color: var(--text-tertiary);
+    }
+
+    .sim-metric span:last-child {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    /* =====================================================================
+       COMMAND PALETTE (⌘K) & SETTINGS MODAL
+       ===================================================================== */
+    .overlay-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 5, 7, 0.72);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: min(14vh, 110px) 16px 24px;
+      z-index: 140;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity var(--dur-fast) var(--ease-out), visibility 0s linear var(--dur-fast);
+    }
+
+    .overlay-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transition: opacity var(--dur-fast) var(--ease-out), visibility 0s linear 0s;
+    }
+
+    .cmd-dialog {
+      width: 100%;
+      max-width: 560px;
+      background: var(--bg-elevated);
+      border-radius: 10px;
+      box-shadow: var(--shadow-popover);
+      overflow: hidden;
+      transform: translateY(-6px) scale(0.98);
+      transition: transform var(--dur-mid) var(--ease-out);
+    }
+
+    .overlay-backdrop.open .cmd-dialog {
+      transform: translateY(0) scale(1);
+    }
+
+    .cmd-input-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .cmd-input-bar svg { width: 15px; height: 15px; color: var(--text-tertiary); flex-shrink: 0; }
+
+    .cmd-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .cmd-input::placeholder { color: var(--text-tertiary); }
+
+    .cmd-list {
+      max-height: 360px;
+      overflow-y: auto;
+      padding: 6px;
+      overscroll-behavior: contain;
+    }
+
+    .cmd-group-title {
+      font-size: 10.5px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      padding: 6px 8px 4px;
+    }
+
+    .cmd-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 9px;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 12.5px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .cmd-item:hover, .cmd-item.active { background: var(--bg-active); }
+
+    .cmd-item-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+
+    .cmd-item-meta {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    /* Settings Modal */
+    .settings-dialog {
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg-elevated);
+      border-radius: 10px;
+      box-shadow: var(--shadow-popover);
+      overflow: hidden;
+      transform: translateY(6px) scale(0.98);
+      transition: transform var(--dur-mid) var(--ease-out);
+      max-height: calc(100dvh - 80px);
+      overflow-y: auto;
+    }
+
+    .overlay-backdrop.open .settings-dialog { transform: translateY(0) scale(1); }
+
+    .dlg-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .dlg-head h2 { font-size: 13.5px; font-weight: 600; }
+
+    .dlg-body {
       padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
 
-    .field-group { display: flex; flex-direction: column; gap: 7px; }
-    .field-group label {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-    }
-
-    .info-box {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      padding: 9px 11px;
-      font-size: 11.5px;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-    .info-box strong { color: var(--text); }
+    .field-group { display: flex; flex-direction: column; gap: 6px; }
+    .field-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+    .field-hint { font-size: 11.5px; color: var(--text-tertiary); line-height: 1.45; }
 
     .text-input {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 7px 10px;
-      border-radius: 4px;
+      height: 30px;
+      padding: 0 9px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-default);
+      border-radius: 6px;
+      color: var(--text-primary);
       font-family: var(--mono);
       font-size: 12px;
       width: 100%;
       outline: none;
     }
-    .text-input:focus { border-color: var(--border-strong); }
 
+    .text-input:focus { border-color: var(--border-strong); }
     .inline-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .divider { height: 1px; background: var(--border); }
-    .hint { font-size: 11px; color: var(--text-dim); }
-    .status-msg { font-size: 11px; font-family: var(--mono); color: var(--pos-bright); }
+    .divider { height: 1px; background: var(--border-subtle); }
 
     .sync-dot {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--pos-bright);
-      flex-shrink: 0;
     }
     .sync-dot.loading { background: var(--warn-bright); }
     .sync-dot.error { background: var(--neg); }
 
-    /* Emil Design-Eng: Tactile press feedback (subtle scale 0.97) */
-    .calc-btn:active,
-    .round-trigger:active,
-    .icon-btn:active,
-    .btn:active,
-    .action-icon-btn:active {
-      transform: scale(0.97);
+    .danger-btn {
+      color: var(--neg-soft);
+      border-color: rgba(239, 68, 68, 0.28);
+    }
+    .danger-btn:hover { background: var(--neg-bg); color: var(--neg-soft); border-color: rgba(239, 68, 68, 0.45); }
+
+    /* Mobile Sidebar Drawer & Responsive Inspector */
+    .sb-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 88;
     }
 
-    /* Break-UI Hardening: Long player names & injury strings never distort columns */
-    .player-info-col {
-      min-width: 0;
-      max-width: 215px;
-    }
-
-    .player-name {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 190px;
-    }
-
-    .inj-tag {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 110px;
-      display: inline-block;
-      vertical-align: bottom;
-    }
-
-    /* Sticky table header + overscroll containment */
-    .table-wrap {
-      overscroll-behavior-x: contain;
-      box-shadow: 0 0 0 1px var(--border);
-      border: none;
-    }
-
-    .ac-list {
-      overscroll-behavior: contain;
-      box-shadow: var(--ring-elevated);
-      border: none;
-    }
-
-    /* Mobile-Native: Prevent sticky hover on touch devices */
-    @media (hover: none) {
-      tbody tr:hover { background: transparent; }
-      tbody tr:hover td.col-be { background: var(--be-col-bg); }
-      .top-nav-btn:hover { background: transparent; color: var(--text-muted); }
-      .top-nav-btn.active:hover { color: var(--text); }
-      .round-trigger:hover, .calc-btn:hover, .icon-btn:hover { background: var(--surface); }
-    }
-
-    /* Mobile-Native: Prevent iOS Safari auto-zoom on form inputs (>= 16px) */
-    @media (max-width: 768px) {
-      .search-input,
-      .price-filter input,
-      .sp-search,
-      .sp-num,
-      .text-input {
-        font-size: 16px;
-      }
-      .search-input {
-        width: 100%;
-        min-width: 160px;
-      }
-      .calc-popover {
-        right: 12px;
-        left: 12px;
-        width: auto;
-      }
-      .header-controls {
-        flex-wrap: wrap;
+    @media (max-width: 1200px) {
+      .inspector.open {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 60;
+        box-shadow: -16px 0 40px rgba(0, 0, 0, 0.65);
       }
     }
 
-    /* Accessibility: Respect prefers-reduced-motion (keep opacity/color, drop transforms) */
+    @media (max-width: 920px) {
+      .app-shell { padding: 0; }
+      .workspace-frame { border-radius: 0; border: none; }
+      .mobile-menu-btn { display: inline-flex; }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 90;
+        background: var(--bg-shell);
+        border-right: 1px solid var(--border-default);
+        transform: translateX(-100%);
+        transition: transform var(--dur-mid) var(--ease-out);
+        padding-top: 12px;
+      }
+      .sidebar.mobile-open { transform: translateX(0); }
+      .sb-backdrop.open { display: block; }
+      .inline-search { width: 130px; font-size: 16px; }
+      .inline-search:focus { width: 165px; }
+      .pop-input-num, .text-input, .cmd-input { font-size: 16px; }
+      .inspector.open { width: min(100vw, 350px); }
+      .insp-inner { width: min(100vw, 350px); }
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      .row-acts { opacity: 0.9; }
+      .market-table tbody tr:hover { background: transparent; }
+      .market-table tbody tr.row-selected:hover { background: var(--bg-active); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-      }
-      .round-menu, .calc-popover, .modal {
-        transform: none !important;
-      }
-      .calc-btn:active, .round-trigger:active, .icon-btn:active, .btn:active, .action-icon-btn:active {
-        transform: none !important;
+        transition-duration: 0.01ms !important;
       }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Unified 3-Zone Header -->
-    <header>
-      <div class="brand-group">
-        <div class="logo">SCHOOPS<span class="logo-dot"></span></div>
+  <div class="sb-backdrop" id="sbBackdrop"></div>
+
+  <div class="app-shell">
+    <!-- RECESSED LEFT SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sb-top">
+        <div class="brand">
+          <span class="brand-mark">S</span>
+          <span>SCHOOPS</span>
+        </div>
+        <button type="button" class="sb-cmd-btn" id="openCmdBtn" title="Command Menu (⌘K / Ctrl+K)">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span class="kbd">⌘K</span>
+        </button>
       </div>
 
-      <nav class="top-nav" id="topNavTabs" aria-label="Primary Views">
-        <button type="button" class="top-nav-btn active" data-nav="market">
-          <span>Market</span>
+      <!-- Primary Workspace Navigation -->
+      <div class="sb-group" id="sbPrimaryNav">
+        <button type="button" class="sb-item active" data-nav="market">
+          <span class="sb-item-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            <span>Market</span>
+          </span>
+          <span class="sb-count" id="sbAllCount">0</span>
         </button>
-        <button type="button" class="top-nav-btn" data-nav="court">
-          <span>My Court</span>
-          <span class="nav-pill-count" id="navCourtCount">0</span>
-        </button>
-        <button type="button" class="top-nav-btn" data-nav="tradelab">
-          <span>Trade Lab</span>
-          <span class="nav-pill-soon">PH 3</span>
-        </button>
-      </nav>
 
-      <div class="header-controls">
-        <div class="round-dropdown" id="roundDropdown">
-          <button class="round-trigger" id="roundTrigger" type="button" title="Switch between live round and historical snapshots">
-            <span id="roundTriggerText">ROUND 6 · NOV 24–30</span>
-            <span>·</span>
-            <span class="round-tag-live" id="roundTriggerTag">LIVE</span>
-            <span class="round-chevron">▾</span>
+        <button type="button" class="sb-item" data-nav="court">
+          <span class="sb-item-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="12" y1="4" x2="12" y2="20"/><circle cx="12" cy="12" r="3"/></svg>
+            <span>My Court</span>
+          </span>
+          <span class="sb-count" id="sbSquadCount">0</span>
+        </button>
+
+        <button type="button" class="sb-item" data-nav="tradelab">
+          <span class="sb-item-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+            <span>Trade Lab</span>
+          </span>
+          <span class="sb-count" id="sbTradeCount">0</span>
+        </button>
+      </div>
+
+      <!-- Smart Views (Replaces Cluttered Multi-Row Filter Toolbar) -->
+      <div class="sb-group" id="sbSmartViews">
+        <div class="sb-section-label">Views</div>
+        <button type="button" class="sb-item" data-view="squad">
+          <span class="sb-item-left">
+            <span class="sb-dot" style="background:var(--text-primary);"></span>
+            <span>My Squad</span>
+          </span>
+          <span class="sb-count" id="sbViewSquadCount">0</span>
+        </button>
+        <button type="button" class="sb-item" data-view="cows">
+          <span class="sb-item-left">
+            <span class="sb-dot" style="background:var(--pos-bright);"></span>
+            <span>Cash Cows</span>
+          </span>
+          <span class="sb-count" id="sbViewCowsCount">0</span>
+        </button>
+        <button type="button" class="sb-item" data-view="bleeding">
+          <span class="sb-item-left">
+            <span class="sb-dot" style="background:var(--neg-soft);"></span>
+            <span>Bleeding</span>
+          </span>
+          <span class="sb-count" id="sbViewBleedCount">0</span>
+        </button>
+        <button type="button" class="sb-item" data-view="fourgames">
+          <span class="sb-item-left">
+            <span class="sb-dot" style="background:var(--accent);"></span>
+            <span>4-Game Slate</span>
+          </span>
+          <span class="sb-count" id="sbView4GCount">0</span>
+        </button>
+        <button type="button" class="sb-item" data-view="pods">
+          <span class="sb-item-left">
+            <span class="sb-dot" style="background:var(--warn-bright);"></span>
+            <span>PODs &lt;5%</span>
+          </span>
+          <span class="sb-count" id="sbViewPodCount">0</span>
+        </button>
+        <button type="button" class="sb-item" data-view="watchlist">
+          <span class="sb-item-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>Watchlist</span>
+          </span>
+          <span class="sb-count" id="sbViewWatchCount">0</span>
+        </button>
+      </div>
+
+      <div class="sb-spacer"></div>
+
+      <!-- Sidebar Footer: Round Switcher & Settings -->
+      <div class="sb-footer">
+        <div class="round-wrap" id="roundDropdown">
+          <button type="button" class="round-btn" id="roundTrigger" title="Switch active round or view historical snapshot">
+            <span class="round-btn-left">
+              <span class="live-pip" id="roundPip"></span>
+              <span class="round-btn-text" id="roundTriggerText">Rd 6 · Nov 24–30</span>
+            </span>
+            <span style="color:var(--text-tertiary); font-size:9px;">▾</span>
           </button>
           <div class="round-menu" id="roundMenu"></div>
         </div>
 
-        <button class="calc-btn" id="toggleCalcBtn" type="button" title="Live Breakeven & Cash Earned Calculator">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="4" y="2" width="16" height="20" rx="2"/>
-            <line x1="8" y1="6" x2="16" y2="6"/>
-            <line x1="8" y1="10" x2="10" y2="10"/>
-            <line x1="14" y1="10" x2="16" y2="10"/>
-            <line x1="8" y1="14" x2="10" y2="14"/>
-            <line x1="14" y1="14" x2="16" y2="14"/>
-            <line x1="8" y1="18" x2="16" y2="18"/>
-          </svg>
-          <span>LIVE BE CALC</span>
-        </button>
-
-        <button class="icon-btn" id="openSettingsBtn" type="button" title="Settings, Feed Sync & Squad Transfer">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          </svg>
-        </button>
-      </div>
-    </header>
-
-    <!-- Floating LIVE BE CALC Popover -->
-    <div class="calc-popover" id="scratchpadPanel">
-      <div class="calc-pop-head">
-        <span class="calc-pop-title">LIVE BREAKEVEN &amp; CASH CALCULATOR</span>
-        <button class="icon-btn" id="closeCalcBtn" type="button" style="width:24px; height:24px;" title="Close">✕</button>
-      </div>
-      <div class="sp-field">
-        <label>Search Player</label>
-        <input type="text" class="sp-search" id="calcPlayerSearch" placeholder="Type name (e.g. wemb, bamba)..." autocomplete="off" />
-        <div class="ac-list" id="calcAcList"></div>
-      </div>
-      <div class="calc-pop-grid">
-        <div class="sp-field">
-          <label>Breakeven</label>
-          <input type="number" class="sp-num" id="calcBeInput" value="-11" step="1" />
-        </div>
-        <div class="sp-field">
-          <label>Live Score</label>
-          <input type="number" class="sp-num" id="calcScoreInput" value="64" step="1" />
-        </div>
-        <div class="sp-field">
-          <label>Price ($M)</label>
-          <input type="number" class="sp-num" id="calcPriceInput" value="8.05" step="0.01" />
-        </div>
-      </div>
-      <div class="calc-pop-results">
-        <div class="sp-stat">
-          <span class="sp-stat-label">Pts vs BE</span>
-          <span class="sp-stat-val pos-text" id="calcPtsDiff">+75</span>
-        </div>
-        <div class="sp-stat">
-          <span class="sp-stat-label">Est. Cash</span>
-          <span class="sp-stat-val pos-text" id="calcCashEarned">+$1.11M</span>
-        </div>
-        <div class="sp-stat">
-          <span class="sp-stat-label">New Price</span>
-          <span class="sp-stat-val" id="calcNewPrice">$9.16M</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- MARKET VIEW (Option 2) -->
-    <div id="marketViewSection" class="view-section">
-      <!-- Slim Single-Line KPI Ticker -->
-      <div class="kpi-ticker">
-        <div class="ticker-item">
-          <span class="ticker-lbl">Squad Value:</span>
-          <span class="ticker-val" id="kpiSquadVal">$0.00M</span>
-          <span class="ticker-sub" id="kpiSquadCount">(0 tracked)</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-lbl">Projected Squad Cash Gen:</span>
-          <span class="ticker-val" id="kpiCashGen">$0</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-lbl">#1 League Cash Cow:</span>
-          <span class="ticker-val" id="kpiTopCow">—</span>
-          <span class="ticker-sub pos-text" id="kpiTopCowMeta">—</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-lbl">Top 4-Game POD (&lt;5% Own):</span>
-          <span class="ticker-val" id="kpiTopPod">—</span>
-          <span class="ticker-sub pos-text" id="kpiTopPodMeta">—</span>
-        </div>
-      </div>
-
-      <!-- Filter Toolbar -->
-      <div class="toolbar">
-        <div class="toolbar-left">
-          <div class="segmented" id="statusTabs">
-            <button class="seg-btn active" data-tab="all">All</button>
-            <button class="seg-btn" data-tab="squad">Squad</button>
-            <button class="seg-btn" data-tab="cows">Cows</button>
-            <button class="seg-btn" data-tab="bleeding">Bleeding</button>
-            <button class="seg-btn" data-tab="watchlist">Watchlist</button>
-          </div>
-
-          <div class="segmented" id="posTabs">
-            <button class="seg-btn active" data-pos="ALL">ALL</button>
-            <button class="seg-btn" data-pos="PG">PG</button>
-            <button class="seg-btn" data-pos="SG">SG</button>
-            <button class="seg-btn" data-pos="SF">SF</button>
-            <button class="seg-btn" data-pos="PF">PF</button>
-            <button class="seg-btn" data-pos="C">C</button>
-          </div>
-
-          <div class="price-filter" id="priceFilterWrap" title="Filter to players at or under budget (e.g. type 6 for ≤ $6.00M)">
-            <span>MAX $</span>
-            <input type="number" id="maxPriceInput" placeholder="Any" step="0.5" min="0" />
-            <span>M</span>
-            <button class="price-clear" id="clearPriceBtn" title="Clear price filter">×</button>
-          </div>
-
-          <div class="search-box">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <input type="text" class="search-input" id="searchInput" placeholder="Search player or team..." />
-          </div>
-        </div>
-
-        <div class="toolbar-right">
-          <button type="button" class="switch-btn" id="toggleFourGames">
-            <span class="switch-track"><span class="switch-thumb"></span></span>
-            <span>4-Game Only</span>
-          </button>
-          <button type="button" class="switch-btn" id="togglePods">
-            <span class="switch-track"><span class="switch-thumb"></span></span>
-            <span>PODs &lt;5%</span>
-          </button>
-          <button type="button" class="switch-btn active" id="toggleHideDnps" title="Hides deep-bench DNPs while keeping injured stars (OUT/INJ) visible. Auto-disabled in Squad, Watchlist, and Search.">
-            <span class="switch-track"><span class="switch-thumb"></span></span>
-            <span>Hide DNPs</span>
+        <div class="sb-meta-row">
+          <span class="sb-sync-hint" id="sbSyncHint">Loading...</span>
+          <button type="button" class="sb-cmd-btn" id="openSettingsBtn" title="Settings, Sync & Squad Code">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           </button>
         </div>
       </div>
+    </aside>
 
-      <!-- Option 2 Data Table -->
-      <div class="table-wrap" id="mainTableWrap">
-        <table>
-          <thead>
-            <tr>
-              <th rowspan="2" data-sort="name" data-col="name">Player</th>
-              <th rowspan="2" class="num" data-sort="price" data-col="price">Price ($M)</th>
-              <th rowspan="2" class="num" data-sort="owned" data-col="owned">Own %</th>
-              <th rowspan="2" class="num" data-sort="r_minus_1" data-col="form" id="thForm" title="Last two completed rounds (Wk-2 / Wk-1). Click to sort by most recent score.">Form</th>
-              <th colspan="3" class="sched-group-th no-sort">Schedule</th>
-              <th rowspan="2" class="col-be" data-sort="be" data-col="be" id="thBe">Breakeven</th>
-              <th rowspan="2" class="num" data-sort="proj" data-col="proj" id="thProj">Rd 6 Proj</th>
-              <th rowspan="2" class="num" data-sort="avg3" data-col="avg3">3-Wk Avg</th>
-              <th rowspan="2" class="num" data-sort="avg5" data-col="avg5">5-Wk Avg</th>
-              <th rowspan="2" class="num sort-active" data-sort="priceChange" data-col="priceChange">Proj Chg</th>
-              <th rowspan="2" class="num" data-sort="newPrice" data-col="newPrice">New Price</th>
-            </tr>
-            <tr>
-              <th class="sched-sub-th" data-sort="games" data-col="games" id="thR0">R6</th>
-              <th class="sched-sub-th" data-sort="gamesNext" data-col="gamesNext" id="thR1">R7</th>
-              <th class="sched-sub-th" data-sort="gamesAfter" data-col="gamesAfter" id="thR2">R8</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody">
-            <tr>
-              <td colspan="13" style="text-align:center; padding:34px; color:var(--text-dim);">
-                Loading player feed...
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="table-footer">
-          <span id="showingCount">Showing 0 of 0 players</span>
-          <button class="btn" id="showAllBtn" style="display:none;">Show All</button>
+    <!-- ELEVATED MAIN WORKSPACE + SLIDE-IN PLAYER INSPECTOR -->
+    <div class="workspace-frame">
+      <div class="main-column">
+        <!-- Unified 44px View Header -->
+        <header class="view-header">
+          <div class="vh-left">
+            <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Menu">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+            <div class="vh-crumb" id="vhCrumb">Market</div>
+            <span class="vh-count" id="vhCount"></span>
+          </div>
+
+          <!-- Market-Only Header Controls -->
+          <div class="vh-right" id="marketHeaderControls">
+            <div class="inline-search-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" class="inline-search" id="searchInput" placeholder="Filter players..." autocomplete="off" />
+            </div>
+
+            <!-- Filter Popover -->
+            <div class="pop-anchor" id="filterPopWrap">
+              <button type="button" class="ghost-btn" id="filterPopBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+                <span>Filter</span>
+              </button>
+              <div class="linear-popover" id="filterPopover">
+                <div>
+                  <div class="pop-sec-label">Position</div>
+                  <div class="pill-row" id="posPills">
+                    <button type="button" class="chip-btn active" data-pos="ALL">All</button>
+                    <button type="button" class="chip-btn" data-pos="PG">PG</button>
+                    <button type="button" class="chip-btn" data-pos="SG">SG</button>
+                    <button type="button" class="chip-btn" data-pos="SF">SF</button>
+                    <button type="button" class="chip-btn" data-pos="PF">PF</button>
+                    <button type="button" class="chip-btn" data-pos="C">C</button>
+                  </div>
+                </div>
+                <div class="divider"></div>
+                <div class="pop-row">
+                  <span>Max Price ($M)</span>
+                  <input type="number" class="pop-input-num" id="maxPriceInput" placeholder="Any" step="0.5" min="0" />
+                </div>
+                <div class="pop-row">
+                  <span>4-Game Slate Only</span>
+                  <button type="button" class="mini-switch" id="swFourGames" aria-label="4-Game Only"></button>
+                </div>
+                <div class="pop-row">
+                  <span>PODs (&lt;5% Owned)</span>
+                  <button type="button" class="mini-switch" id="swPods" aria-label="PODs under 5 percent"></button>
+                </div>
+                <div class="pop-row">
+                  <span>Hide Deep-Bench DNPs</span>
+                  <button type="button" class="mini-switch on" id="swHideDnps" aria-label="Hide DNPs"></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Display Options Popover (Progressive Column Disclosure) -->
+            <div class="pop-anchor" id="displayPopWrap">
+              <button type="button" class="ghost-btn" id="displayPopBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+                <span>Display</span>
+              </button>
+              <div class="linear-popover" id="displayPopover">
+                <div class="pop-sec-label">Visible Columns</div>
+                <div class="pop-row">
+                  <span>Ownership %</span>
+                  <button type="button" class="mini-switch on" data-col-toggle="owned"></button>
+                </div>
+                <div class="pop-row">
+                  <span>Recent Form (2-Wk)</span>
+                  <button type="button" class="mini-switch on" data-col-toggle="form"></button>
+                </div>
+                <div class="pop-row">
+                  <span>3-Wk Average</span>
+                  <button type="button" class="mini-switch" data-col-toggle="avg3"></button>
+                </div>
+                <div class="pop-row">
+                  <span>5-Wk Average</span>
+                  <button type="button" class="mini-switch" data-col-toggle="avg5"></button>
+                </div>
+                <div class="pop-row">
+                  <span>New Price</span>
+                  <button type="button" class="mini-switch" data-col-toggle="newPrice"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Action Slot for Court & Trade Lab -->
+          <div class="vh-right" id="moduleHeaderActions" style="display:none;"></div>
+        </header>
+
+        <!-- MARKET VIEW -->
+        <div id="marketViewSection" style="display:flex; flex-direction:column; flex:1; overflow:hidden;">
+          <div class="context-strip">
+            <div class="ctx-metrics">
+              <span class="ctx-stat">Squad <strong id="ctxSquadVal">$0.00M</strong> <span id="ctxSquadCount" class="mono">0/15</span></span>
+              <span class="ctx-stat">Cash Gen <strong id="ctxCashGen">$0</strong></span>
+              <span class="ctx-stat">Top Cow <strong id="ctxTopCow">—</strong> <span id="ctxTopCowMeta" class="mono pos-text"></span></span>
+            </div>
+            <div class="ctx-chips" id="activeFilterChips"></div>
+          </div>
+
+          <div class="view-body" id="marketScrollBody">
+            <table class="market-table">
+              <thead id="tableHead"></thead>
+              <tbody id="tableBody">
+                <tr>
+                  <td colspan="12" style="text-align:center; padding:42px; color:var(--text-tertiary);">
+                    Loading player feed...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="list-footer">
+              <span id="showingCount">Showing 0 players · Press ↑/↓ to navigate, Enter to inspect, ⌘K to search</span>
+              <button type="button" class="ghost-btn" id="showAllBtn" style="display:none;">Show All</button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <!-- MY COURT VIEW (populated by court.js) -->
-    <div id="courtViewRoot" class="view-section" style="display:none;"></div>
+        <!-- MY COURT VIEW (Populated by court.js) -->
+        <div id="courtViewRoot" class="view-body" style="display:none;"></div>
 
-    <!-- TRADE LAB VIEW -->
-    <div id="tradeLabViewRoot" class="view-section" style="display:none;">
-      <div class="tradelab-card">
-        <h2>Trade Lab &amp; Scenario Comparator</h2>
-        <p>Phase 3 connects your Squad, salary bank, 3-round schedule, and Court optimiser into a side-by-side trade comparator showing projected points gained/lost and cash generation gained/lost across competing plans.</p>
-        <div class="btn-row" style="margin-top:4px;">
-          <button type="button" class="btn btn-primary" id="jumpToCourtBtn">Open My Court</button>
-          <button type="button" class="btn" id="jumpToMarketBtn">Back to Market</button>
-        </div>
+        <!-- TRADE LAB VIEW (Populated by tradelab.js) -->
+        <div id="tradeLabViewRoot" class="view-body" style="display:none;"></div>
       </div>
+
+      <!-- RIGHT-SIDE LINEAR PLAYER INSPECTOR (Properties + Live BE Simulator) -->
+      <aside class="inspector" id="playerInspector" aria-label="Player Inspector">
+        <div class="insp-inner" id="inspectorInner"></div>
+      </aside>
     </div>
   </div>
 
-  <!-- Settings, Feed Sync & Squad Transfer Modal -->
-  <div class="modal-backdrop" id="settingsModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>Settings, Data Sync &amp; Squad</h2>
-        <button class="icon-btn" id="closeSettingsBtn">✕</button>
+  <!-- ⌘K COMMAND PALETTE -->
+  <div class="overlay-backdrop" id="cmdOverlay">
+    <div class="cmd-dialog" role="dialog" aria-modal="true" aria-label="Command Menu">
+      <div class="cmd-input-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" class="cmd-input" id="cmdInput" placeholder="Search any NBA player or type a command..." autocomplete="off" />
+        <span class="kbd">ESC</span>
       </div>
-      <div class="modal-body">
+      <div class="cmd-list" id="cmdList"></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div class="overlay-backdrop" id="settingsOverlay">
+    <div class="settings-dialog" role="dialog" aria-modal="true" aria-label="Settings">
+      <div class="dlg-head">
+        <h2>Workspace Settings</h2>
+        <button type="button" class="insp-close" id="closeSettingsBtn" aria-label="Close">✕</button>
+      </div>
+      <div class="dlg-body">
         <div class="field-group">
-          <label>Data Feed &amp; Freshness</label>
+          <div class="field-label">Data Feed</div>
           <div class="inline-row">
-            <button type="button" class="btn" id="syncBtn" title="Refresh latest synced SuperCoach data">
+            <button type="button" class="ghost-btn" id="syncBtn">
               <span class="sync-dot" id="syncDot"></span>
               <span id="syncText">Sync Now</span>
             </button>
-            <span class="hint" id="syncMetaHint">Feed timestamp: —</span>
+            <span class="field-hint" id="syncMetaHint">Not synced yet</span>
           </div>
         </div>
 
         <div class="divider"></div>
 
         <div class="field-group">
-          <label>Squad &amp; Watchlist Transfer Code</label>
-          <span class="hint">Your squad and court lineup save automatically in this browser. Copy your code to transfer to another device.</span>
-          <div class="btn-row">
-            <button class="btn btn-primary" id="copySquadCodeBtn">Copy Squad Code</button>
-            <span class="status-msg" id="squadCodeStatus"></span>
+          <div class="field-label">Squad Transfer Code</div>
+          <div class="field-hint">Your squad, court lineup, and trade plans save locally in this browser. Copy your code to transfer across devices.</div>
+          <div class="inline-row" style="margin-top:2px;">
+            <button type="button" class="primary-btn" id="copySquadCodeBtn">Copy Squad Code</button>
+            <span class="mono pos-text" id="squadCodeStatus" style="font-size:11px;"></span>
           </div>
           <div class="inline-row" style="margin-top:4px;">
-            <input type="text" class="text-input" id="importSquadCodeInput" placeholder="Paste squad code here..." />
-            <button class="btn" id="loadSquadCodeBtn" style="white-space:nowrap;">Load Code</button>
+            <input type="text" class="text-input" id="importSquadCodeInput" placeholder="Paste SCH1-... code" style="flex:1;" />
+            <button type="button" class="ghost-btn" id="loadSquadCodeBtn">Load</button>
           </div>
         </div>
 
         <div class="divider"></div>
 
         <div class="field-group">
-          <label>Est. Magic Number (EST. MN)</label>
+          <div class="field-label">Est. Magic Number</div>
           <div class="inline-row">
-            <input type="number" class="text-input" id="magicInput" value="178000" step="1000" style="width:140px;" />
-            <button class="btn" id="resetMagicBtn">Reset Default ($178,000)</button>
+            <input type="number" class="text-input" id="magicInput" value="178000" step="1000" style="width:130px;" />
+            <button type="button" class="ghost-btn" id="resetMagicBtn">Reset ($178,000)</button>
           </div>
-          <div class="info-box">
-            <strong>About the Est. Magic Number ($178,000):</strong> Converts weekly SuperCoach points into estimated dollar value. Adjusting it shifts projected price changes and breakevens across the terminal.
-          </div>
+          <div class="field-hint">Converts weekly points into projected price changes and breakevens using the 0.25 weekly weighting formula.</div>
         </div>
 
         <div class="divider"></div>
 
         <div class="field-group">
-          <label>Local Browser Data</label>
-          <div class="btn-row">
-            <button class="btn btn-danger" id="clearSquadBtn">Reset My Squad &amp; Watchlist</button>
+          <div class="field-label">Danger Zone</div>
+          <div>
+            <button type="button" class="ghost-btn danger-btn" id="clearSquadBtn">Reset Squad, Court &amp; Trade Plans</button>
           </div>
         </div>
       </div>
@@ -1579,7 +1744,6 @@
   <script>
     const DATA_URL = "https://raw.githubusercontent.com/theebis/nba-supercoach-sync/main/supercoach_data.json";
     const DEFAULT_MAGIC_NUMBER = 178000;
-
     const STORAGE_KEY = "schoops_terminal_v3";
     const LEGACY_STORAGE_KEY = "schoops_terminal_v2";
 
@@ -1600,7 +1764,8 @@
     };
 
     const state = {
-      activeNav: "market",
+      activeNav: "market",   // "market" | "court" | "tradelab"
+      activeView: "all",     // "all" | "squad" | "cows" | "bleeding" | "fourgames" | "pods" | "watchlist"
       liveRound: 6,
       round: 6,
       availableRounds: [],
@@ -1610,6 +1775,7 @@
       teamScheduleMap: {},
       players: [],
       computedById: {},
+      visibleRows: [],
       squadIds: {},
       watchlistIds: {},
       court: {
@@ -1618,7 +1784,20 @@
         viceCaptainId: null,
         lockedBenchIds: {}
       },
-      activeTab: "all",
+      tradeLab: {
+        bankM: 0,
+        activePlanId: "A",
+        plans: [
+          { id: "A", name: "Plan A", trades: [{ outId: "", inId: "" }] }
+        ]
+      },
+      displayCols: {
+        owned: true,
+        form: true,
+        avg3: false,
+        avg5: false,
+        newPrice: false
+      },
       filterPos: "ALL",
       maxPriceM: null,
       fourGamesOnly: false,
@@ -1628,16 +1807,19 @@
       sortKey: "priceChange",
       sortCol: "priceChange",
       sortDir: "desc",
-      showAll: false
+      showAll: false,
+      selectedRowId: null,
+      inspectorId: null,
+      simScoreById: {}
     };
 
     function getTeamColor(team) {
-      return TEAM_COLORS[String(team || "").toUpperCase()] || "#525D73";
+      return TEAM_COLORS[String(team || "").toUpperCase()] || "#595D66";
     }
 
     function getInitials(name) {
       const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
-      if (parts.length === 0) return "?";
+      if (!parts.length) return "?";
       if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
       return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     }
@@ -1647,10 +1829,9 @@
     }
 
     function renderAvatar(player, sizePx) {
-      const sz = sizePx || 34;
-      const accent = getTeamColor(player.team);
+      const sz = sizePx || 28;
       const init = escapeHtml(getInitials(player.name));
-      const style = `width:${sz}px; height:${sz}px; --av-accent:${accent};`;
+      const style = `width:${sz}px; height:${sz}px;`;
       if (player.photo) {
         const safeUrl = escapeHtml(player.photo);
         return `
@@ -1660,11 +1841,7 @@
           </span>
         `;
       }
-      return `
-        <span class="sc-avatar" style="${style}">
-          <span class="sc-avatar-init">${init}</span>
-        </span>
-      `;
+      return `<span class="sc-avatar" style="${style}"><span class="sc-avatar-init">${init}</span></span>`;
     }
 
     function getRoundDateRangeCompact(roundNum) {
@@ -1672,12 +1849,11 @@
       const anchorStart = new Date(Date.UTC(2026, 10, 17));
       const start = new Date(anchorStart.getTime() + (r - 5) * 7 * 86400000);
       const end = new Date(start.getTime() + 6 * 86400000);
-      const sMon = start.toLocaleDateString("en-AU", { month: "short", timeZone: "UTC" }).toUpperCase();
-      const eMon = end.toLocaleDateString("en-AU", { month: "short", timeZone: "UTC" }).toUpperCase();
+      const sMon = start.toLocaleDateString("en-AU", { month: "short", timeZone: "UTC" });
+      const eMon = end.toLocaleDateString("en-AU", { month: "short", timeZone: "UTC" });
       const sDay = start.getUTCDate();
       const eDay = end.getUTCDate();
-      if (sMon === eMon) return `${sMon} ${sDay}–${eDay}`;
-      return `${sMon} ${sDay}–${eMon} ${eDay}`;
+      return sMon === eMon ? `${sMon} ${sDay}–${eDay}` : `${sMon} ${sDay}–${eMon} ${eDay}`;
     }
 
     function getHistoryUrl(roundNum) {
@@ -1685,21 +1861,29 @@
       return `${base}/history/round_${roundNum}.json`;
     }
 
+    function formatMoney(val) {
+      const abs = Math.abs(val);
+      const sign = val > 0 ? "+" : val < 0 ? "-" : "";
+      if (abs >= 1000000) return `${sign}$${(abs / 1000000).toFixed(2)}M`;
+      if (abs >= 1000) return `${sign}$${Math.round(abs / 1000)}K`;
+      return `${sign}$0`;
+    }
+
+    function formatPriceM(val) {
+      return `$${(val / 1000000).toFixed(2)}M`;
+    }
+
     function formatFeedTimestamp(isoStr) {
-      if (!isoStr) return { short: "Sync Now", full: "Unknown feed timestamp", rel: "" };
+      if (!isoStr) return { short: "Live", full: "Unknown timestamp", rel: "" };
       const dt = new Date(isoStr);
-      if (Number.isNaN(dt.getTime())) return { short: "Sync Now", full: String(isoStr), rel: "" };
-      const diffMs = Math.max(0, Date.now() - dt.getTime());
-      const diffMins = Math.floor(diffMs / 60000);
+      if (Number.isNaN(dt.getTime())) return { short: "Live", full: String(isoStr), rel: "" };
+      const diffMins = Math.floor(Math.max(0, Date.now() - dt.getTime()) / 60000);
       let rel = "just now";
       if (diffMins >= 1440) {
         const d = Math.floor(diffMins / 1440);
-        const h = Math.floor((diffMins % 1440) / 60);
-        rel = h > 0 ? `${d}d ${h}h ago` : `${d}d ago`;
+        rel = `${d}d ago`;
       } else if (diffMins >= 60) {
-        const h = Math.floor(diffMins / 60);
-        const m = diffMins % 60;
-        rel = m > 0 ? `${h}h ${m}m ago` : `${h}h ago`;
+        rel = `${Math.floor(diffMins / 60)}h ago`;
       } else if (diffMins >= 1) {
         rel = `${diffMins}m ago`;
       }
@@ -1729,6 +1913,18 @@
             lockedBenchIds: (parsed.court.lockedBenchIds && typeof parsed.court.lockedBenchIds === "object") ? parsed.court.lockedBenchIds : {}
           };
         }
+        if (parsed.tradeLab && typeof parsed.tradeLab === "object") {
+          state.tradeLab = {
+            bankM: Number(parsed.tradeLab.bankM) || 0,
+            activePlanId: parsed.tradeLab.activePlanId || "A",
+            plans: Array.isArray(parsed.tradeLab.plans) && parsed.tradeLab.plans.length
+              ? parsed.tradeLab.plans
+              : [{ id: "A", name: "Plan A", trades: [{ outId: "", inId: "" }] }]
+          };
+        }
+        if (parsed.displayCols && typeof parsed.displayCols === "object") {
+          state.displayCols = { ...state.displayCols, ...parsed.displayCols };
+        }
       } catch (e) {}
     }
 
@@ -1738,45 +1934,28 @@
           magicNumber: state.magicNumber,
           squadIds: state.squadIds,
           watchlistIds: state.watchlistIds,
-          court: state.court
+          court: state.court,
+          tradeLab: state.tradeLab,
+          displayCols: state.displayCols
         }));
       } catch (e) {}
     }
 
-    function extractFutureGames(p, currentGames, roundNum, teamScheduleMap) {
+    function extractFutureGames(p, roundNum, teamScheduleMap) {
       let gNext = null;
       let gAfter = null;
-
-      if (p.next_round_games !== undefined && p.next_round_games !== null && p.next_round_games !== "") {
-        gNext = Number(p.next_round_games);
-      }
-      if (p.round_after_games !== undefined && p.round_after_games !== null && p.round_after_games !== "") {
-        gAfter = Number(p.round_after_games);
-      }
-
-      if (Array.isArray(p.upcoming_games_list) || Array.isArray(p.games_by_round) || Array.isArray(p.schedule_counts)) {
-        const arr = p.upcoming_games_list || p.games_by_round || p.schedule_counts;
-        if (gNext === null && arr.length > 1 && arr[1] !== null && arr[1] !== "") gNext = Number(arr[1]);
-        if (gAfter === null && arr.length > 2 && arr[2] !== null && arr[2] !== "") gAfter = Number(arr[2]);
-      } else if (p.games_by_round && typeof p.games_by_round === "object") {
-        const r = Number(roundNum) || 6;
-        if (gNext === null && p.games_by_round[String(r + 1)] !== undefined && p.games_by_round[String(r + 1)] !== null) gNext = Number(p.games_by_round[String(r + 1)]);
-        if (gAfter === null && p.games_by_round[String(r + 2)] !== undefined && p.games_by_round[String(r + 2)] !== null) gAfter = Number(p.games_by_round[String(r + 2)]);
-      }
+      if (p.next_round_games !== undefined && p.next_round_games !== null && p.next_round_games !== "") gNext = Number(p.next_round_games);
+      if (p.round_after_games !== undefined && p.round_after_games !== null && p.round_after_games !== "") gAfter = Number(p.round_after_games);
 
       const teamCode = String(p.team || p.team_abbrev || "").toUpperCase();
       if (teamCode && teamScheduleMap && teamScheduleMap[teamCode]) {
         const tSched = teamScheduleMap[teamCode];
         const r = Number(roundNum) || 6;
-        if (Array.isArray(tSched)) {
-          if (gNext === null && tSched[1] !== undefined && tSched[1] !== null) gNext = Number(tSched[1]);
-          if (gAfter === null && tSched[2] !== undefined && tSched[2] !== null) gAfter = Number(tSched[2]);
-        } else if (typeof tSched === "object") {
+        if (typeof tSched === "object" && !Array.isArray(tSched)) {
           if (gNext === null && tSched[String(r + 1)] !== undefined && tSched[String(r + 1)] !== null) gNext = Number(tSched[String(r + 1)]);
           if (gAfter === null && tSched[String(r + 2)] !== undefined && tSched[String(r + 2)] !== null) gAfter = Number(tSched[String(r + 2)]);
         }
       }
-
       return {
         gamesNext: (gNext !== null && !Number.isNaN(gNext)) ? gNext : null,
         gamesAfter: (gAfter !== null && !Number.isNaN(gAfter)) ? gAfter : null
@@ -1802,12 +1981,9 @@
       const officialBeRaw = p.be ?? p.breakeven ?? p.break_even ?? null;
       const officialBe = (officialBeRaw !== null && officialBeRaw !== undefined && officialBeRaw !== "") ? Number(officialBeRaw) : null;
 
-      const futureGms = extractFutureGames(p, games, roundNum, teamScheduleMap);
-
+      const futureGms = extractFutureGames(p, roundNum, teamScheduleMap);
       let photo = p.photo || p.headshot || p.avatar || p.image_url || null;
-      if (!photo && p.nba_id) {
-        photo = `https://cdn.nba.com/headshots/nba/latest/260x190/${p.nba_id}.png`;
-      }
+      if (!photo && p.nba_id) photo = `https://cdn.nba.com/headshots/nba/latest/260x190/${p.nba_id}.png`;
 
       return {
         id,
@@ -1843,26 +2019,17 @@
       const isZeroGames = (base.games === 0);
       const hasRecentAvg5 = (base.avg5 !== null && !Number.isNaN(base.avg5) && base.avg5 > 0);
       const isRelevantOut = isInactive && (
-        hasRecentAvg5 ||
-        price >= RELEVANT_OUT_PRICE ||
-        !!base.injury ||
-        base.owned >= RELEVANT_OUT_OWN ||
-        inSquad ||
-        inWatchlist
+        hasRecentAvg5 || price >= RELEVANT_OUT_PRICE || !!base.injury || base.owned >= RELEVANT_OUT_OWN || inSquad || inWatchlist
       );
       const isFringeDnp = isInactive && !isRelevantOut;
       const rolling3 = (r2 + r1 + proj) / 3;
 
       const be = isInactive
         ? null
-        : (base.officialBe !== null
-          ? Math.round(base.officialBe)
-          : Math.round((3 * price / magic) - r2 - r1));
+        : (base.officialBe !== null ? Math.round(base.officialBe) : Math.round((3 * price / magic) - r2 - r1));
 
       const dist = (be === null) ? null : (proj - be);
-      const newPrice = isInactive
-        ? price
-        : Math.round((0.75 * price + 0.25 * rolling3 * magic) / 10000) * 10000;
+      const newPrice = isInactive ? price : Math.round((0.75 * price + 0.25 * rolling3 * magic) / 10000) * 10000;
       const priceChange = newPrice - price;
 
       let trend = "neutral";
@@ -1873,74 +2040,82 @@
 
       return {
         ...base,
-        price,
-        r_minus_2: r2,
-        r_minus_1: r1,
-        proj,
+        price, r_minus_2: r2, r_minus_1: r1, proj,
         avg3: rolling3,
-        be,
-        dist,
-        newPrice,
-        priceChange,
-        inSquad,
-        inWatchlist,
-        isInactive,
-        isRelevantOut,
-        isFringeDnp,
-        isZeroGames,
+        be, dist, newPrice, priceChange,
+        inSquad, inWatchlist,
+        isInactive, isRelevantOut, isFringeDnp, isZeroGames,
         trend
       };
     }
 
-    function formatMoney(val) {
-      const abs = Math.abs(val);
-      const sign = val > 0 ? "+" : val < 0 ? "-" : "";
-      if (abs >= 1000000) return `${sign}$${(abs / 1000000).toFixed(2)}M`;
-      if (abs >= 1000) return `${sign}$${Math.round(abs / 1000)}K`;
-      return `${sign}$0`;
+    function renderSchedStrip(p, roundNum) {
+      const r = Number(roundNum) || 6;
+      const cells = [
+        { val: p.games, lbl: `R${r}` },
+        { val: p.gamesNext, lbl: `R${r + 1}` },
+        { val: p.gamesAfter, lbl: `R${r + 2}` }
+      ];
+      return `<div class="sched-strip">${cells.map((c) => {
+        if (c.val === null || c.val === undefined || Number.isNaN(c.val)) {
+          return `<span class="sched-box tbd" title="${c.lbl}: Pending">—</span>`;
+        }
+        const cls = c.val >= 4 ? "g4" : (c.val === 2 ? "g2" : (c.val === 0 ? "g0" : ""));
+        return `<span class="sched-box ${cls}" title="${c.lbl}: ${c.val} games">${c.val}</span>`;
+      }).join("")}</div>`;
     }
 
-    function formatPriceM(val) {
-      return `$${(val / 1000000).toFixed(2)}M`;
-    }
-
-    function renderSchedTile(val, label) {
-      if (val === null || val === undefined || Number.isNaN(val)) {
-        return `<span class="sched-tile tbd" title="${label}: Pending fixture sync">—</span>`;
-      }
-      let cls = "";
-      if (val >= 4) cls = "g4";
-      else if (val === 2) cls = "g2";
-      else if (val === 0) cls = "g0";
-      return `<span class="sched-tile ${cls}" title="${label}: ${val} games">${val}</span>`;
-    }
-
-    function setSyncStatus(mode, text, tooltip) {
+    function setSyncStatus(mode, shortTxt, fullTxt) {
       const dot = document.getElementById("syncDot");
-      const label = document.getElementById("syncText");
-      const btn = document.getElementById("syncBtn");
-      dot.className = "sync-dot" + (mode ? ` ${mode}` : "");
-      label.textContent = text;
-      if (tooltip) btn.title = tooltip;
+      const btnText = document.getElementById("syncText");
+      const sbHint = document.getElementById("sbSyncHint");
+      const metaHint = document.getElementById("syncMetaHint");
+      if (dot) dot.className = "sync-dot" + (mode ? ` ${mode}` : "");
+      if (btnText) btnText.textContent = mode === "loading" ? "Syncing..." : "Sync Now";
+      if (sbHint) sbHint.textContent = shortTxt;
+      if (metaHint && fullTxt) metaHint.textContent = fullTxt;
     }
 
     async function syncFromGitHub() {
-      setSyncStatus("loading", "Syncing...", "Fetching latest supercoach_data.json...");
+      setSyncStatus("loading", "Syncing...", "Fetching live SuperCoach data...");
       try {
         const res = await fetch(`${DATA_URL}?cb=${Date.now()}`, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
+
+        // Frontend Round Regression Safeguard:
+        // If supercoach_data.json accidentally regressed to an older round (e.g. Rd 5) while a newer
+        // round snapshot (e.g. Rd 6) already exists in availableRounds, auto-promote the highest round as LIVE.
+        const avail = Array.isArray(data.availableRounds) ? data.availableRounds.map(Number).filter(Boolean) : [];
+        const dataRound = Number(data.round || 6);
+        const maxAvail = avail.length ? Math.max(...avail, dataRound) : dataRound;
+
+        if (maxAvail > dataRound) {
+          try {
+            const latestRes = await fetch(`${getHistoryUrl(maxAvail)}?cb=${Date.now()}`, { cache: "no-store" });
+            if (latestRes.ok) {
+              const latestData = await latestRes.json();
+              latestData.availableRounds = avail;
+              state.liveRound = maxAvail;
+              state.isHistorical = false;
+              loadDataset(latestData, `Live Feed (Rd ${maxAvail})`);
+              return;
+            }
+          } catch (innerErr) {
+            console.warn("Could not auto-promote newer round snapshot:", innerErr);
+          }
+        }
+
+        state.liveRound = dataRound;
         state.isHistorical = false;
         loadDataset(data, "Live Feed");
       } catch (err) {
         console.error("Sync error:", err);
-        setSyncStatus("error", "Sync Failed", `Error: ${err.message}. Click to retry.`);
+        setSyncStatus("error", "Sync error", `Error: ${err.message}`);
         document.getElementById("tableBody").innerHTML = `
-          <tr>
-            <td colspan="13" style="text-align:center; padding:32px; color:var(--neg);">
-              Failed to load player feed (${escapeHtml(err.message)}). Open Settings to retry sync.
-            </td>
-          </tr>`;
+          <tr><td colspan="12" style="text-align:center; padding:36px; color:var(--neg-soft);">
+            Failed to load feed (${escapeHtml(err.message)}). Open Settings to retry.
+          </td></tr>`;
       }
     }
 
@@ -1949,18 +2124,44 @@
         syncFromGitHub();
         return;
       }
-      setSyncStatus("loading", `Loading Rd ${roundNum}...`, `Loading historical snapshot for Round ${roundNum}...`);
+      setSyncStatus("loading", `Rd ${roundNum}...`, `Loading Round ${roundNum} snapshot...`);
       try {
         const res = await fetch(`${getHistoryUrl(roundNum)}?cb=${Date.now()}`, { cache: "no-store" });
-        if (!res.ok) throw new Error(`Snapshot for Round ${roundNum} not found (HTTP ${res.status})`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         state.isHistorical = true;
         loadDataset(data, `Snapshot Rd ${roundNum}`);
       } catch (err) {
-        console.error("Snapshot load error:", err);
-        setSyncStatus("error", `Rd ${roundNum} Missing`, `Snapshot missing: ${err.message}`);
-        alert(`Could not load Round ${roundNum} snapshot.`);
+        setSyncStatus("error", "Load failed", err.message);
       }
+    }
+
+    function loadDataset(data, sourceLabel) {
+      const roundNum = data.round ? Number(data.round) : state.round;
+      const scheduleMap = data.team_schedule || data.teamSchedule || {};
+      state.teamScheduleMap = (scheduleMap && typeof scheduleMap === "object") ? scheduleMap : {};
+      const list = Array.isArray(data) ? data : (data.players || data.data || []);
+      state.players = list.map((p, i) => normalizePlayer(p, i, roundNum, state.teamScheduleMap));
+
+      state.round = roundNum;
+      if (Array.isArray(data.availableRounds) && data.availableRounds.length) {
+        state.availableRounds = [...new Set([...data.availableRounds.map(Number), roundNum])];
+      } else if (!state.availableRounds.includes(roundNum)) {
+        state.availableRounds.push(roundNum);
+      }
+      state.liveRound = Math.max(state.liveRound, ...state.availableRounds);
+      state.isHistorical = (state.round < state.liveRound);
+
+      state.lastUpdated = data.lastUpdated || data.last_updated || data.timestamp || null;
+      const ts = formatFeedTimestamp(state.lastUpdated);
+      setSyncStatus(
+        "",
+        state.isHistorical ? `Snapshot Rd ${state.round}` : ts.short,
+        `${sourceLabel} · ${state.players.length} players · ${ts.full}`
+      );
+
+      renderRoundDropdown();
+      render();
     }
 
     function renderRoundDropdown() {
@@ -1968,164 +2169,19 @@
         ? [...state.availableRounds].sort((a, b) => b - a)
         : [state.liveRound];
 
-      const triggerText = document.getElementById("roundTriggerText");
-      const triggerTag = document.getElementById("roundTriggerTag");
-      const menu = document.getElementById("roundMenu");
+      document.getElementById("roundTriggerText").textContent = `Rd ${state.round} · ${getRoundDateRangeCompact(state.round)}`;
+      document.getElementById("roundPip").className = "live-pip" + (state.isHistorical ? " snap" : "");
 
-      triggerText.textContent = `ROUND ${state.round} · ${getRoundDateRangeCompact(state.round)}`;
-      if (state.isHistorical) {
-        triggerTag.textContent = "SNAP";
-        triggerTag.className = "round-tag-snap";
-      } else {
-        triggerTag.textContent = "LIVE";
-        triggerTag.className = "round-tag-live";
-      }
-
-      menu.innerHTML = rounds.map((r) => {
+      document.getElementById("roundMenu").innerHTML = rounds.map((r) => {
         const isLive = Number(r) === Number(state.liveRound);
         const isActive = Number(r) === Number(state.round);
         return `
-          <button type="button" class="round-option ${isActive ? "active" : ""}" data-round="${r}">
-            <span>ROUND ${r} · ${getRoundDateRangeCompact(r)} (AEDT)</span>
-            <span class="round-opt-pill ${isLive ? "live" : "snap"}">${isLive ? "LIVE" : "SNAPSHOT"}</span>
+          <button type="button" class="round-opt ${isActive ? "active" : ""}" data-round="${r}">
+            <span>Rd ${r} · ${getRoundDateRangeCompact(r)}</span>
+            <span class="round-tag ${isLive ? "live" : "snap"}">${isLive ? "LIVE" : "SNAPSHOT"}</span>
           </button>
         `;
       }).join("");
-    }
-
-    function loadDataset(data, sourceLabel) {
-      const roundNum = data.round ? Number(data.round) : state.round;
-      const scheduleMap = data.team_schedule || data.teamSchedule || data.schedules || {};
-      state.teamScheduleMap = (scheduleMap && typeof scheduleMap === "object") ? scheduleMap : {};
-
-      const list = Array.isArray(data) ? data : (data.players || data.data || []);
-      state.players = list.map((p, i) => normalizePlayer(p, i, roundNum, state.teamScheduleMap));
-
-      if (data.round) {
-        state.round = roundNum;
-        if (!state.isHistorical) state.liveRound = roundNum;
-      }
-      if (Array.isArray(data.availableRounds) && data.availableRounds.length) {
-        state.availableRounds = data.availableRounds.map(Number);
-      } else if (!state.availableRounds.includes(state.round)) {
-        state.availableRounds.push(state.round);
-      }
-
-      state.lastUpdated = data.lastUpdated || data.last_updated || data.updated_at || data.timestamp || null;
-      const ts = formatFeedTimestamp(state.lastUpdated);
-
-      setSyncStatus(
-        "",
-        state.isHistorical ? `Snapshot Rd ${state.round}` : ts.short,
-        `Feed updated: ${ts.full}${ts.rel ? ` (${ts.rel})` : ""} · Click to refresh`
-      );
-
-      document.getElementById("syncMetaHint").textContent =
-        `${sourceLabel} · ${state.players.length} players · ${ts.full}`;
-
-      renderRoundDropdown();
-      render();
-    }
-
-    /* LIVE BE CALC Popover Math (0.25 weekly weighting) */
-    function recalculateScratchpad() {
-      const be = parseFloat(document.getElementById("calcBeInput").value) || 0;
-      const score = parseFloat(document.getElementById("calcScoreInput").value) || 0;
-      const priceM = parseFloat(document.getElementById("calcPriceInput").value) || 0;
-      const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
-
-      const ptsDiff = score - be;
-      const rawCashDelta = 0.25 * ptsDiff * (magic / 3);
-      const roundedCashDelta = Math.round(rawCashDelta / 10000) * 10000;
-      const newPriceDollars = Math.max(0, Math.round(priceM * 1000000) + roundedCashDelta);
-
-      const diffEl = document.getElementById("calcPtsDiff");
-      const cashEl = document.getElementById("calcCashEarned");
-      const newPriceEl = document.getElementById("calcNewPrice");
-
-      diffEl.textContent = `${ptsDiff > 0 ? "+" : ""}${Math.round(ptsDiff)}`;
-      diffEl.className = "sp-stat-val " + (ptsDiff > 0 ? "pos-text" : ptsDiff < 0 ? "neg-text" : "muted-text");
-
-      cashEl.textContent = formatMoney(roundedCashDelta);
-      cashEl.className = "sp-stat-val " + (roundedCashDelta > 0 ? "pos-text" : roundedCashDelta < 0 ? "neg-text" : "muted-text");
-
-      newPriceEl.textContent = formatPriceM(newPriceDollars);
-    }
-
-    let acMatches = [];
-    let acIndex = -1;
-
-    function renderAutocomplete(query) {
-      const listEl = document.getElementById("calcAcList");
-      const q = query.trim().toLowerCase();
-      if (!q) {
-        acMatches = [];
-        acIndex = -1;
-        listEl.classList.remove("open");
-        listEl.innerHTML = "";
-        return;
-      }
-
-      acMatches = Object.values(state.computedById)
-        .filter((p) => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))
-        .sort((a, b) => {
-          const aStarts = a.name.toLowerCase().startsWith(q) ? 0 : 1;
-          const bStarts = b.name.toLowerCase().startsWith(q) ? 0 : 1;
-          if (aStarts !== bStarts) return aStarts - bStarts;
-          return b.price - a.price;
-        })
-        .slice(0, 8);
-
-      acIndex = acMatches.length > 0 ? 0 : -1;
-
-      if (acMatches.length === 0) {
-        listEl.innerHTML = `<div style="padding:6px 8px; font-size:11px; color:var(--text-dim);">No matching players</div>`;
-      } else {
-        listEl.innerHTML = acMatches.map((p, i) => `
-          <button type="button" class="ac-item ${i === acIndex ? "active" : ""}" data-ac-id="${escapeHtml(p.id)}">
-            <span>${escapeHtml(p.name)}</span>
-            <span class="ac-meta">${escapeHtml(p.team)} · BE ${p.be === null ? "—" : p.be} · $${(p.price / 1000000).toFixed(2)}M</span>
-          </button>
-        `).join("");
-      }
-      listEl.classList.add("open");
-    }
-
-    function selectAutocompletePlayer(playerId) {
-      const p = state.computedById[playerId];
-      if (!p) return;
-      document.getElementById("calcPlayerSearch").value = p.name;
-      document.getElementById("calcBeInput").value = p.be === null ? 0 : p.be;
-      document.getElementById("calcPriceInput").value = (p.price / 1000000).toFixed(2);
-      document.getElementById("calcScoreInput").value = p.proj || 0;
-      document.getElementById("calcAcList").classList.remove("open");
-      recalculateScratchpad();
-      document.getElementById("calcScoreInput").focus();
-      document.getElementById("calcScoreInput").select();
-    }
-
-    function generateSquadCode() {
-      const squad = Object.keys(state.squadIds).filter((k) => state.squadIds[k]);
-      const watch = Object.keys(state.watchlistIds).filter((k) => state.watchlistIds[k]);
-      const json = JSON.stringify({ s: squad, w: watch });
-      return "SCH1-" + btoa(unescape(encodeURIComponent(json)));
-    }
-
-    function applySquadCode(codeStr) {
-      const cleaned = codeStr.trim();
-      if (!cleaned.startsWith("SCH1-")) throw new Error("Invalid code format");
-      const rawJson = decodeURIComponent(escape(atob(cleaned.slice(5))));
-      const parsed = JSON.parse(rawJson);
-      if (!Array.isArray(parsed.s) && !Array.isArray(parsed.w)) throw new Error("Invalid squad payload");
-      const newSquad = {};
-      const newWatch = {};
-      (parsed.s || []).forEach((id) => { newSquad[String(id)] = true; });
-      (parsed.w || []).forEach((id) => { newWatch[String(id)] = true; });
-      state.squadIds = newSquad;
-      state.watchlistIds = newWatch;
-      savePrefs();
-      render();
-      return { squadCount: Object.keys(newSquad).length, watchCount: Object.keys(newWatch).length };
     }
 
     function getFilteredRows(allComputed) {
@@ -2134,19 +2190,18 @@
         ? (state.maxPriceM > 1000 ? state.maxPriceM : state.maxPriceM * 1000000)
         : null;
 
-      const applyHideDnps = state.hideDnps &&
-        state.activeTab !== "squad" &&
-        state.activeTab !== "watchlist" &&
-        q.length === 0;
+      const bypassDnpHide = (state.activeView === "squad" || state.activeView === "watchlist" || q.length > 0);
+      const applyHideDnps = state.hideDnps && !bypassDnpHide;
 
       return allComputed.filter((p) => {
-        if (state.activeTab === "squad" && !p.inSquad) return false;
-        if (state.activeTab === "cows" && p.trend !== "cow") return false;
-        if (state.activeTab === "bleeding" && p.trend !== "bleed") return false;
-        if (state.activeTab === "watchlist" && !p.inWatchlist) return false;
+        if (state.activeView === "squad" && !p.inSquad) return false;
+        if (state.activeView === "cows" && p.trend !== "cow") return false;
+        if (state.activeView === "bleeding" && p.trend !== "bleed") return false;
+        if (state.activeView === "fourgames" && p.games < 4) return false;
+        if (state.activeView === "pods" && !(p.owned > 0 && p.owned < 5)) return false;
+        if (state.activeView === "watchlist" && !p.inWatchlist) return false;
 
         if (applyHideDnps && p.isFringeDnp) return false;
-
         if (state.filterPos !== "ALL") {
           const parts = p.pos.toUpperCase().split(/[\/,\s]+/);
           if (!parts.includes(state.filterPos)) return false;
@@ -2176,410 +2231,669 @@
       });
     }
 
-    function updateSortHeaders() {
+    function getActiveColumns() {
       const r = state.round;
-      const baseLabels = {
-        name: "Player",
-        price: "Price ($M)",
-        owned: "Own %",
-        form: `Form (W${Math.max(1, r - 2)}/W${Math.max(1, r - 1)})`,
-        games: `R${r}`,
-        gamesNext: `R${r + 1}`,
-        gamesAfter: `R${r + 2}`,
-        be: "Breakeven",
-        proj: `Rd ${r} Proj`,
-        avg3: "3-Wk Avg",
-        avg5: "5-Wk Avg",
-        priceChange: "Proj Chg",
-        newPrice: "New Price"
-      };
-
-      document.querySelectorAll("thead th[data-col]").forEach((th) => {
-        const col = th.dataset.col;
-        const isActive = (col === state.sortCol);
-        th.classList.toggle("sort-active", isActive);
-        const arrow = isActive ? `<span class="sort-arrow">${state.sortDir === "asc" ? "▲" : "▼"}</span>` : "";
-        th.innerHTML = `${baseLabels[col] || th.textContent}${arrow}`;
-      });
+      const cols = [
+        { key: "name", sort: "name", label: "Player", align: "" },
+        { key: "price", sort: "price", label: "Price", align: "num" }
+      ];
+      if (state.displayCols.owned) cols.push({ key: "owned", sort: "owned", label: "Own %", align: "num" });
+      if (state.displayCols.form) cols.push({ key: "form", sort: "r_minus_1", label: `W${Math.max(1, r - 2)}/W${Math.max(1, r - 1)}`, align: "num" });
+      cols.push({ key: "games", sort: "games", label: `R${r}·R${r + 1}·R${r + 2}`, align: "center" });
+      cols.push({ key: "be", sort: "be", label: "BE", align: "num", isBe: true });
+      cols.push({ key: "proj", sort: "proj", label: `R${r} Proj`, align: "num" });
+      if (state.displayCols.avg3) cols.push({ key: "avg3", sort: "avg3", label: "3-Wk", align: "num" });
+      if (state.displayCols.avg5) cols.push({ key: "avg5", sort: "avg5", label: "5-Wk", align: "num" });
+      cols.push({ key: "priceChange", sort: "priceChange", label: "Proj Chg", align: "num" });
+      if (state.displayCols.newPrice) cols.push({ key: "newPrice", sort: "newPrice", label: "New Price", align: "num" });
+      cols.push({ key: "actions", sort: null, label: "", align: "num" });
+      return cols;
     }
 
-    function updateKPIs(allComputed) {
+    function renderActiveFilterChips() {
+      const chips = [];
+      if (state.filterPos !== "ALL") chips.push(`<span class="filter-chip">Pos: ${state.filterPos} <button type="button" data-clear-chip="pos">×</button></span>`);
+      if (state.maxPriceM !== null) chips.push(`<span class="filter-chip">≤ $${state.maxPriceM}M <button type="button" data-clear-chip="price">×</button></span>`);
+      if (state.fourGamesOnly) chips.push(`<span class="filter-chip">4-Game Only <button type="button" data-clear-chip="4g">×</button></span>`);
+      if (state.podsOnly) chips.push(`<span class="filter-chip">PODs &lt;5% <button type="button" data-clear-chip="pod">×</button></span>`);
+      if (!state.hideDnps) chips.push(`<span class="filter-chip">Showing DNPs <button type="button" data-clear-chip="dnp">×</button></span>`);
+      document.getElementById("activeFilterChips").innerHTML = chips.join("");
+      document.getElementById("filterPopBtn").classList.toggle("active", chips.length > 0);
+    }
+
+    function syncSidebarAndHeader(allComputed, filteredLen) {
       const squad = allComputed.filter((p) => p.inSquad);
+      const cows = allComputed.filter((p) => p.trend === "cow");
+      const bleed = allComputed.filter((p) => p.trend === "bleed");
+      const fourG = allComputed.filter((p) => p.games >= 4 && !p.isFringeDnp);
+      const pods = allComputed.filter((p) => p.owned > 0 && p.owned < 5 && !p.isFringeDnp);
+      const watch = allComputed.filter((p) => p.inWatchlist);
+
+      document.getElementById("sbAllCount").textContent = String(allComputed.filter((p) => !p.isFringeDnp).length);
+      document.getElementById("sbSquadCount").textContent = String(squad.length);
+      document.getElementById("sbTradeCount").textContent = String((state.tradeLab.plans || []).length);
+      document.getElementById("sbViewSquadCount").textContent = String(squad.length);
+      document.getElementById("sbViewCowsCount").textContent = String(cows.length);
+      document.getElementById("sbViewBleedCount").textContent = String(bleed.length);
+      document.getElementById("sbView4GCount").textContent = String(fourG.length);
+      document.getElementById("sbViewPodCount").textContent = String(pods.length);
+      document.getElementById("sbViewWatchCount").textContent = String(watch.length);
+
+      // Context Strip Metrics
       const squadVal = squad.reduce((s, p) => s + p.price, 0);
       const squadCash = squad.reduce((s, p) => s + p.priceChange, 0);
+      document.getElementById("ctxSquadVal").textContent = formatPriceM(squadVal);
+      document.getElementById("ctxSquadCount").textContent = `${squad.length}/15`;
+      const cgEl = document.getElementById("ctxCashGen");
+      cgEl.textContent = formatMoney(squadCash);
+      cgEl.className = squadCash > 0 ? "pos-text" : (squadCash < 0 ? "neg-text" : "");
 
-      const navCountEl = document.getElementById("navCourtCount");
-      if (navCountEl) navCountEl.textContent = String(squad.length);
-
-      document.getElementById("kpiSquadVal").textContent = formatPriceM(squadVal);
-      document.getElementById("kpiSquadCount").textContent = `(${squad.length} tracked)`;
-
-      const cashEl = document.getElementById("kpiCashGen");
-      cashEl.textContent = formatMoney(squadCash);
-      cashEl.className = "ticker-val " + (squadCash > 0 ? "pos-text" : squadCash < 0 ? "neg-text" : "");
-
-      const sortedCows = [...allComputed].sort((a, b) => b.priceChange - a.priceChange);
-      const topCow = sortedCows[0];
+      const topCow = [...allComputed].sort((a, b) => b.priceChange - a.priceChange)[0];
       if (topCow) {
-        document.getElementById("kpiTopCow").textContent = topCow.name;
-        document.getElementById("kpiTopCowMeta").textContent = `(${formatMoney(topCow.priceChange)} · BE ${topCow.be === null ? "—" : topCow.be})`;
+        document.getElementById("ctxTopCow").textContent = topCow.name;
+        document.getElementById("ctxTopCowMeta").textContent = formatMoney(topCow.priceChange);
       }
 
-      const topPod = sortedCows.find((p) => p.games >= 4 && p.owned > 0 && p.owned < 5);
-      if (topPod) {
-        document.getElementById("kpiTopPod").textContent = topPod.name;
-        document.getElementById("kpiTopPodMeta").textContent = `(${formatMoney(topPod.priceChange)} · ${topPod.owned.toFixed(1)}%)`;
-      } else {
-        document.getElementById("kpiTopPod").textContent = "—";
-        document.getElementById("kpiTopPodMeta").textContent = "(No 4G PODs)";
-      }
+      // Highlight Sidebar Active States
+      document.querySelectorAll("#sbPrimaryNav .sb-item").forEach((b) => {
+        b.classList.toggle("active", b.dataset.nav === state.activeNav && (state.activeNav !== "market" || state.activeView === "all"));
+      });
+      document.querySelectorAll("#sbSmartViews .sb-item").forEach((b) => {
+        b.classList.toggle("active", state.activeNav === "market" && b.dataset.view === state.activeView);
+      });
 
-      const counts = {
-        all: allComputed.length,
-        squad: squad.length,
-        cows: allComputed.filter((p) => p.trend === "cow").length,
-        bleeding: allComputed.filter((p) => p.trend === "bleed").length,
-        watchlist: allComputed.filter((p) => p.inWatchlist).length
+      // Header Breadcrumb & Controls
+      const viewNames = {
+        all: "All Players",
+        squad: "My Squad",
+        cows: "Cash Cows",
+        bleeding: "Bleeding",
+        fourgames: "4-Game Slate",
+        pods: "PODs <5%",
+        watchlist: "Watchlist"
       };
-      const labels = { all: "All", squad: "Squad", cows: "Cows", bleeding: "Bleeding", watchlist: "Watchlist" };
-      document.querySelectorAll("#statusTabs .seg-btn").forEach((btn) => {
-        const t = btn.dataset.tab;
-        btn.textContent = `${labels[t]} (${counts[t]})`;
+      const crumb = document.getElementById("vhCrumb");
+      const countEl = document.getElementById("vhCount");
+      const mktCtrl = document.getElementById("marketHeaderControls");
+      const modCtrl = document.getElementById("moduleHeaderActions");
+
+      if (state.activeNav === "market") {
+        crumb.innerHTML = state.activeView === "all"
+          ? `Market`
+          : `Market <span class="vh-crumb-sep">/</span> <span class="vh-crumb-sub">${escapeHtml(viewNames[state.activeView] || state.activeView)}</span>`;
+        countEl.textContent = String(filteredLen);
+        mktCtrl.style.display = "flex";
+        modCtrl.style.display = "none";
+      } else if (state.activeNav === "court") {
+        crumb.innerHTML = `My Court`;
+        countEl.textContent = `${squad.length}/15`;
+        mktCtrl.style.display = "none";
+        modCtrl.style.display = "flex";
+      } else {
+        crumb.innerHTML = `Trade Lab`;
+        countEl.textContent = `${(state.tradeLab.plans || []).length} plans`;
+        mktCtrl.style.display = "none";
+        modCtrl.style.display = "flex";
+      }
+    }
+
+    function renderInspector() {
+      const panel = document.getElementById("playerInspector");
+      const inner = document.getElementById("inspectorInner");
+      const p = state.inspectorId ? state.computedById[state.inspectorId] : null;
+
+      if (!p) {
+        panel.classList.remove("open");
+        return;
+      }
+
+      const simScore = (state.simScoreById[p.id] !== undefined) ? state.simScoreById[p.id] : (p.proj || 0);
+      const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
+      const beVal = p.be === null ? 0 : p.be;
+      const ptsDiff = simScore - beVal;
+      const simCash = Math.round((0.25 * ptsDiff * (magic / 3)) / 10000) * 10000;
+      const simNewPrice = Math.max(0, p.price + simCash);
+      const r = state.round;
+
+      inner.innerHTML = `
+        <div class="insp-head">
+          <span class="insp-head-title">${escapeHtml(p.team)} · ${escapeHtml(p.pos)}</span>
+          <button type="button" class="insp-close" id="closeInspectorBtn" aria-label="Close Inspector">✕</button>
+        </div>
+
+        <div class="insp-hero">
+          ${renderAvatar(p, 44)}
+          <div style="min-width:0;">
+            <div class="insp-name">${escapeHtml(p.name)}</div>
+            <div class="insp-sub">
+              ${formatPriceM(p.price)} · ${p.owned.toFixed(1)}% owned
+              ${p.injury ? ` · <span class="warn-text">${escapeHtml(String(p.injury))}</span>` : ""}
+            </div>
+          </div>
+        </div>
+
+        <div class="insp-actions">
+          <button type="button" class="${p.inSquad ? "primary-btn" : "ghost-btn"}" data-insp-squad="${escapeHtml(p.id)}" style="justify-content:center;">
+            ${p.inSquad ? "✓ In Squad" : "+ Add to Squad"}
+          </button>
+          <button type="button" class="ghost-btn ${p.inWatchlist ? "active" : ""}" data-insp-watch="${escapeHtml(p.id)}" style="justify-content:center;">
+            ${p.inWatchlist ? "★ Watchlisted" : "☆ Watchlist"}
+          </button>
+          <button type="button" class="ghost-btn full" data-insp-trade="${escapeHtml(p.id)}" data-trade-dir="${p.inSquad ? "out" : "in"}" style="justify-content:center;">
+            ${p.inSquad ? "→ Test Trading OUT in Trade Lab" : "→ Test Trading IN in Trade Lab"}
+          </button>
+        </div>
+
+        <div class="insp-section">
+          <div class="insp-section-title">Properties</div>
+          <div class="prop-list">
+            <div class="prop-row"><span class="prop-key">Breakeven</span><span class="prop-val">${p.be === null ? "—" : p.be}</span></div>
+            <div class="prop-row"><span class="prop-key">Round ${r} Proj</span><span class="prop-val">${p.proj}</span></div>
+            <div class="prop-row"><span class="prop-key">Proj Change</span><span class="prop-val ${p.priceChange > 0 ? "pos-text" : p.priceChange < 0 ? "neg-text" : "muted-text"}">${formatMoney(p.priceChange)}</span></div>
+            <div class="prop-row"><span class="prop-key">Est. New Price</span><span class="prop-val">${formatPriceM(p.newPrice)}</span></div>
+            <div class="prop-row"><span class="prop-key">Schedule (R${r}–R${r + 2})</span>${renderSchedStrip(p, r)}</div>
+            <div class="prop-row"><span class="prop-key">Recent (W${Math.max(1, r - 2)} / W${Math.max(1, r - 1)})</span><span class="prop-val">${p.r_minus_2} / ${p.r_minus_1}</span></div>
+            <div class="prop-row"><span class="prop-key">3-Wk / 5-Wk Avg</span><span class="prop-val">${p.avg3.toFixed(1)} / ${p.avg5 !== null ? p.avg5.toFixed(1) : "—"}</span></div>
+          </div>
+        </div>
+
+        <div class="insp-section" style="border-bottom:none;">
+          <div class="insp-section-title">Live BE &amp; Cash Simulator</div>
+          <div class="sim-box">
+            <div class="sim-input-row">
+              <label for="inspSimScore">Live Round Score</label>
+              <input type="number" class="pop-input-num" id="inspSimScore" value="${Math.round(simScore)}" step="1" />
+            </div>
+            <input type="range" class="sim-range" id="inspSimRange" min="0" max="240" value="${Math.min(240, Math.max(0, Math.round(simScore)))}" />
+            <div class="sim-grid">
+              <div class="sim-metric">
+                <span>Pts vs BE</span>
+                <span id="inspSimDiff" class="${ptsDiff > 0 ? "pos-text" : ptsDiff < 0 ? "neg-text" : "muted-text"}">${ptsDiff > 0 ? "+" : ""}${Math.round(ptsDiff)}</span>
+              </div>
+              <div class="sim-metric">
+                <span>Est. Cash</span>
+                <span id="inspSimCash" class="${simCash > 0 ? "pos-text" : simCash < 0 ? "neg-text" : "muted-text"}">${formatMoney(simCash)}</span>
+              </div>
+              <div class="sim-metric">
+                <span>New Price</span>
+                <span id="inspSimPrice">${formatPriceM(simNewPrice)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      panel.classList.add("open");
+    }
+
+    function updateInspectorSimUI(scoreVal) {
+      const p = state.inspectorId ? state.computedById[state.inspectorId] : null;
+      if (!p) return;
+      const score = Number(scoreVal) || 0;
+      state.simScoreById[p.id] = score;
+      const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
+      const beVal = p.be === null ? 0 : p.be;
+      const ptsDiff = score - beVal;
+      const simCash = Math.round((0.25 * ptsDiff * (magic / 3)) / 10000) * 10000;
+      const simNewPrice = Math.max(0, p.price + simCash);
+
+      const dEl = document.getElementById("inspSimDiff");
+      const cEl = document.getElementById("inspSimCash");
+      const pEl = document.getElementById("inspSimPrice");
+      if (dEl) {
+        dEl.textContent = `${ptsDiff > 0 ? "+" : ""}${Math.round(ptsDiff)}`;
+        dEl.className = ptsDiff > 0 ? "pos-text" : ptsDiff < 0 ? "neg-text" : "muted-text";
+      }
+      if (cEl) {
+        cEl.textContent = formatMoney(simCash);
+        cEl.className = simCash > 0 ? "pos-text" : simCash < 0 ? "neg-text" : "muted-text";
+      }
+      if (pEl) pEl.textContent = formatPriceM(simNewPrice);
+    }
+
+    function openInspector(playerId) {
+      state.inspectorId = playerId;
+      state.selectedRowId = playerId;
+      renderInspector();
+      document.querySelectorAll("#tableBody tr").forEach((tr) => {
+        tr.classList.toggle("row-selected", tr.dataset.rowId === playerId);
       });
     }
 
-    function setActiveNav(navName) {
+    function closeInspector() {
+      state.inspectorId = null;
+      renderInspector();
+    }
+
+    function setActiveNav(navName, optionalView) {
       state.activeNav = navName;
-      document.querySelectorAll("#topNavTabs .top-nav-btn").forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.nav === navName);
-      });
-      syncViewVisibility();
+      if (optionalView) state.activeView = optionalView;
+      closeMobileSidebar();
       render();
     }
 
-    function syncViewVisibility() {
-      const nav = state.activeNav;
-      document.getElementById("marketViewSection").style.display = (nav === "market") ? "block" : "none";
-      document.getElementById("courtViewRoot").style.display = (nav === "court") ? "block" : "none";
-      document.getElementById("tradeLabViewRoot").style.display = (nav === "tradelab") ? "block" : "none";
+    function syncViewContainers() {
+      document.getElementById("marketViewSection").style.display = state.activeNav === "market" ? "flex" : "none";
+      document.getElementById("courtViewRoot").style.display = state.activeNav === "court" ? "block" : "none";
+      document.getElementById("tradeLabViewRoot").style.display = state.activeNav === "tradelab" ? "block" : "none";
     }
 
     function render() {
-      updateSortHeaders();
-
       const allComputed = state.players.map(computeRow);
       state.computedById = {};
       allComputed.forEach((p) => { state.computedById[p.id] = p; });
 
-      updateKPIs(allComputed);
-      syncViewVisibility();
+      const filtered = sortRows(getFilteredRows(allComputed));
+      syncSidebarAndHeader(allComputed, filtered.length);
+      syncViewContainers();
+      renderActiveFilterChips();
+
+      // Sync Display popover switches
+      document.querySelectorAll("[data-col-toggle]").forEach((el) => {
+        el.classList.toggle("on", !!state.displayCols[el.dataset.colToggle]);
+      });
 
       if (state.activeNav === "market") {
-        const filtered = sortRows(getFilteredRows(allComputed));
+        const cols = getActiveColumns();
+        document.getElementById("tableHead").innerHTML = `<tr>${cols.map((c) => {
+          const active = c.sort && c.key === state.sortCol;
+          const arrow = active ? `<span class="sort-arrow">${state.sortDir === "asc" ? "▲" : "▼"}</span>` : "";
+          return `<th class="${c.align} ${active ? "sort-active" : ""}" ${c.sort ? `data-sort="${c.sort}" data-col="${c.key}"` : ""}>${c.label}${arrow}</th>`;
+        }).join("")}</tr>`;
+
         const limit = state.showAll ? filtered.length : Math.min(100, filtered.length);
         const visible = filtered.slice(0, limit);
-        const r = state.round;
+        state.visibleRows = visible;
 
         const tbody = document.getElementById("tableBody");
         if (visible.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="13" style="text-align:center; padding:34px; color:var(--text-dim);">No players match your current filters.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="${cols.length}" style="text-align:center; padding:42px; color:var(--text-tertiary);">No players match this view.</td></tr>`;
         } else {
           tbody.innerHTML = visible.map((p) => {
             const chgClass = p.priceChange > 0 ? "pos-text" : p.priceChange < 0 ? "neg-text" : "muted-text";
             const distClass = (p.dist !== null && p.dist >= 0) ? "pos-text" : "neg-text";
             const distSign = (p.dist !== null && p.dist > 0) ? "+" : "";
-
             const dotCls = p.isRelevantOut ? "out" : (p.trend === "cow" ? "cow" : p.trend === "bleed" ? "bleed" : "");
-            const statusDot = dotCls ? `<span class="status-dot ${dotCls}" title="${dotCls.toUpperCase()}"></span>` : "";
+            const rowClasses = [];
+            if (p.isRelevantOut) rowClasses.push("row-out");
+            else if (p.isFringeDnp || p.isZeroGames) rowClasses.push("row-dnp");
+            if (state.selectedRowId === p.id) rowClasses.push("row-selected");
 
-            const avg5Cell = (p.avg5 !== null && !Number.isNaN(p.avg5))
-              ? `<span class="mono">${p.avg5.toFixed(1)}</span>`
-              : `<span class="mono dim-text">—</span>`;
+            const tagHtml = p.isRelevantOut
+              ? `<span class="micro-tag out">${p.injury ? "INJ" : "OUT"}</span>`
+              : (p.isFringeDnp ? `<span class="micro-tag dnp">DNP</span>` : (p.isZeroGames ? `<span class="micro-tag g0">0G</span>` : ""));
 
-            const statusPill = p.isRelevantOut
-              ? `<span class="out-pill">${p.injury ? "INJ" : "OUT"}</span>`
-              : (p.isFringeDnp
-                ? `<span class="dnp-pill">DNP</span>`
-                : (p.isZeroGames ? `<span class="zero-pill">0G</span>` : ""));
-
-            const beCellHtml = (p.be === null)
-              ? `<span class="dim-text">—</span>`
-              : `<span class="be-main">${p.be}</span><span class="be-dist ${distClass}">(${distSign}${p.dist})</span>`;
-
-            const rowClass = p.isRelevantOut ? "row-out" : (p.isFringeDnp || p.isZeroGames ? "row-dnp" : "");
-
-            return `
-              <tr class="${rowClass}">
-                <td>
-                  <div class="player-cell">
-                    <div class="row-actions">
-                      <button class="action-icon-btn ${p.inWatchlist ? "starred" : ""}" data-toggle-watch="${p.id}" title="${p.inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}">${p.inWatchlist ? "★" : "☆"}</button>
-                      <button class="action-icon-btn ${p.inSquad ? "in-squad" : "squad-off"}" data-toggle-squad="${p.id}" title="${p.inSquad ? "In Squad (click to remove)" : "Add to Squad"}">${p.inSquad ? "SQ" : "+"}</button>
-                    </div>
-                    ${renderAvatar(p, 34)}
-                    <div class="player-info-col">
-                      <div class="player-name-row">
-                        <span class="player-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</span>
-                        ${statusDot}
-                      </div>
-                      <div class="player-meta">
-                        <span class="team-dot" style="background:${getTeamColor(p.team)};"></span>
-                        <span>${escapeHtml(p.team)}</span>
-                        <span>·</span>
-                        <span>${escapeHtml(p.pos)}</span>
-                        ${statusPill}
-                        ${p.injury ? `<span class="inj-tag" title="${escapeHtml(String(p.injury))}">· ${escapeHtml(String(p.injury))}</span>` : ""}
+            const cells = cols.map((c) => {
+              if (c.key === "name") {
+                return `
+                  <td>
+                    <div class="p-cell">
+                      <span class="status-dot ${dotCls}"></span>
+                      ${renderAvatar(p, 28)}
+                      <div class="p-meta-wrap">
+                        <div class="p-name-line">
+                          <span class="p-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</span>
+                          ${tagHtml}
+                        </div>
+                        <div class="p-sub">
+                          <span>${escapeHtml(p.team)}</span>
+                          <span>·</span>
+                          <span>${escapeHtml(p.pos)}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-                <td class="num mono">${(p.price / 1000000).toFixed(2)}</td>
-                <td class="num mono muted-text">${p.owned.toFixed(1)}%</td>
-                <td class="num form-cell">${p.r_minus_2}<span class="form-sep">/</span>${p.r_minus_1}</td>
-                <td class="sched-td">${renderSchedTile(p.games, `R${r}`)}</td>
-                <td class="sched-td">${renderSchedTile(p.gamesNext, `R${r + 1}`)}</td>
-                <td class="sched-td">${renderSchedTile(p.gamesAfter, `R${r + 2}`)}</td>
-                <td class="num mono col-be">${beCellHtml}</td>
-                <td class="num mono" style="font-weight:600;">${p.proj}</td>
-                <td class="num mono muted-text">${p.avg3.toFixed(1)}</td>
-                <td class="num">${avg5Cell}</td>
-                <td class="num mono ${chgClass}" style="font-weight:700;">${formatMoney(p.priceChange)}</td>
-                <td class="num mono">${formatPriceM(p.newPrice)}</td>
-              </tr>
-            `;
+                  </td>`;
+              }
+              if (c.key === "price") return `<td class="num mono">${(p.price / 1000000).toFixed(2)}</td>`;
+              if (c.key === "owned") return `<td class="num mono muted-text">${p.owned.toFixed(1)}%</td>`;
+              if (c.key === "form") return `<td class="num mono muted-text">${p.r_minus_2} / ${p.r_minus_1}</td>`;
+              if (c.key === "games") return `<td class="center">${renderSchedStrip(p, state.round)}</td>`;
+              if (c.key === "be") {
+                const beHtml = p.be === null
+                  ? `<span class="dim-text">—</span>`
+                  : `<span class="be-num">${p.be}</span><span class="be-diff ${distClass}">${distSign}${p.dist}</span>`;
+                return `<td class="num mono col-be-cell">${beHtml}</td>`;
+              }
+              if (c.key === "proj") return `<td class="num mono">${p.proj}</td>`;
+              if (c.key === "avg3") return `<td class="num mono muted-text">${p.avg3.toFixed(1)}</td>`;
+              if (c.key === "avg5") return `<td class="num mono muted-text">${p.avg5 !== null ? p.avg5.toFixed(1) : "—"}</td>`;
+              if (c.key === "priceChange") return `<td class="num mono ${chgClass}" style="font-weight:600;">${formatMoney(p.priceChange)}</td>`;
+              if (c.key === "newPrice") return `<td class="num mono muted-text">${formatPriceM(p.newPrice)}</td>`;
+              if (c.key === "actions") {
+                return `
+                  <td class="num">
+                    <div class="row-acts ${p.inSquad || p.inWatchlist ? "has-active" : ""}">
+                      <button type="button" class="row-btn ${p.inWatchlist ? "is-star" : ""}" data-toggle-watch="${escapeHtml(p.id)}" title="Watchlist">${p.inWatchlist ? "★" : "☆"}</button>
+                      <button type="button" class="row-btn ${p.inSquad ? "is-sq" : ""}" data-toggle-squad="${escapeHtml(p.id)}" title="Squad">${p.inSquad ? "SQ" : "+"}</button>
+                    </div>
+                  </td>`;
+              }
+              return `<td></td>`;
+            }).join("");
+
+            return `<tr class="${rowClasses.join(" ")}" data-row-id="${escapeHtml(p.id)}">${cells}</tr>`;
           }).join("");
         }
 
-        const hiddenFringeCount = (state.hideDnps && state.activeTab !== "squad" && state.activeTab !== "watchlist" && state.search.trim().length === 0)
-          ? allComputed.filter((p) => p.isFringeDnp).length
-          : 0;
-        const hiddenNote = hiddenFringeCount > 0 ? ` · ${hiddenFringeCount} deep-bench DNPs hidden` : "";
-        document.getElementById("showingCount").textContent = `Showing ${visible.length} of ${filtered.length} matching players${hiddenNote}`;
+        document.getElementById("showingCount").textContent =
+          `Showing ${visible.length} of ${filtered.length} · ↑/↓ navigate · Enter inspect · ⌘K command menu`;
 
         const showAllBtn = document.getElementById("showAllBtn");
         if (filtered.length > 100 && !state.showAll) {
-          showAllBtn.style.display = "inline-block";
-          showAllBtn.textContent = `Show All (${filtered.length})`;
+          showAllBtn.style.display = "inline-flex";
+          showAllBtn.textContent = `Show all ${filtered.length}`;
         } else {
           showAllBtn.style.display = "none";
         }
       }
+
+      if (state.inspectorId) renderInspector();
 
       window.SCHOOPS.onRenderListeners.forEach((fn) => {
         try { fn(); } catch (err) { console.error("Module render error:", err); }
       });
     }
 
+    /* =====================================================================
+       ⌘K COMMAND PALETTE
+       ===================================================================== */
+    let cmdItems = [];
+    let cmdActiveIdx = 0;
+
+    function openCommandPalette() {
+      const overlay = document.getElementById("cmdOverlay");
+      const input = document.getElementById("cmdInput");
+      overlay.classList.add("open");
+      input.value = "";
+      renderCommandList("");
+      setTimeout(() => input.focus(), 10);
+    }
+
+    function closeCommandPalette() {
+      document.getElementById("cmdOverlay").classList.remove("open");
+    }
+
+    function renderCommandList(query) {
+      const q = query.trim().toLowerCase();
+      const commands = [
+        { type: "cmd", id: "nav-market", label: "Go to Market", meta: "G M", run: () => setActiveNav("market", "all") },
+        { type: "cmd", id: "nav-court", label: "Go to My Court", meta: "G C", run: () => setActiveNav("court") },
+        { type: "cmd", id: "nav-trade", label: "Go to Trade Lab", meta: "G T", run: () => setActiveNav("tradelab") },
+        { type: "cmd", id: "opt-court", label: "Optimise My Court Lineup", meta: "Best 9 + 2× C", run: () => { setActiveNav("court"); setTimeout(() => { const b = document.getElementById("courtOptimiseBtn"); if (b) b.click(); }, 30); } },
+        { type: "cmd", id: "view-cows", label: "View: Cash Cows", meta: "Filter", run: () => setActiveNav("market", "cows") },
+        { type: "cmd", id: "view-4g", label: "View: 4-Game Slate", meta: "Filter", run: () => setActiveNav("market", "fourgames") },
+        { type: "cmd", id: "open-settings", label: "Open Workspace Settings", meta: "Sync & Code", run: () => openSettingsModal() }
+      ];
+
+      const matchedCmds = q
+        ? commands.filter((c) => c.label.toLowerCase().includes(q) || c.meta.toLowerCase().includes(q))
+        : commands;
+
+      const matchedPlayers = q
+        ? Object.values(state.computedById)
+            .filter((p) => p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q))
+            .sort((a, b) => {
+              const as = a.name.toLowerCase().startsWith(q) ? 0 : 1;
+              const bs = b.name.toLowerCase().startsWith(q) ? 0 : 1;
+              return (as - bs) || (b.price - a.price);
+            })
+            .slice(0, 8)
+            .map((p) => ({
+              type: "player",
+              id: p.id,
+              player: p,
+              label: p.name,
+              meta: `${p.team} · BE ${p.be === null ? "—" : p.be} · ${formatMoney(p.priceChange)}`,
+              run: () => openInspector(p.id)
+            }))
+        : Object.values(state.computedById)
+            .filter((p) => p.inSquad)
+            .sort((a, b) => b.proj - a.proj)
+            .slice(0, 5)
+            .map((p) => ({
+              type: "player",
+              id: p.id,
+              player: p,
+              label: p.name,
+              meta: `Squad · BE ${p.be === null ? "—" : p.be} · Proj ${p.proj}`,
+              run: () => openInspector(p.id)
+            }));
+
+      cmdItems = [...matchedPlayers, ...matchedCmds];
+      cmdActiveIdx = 0;
+
+      const listEl = document.getElementById("cmdList");
+      if (!cmdItems.length) {
+        listEl.innerHTML = `<div style="padding:18px; text-align:center; color:var(--text-tertiary);">No matching players or commands</div>`;
+        return;
+      }
+
+      let html = "";
+      if (matchedPlayers.length) {
+        html += `<div class="cmd-group-title">${q ? "Players" : "Your Squad"}</div>`;
+        html += matchedPlayers.map((item, idx) => `
+          <button type="button" class="cmd-item ${idx === 0 ? "active" : ""}" data-cmd-idx="${idx}">
+            <span class="cmd-item-left">${renderAvatar(item.player, 22)}<span>${escapeHtml(item.label)}</span></span>
+            <span class="cmd-item-meta">${escapeHtml(item.meta)}</span>
+          </button>
+        `).join("");
+      }
+      if (matchedCmds.length) {
+        html += `<div class="cmd-group-title">Commands</div>`;
+        html += matchedCmds.map((item, i) => {
+          const idx = matchedPlayers.length + i;
+          return `
+            <button type="button" class="cmd-item ${idx === 0 ? "active" : ""}" data-cmd-idx="${idx}">
+              <span class="cmd-item-left"><span>${escapeHtml(item.label)}</span></span>
+              <span class="cmd-item-meta">${escapeHtml(item.meta)}</span>
+            </button>
+          `;
+        }).join("");
+      }
+      listEl.innerHTML = html;
+    }
+
+    function executeCommandIndex(idx) {
+      const item = cmdItems[idx];
+      if (!item) return;
+      closeCommandPalette();
+      item.run();
+    }
+
+    /* Squad Code Transfer */
+    function generateSquadCode() {
+      const squad = Object.keys(state.squadIds).filter((k) => state.squadIds[k]);
+      const watch = Object.keys(state.watchlistIds).filter((k) => state.watchlistIds[k]);
+      return "SCH1-" + btoa(unescape(encodeURIComponent(JSON.stringify({ s: squad, w: watch }))));
+    }
+
+    function applySquadCode(codeStr) {
+      const cleaned = codeStr.trim();
+      if (!cleaned.startsWith("SCH1-")) throw new Error("Invalid code format");
+      const parsed = JSON.parse(decodeURIComponent(escape(atob(cleaned.slice(5)))));
+      const newSquad = {};
+      const newWatch = {};
+      (parsed.s || []).forEach((id) => { newSquad[String(id)] = true; });
+      (parsed.w || []).forEach((id) => { newWatch[String(id)] = true; });
+      state.squadIds = newSquad;
+      state.watchlistIds = newWatch;
+      savePrefs();
+      render();
+      return { squadCount: Object.keys(newSquad).length, watchCount: Object.keys(newWatch).length };
+    }
+
+    function openSettingsModal() {
+      document.getElementById("magicInput").value = state.magicNumber;
+      document.getElementById("squadCodeStatus").textContent = "";
+      document.getElementById("settingsOverlay").classList.add("open");
+    }
+
+    function closeMobileSidebar() {
+      document.getElementById("sidebar").classList.remove("mobile-open");
+      document.getElementById("sbBackdrop").classList.remove("open");
+    }
+
+    /* Public Modular Bridge for court.js & tradelab.js */
     window.SCHOOPS = {
       TEAM_COLORS,
       getTeamColor,
       renderAvatar,
+      renderSchedStrip,
       getState: () => state,
       savePrefs,
       render,
       setActiveNav,
+      openInspector,
+      closeInspector,
       formatMoney,
       formatPriceM,
       escapeHtml,
       getSquadPlayers: () => Object.values(state.computedById).filter((p) => p.inSquad),
+      sendToTradeLab(dir, playerId) {
+        const plans = state.tradeLab.plans;
+        let plan = plans.find((x) => x.id === state.tradeLab.activePlanId) || plans[0];
+        if (!plan) {
+          plan = { id: "A", name: "Plan A", trades: [{ outId: "", inId: "" }] };
+          plans.push(plan);
+          state.tradeLab.activePlanId = "A";
+        }
+        const field = dir === "out" ? "outId" : "inId";
+        let slot = plan.trades.find((t) => !t[field]);
+        if (!slot) {
+          if (plan.trades.length < 4) {
+            slot = { outId: "", inId: "" };
+            plan.trades.push(slot);
+          } else {
+            slot = plan.trades[plan.trades.length - 1];
+          }
+        }
+        slot[field] = playerId;
+        savePrefs();
+        setActiveNav("tradelab");
+      },
       onRenderListeners: [],
-      onRender(fn) {
-        this.onRenderListeners.push(fn);
-      }
+      onRender(fn) { this.onRenderListeners.push(fn); }
     };
 
-    /* Navigation */
-    document.querySelectorAll("#topNavTabs .top-nav-btn").forEach((btn) => {
-      btn.addEventListener("click", () => setActiveNav(btn.dataset.nav));
+    /* =====================================================================
+       EVENT LISTENERS
+       ===================================================================== */
+    document.querySelectorAll("#sbPrimaryNav .sb-item").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (btn.dataset.nav === "market") state.activeView = "all";
+        setActiveNav(btn.dataset.nav);
+      });
     });
-    document.getElementById("jumpToCourtBtn").addEventListener("click", () => setActiveNav("court"));
-    document.getElementById("jumpToMarketBtn").addEventListener("click", () => setActiveNav("market"));
 
-    /* Round Dropdown */
-    const roundDropdown = document.getElementById("roundDropdown");
+    document.querySelectorAll("#sbSmartViews .sb-item").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        setActiveNav("market", btn.dataset.view);
+      });
+    });
+
+    document.getElementById("mobileMenuBtn").addEventListener("click", () => {
+      document.getElementById("sidebar").classList.add("mobile-open");
+      document.getElementById("sbBackdrop").classList.add("open");
+    });
+    document.getElementById("sbBackdrop").addEventListener("click", closeMobileSidebar);
+
+    // Round dropdown
+    const roundWrap = document.getElementById("roundDropdown");
     document.getElementById("roundTrigger").addEventListener("click", (e) => {
       e.stopPropagation();
-      roundDropdown.classList.toggle("open");
+      roundWrap.classList.toggle("open");
     });
-
     document.getElementById("roundMenu").addEventListener("click", (e) => {
       const opt = e.target.closest("[data-round]");
       if (!opt) return;
-      const selectedRound = Number(opt.dataset.round);
-      roundDropdown.classList.remove("open");
-      if (selectedRound !== state.round) loadHistoricalRound(selectedRound);
+      roundWrap.classList.remove("open");
+      const r = Number(opt.dataset.round);
+      if (r !== state.round) loadHistoricalRound(r);
     });
 
-    /* Floating LIVE BE CALC Popover */
-    const scratchpad = document.getElementById("scratchpadPanel");
-    const toggleCalcBtn = document.getElementById("toggleCalcBtn");
-    const calcSearchInput = document.getElementById("calcPlayerSearch");
-    const calcAcList = document.getElementById("calcAcList");
-
-    toggleCalcBtn.addEventListener("click", (e) => {
+    // Filter & Display popovers
+    const filterPopWrap = document.getElementById("filterPopWrap");
+    const displayPopWrap = document.getElementById("displayPopWrap");
+    document.getElementById("filterPopBtn").addEventListener("click", (e) => {
       e.stopPropagation();
-      const isOpen = scratchpad.classList.toggle("open");
-      toggleCalcBtn.classList.toggle("active", isOpen);
-      if (isOpen) calcSearchInput.focus();
+      displayPopWrap.classList.remove("open");
+      filterPopWrap.classList.toggle("open");
     });
-
-    document.getElementById("closeCalcBtn").addEventListener("click", () => {
-      scratchpad.classList.remove("open");
-      toggleCalcBtn.classList.remove("active");
+    document.getElementById("displayPopBtn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      filterPopWrap.classList.remove("open");
+      displayPopWrap.classList.toggle("open");
     });
 
     document.addEventListener("click", (e) => {
-      if (!roundDropdown.contains(e.target)) roundDropdown.classList.remove("open");
-      if (!scratchpad.contains(e.target) && !toggleCalcBtn.contains(e.target)) {
-        scratchpad.classList.remove("open");
-        toggleCalcBtn.classList.remove("active");
-      }
-      if (!e.target.closest(".sp-field")) calcAcList.classList.remove("open");
+      if (!roundWrap.contains(e.target)) roundWrap.classList.remove("open");
+      if (!filterPopWrap.contains(e.target)) filterPopWrap.classList.remove("open");
+      if (!displayPopWrap.contains(e.target)) displayPopWrap.classList.remove("open");
     });
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key !== "Escape") return;
-      roundDropdown.classList.remove("open");
-      calcAcList.classList.remove("open");
-      scratchpad.classList.remove("open");
-      toggleCalcBtn.classList.remove("active");
-      modal.classList.remove("open");
+    document.getElementById("posPills").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-pos]");
+      if (!btn) return;
+      state.filterPos = btn.dataset.pos;
+      document.querySelectorAll("#posPills .chip-btn").forEach((b) => b.classList.toggle("active", b.dataset.pos === state.filterPos));
+      state.showAll = false;
+      render();
     });
 
-    calcSearchInput.addEventListener("input", (e) => renderAutocomplete(e.target.value));
-    calcSearchInput.addEventListener("focus", (e) => {
-      if (e.target.value.trim()) renderAutocomplete(e.target.value);
-    });
-
-    calcSearchInput.addEventListener("keydown", (e) => {
-      if (!calcAcList.classList.contains("open") || acMatches.length === 0) return;
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        acIndex = (acIndex + 1) % acMatches.length;
-        calcAcList.querySelectorAll(".ac-item").forEach((el, i) => el.classList.toggle("active", i === acIndex));
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        acIndex = (acIndex - 1 + acMatches.length) % acMatches.length;
-        calcAcList.querySelectorAll(".ac-item").forEach((el, i) => el.classList.toggle("active", i === acIndex));
-      } else if (e.key === "Enter") {
-        e.preventDefault();
-        const pick = acMatches[acIndex >= 0 ? acIndex : 0];
-        if (pick) selectAutocompletePlayer(pick.id);
-      } else if (e.key === "Escape") {
-        calcAcList.classList.remove("open");
-      }
-    });
-
-    calcAcList.addEventListener("click", (e) => {
-      const item = e.target.closest("[data-ac-id]");
-      if (item) selectAutocompletePlayer(item.dataset.acId);
-    });
-
-    ["calcBeInput", "calcScoreInput", "calcPriceInput"].forEach((id) => {
-      document.getElementById(id).addEventListener("input", recalculateScratchpad);
-    });
-
-    /* Table Interactions */
-    document.getElementById("tableBody").addEventListener("click", (e) => {
-      const watchBtn = e.target.closest("[data-toggle-watch]");
-      if (watchBtn) {
-        const id = watchBtn.dataset.toggleWatch;
-        if (state.watchlistIds[id]) delete state.watchlistIds[id];
-        else state.watchlistIds[id] = true;
-        savePrefs();
-        render();
-        return;
-      }
-
-      const squadBtn = e.target.closest("[data-toggle-squad]");
-      if (squadBtn) {
-        const id = squadBtn.dataset.toggleSquad;
-        if (state.squadIds[id]) delete state.squadIds[id];
-        else state.squadIds[id] = true;
-        savePrefs();
-        render();
-      }
-    });
-
-    document.querySelectorAll("thead th[data-sort]").forEach((th) => {
-      th.addEventListener("click", () => {
-        const key = th.dataset.sort;
-        const col = th.dataset.col || key;
-        if (state.sortKey === key && state.sortCol === col) {
-          state.sortDir = state.sortDir === "desc" ? "asc" : "desc";
-        } else {
-          state.sortKey = key;
-          state.sortCol = col;
-          state.sortDir = (key === "name" || key === "be") ? "asc" : "desc";
-        }
-        render();
-      });
-    });
-
-    document.querySelectorAll("#statusTabs .seg-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll("#statusTabs .seg-btn").forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        state.activeTab = btn.dataset.tab;
-        state.showAll = false;
-        render();
-      });
-    });
-
-    document.querySelectorAll("#posTabs .seg-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll("#posTabs .seg-btn").forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        state.filterPos = btn.dataset.pos;
-        state.showAll = false;
-        render();
-      });
-    });
-
-    const maxPriceInput = document.getElementById("maxPriceInput");
-    const priceFilterWrap = document.getElementById("priceFilterWrap");
-    maxPriceInput.addEventListener("input", (e) => {
+    document.getElementById("maxPriceInput").addEventListener("input", (e) => {
       const raw = e.target.value.trim();
-      if (raw === "") {
-        state.maxPriceM = null;
-        priceFilterWrap.classList.remove("active");
-      } else {
-        const val = parseFloat(raw);
-        if (!Number.isNaN(val) && val >= 0) {
-          state.maxPriceM = val;
-          priceFilterWrap.classList.add("active");
-        }
-      }
+      state.maxPriceM = raw === "" ? null : (Number.isNaN(parseFloat(raw)) ? null : parseFloat(raw));
       state.showAll = false;
       render();
     });
 
-    document.getElementById("clearPriceBtn").addEventListener("click", () => {
-      maxPriceInput.value = "";
-      state.maxPriceM = null;
-      priceFilterWrap.classList.remove("active");
-      state.showAll = false;
-      render();
-    });
-
-    document.getElementById("toggleFourGames").addEventListener("click", (e) => {
-      const btn = e.currentTarget;
+    document.getElementById("swFourGames").addEventListener("click", (e) => {
       state.fourGamesOnly = !state.fourGamesOnly;
-      btn.classList.toggle("active", state.fourGamesOnly);
+      e.currentTarget.classList.toggle("on", state.fourGamesOnly);
       render();
     });
 
-    document.getElementById("togglePods").addEventListener("click", (e) => {
-      const btn = e.currentTarget;
+    document.getElementById("swPods").addEventListener("click", (e) => {
       state.podsOnly = !state.podsOnly;
-      btn.classList.toggle("active", state.podsOnly);
+      e.currentTarget.classList.toggle("on", state.podsOnly);
       render();
     });
 
-    document.getElementById("toggleHideDnps").addEventListener("click", (e) => {
-      const btn = e.currentTarget;
+    document.getElementById("swHideDnps").addEventListener("click", (e) => {
       state.hideDnps = !state.hideDnps;
-      btn.classList.toggle("active", state.hideDnps);
+      e.currentTarget.classList.toggle("on", state.hideDnps);
+      render();
+    });
+
+    document.getElementById("displayPopover").addEventListener("click", (e) => {
+      const sw = e.target.closest("[data-col-toggle]");
+      if (!sw) return;
+      const col = sw.dataset.colToggle;
+      state.displayCols[col] = !state.displayCols[col];
+      savePrefs();
+      render();
+    });
+
+    document.getElementById("activeFilterChips").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-clear-chip]");
+      if (!btn) return;
+      const type = btn.dataset.clearChip;
+      if (type === "pos") {
+        state.filterPos = "ALL";
+        document.querySelectorAll("#posPills .chip-btn").forEach((b) => b.classList.toggle("active", b.dataset.pos === "ALL"));
+      } else if (type === "price") {
+        state.maxPriceM = null;
+        document.getElementById("maxPriceInput").value = "";
+      } else if (type === "4g") {
+        state.fourGamesOnly = false;
+        document.getElementById("swFourGames").classList.remove("on");
+      } else if (type === "pod") {
+        state.podsOnly = false;
+        document.getElementById("swPods").classList.remove("on");
+      } else if (type === "dnp") {
+        state.hideDnps = true;
+        document.getElementById("swHideDnps").classList.add("on");
+      }
       render();
     });
 
@@ -2594,77 +2908,262 @@
       render();
     });
 
-    document.getElementById("syncBtn").addEventListener("click", syncFromGitHub);
-
-    /* Settings Modal */
-    const modal = document.getElementById("settingsModal");
-    const squadCodeStatus = document.getElementById("squadCodeStatus");
-
-    document.getElementById("openSettingsBtn").addEventListener("click", () => {
-      document.getElementById("magicInput").value = state.magicNumber;
-      squadCodeStatus.textContent = "";
-      modal.classList.add("open");
+    // Table sorting
+    document.getElementById("tableHead").addEventListener("click", (e) => {
+      const th = e.target.closest("th[data-sort]");
+      if (!th) return;
+      const key = th.dataset.sort;
+      const col = th.dataset.col || key;
+      if (state.sortKey === key && state.sortCol === col) {
+        state.sortDir = state.sortDir === "desc" ? "asc" : "desc";
+      } else {
+        state.sortKey = key;
+        state.sortCol = col;
+        state.sortDir = (key === "name" || key === "be") ? "asc" : "desc";
+      }
+      render();
     });
 
-    document.getElementById("closeSettingsBtn").addEventListener("click", () => modal.classList.remove("open"));
-    modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
+    // Table row click (open Inspector) + SQ / Watch quick actions
+    document.getElementById("tableBody").addEventListener("click", (e) => {
+      const watchBtn = e.target.closest("[data-toggle-watch]");
+      if (watchBtn) {
+        e.stopPropagation();
+        const id = watchBtn.dataset.toggleWatch;
+        if (state.watchlistIds[id]) delete state.watchlistIds[id];
+        else state.watchlistIds[id] = true;
+        savePrefs();
+        render();
+        return;
+      }
+
+      const squadBtn = e.target.closest("[data-toggle-squad]");
+      if (squadBtn) {
+        e.stopPropagation();
+        const id = squadBtn.dataset.toggleSquad;
+        if (state.squadIds[id]) delete state.squadIds[id];
+        else state.squadIds[id] = true;
+        savePrefs();
+        render();
+        return;
+      }
+
+      const tr = e.target.closest("tr[data-row-id]");
+      if (tr) {
+        const pid = tr.dataset.rowId;
+        if (state.inspectorId === pid) closeInspector();
+        else openInspector(pid);
+      }
+    });
+
+    // Inspector interactions
+    document.getElementById("inspectorInner").addEventListener("click", (e) => {
+      if (e.target.closest("#closeInspectorBtn")) {
+        closeInspector();
+        return;
+      }
+      const sqBtn = e.target.closest("[data-insp-squad]");
+      if (sqBtn) {
+        const id = sqBtn.dataset.inspSquad;
+        if (state.squadIds[id]) delete state.squadIds[id];
+        else state.squadIds[id] = true;
+        savePrefs();
+        render();
+        return;
+      }
+      const wBtn = e.target.closest("[data-insp-watch]");
+      if (wBtn) {
+        const id = wBtn.dataset.inspWatch;
+        if (state.watchlistIds[id]) delete state.watchlistIds[id];
+        else state.watchlistIds[id] = true;
+        savePrefs();
+        render();
+        return;
+      }
+      const trBtn = e.target.closest("[data-insp-trade]");
+      if (trBtn) {
+        window.SCHOOPS.sendToTradeLab(trBtn.dataset.tradeDir, trBtn.dataset.inspTrade);
+      }
+    });
+
+    document.getElementById("inspectorInner").addEventListener("input", (e) => {
+      if (e.target.id === "inspSimScore") {
+        const val = Number(e.target.value) || 0;
+        const rng = document.getElementById("inspSimRange");
+        if (rng) rng.value = Math.min(240, Math.max(0, Math.round(val)));
+        updateInspectorSimUI(val);
+      } else if (e.target.id === "inspSimRange") {
+        const val = Number(e.target.value) || 0;
+        const num = document.getElementById("inspSimScore");
+        if (num) num.value = Math.round(val);
+        updateInspectorSimUI(val);
+      }
+    });
+
+    // Command palette events
+    document.getElementById("openCmdBtn").addEventListener("click", openCommandPalette);
+    document.getElementById("cmdOverlay").addEventListener("click", (e) => {
+      if (e.target.id === "cmdOverlay") closeCommandPalette();
+    });
+    document.getElementById("cmdInput").addEventListener("input", (e) => renderCommandList(e.target.value));
+    document.getElementById("cmdInput").addEventListener("keydown", (e) => {
+      if (!cmdItems.length) return;
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        cmdActiveIdx = (cmdActiveIdx + 1) % cmdItems.length;
+        document.querySelectorAll("#cmdList .cmd-item").forEach((el, i) => el.classList.toggle("active", i === cmdActiveIdx));
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        cmdActiveIdx = (cmdActiveIdx - 1 + cmdItems.length) % cmdItems.length;
+        document.querySelectorAll("#cmdList .cmd-item").forEach((el, i) => el.classList.toggle("active", i === cmdActiveIdx));
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        executeCommandIndex(cmdActiveIdx);
+      }
+    });
+    document.getElementById("cmdList").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-cmd-idx]");
+      if (btn) executeCommandIndex(Number(btn.dataset.cmdIdx));
+    });
+
+    // Settings Modal
+    const settingsOverlay = document.getElementById("settingsOverlay");
+    document.getElementById("openSettingsBtn").addEventListener("click", openSettingsModal);
+    document.getElementById("closeSettingsBtn").addEventListener("click", () => settingsOverlay.classList.remove("open"));
+    settingsOverlay.addEventListener("click", (e) => { if (e.target === settingsOverlay) settingsOverlay.classList.remove("open"); });
+    document.getElementById("syncBtn").addEventListener("click", syncFromGitHub);
 
     document.getElementById("magicInput").addEventListener("change", (e) => {
       state.magicNumber = Number(e.target.value) || DEFAULT_MAGIC_NUMBER;
       savePrefs();
       render();
-      recalculateScratchpad();
     });
-
     document.getElementById("resetMagicBtn").addEventListener("click", () => {
       state.magicNumber = DEFAULT_MAGIC_NUMBER;
       document.getElementById("magicInput").value = DEFAULT_MAGIC_NUMBER;
       savePrefs();
       render();
-      recalculateScratchpad();
     });
-
     document.getElementById("copySquadCodeBtn").addEventListener("click", async () => {
       const code = generateSquadCode();
+      const status = document.getElementById("squadCodeStatus");
       try {
         await navigator.clipboard.writeText(code);
-        squadCodeStatus.style.color = "var(--pos-bright)";
-        squadCodeStatus.textContent = "Copied to clipboard!";
+        status.textContent = "Copied!";
       } catch (e) {
         document.getElementById("importSquadCodeInput").value = code;
-        squadCodeStatus.style.color = "var(--text-muted)";
-        squadCodeStatus.textContent = "Code placed in box below — copy it manually.";
+        status.textContent = "Placed in box below";
       }
     });
-
     document.getElementById("loadSquadCodeBtn").addEventListener("click", () => {
-      const val = document.getElementById("importSquadCodeInput").value;
+      const input = document.getElementById("importSquadCodeInput");
+      const status = document.getElementById("squadCodeStatus");
       try {
-        const res = applySquadCode(val);
-        squadCodeStatus.style.color = "var(--pos-bright)";
-        squadCodeStatus.textContent = `Loaded ${res.squadCount} squad & ${res.watchCount} watchlist!`;
-        document.getElementById("importSquadCodeInput").value = "";
+        const res = applySquadCode(input.value);
+        status.className = "mono pos-text";
+        status.textContent = `Loaded ${res.squadCount} squad`;
+        input.value = "";
       } catch (err) {
-        squadCodeStatus.style.color = "var(--neg)";
-        squadCodeStatus.textContent = "Invalid squad code.";
+        status.className = "mono neg-text";
+        status.textContent = "Invalid code";
       }
     });
-
     document.getElementById("clearSquadBtn").addEventListener("click", () => {
-      if (!confirm("Reset your saved squad and watchlist in this browser?")) return;
+      if (!confirm("Reset saved squad, court lineup, and trade plans?")) return;
       state.squadIds = {};
       state.watchlistIds = {};
       state.court = { slots: {}, captainId: null, viceCaptainId: null, lockedBenchIds: {} };
+      state.tradeLab = { bankM: 0, activePlanId: "A", plans: [{ id: "A", name: "Plan A", trades: [{ outId: "", inId: "" }] }] };
       savePrefs();
-      modal.classList.remove("open");
+      settingsOverlay.classList.remove("open");
       render();
     });
 
+    /* Linear-Style Keyboard Navigation (⌘K, G+M/C/T, J/K, Enter, Esc) */
+    let gPrefixTimer = null;
+    let gPrefixActive = false;
+
+    document.addEventListener("keydown", (e) => {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
+      const isTyping = (tag === "input" || tag === "textarea" || tag === "select");
+
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        if (document.getElementById("cmdOverlay").classList.contains("open")) closeCommandPalette();
+        else openCommandPalette();
+        return;
+      }
+
+      if (e.key === "Escape") {
+        closeCommandPalette();
+        settingsOverlay.classList.remove("open");
+        roundWrap.classList.remove("open");
+        filterPopWrap.classList.remove("open");
+        displayPopWrap.classList.remove("open");
+        closeMobileSidebar();
+        if (!isTyping && state.inspectorId) closeInspector();
+        return;
+      }
+
+      if (isTyping) return;
+
+      if (e.key === "/") {
+        e.preventDefault();
+        openCommandPalette();
+        return;
+      }
+
+      const lower = e.key.toLowerCase();
+      if (gPrefixActive) {
+        gPrefixActive = false;
+        clearTimeout(gPrefixTimer);
+        if (lower === "m") { setActiveNav("market", "all"); return; }
+        if (lower === "c") { setActiveNav("court"); return; }
+        if (lower === "t") { setActiveNav("tradelab"); return; }
+      }
+      if (lower === "g" && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        gPrefixActive = true;
+        clearTimeout(gPrefixTimer);
+        gPrefixTimer = setTimeout(() => { gPrefixActive = false; }, 750);
+        return;
+      }
+
+      if (state.activeNav === "market" && state.visibleRows.length) {
+        if (e.key === "ArrowDown" || lower === "j") {
+          e.preventDefault();
+          const curIdx = state.visibleRows.findIndex((r) => r.id === state.selectedRowId);
+          const next = state.visibleRows[Math.min(state.visibleRows.length - 1, curIdx + 1)];
+          if (next) {
+            state.selectedRowId = next.id;
+            if (state.inspectorId) state.inspectorId = next.id;
+            render();
+            const tr = document.querySelector(`tr[data-row-id="${CSS.escape(next.id)}"]`);
+            if (tr) tr.scrollIntoView({ block: "nearest" });
+          }
+        } else if (e.key === "ArrowUp" || lower === "k") {
+          e.preventDefault();
+          const curIdx = state.visibleRows.findIndex((r) => r.id === state.selectedRowId);
+          const prev = state.visibleRows[Math.max(0, curIdx <= 0 ? 0 : curIdx - 1)];
+          if (prev) {
+            state.selectedRowId = prev.id;
+            if (state.inspectorId) state.inspectorId = prev.id;
+            render();
+            const tr = document.querySelector(`tr[data-row-id="${CSS.escape(prev.id)}"]`);
+            if (tr) tr.scrollIntoView({ block: "nearest" });
+          }
+        } else if (e.key === "Enter" && state.selectedRowId) {
+          e.preventDefault();
+          if (state.inspectorId === state.selectedRowId) closeInspector();
+          else openInspector(state.selectedRowId);
+        }
+      }
+    });
+
     loadSavedPrefs();
-    recalculateScratchpad();
     syncFromGitHub();
   </script>
-  <!-- Modular Phase 2: My Court Tactical Board & Exact Lineup Optimiser -->
-  <script src="court.js?v=10"></script>
+  <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
+  <script src="court.js?v=11"></script>
+  <script src="tradelab.js?v=11"></script>
 </body>
 </html>
