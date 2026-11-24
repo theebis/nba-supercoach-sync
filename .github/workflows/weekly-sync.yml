@@ -2,12 +2,24 @@ name: Weekly SuperCoach Data Sync
 
 on:
   schedule:
-    # Runs Monday at 08:00 UTC (7:00 PM AEDT)
+    # Round rollover checks: Monday 08:00 UTC (7 PM AEDT) and 15:00 UTC (2 AM AEDT Tuesday)
     - cron: '0 8 * * 1'
-    # Runs Monday at 15:00 UTC (2:00 AM AEDT Tuesday morning)
     - cron: '0 15 * * 1'
-    # Daily at 22:00 UTC (9:00 AM AEDT) to keep ESPN injury statuses current
-    - cron: '0 22 * * *'
+    # 8 refreshes a day for injuries and projections, bunched before NBA tip-offs (~11 AM-2:30 PM AEDT).
+    # Times below are UTC; AEDT = UTC+11 (AEST = UTC+10 from April, so they run an hour earlier locally).
+    - cron: '0 19 * * *'    #  6:00 AM AEDT
+    - cron: '0 21 * * *'    #  8:00 AM AEDT
+    - cron: '30 22 * * *'   #  9:30 AM AEDT
+    - cron: '30 23 * * *'   # 10:30 AM AEDT
+    - cron: '30 0 * * *'    # 11:30 AM AEDT
+    - cron: '30 1 * * *'    # 12:30 PM AEDT
+    - cron: '30 3 * * *'    #  2:30 PM AEDT
+    - cron: '0 9 * * *'     #  8:00 PM AEDT
+
+# Never run two syncs at once (they'd fight over the same data files)
+concurrency:
+  group: data-sync
+  cancel-in-progress: false
   workflow_dispatch: # Allows you to manually click "Run workflow" to test
   # Refresh the data straight away whenever the scraper itself changes on main
   push:
@@ -47,4 +59,4 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add supercoach_data.json history/
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: weekly SuperCoach data rollover" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: SuperCoach data refresh" && git pull --rebase && git push)
