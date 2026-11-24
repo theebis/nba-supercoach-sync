@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SCHOOPS — NBA SuperCoach</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2322C58B'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' text-anchor='middle' fill='%230A0A0B'%3ES%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -548,28 +549,60 @@
       align-items: center;
     }
 
+    /* "How it works" guide trigger: a labelled pill (not a bare "?"), with an accent dot
+       until you've opened the guide for this view once */
     .help-icon-btn {
-      width: 22px;
-      height: 22px;
+      position: relative;
+      height: 26px;
+      padding: 0 10px 0 6px;
+      border-radius: 99px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(110, 123, 242, 0.32);
+      color: #C3C9FF;
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease, border-color var(--dur-fast) ease, transform 160ms var(--ease-out);
+    }
+    .help-icon-btn .help-q {
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
-      background: transparent;
-      border: 1px solid var(--border-default);
-      color: var(--text-tertiary);
+      background: var(--accent);
+      color: #fff;
       font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 10.5px;
+      font-weight: 700;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
     }
-
-    .help-icon-btn:hover,
+    .help-icon-btn .help-new {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--warn-bright);
+      box-shadow: 0 0 0 2px var(--bg-canvas);
+    }
+    .help-icon-btn:active { transform: scale(0.97); }
+    @media (hover: hover) {
+      .help-icon-btn:hover { background: rgba(110, 123, 242, 0.24); color: #fff; border-color: rgba(110, 123, 242, 0.55); }
+    }
     .guide-anchor.open .help-icon-btn {
-      background: var(--bg-active);
-      color: var(--text-primary);
-      border-color: var(--border-strong);
+      background: rgba(110, 123, 242, 0.24);
+      color: #fff;
+      border-color: rgba(110, 123, 242, 0.55);
+    }
+    @media (max-width: 760px) {
+      .help-icon-btn .help-label { display: none; }
+      .help-icon-btn { padding: 0 5px; }
     }
 
     .guide-popover {
@@ -1071,6 +1104,37 @@
 
     .col-be-cell {
       background: rgba(255, 255, 255, 0.022);
+    }
+
+    /* Spare width goes here, so data columns sit right next to the player */
+    .market-table .col-fill { padding: 0 !important; cursor: default; }
+
+    /* Phone: Player column stays pinned while the numbers scroll sideways */
+    @media (max-width: 760px) {
+      .market-table .col-sticky {
+        position: sticky;
+        left: 0;
+        z-index: 3;
+        background: var(--bg-canvas);
+        box-shadow: 1px 0 0 var(--border-subtle);
+      }
+      .market-table thead th.col-sticky { z-index: 5; }
+      .market-table tbody tr:hover .col-sticky { background: #151518; }
+      .market-table tbody tr.row-selected .col-sticky { background: #18181c; }
+      .market-table .row-quick-controls .star-btn { display: none; }
+      .market-table tbody td.col-sticky { padding-left: 10px; padding-right: 8px; }
+      .market-table .p-cell .sc-avatar { display: none; }
+      .market-table .p-cell { gap: 8px; }
+
+      /* Header: title row on top, full-width search + icon buttons underneath */
+      .view-header { height: auto; flex-wrap: wrap; row-gap: 8px; padding: 8px 12px; }
+      .vh-right { width: 100%; }
+      .vh-right .inline-search-wrap { flex: 1; min-width: 0; }
+      .vh-right .inline-search, .vh-right .inline-search:focus { width: 100%; }
+      #marketHeaderControls .ghost-btn span { display: none; }
+      #marketHeaderControls .ghost-btn { padding: 0 9px; }
+      .context-strip { padding: 6px 12px; }
+      .ctx-metrics { gap: 6px 14px; }
     }
 
     .be-num {
@@ -1730,7 +1794,7 @@
         <button type="button" class="sb-item" data-view="fourgames">
           <span class="sb-item-left">
             <span class="sb-dot" style="background:var(--accent);"></span>
-            <span>4-Game Slate</span>
+            <span>4-Games Round</span>
           </span>
           <span class="sb-count" id="sbView4GCount">0</span>
         </button>
@@ -1788,7 +1852,7 @@
 
             <!-- Unintrusive Contextual '?' Tab Guide -->
             <div class="guide-anchor" id="guideAnchor">
-              <button type="button" class="help-icon-btn" id="guideBtn" title="How this view works" aria-label="How this view works">?</button>
+              <button type="button" class="help-icon-btn" id="guideBtn" title="How this view works" aria-label="How this view works"><span class="help-q" aria-hidden="true">?</span><span class="help-label">How it works</span></button>
               <div class="guide-popover" id="guidePopover"></div>
             </div>
           </div>
@@ -1824,8 +1888,8 @@
                   <input type="number" class="pop-input-num" id="maxPriceInput" placeholder="Any" step="0.5" min="0" />
                 </div>
                 <div class="pop-row">
-                  <span>4-Game Slate Only</span>
-                  <button type="button" class="mini-switch" id="swFourGames" aria-label="4-Game Only"></button>
+                  <span>4-games round only</span>
+                  <button type="button" class="mini-switch" id="swFourGames" aria-label="4-games round only"></button>
                 </div>
                 <div class="pop-row">
                   <span>PODs (&lt;5% Owned)</span>
@@ -2023,11 +2087,11 @@
     const RELEVANT_OUT_OWN = 3.0;
 
     const DEFAULT_COL_WIDTHS = {
-      name: 330,
+      name: 300,
       price: 88,
       owned: 84,
-      form: 96,
-      games: 112,
+      form: 124,
+      games: 136,
       be: 118,
       proj: 86,
       avg3: 80,
@@ -2037,11 +2101,11 @@
     };
 
     const MIN_COL_WIDTHS = {
-      name: 250,
+      name: 180,
       price: 68,
       owned: 68,
-      form: 76,
-      games: 96,
+      form: 100,
+      games: 116,
       be: 94,
       proj: 68,
       avg3: 64,
@@ -2052,11 +2116,12 @@
 
     const TAB_GUIDES = {
       market: {
-        title: "Market Guide",
-        tip: "Click any row for the Live BE Simulator · Drag column borders to resize",
+        title: "How the Market works",
         bullets: [
+          "<strong>BE</strong> (breakeven) is the round total a player needs over this round's games to hold his price. The small number beside it is projection minus BE.",
+          "Prices move after every round: each game played moves a player 4.15% of the way towards $712k × his points-per-game over the last two rounds. No games, no change.",
           "Use <strong>+</strong> (Squad) and <strong>☆</strong> (Watchlist) on the left of any player row to track your team.",
-          "Click any player row (or press <strong>Enter</strong>) to open the right-side Inspector with the <strong>Live BE &amp; Cash Simulator</strong>.",
+          "Click any player row (or press <strong>Enter</strong>) to open the Inspector with the <strong>Live BE &amp; Cash Simulator</strong>.",
           "Drag any column header border or the sidebar edge to resize—double-click a border to auto-reset.",
           "Press <strong>⌘K</strong> (or <strong>/</strong>) anywhere to jump directly to any player or workspace."
         ]
@@ -2436,21 +2501,23 @@
       }).join("")}</div>`;
     }
 
-    function renderDismissibleTip(tabKey) {
-      if (state.dismissedTips[tabKey]) return "";
-      const info = TAB_GUIDES[tabKey];
-      if (!info || !info.tip) return "";
-      return `
-        <span class="tip-pill">
-          <span>${escapeHtml(info.tip)}</span>
-          <button type="button" data-dismiss-tip="${tabKey}" title="Dismiss tip" aria-label="Dismiss tip">×</button>
-        </span>
-      `;
+    // Inline tip pills were removed in favour of the "How it works" guide button; kept as a no-op
+    // because court.js / tradelab.js still call it.
+    function renderDismissibleTip() {
+      return "";
     }
 
     function renderGuidePopover() {
       const info = TAB_GUIDES[state.activeNav] || TAB_GUIDES.market;
       const pop = document.getElementById("guidePopover");
+      // Accent dot on the guide button until this view's guide has been opened once
+      const btn = document.getElementById("guideBtn");
+      if (btn) {
+        const seen = !!state.dismissedTips[state.activeNav];
+        let dot = btn.querySelector(".help-new");
+        if (!seen && !dot) btn.insertAdjacentHTML("beforeend", `<span class="help-new" aria-hidden="true"></span>`);
+        if (seen && dot) dot.remove();
+      }
       if (!pop) return;
       pop.innerHTML = `
         <div class="guide-title">${escapeHtml(info.title)}</div>
@@ -2641,50 +2708,55 @@
         { key: "price", sort: "price", label: "Price", align: "num" }
       ];
       if (state.displayCols.owned) cols.push({ key: "owned", sort: "owned", label: "Own %", align: "num" });
-      if (state.displayCols.form) cols.push({ key: "form", sort: "r_minus_1", label: `W${Math.max(1, r - 2)}/W${Math.max(1, r - 1)}`, align: "num" });
-      cols.push({ key: "games", sort: "games", label: `R${r}·R${r + 1}·R${r + 2}`, align: "center" });
+      if (state.displayCols.form) cols.push({ key: "form", sort: "r_minus_1", label: `W${Math.max(1, r - 2)}/W${Math.max(1, r - 1)} scores`, title: "Round totals for the last two rounds", align: "num" });
+      cols.push({ key: "games", sort: "games", label: `R${r}·R${r + 1}·R${r + 2} games`, title: "Games each team plays this round and the next two", align: "center" });
       cols.push({ key: "be", sort: "be", label: "BE", align: "num", isBe: true });
       cols.push({ key: "proj", sort: "proj", label: `R${r} Proj`, align: "num" });
       if (state.displayCols.avg3) cols.push({ key: "avg3", sort: "avg3", label: "3-Wk", align: "num" });
       if (state.displayCols.avg5) cols.push({ key: "avg5", sort: "avg5", label: "5-Wk", align: "num" });
       cols.push({ key: "priceChange", sort: "priceChange", label: "Proj Chg", align: "num" });
       if (state.displayCols.newPrice) cols.push({ key: "newPrice", sort: "newPrice", label: "New Price", align: "num" });
+      // Phone: the decision numbers (BE, projected change) come first so they're visible without scrolling
+      if (isPhone()) {
+        const order = ["name", "be", "priceChange", "price", "proj", "form", "games", "owned", "avg3", "avg5", "newPrice"];
+        cols.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
+      }
       return cols;
     }
+
+    const isPhone = () => window.matchMedia("(max-width: 760px)").matches;
 
     function getColWidth(key) {
       const saved = Number(state.colWidths[key]);
       if (saved && !Number.isNaN(saved)) return Math.max(MIN_COL_WIDTHS[key] || 64, saved);
+      if (isPhone()) {
+        const phoneWidths = { name: 190, be: 96, priceChange: 96 };
+        if (phoneWidths[key]) return phoneWidths[key];
+      }
       return DEFAULT_COL_WIDTHS[key] || 90;
     }
 
+    // Every column keeps its own width so the numbers sit right next to the player name;
+    // any spare width goes to an empty trailing filler column instead of stretching Player.
     function applyTableColumnWidths(cols) {
       const cg = document.getElementById("tableColGroup");
       const tbl = document.getElementById("marketTable");
       if (!cg || !tbl) return;
       const totalPx = cols.reduce((sum, c) => sum + getColWidth(c.key), 0);
       tbl.style.minWidth = `${totalPx}px`;
-      cg.innerHTML = cols.map((c, idx) => {
-        const w = getColWidth(c.key);
-        // Let the Name column absorb extra viewport width naturally when user hasn't forced custom widths
-        const hasCustom = Object.keys(state.colWidths).length > 0;
-        if (!hasCustom && idx === 0) {
-          return `<col data-col-key="${c.key}" style="min-width:${w}px;" />`;
-        }
-        return `<col data-col-key="${c.key}" style="width:${w}px;" />`;
-      }).join("");
+      cg.innerHTML = cols.map((c) => `<col data-col-key="${c.key}" style="width:${getColWidth(c.key)}px;" />`).join("")
+        + `<col class="col-fill" />`;
     }
 
     function renderActiveFilterChips() {
       const chips = [];
       if (state.filterPos !== "ALL") chips.push(`<span class="filter-chip">Pos: ${state.filterPos} <button type="button" data-clear-chip="pos">×</button></span>`);
       if (state.maxPriceM !== null) chips.push(`<span class="filter-chip">≤ $${state.maxPriceM}M <button type="button" data-clear-chip="price">×</button></span>`);
-      if (state.fourGamesOnly) chips.push(`<span class="filter-chip">4-Game Only <button type="button" data-clear-chip="4g">×</button></span>`);
+      if (state.fourGamesOnly) chips.push(`<span class="filter-chip">4-games round <button type="button" data-clear-chip="4g">×</button></span>`);
       if (state.podsOnly) chips.push(`<span class="filter-chip">PODs &lt;5% <button type="button" data-clear-chip="pod">×</button></span>`);
       if (!state.hideDnps) chips.push(`<span class="filter-chip">Showing DNPs <button type="button" data-clear-chip="dnp">×</button></span>`);
       document.getElementById("activeFilterChips").innerHTML = chips.join("");
       document.getElementById("filterPopBtn").classList.toggle("active", chips.length > 0);
-      document.getElementById("marketTipSlot").innerHTML = chips.length === 0 ? renderDismissibleTip("market") : "";
     }
 
     function syncSidebarAndHeader(allComputed, filteredLen) {
@@ -2728,7 +2800,7 @@
 
       const viewNames = {
         all: "All Players", squad: "My Squad", cows: "Cash Cows",
-        bleeding: "Bleeding", fourgames: "4-Game Slate", pods: "PODs <5%", watchlist: "Watchlist"
+        bleeding: "Bleeding", fourgames: "4-Games Round", pods: "PODs <5%", watchlist: "Watchlist"
       };
       const crumb = document.getElementById("vhCrumb");
       const countEl = document.getElementById("vhCount");
@@ -2927,9 +2999,9 @@
         document.getElementById("tableHead").innerHTML = `<tr>${cols.map((c, idx) => {
           const active = c.sort && c.key === state.sortCol;
           const arrow = active ? `<span class="sort-arrow">${state.sortDir === "asc" ? "▲" : "▼"}</span>` : "";
-          const resizer = idx < cols.length - 1 ? `<span class="col-resizer" data-resize-col="${c.key}" title="Drag to resize · Double-click to reset"></span>` : "";
-          return `<th class="${c.align} ${active ? "sort-active" : ""}" ${c.sort ? `data-sort="${c.sort}" data-col="${c.key}"` : ""}>${c.label}${arrow}${resizer}</th>`;
-        }).join("")}</tr>`;
+          const resizer = `<span class="col-resizer" data-resize-col="${c.key}" title="Drag to resize · Double-click to reset"></span>`;
+          return `<th class="${c.align} ${active ? "sort-active" : ""} ${idx === 0 ? "col-sticky" : ""}" ${c.title ? `title="${c.title}"` : ""} ${c.sort ? `data-sort="${c.sort}" data-col="${c.key}"` : ""}>${c.label}${arrow}${resizer}</th>`;
+        }).join("")}<th class="col-fill" aria-hidden="true"></th></tr>`;
 
         const limit = state.showAll ? filtered.length : Math.min(100, filtered.length);
         const visible = filtered.slice(0, limit);
@@ -2938,7 +3010,7 @@
 
         const tbody = document.getElementById("tableBody");
         if (visible.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="${cols.length}" style="text-align:center; padding:42px; color:var(--text-tertiary);">No players match this view.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="${cols.length + 1}" style="text-align:center; padding:42px; color:var(--text-tertiary);">No players match this view.</td></tr>`;
         } else {
           tbody.innerHTML = visible.map((p) => {
             const chgClass = p.priceChange > 0 ? "pos-text" : p.priceChange < 0 ? "neg-text" : "muted-text";
@@ -2960,7 +3032,7 @@
             const cells = cols.map((c) => {
               if (c.key === "name") {
                 return `
-                  <td>
+                  <td class="col-sticky">
                     <div class="p-cell">
                       <div class="row-quick-controls">
                         <button type="button" class="row-btn star-btn ${p.inWatchlist ? "is-star" : ""}" data-toggle-watch="${escapeHtml(p.id)}" title="${p.inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}">${p.inWatchlist ? "★" : "☆"}</button>
@@ -3000,7 +3072,7 @@
               return `<td></td>`;
             }).join("");
 
-            return `<tr class="${rowClasses.join(" ")}" data-row-id="${escapeHtml(p.id)}">${cells}</tr>`;
+            return `<tr class="${rowClasses.join(" ")}" data-row-id="${escapeHtml(p.id)}">${cells}<td class="col-fill"></td></tr>`;
           }).join("");
         }
 
@@ -3149,7 +3221,7 @@
         { type: "cmd", label: "Optimise My Court Lineup", meta: "Best 9 + 2× C", run: () => { setActiveNav("court"); setTimeout(() => { const b = document.getElementById("courtOptimiseBtn"); if (b) b.click(); }, 30); } },
         { type: "cmd", label: "Add Player to My Court", meta: "Squad", run: () => { setActiveNav("court"); setTimeout(() => { const b = document.getElementById("courtAddPlayerBtn"); if (b) b.click(); }, 30); } },
         { type: "cmd", label: "View: Cash Cows", meta: "Filter", run: () => setActiveNav("market", "cows") },
-        { type: "cmd", label: "View: 4-Game Slate", meta: "Filter", run: () => setActiveNav("market", "fourgames") },
+        { type: "cmd", label: "View: 4-Games Round", meta: "Filter", run: () => setActiveNav("market", "fourgames") },
         { type: "cmd", label: "Open Workspace Settings", meta: "Sync & Code", run: () => openSettingsModal() }
       ];
 
@@ -3338,6 +3410,11 @@
       displayPopWrap.classList.remove("open");
       roundMenuEl.classList.remove("open");
       guideAnchor.classList.toggle("open");
+      if (!state.dismissedTips[state.activeNav]) {
+        state.dismissedTips[state.activeNav] = true;
+        savePrefs();
+        renderGuidePopover();
+      }
     });
 
     document.getElementById("filterPopBtn").addEventListener("click", (e) => {
