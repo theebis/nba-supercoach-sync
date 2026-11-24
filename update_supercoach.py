@@ -510,7 +510,12 @@ def fetch_team_game_counts(base_url, round_num, fixture_cache):
         fixtures = fetch_json(url)
         if not isinstance(fixtures, list):
             fixtures = fixtures.get("fixtures") or fixtures.get("matches") or []
+        games = []
         for fx in fixtures:
+            t1, t2 = fx.get("team1") or {}, fx.get("team2") or {}
+            if isinstance(t1, dict) and isinstance(t2, dict) and fx.get("kickoff"):
+                # Tip-off time + teams: lets the site find each round's games in ESPN's live feed
+                games.append({"t": fx.get("kickoff"), "home": t1.get("abbrev"), "away": t2.get("abbrev")})
             for key in ("team1", "team2", "home_team", "away_team"):
                 t = fx.get(key)
                 if isinstance(t, dict):
@@ -521,6 +526,8 @@ def fetch_team_game_counts(base_url, round_num, fixture_cache):
                 tid = fx.get(id_key)
                 if tid is not None:
                     counts[str(tid)] = counts.get(str(tid), 0) + 1
+        games.sort(key=lambda g: g["t"])
+        fixture_cache.setdefault("_games", {})[round_num] = games
         print(f"Fetched Round {round_num} fixture game counts ({len(fixtures)} games).")
     except Exception as err:
         print(f"Could not fetch Round {round_num} fixtures: {err}")
@@ -749,6 +756,8 @@ def build_round_dataset(
         "lastUpdated": datetime.now(timezone.utc).isoformat(),
         "injurySource": "ESPN" if injury_map else None,
         "team_schedule": team_schedule,
+        # Each round's games (tip-off time, teams) for this round and the next two
+        "fixtures": {str(r): fixture_cache.get("_games", {}).get(r, []) for r in (round_num, round_num + 1, round_num + 2)},
         "players": parsed,
     }
 
