@@ -580,13 +580,21 @@ def parse_player(
     r_minus_2_games = prev2["games"] if prev2 else None
 
     if r_minus_1 is None or r_minus_2 is None:
-        completed = [s for s in stats if s.get("points") is not None]
+        # Only rounds BEFORE this one (the last row is this round itself)
+        completed = [s for s in stats[:-1] if s.get("points") is not None]
         if r_minus_1 is None:
             r_minus_1 = int(completed[-1].get("points") or 0) if len(completed) >= 1 else 0
         if r_minus_2 is None:
             r_minus_2 = int(completed[-2].get("points") or 0) if len(completed) >= 2 else 0
 
-    price = int(latest_stat.get("price") or p.get("price") or 3800000)
+    # A round's stat row holds the price AFTER that round's change (price_change is caused by that
+    # round's own games). The price during the round is therefore price - price_change. For the live
+    # round before any games this is the same number (price_change is 0).
+    row_price = int(latest_stat.get("price") or p.get("price") or 3800000)
+    row_change = int(latest_stat.get("price_change") or 0)
+    price = row_price - row_change
+    games_played = int(latest_stat.get("games") or 0)
+    actual_points = int(latest_stat.get("points") or 0)
 
     proj_raw = (
         latest_stat.get("ppts1")
@@ -656,6 +664,11 @@ def parse_player(
         "avg5": avg5,
         "be": be,
         "games": int(games),
+        # What actually happened in this round (0 until games are played; final for past rounds)
+        "games_played": games_played,
+        "actual_points": actual_points,
+        "actual_price_change": row_change,
+        "price_after": row_price,
         "next_round_games": next_round_games,
         "round_after_games": round_after_games,
         "owned": round(owned, 2),
@@ -824,11 +837,14 @@ def main():
     with open(current_snap_path, "w", encoding="utf-8") as f:
         json.dump(live_data, f, indent=2)
 
+    # Past snapshots: build missing ones, always refresh the round that just finished (so it gets its
+    # final scores and price change), and rebuild everything with --rebuild-history.
+    rebuild_all = "--rebuild-history" in sys.argv
     for past_r in range(1, target_round):
         snap_path = os.path.join(HISTORY_DIR, f"round_{past_r}.json")
-        if not os.path.exists(snap_path):
+        if rebuild_all or past_r == target_round - 1 or not os.path.exists(snap_path):
             try:
-                print(f"Backfilling missing historical snapshot for Round {past_r}...")
+                print(f"Building historical snapshot for Round {past_r}...")
                 past_data = build_round_dataset(
                     base_url,
                     past_r,

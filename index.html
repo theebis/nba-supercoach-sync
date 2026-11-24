@@ -2000,14 +2000,18 @@
     </div>
   </div>
 
+  <script src="pricing.js?v=1"></script>
   <script>
-    const DATA_URL = "https://raw.githubusercontent.com/theebis/nba-supercoach-sync/main/supercoach_data.json";
+    // Live site reads the data committed to main; a local preview (npm run serve) reads the working copy
+    const IS_LOCAL = ["localhost", "127.0.0.1"].includes(location.hostname);
+    const DATA_URL = IS_LOCAL
+      ? `${location.origin}/supercoach_data.json`
+      : "https://raw.githubusercontent.com/theebis/nba-supercoach-sync/main/supercoach_data.json";
     // Price model fitted to 1,231 real SuperCoach NBA price changes (2026-27 Rounds 3-5):
     //   avg       = points per game over last round + this round (total points / total games)
     //   new price = price + PER_GAME_RATE x games played this round x (MAGIC x avg - price)
     // A player who plays 0 games in a round keeps his price. Median error ~$50k; direction right 95%.
-    const DEFAULT_MAGIC_NUMBER = 712000;
-    const PER_GAME_RATE = 0.0415;
+    const { DEFAULT_MAGIC_NUMBER } = window.SchoopsPricing;
     const LEGACY_MAGIC_CUTOFF = 400000; // saved values below this came from the old 0.75/0.25 model
     const STORAGE_KEY = "schoops_terminal_v3";
     const LEGACY_STORAGE_KEY = "schoops_terminal_v2";
@@ -2366,28 +2370,8 @@
       return `<span class="micro-tag ${cls}" title="${escapeHtml(injuryTooltip(p))}">${label}</span>`;
     }
 
-    // Games the player played last round; when unknown (older data files), assume a normal 3-game week
-    function prevRoundGames(base) {
-      if (base.prevGames !== null && base.prevGames !== undefined && !Number.isNaN(base.prevGames)) return base.prevGames;
-      return base.r_minus_1 > 0 ? 3 : 0;
-    }
-
-    // Projected price after this round if the player scores `roundScore` in total over `games` games
-    function projectPrice(base, roundScore, games, magic) {
-      const g = Number(games) || 0;
-      if (g <= 0) return base.price;
-      const gPrev = prevRoundGames(base);
-      const avg = (base.r_minus_1 + Number(roundScore || 0)) / (gPrev + g);
-      const next = base.price + PER_GAME_RATE * g * (magic * avg - base.price);
-      return Math.max(0, Math.round(next / 10000) * 10000);
-    }
-
-    // Breakeven: round total (over this round's games) that leaves the price unchanged
-    function calcBreakeven(base, magic) {
-      const g = Number(base.games) || 0;
-      if (g <= 0) return null;
-      return Math.round((base.price / magic) * (prevRoundGames(base) + g) - base.r_minus_1);
-    }
+    // Price model lives in pricing.js (shared with the tests)
+    const { projectPrice, calcBreakeven } = window.SchoopsPricing;
 
     function computeRow(base) {
       const price = base.price;

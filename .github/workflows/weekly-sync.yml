@@ -39,6 +39,9 @@ jobs:
           SC_BEARER_TOKEN: ${{ secrets.SC_BEARER_TOKEN }}
         run: python update_supercoach.py
 
+      - name: Check data before publishing (blocks the commit if anything looks wrong)
+        run: python scripts/check_data.py
+
       - name: Commit and push updated JSON
         run: |
           git config --global user.name "github-actions[bot]"

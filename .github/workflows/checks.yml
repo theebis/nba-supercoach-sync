@@ -1,0 +1,32 @@
+name: Checks
+
+# Runs the price-model tests, scraper unit tests and data sanity checks on every push.
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Python packages
+        run: pip install curl_cffi pytest
+
+      - name: Price model tests (incl. backtest on real price changes)
+        run: node --test tests/
+
+      - name: Scraper unit tests
+        run: python -m pytest -q tests
+
+      - name: Data sanity checks
+        run: python scripts/check_data.py
