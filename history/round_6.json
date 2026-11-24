@@ -8,7 +8,7 @@
     "calibratedOn": "2026-27 Rounds 3-5 (1,231 price changes)"
   },
   "totalPlayersScraped": 643,
-  "lastUpdated": "2026-11-24T16:05:18.729969+00:00",
+  "lastUpdated": "2026-11-24T17:25:13.436452+00:00",
   "injurySource": "ESPN",
   "team_schedule": {
     "ATL": {
@@ -961,8 +961,8 @@
         ]
       ],
       "proj_v2": 47,
-      "proj_lo": 34,
-      "proj_hi": 58,
+      "proj_lo": 19,
+      "proj_hi": 68,
       "exp_games": 2.0,
       "exp_ppg": 24.0
     },
@@ -1026,8 +1026,8 @@
         ]
       ],
       "proj_v2": 57,
-      "proj_lo": 41,
-      "proj_hi": 71,
+      "proj_lo": 23,
+      "proj_hi": 83,
       "exp_games": 2.0,
       "exp_ppg": 29.1
     },
@@ -1092,7 +1092,7 @@
       ],
       "proj_v2": 6,
       "proj_lo": 0,
-      "proj_hi": 7,
+      "proj_hi": 10,
       "exp_games": 0.6,
       "exp_ppg": 9.3
     },
@@ -1157,7 +1157,7 @@
       ],
       "proj_v2": 26,
       "proj_lo": 0,
-      "proj_hi": 32,
+      "proj_hi": 49,
       "exp_games": 2.0,
       "exp_ppg": 13.2
     },
@@ -1222,7 +1222,7 @@
       ],
       "proj_v2": 11,
       "proj_lo": 0,
-      "proj_hi": 14,
+      "proj_hi": 21,
       "exp_games": 1.3,
       "exp_ppg": 8.5
     },
@@ -1287,7 +1287,7 @@
       ],
       "proj_v2": 23,
       "proj_lo": 0,
-      "proj_hi": 29,
+      "proj_hi": 44,
       "exp_games": 1.5,
       "exp_ppg": 15.0
     },
@@ -1352,7 +1352,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.2,
       "exp_ppg": 10.2
     },
@@ -1482,7 +1482,7 @@
       ],
       "proj_v2": 31,
       "proj_lo": 0,
-      "proj_hi": 38,
+      "proj_hi": 58,
       "exp_games": 2.6,
       "exp_ppg": 11.7
     },
@@ -1546,8 +1546,8 @@
         ]
       ],
       "proj_v2": 50,
-      "proj_lo": 36,
-      "proj_hi": 62,
+      "proj_lo": 20,
+      "proj_hi": 72,
       "exp_games": 1.6,
       "exp_ppg": 30.2
     },
@@ -1612,7 +1612,7 @@
       ],
       "proj_v2": 16,
       "proj_lo": 0,
-      "proj_hi": 19,
+      "proj_hi": 29,
       "exp_games": 1.2,
       "exp_ppg": 12.7
     },
@@ -1807,7 +1807,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 9,
+      "proj_hi": 14,
       "exp_games": 0.8,
       "exp_ppg": 9.1
     },
@@ -1936,8 +1936,8 @@
         ]
       ],
       "proj_v2": 52,
-      "proj_lo": 37,
-      "proj_hi": 65,
+      "proj_lo": 21,
+      "proj_hi": 76,
       "exp_games": 2.0,
       "exp_ppg": 26.6
     },
@@ -2067,7 +2067,7 @@
       ],
       "proj_v2": 30,
       "proj_lo": 0,
-      "proj_hi": 38,
+      "proj_hi": 57,
       "exp_games": 2.0,
       "exp_ppg": 15.5
     },
@@ -2132,7 +2132,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.2,
       "exp_ppg": 10.0
     },
@@ -2197,7 +2197,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.4,
       "exp_ppg": 4.8
     },
@@ -2262,7 +2262,7 @@
       ],
       "proj_v2": 22,
       "proj_lo": 0,
-      "proj_hi": 28,
+      "proj_hi": 42,
       "exp_games": 3.0,
       "exp_ppg": 7.6
     },
@@ -2327,7 +2327,7 @@
       ],
       "proj_v2": 32,
       "proj_lo": 0,
-      "proj_hi": 40,
+      "proj_hi": 60,
       "exp_games": 3.9,
       "exp_ppg": 8.2
     },
@@ -2392,7 +2392,7 @@
       ],
       "proj_v2": 21,
       "proj_lo": 0,
-      "proj_hi": 26,
+      "proj_hi": 39,
       "exp_games": 2.5,
       "exp_ppg": 8.4
     },
@@ -2457,7 +2457,7 @@
       ],
       "proj_v2": 26,
       "proj_lo": 0,
-      "proj_hi": 33,
+      "proj_hi": 50,
       "exp_games": 3.7,
       "exp_ppg": 7.2
     },
@@ -2522,7 +2522,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 4,
       "exp_games": 0.6,
       "exp_ppg": 3.6
     },
@@ -2587,7 +2587,7 @@
       ],
       "proj_v2": 21,
       "proj_lo": 0,
-      "proj_hi": 26,
+      "proj_hi": 40,
       "exp_games": 3.7,
       "exp_ppg": 5.7
     },
@@ -2652,7 +2652,7 @@
       ],
       "proj_v2": 8,
       "proj_lo": 0,
-      "proj_hi": 10,
+      "proj_hi": 15,
       "exp_games": 2.3,
       "exp_ppg": 3.5
     },
@@ -2717,7 +2717,7 @@
       ],
       "proj_v2": 10,
       "proj_lo": 0,
-      "proj_hi": 12,
+      "proj_hi": 18,
       "exp_games": 2.7,
       "exp_ppg": 3.5
     },
@@ -2782,7 +2782,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 4,
       "exp_games": 0.4,
       "exp_ppg": 5.9
     },
@@ -2846,8 +2846,8 @@
         ]
       ],
       "proj_v2": 67,
-      "proj_lo": 48,
-      "proj_hi": 83,
+      "proj_lo": 27,
+      "proj_hi": 97,
       "exp_games": 3.7,
       "exp_ppg": 18.1
     },
@@ -2912,7 +2912,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 6,
+      "proj_hi": 9,
       "exp_games": 1.6,
       "exp_ppg": 3.1
     },
@@ -2976,8 +2976,8 @@
         ]
       ],
       "proj_v2": 75,
-      "proj_lo": 54,
-      "proj_hi": 93,
+      "proj_lo": 31,
+      "proj_hi": 109,
       "exp_games": 3.9,
       "exp_ppg": 19.1
     },
@@ -3042,7 +3042,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 6,
+      "proj_hi": 9,
       "exp_games": 0.6,
       "exp_ppg": 8.1
     },
@@ -3106,8 +3106,8 @@
         ]
       ],
       "proj_v2": 72,
-      "proj_lo": 51,
-      "proj_hi": 89,
+      "proj_lo": 29,
+      "proj_hi": 104,
       "exp_games": 3.9,
       "exp_ppg": 18.3
     },
@@ -3237,7 +3237,7 @@
       ],
       "proj_v2": 39,
       "proj_lo": 0,
-      "proj_hi": 48,
+      "proj_hi": 74,
       "exp_games": 3.9,
       "exp_ppg": 10.0
     },
@@ -3302,7 +3302,7 @@
       ],
       "proj_v2": 28,
       "proj_lo": 0,
-      "proj_hi": 35,
+      "proj_hi": 53,
       "exp_games": 2.7,
       "exp_ppg": 10.3
     },
@@ -3367,7 +3367,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 9,
+      "proj_hi": 13,
       "exp_games": 1.5,
       "exp_ppg": 4.6
     },
@@ -3432,7 +3432,7 @@
       ],
       "proj_v2": 13,
       "proj_lo": 0,
-      "proj_hi": 17,
+      "proj_hi": 25,
       "exp_games": 1.2,
       "exp_ppg": 11.2
     },
@@ -3497,7 +3497,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -3562,7 +3562,7 @@
       ],
       "proj_v2": 23,
       "proj_lo": 0,
-      "proj_hi": 29,
+      "proj_hi": 43,
       "exp_games": 2.9,
       "exp_ppg": 7.8
     },
@@ -3626,8 +3626,8 @@
         ]
       ],
       "proj_v2": 51,
-      "proj_lo": 37,
-      "proj_hi": 64,
+      "proj_lo": 21,
+      "proj_hi": 75,
       "exp_games": 2.5,
       "exp_ppg": 20.7
     },
@@ -3692,7 +3692,7 @@
       ],
       "proj_v2": 19,
       "proj_lo": 0,
-      "proj_hi": 24,
+      "proj_hi": 36,
       "exp_games": 2.9,
       "exp_ppg": 6.6
     },
@@ -3757,7 +3757,7 @@
       ],
       "proj_v2": 8,
       "proj_lo": 0,
-      "proj_hi": 9,
+      "proj_hi": 14,
       "exp_games": 1.7,
       "exp_ppg": 4.5
     },
@@ -3822,7 +3822,7 @@
       ],
       "proj_v2": 31,
       "proj_lo": 0,
-      "proj_hi": 39,
+      "proj_hi": 59,
       "exp_games": 2.9,
       "exp_ppg": 10.7
     },
@@ -3887,7 +3887,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 4,
       "exp_games": 0.4,
       "exp_ppg": 4.6
     },
@@ -3951,8 +3951,8 @@
         ]
       ],
       "proj_v2": 42,
-      "proj_lo": 30,
-      "proj_hi": 53,
+      "proj_lo": 17,
+      "proj_hi": 62,
       "exp_games": 2.9,
       "exp_ppg": 14.5
     },
@@ -4016,8 +4016,8 @@
         ]
       ],
       "proj_v2": 48,
-      "proj_lo": 35,
-      "proj_hi": 60,
+      "proj_lo": 20,
+      "proj_hi": 70,
       "exp_games": 2.8,
       "exp_ppg": 17.4
     },
@@ -4082,7 +4082,7 @@
       ],
       "proj_v2": 10,
       "proj_lo": 0,
-      "proj_hi": 13,
+      "proj_hi": 20,
       "exp_games": 1.0,
       "exp_ppg": 10.9
     },
@@ -4147,7 +4147,7 @@
       ],
       "proj_v2": 26,
       "proj_lo": 0,
-      "proj_hi": 32,
+      "proj_hi": 49,
       "exp_games": 2.9,
       "exp_ppg": 8.9
     },
@@ -4211,8 +4211,8 @@
         ]
       ],
       "proj_v2": 71,
-      "proj_lo": 51,
-      "proj_hi": 89,
+      "proj_lo": 29,
+      "proj_hi": 104,
       "exp_games": 2.6,
       "exp_ppg": 27.2
     },
@@ -4277,7 +4277,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -4342,7 +4342,7 @@
       ],
       "proj_v2": 17,
       "proj_lo": 0,
-      "proj_hi": 21,
+      "proj_hi": 32,
       "exp_games": 2.9,
       "exp_ppg": 5.8
     },
@@ -4407,7 +4407,7 @@
       ],
       "proj_v2": 39,
       "proj_lo": 0,
-      "proj_hi": 49,
+      "proj_hi": 74,
       "exp_games": 2.8,
       "exp_ppg": 14.2
     },
@@ -4472,7 +4472,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.2
     },
@@ -4537,7 +4537,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -4602,7 +4602,7 @@
       ],
       "proj_v2": 16,
       "proj_lo": 0,
-      "proj_hi": 20,
+      "proj_hi": 30,
       "exp_games": 1.1,
       "exp_ppg": 14.8
     },
@@ -4667,7 +4667,7 @@
       ],
       "proj_v2": 15,
       "proj_lo": 0,
-      "proj_hi": 19,
+      "proj_hi": 29,
       "exp_games": 2.8,
       "exp_ppg": 5.6
     },
@@ -4732,7 +4732,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -4797,7 +4797,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.0
     },
@@ -4861,8 +4861,8 @@
         ]
       ],
       "proj_v2": 56,
-      "proj_lo": 40,
-      "proj_hi": 70,
+      "proj_lo": 23,
+      "proj_hi": 82,
       "exp_games": 2.6,
       "exp_ppg": 21.8
     },
@@ -4927,7 +4927,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.7,
       "exp_ppg": 4.6
     },
@@ -4992,7 +4992,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 8,
       "exp_games": 0.6,
       "exp_ppg": 6.5
     },
@@ -5057,7 +5057,7 @@
       ],
       "proj_v2": 26,
       "proj_lo": 0,
-      "proj_hi": 32,
+      "proj_hi": 49,
       "exp_games": 2.9,
       "exp_ppg": 8.9
     },
@@ -5122,7 +5122,7 @@
       ],
       "proj_v2": 23,
       "proj_lo": 0,
-      "proj_hi": 28,
+      "proj_hi": 43,
       "exp_games": 1.9,
       "exp_ppg": 11.9
     },
@@ -5252,7 +5252,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 6,
+      "proj_hi": 9,
       "exp_games": 1.9,
       "exp_ppg": 2.6
     },
@@ -5317,7 +5317,7 @@
       ],
       "proj_v2": 40,
       "proj_lo": 0,
-      "proj_hi": 50,
+      "proj_hi": 75,
       "exp_games": 2.6,
       "exp_ppg": 15.5
     },
@@ -5382,7 +5382,7 @@
       ],
       "proj_v2": 22,
       "proj_lo": 0,
-      "proj_hi": 27,
+      "proj_hi": 41,
       "exp_games": 2.9,
       "exp_ppg": 7.3
     },
@@ -5446,8 +5446,8 @@
         ]
       ],
       "proj_v2": 49,
-      "proj_lo": 35,
-      "proj_hi": 61,
+      "proj_lo": 20,
+      "proj_hi": 72,
       "exp_games": 2.9,
       "exp_ppg": 16.8
     },
@@ -5512,7 +5512,7 @@
       ],
       "proj_v2": 17,
       "proj_lo": 0,
-      "proj_hi": 21,
+      "proj_hi": 32,
       "exp_games": 2.8,
       "exp_ppg": 6.1
     },
@@ -5577,7 +5577,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 7,
       "exp_games": 0.4,
       "exp_ppg": 10.5
     },
@@ -5642,7 +5642,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 8,
+      "proj_hi": 13,
       "exp_games": 1.2,
       "exp_ppg": 5.8
     },
@@ -5707,7 +5707,7 @@
       ],
       "proj_v2": 19,
       "proj_lo": 0,
-      "proj_hi": 24,
+      "proj_hi": 36,
       "exp_games": 1.7,
       "exp_ppg": 11.3
     },
@@ -5837,7 +5837,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 8,
+      "proj_hi": 12,
       "exp_games": 0.9,
       "exp_ppg": 7.1
     },
@@ -5901,8 +5901,8 @@
         ]
       ],
       "proj_v2": 45,
-      "proj_lo": 32,
-      "proj_hi": 56,
+      "proj_lo": 18,
+      "proj_hi": 66,
       "exp_games": 2.9,
       "exp_ppg": 15.4
     },
@@ -5967,7 +5967,7 @@
       ],
       "proj_v2": 19,
       "proj_lo": 0,
-      "proj_hi": 23,
+      "proj_hi": 35,
       "exp_games": 1.3,
       "exp_ppg": 14.8
     },
@@ -6032,7 +6032,7 @@
       ],
       "proj_v2": 14,
       "proj_lo": 0,
-      "proj_hi": 17,
+      "proj_hi": 26,
       "exp_games": 2.1,
       "exp_ppg": 6.5
     },
@@ -6097,7 +6097,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 0.3,
       "exp_ppg": 10.2
     },
@@ -6162,7 +6162,7 @@
       ],
       "proj_v2": 17,
       "proj_lo": 0,
-      "proj_hi": 21,
+      "proj_hi": 31,
       "exp_games": 2.8,
       "exp_ppg": 6.0
     },
@@ -6226,8 +6226,8 @@
         ]
       ],
       "proj_v2": 61,
-      "proj_lo": 44,
-      "proj_hi": 76,
+      "proj_lo": 25,
+      "proj_hi": 89,
       "exp_games": 2.9,
       "exp_ppg": 20.8
     },
@@ -6291,8 +6291,8 @@
         ]
       ],
       "proj_v2": 42,
-      "proj_lo": 30,
-      "proj_hi": 52,
+      "proj_lo": 17,
+      "proj_hi": 61,
       "exp_games": 2.9,
       "exp_ppg": 14.2
     },
@@ -6357,7 +6357,7 @@
       ],
       "proj_v2": 17,
       "proj_lo": 0,
-      "proj_hi": 22,
+      "proj_hi": 33,
       "exp_games": 2.3,
       "exp_ppg": 7.6
     },
@@ -6422,7 +6422,7 @@
       ],
       "proj_v2": 31,
       "proj_lo": 0,
-      "proj_hi": 38,
+      "proj_hi": 58,
       "exp_games": 2.9,
       "exp_ppg": 10.5
     },
@@ -6487,7 +6487,7 @@
       ],
       "proj_v2": 16,
       "proj_lo": 0,
-      "proj_hi": 20,
+      "proj_hi": 30,
       "exp_games": 0.9,
       "exp_ppg": 17.2
     },
@@ -6552,7 +6552,7 @@
       ],
       "proj_v2": 6,
       "proj_lo": 0,
-      "proj_hi": 8,
+      "proj_hi": 12,
       "exp_games": 1.3,
       "exp_ppg": 5.1
     },
@@ -6616,8 +6616,8 @@
         ]
       ],
       "proj_v2": 63,
-      "proj_lo": 45,
-      "proj_hi": 78,
+      "proj_lo": 26,
+      "proj_hi": 91,
       "exp_games": 2.6,
       "exp_ppg": 24.1
     },
@@ -6682,7 +6682,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.9,
       "exp_ppg": 3.4
     },
@@ -6747,7 +6747,7 @@
       ],
       "proj_v2": 15,
       "proj_lo": 0,
-      "proj_hi": 19,
+      "proj_hi": 29,
       "exp_games": 1.8,
       "exp_ppg": 8.6
     },
@@ -6876,8 +6876,8 @@
         ]
       ],
       "proj_v2": 52,
-      "proj_lo": 37,
-      "proj_hi": 65,
+      "proj_lo": 21,
+      "proj_hi": 76,
       "exp_games": 2.5,
       "exp_ppg": 21.0
     },
@@ -6942,7 +6942,7 @@
       ],
       "proj_v2": 23,
       "proj_lo": 0,
-      "proj_hi": 28,
+      "proj_hi": 43,
       "exp_games": 2.0,
       "exp_ppg": 11.4
     },
@@ -7007,7 +7007,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 6.3
     },
@@ -7072,7 +7072,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.7,
       "exp_ppg": 4.6
     },
@@ -7136,8 +7136,8 @@
         ]
       ],
       "proj_v2": 70,
-      "proj_lo": 50,
-      "proj_hi": 87,
+      "proj_lo": 29,
+      "proj_hi": 102,
       "exp_games": 2.8,
       "exp_ppg": 25.2
     },
@@ -7202,7 +7202,7 @@
       ],
       "proj_v2": 39,
       "proj_lo": 0,
-      "proj_hi": 49,
+      "proj_hi": 74,
       "exp_games": 2.9,
       "exp_ppg": 13.4
     },
@@ -7267,7 +7267,7 @@
       ],
       "proj_v2": 18,
       "proj_lo": 0,
-      "proj_hi": 22,
+      "proj_hi": 33,
       "exp_games": 2.0,
       "exp_ppg": 8.8
     },
@@ -7332,7 +7332,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.9,
       "exp_ppg": 3.7
     },
@@ -7396,8 +7396,8 @@
         ]
       ],
       "proj_v2": 67,
-      "proj_lo": 48,
-      "proj_hi": 83,
+      "proj_lo": 27,
+      "proj_hi": 98,
       "exp_games": 2.8,
       "exp_ppg": 24.1
     },
@@ -7462,7 +7462,7 @@
       ],
       "proj_v2": 15,
       "proj_lo": 0,
-      "proj_hi": 18,
+      "proj_hi": 28,
       "exp_games": 0.6,
       "exp_ppg": 22.8
     },
@@ -7527,7 +7527,7 @@
       ],
       "proj_v2": 16,
       "proj_lo": 0,
-      "proj_hi": 20,
+      "proj_hi": 30,
       "exp_games": 2.3,
       "exp_ppg": 7.0
     },
@@ -7592,7 +7592,7 @@
       ],
       "proj_v2": 30,
       "proj_lo": 0,
-      "proj_hi": 37,
+      "proj_hi": 56,
       "exp_games": 2.8,
       "exp_ppg": 10.6
     },
@@ -7657,7 +7657,7 @@
       ],
       "proj_v2": 31,
       "proj_lo": 0,
-      "proj_hi": 38,
+      "proj_hi": 58,
       "exp_games": 2.5,
       "exp_ppg": 12.4
     },
@@ -7787,7 +7787,7 @@
       ],
       "proj_v2": 19,
       "proj_lo": 0,
-      "proj_hi": 24,
+      "proj_hi": 36,
       "exp_games": 1.5,
       "exp_ppg": 12.5
     },
@@ -7852,7 +7852,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -7917,7 +7917,7 @@
       ],
       "proj_v2": 31,
       "proj_lo": 0,
-      "proj_hi": 38,
+      "proj_hi": 58,
       "exp_games": 2.3,
       "exp_ppg": 13.4
     },
@@ -7982,7 +7982,7 @@
       ],
       "proj_v2": 9,
       "proj_lo": 0,
-      "proj_hi": 11,
+      "proj_hi": 17,
       "exp_games": 1.0,
       "exp_ppg": 9.1
     },
@@ -8112,7 +8112,7 @@
       ],
       "proj_v2": 12,
       "proj_lo": 0,
-      "proj_hi": 15,
+      "proj_hi": 23,
       "exp_games": 1.6,
       "exp_ppg": 7.3
     },
@@ -8177,7 +8177,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 1.2,
       "exp_ppg": 2.1
     },
@@ -8306,8 +8306,8 @@
         ]
       ],
       "proj_v2": 59,
-      "proj_lo": 43,
-      "proj_hi": 74,
+      "proj_lo": 24,
+      "proj_hi": 86,
       "exp_games": 1.9,
       "exp_ppg": 32.0
     },
@@ -8372,7 +8372,7 @@
       ],
       "proj_v2": 35,
       "proj_lo": 0,
-      "proj_hi": 43,
+      "proj_hi": 66,
       "exp_games": 2.0,
       "exp_ppg": 17.8
     },
@@ -8437,7 +8437,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 0.9,
       "exp_ppg": 3.0
     },
@@ -8502,7 +8502,7 @@
       ],
       "proj_v2": 34,
       "proj_lo": 0,
-      "proj_hi": 42,
+      "proj_hi": 64,
       "exp_games": 1.6,
       "exp_ppg": 20.6
     },
@@ -8567,7 +8567,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.2,
       "exp_ppg": 5.4
     },
@@ -8632,7 +8632,7 @@
       ],
       "proj_v2": 16,
       "proj_lo": 0,
-      "proj_hi": 20,
+      "proj_hi": 30,
       "exp_games": 1.9,
       "exp_ppg": 8.5
     },
@@ -8827,7 +8827,7 @@
       ],
       "proj_v2": 19,
       "proj_lo": 0,
-      "proj_hi": 24,
+      "proj_hi": 36,
       "exp_games": 1.6,
       "exp_ppg": 11.7
     },
@@ -8892,7 +8892,7 @@
       ],
       "proj_v2": 18,
       "proj_lo": 0,
-      "proj_hi": 22,
+      "proj_hi": 34,
       "exp_games": 1.5,
       "exp_ppg": 11.8
     },
@@ -8957,7 +8957,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.2,
       "exp_ppg": 8.8
     },
@@ -9022,7 +9022,7 @@
       ],
       "proj_v2": 25,
       "proj_lo": 0,
-      "proj_hi": 31,
+      "proj_hi": 47,
       "exp_games": 2.0,
       "exp_ppg": 12.7
     },
@@ -9087,7 +9087,7 @@
       ],
       "proj_v2": 6,
       "proj_lo": 0,
-      "proj_hi": 7,
+      "proj_hi": 11,
       "exp_games": 1.4,
       "exp_ppg": 4.1
     },
@@ -9152,7 +9152,7 @@
       ],
       "proj_v2": 13,
       "proj_lo": 0,
-      "proj_hi": 16,
+      "proj_hi": 24,
       "exp_games": 0.7,
       "exp_ppg": 16.7
     },
@@ -9217,7 +9217,7 @@
       ],
       "proj_v2": 25,
       "proj_lo": 0,
-      "proj_hi": 31,
+      "proj_hi": 48,
       "exp_games": 2.9,
       "exp_ppg": 8.7
     },
@@ -9281,8 +9281,8 @@
         ]
       ],
       "proj_v2": 60,
-      "proj_lo": 43,
-      "proj_hi": 75,
+      "proj_lo": 25,
+      "proj_hi": 87,
       "exp_games": 2.9,
       "exp_ppg": 20.4
     },
@@ -9347,7 +9347,7 @@
       ],
       "proj_v2": 27,
       "proj_lo": 0,
-      "proj_hi": 34,
+      "proj_hi": 52,
       "exp_games": 2.9,
       "exp_ppg": 9.3
     },
@@ -9412,7 +9412,7 @@
       ],
       "proj_v2": 25,
       "proj_lo": 0,
-      "proj_hi": 31,
+      "proj_hi": 47,
       "exp_games": 2.8,
       "exp_ppg": 9.1
     },
@@ -9477,7 +9477,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 1.0,
       "exp_ppg": 2.8
     },
@@ -9541,8 +9541,8 @@
         ]
       ],
       "proj_v2": 41,
-      "proj_lo": 29,
-      "proj_hi": 51,
+      "proj_lo": 17,
+      "proj_hi": 60,
       "exp_games": 2.9,
       "exp_ppg": 14.0
     },
@@ -9607,7 +9607,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 5,
       "exp_games": 1.0,
       "exp_ppg": 2.9
     },
@@ -9672,7 +9672,7 @@
       ],
       "proj_v2": 8,
       "proj_lo": 0,
-      "proj_hi": 10,
+      "proj_hi": 15,
       "exp_games": 1.7,
       "exp_ppg": 4.6
     },
@@ -9737,7 +9737,7 @@
       ],
       "proj_v2": 35,
       "proj_lo": 0,
-      "proj_hi": 43,
+      "proj_hi": 65,
       "exp_games": 2.4,
       "exp_ppg": 14.5
     },
@@ -9801,8 +9801,8 @@
         ]
       ],
       "proj_v2": 110,
-      "proj_lo": 80,
-      "proj_hi": 129,
+      "proj_lo": 64,
+      "proj_hi": 139,
       "exp_games": 2.9,
       "exp_ppg": 37.5
     },
@@ -9867,7 +9867,7 @@
       ],
       "proj_v2": 11,
       "proj_lo": 0,
-      "proj_hi": 13,
+      "proj_hi": 20,
       "exp_games": 1.7,
       "exp_ppg": 6.4
     },
@@ -9932,7 +9932,7 @@
       ],
       "proj_v2": 10,
       "proj_lo": 0,
-      "proj_hi": 13,
+      "proj_hi": 20,
       "exp_games": 2.9,
       "exp_ppg": 3.6
     },
@@ -9996,8 +9996,8 @@
         ]
       ],
       "proj_v2": 96,
-      "proj_lo": 69,
-      "proj_hi": 112,
+      "proj_lo": 56,
+      "proj_hi": 121,
       "exp_games": 2.9,
       "exp_ppg": 32.6
     },
@@ -10062,7 +10062,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 7,
       "exp_games": 0.6,
       "exp_ppg": 5.5
     },
@@ -10127,7 +10127,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.2
     },
@@ -10192,7 +10192,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 4,
       "exp_games": 0.3,
       "exp_ppg": 7.8
     },
@@ -10256,8 +10256,8 @@
         ]
       ],
       "proj_v2": 43,
-      "proj_lo": 31,
-      "proj_hi": 53,
+      "proj_lo": 17,
+      "proj_hi": 62,
       "exp_games": 2.9,
       "exp_ppg": 14.5
     },
@@ -10321,8 +10321,8 @@
         ]
       ],
       "proj_v2": 49,
-      "proj_lo": 35,
-      "proj_hi": 61,
+      "proj_lo": 20,
+      "proj_hi": 72,
       "exp_games": 1.8,
       "exp_ppg": 27.9
     },
@@ -10387,7 +10387,7 @@
       ],
       "proj_v2": 28,
       "proj_lo": 0,
-      "proj_hi": 34,
+      "proj_hi": 52,
       "exp_games": 2.9,
       "exp_ppg": 9.4
     },
@@ -10452,7 +10452,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 7,
+      "proj_hi": 10,
       "exp_games": 0.9,
       "exp_ppg": 5.8
     },
@@ -10517,7 +10517,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 6.8
     },
@@ -10582,7 +10582,7 @@
       ],
       "proj_v2": 19,
       "proj_lo": 0,
-      "proj_hi": 23,
+      "proj_hi": 36,
       "exp_games": 2.4,
       "exp_ppg": 7.8
     },
@@ -10647,7 +10647,7 @@
       ],
       "proj_v2": 37,
       "proj_lo": 0,
-      "proj_hi": 46,
+      "proj_hi": 70,
       "exp_games": 2.9,
       "exp_ppg": 12.7
     },
@@ -10711,8 +10711,8 @@
         ]
       ],
       "proj_v2": 45,
-      "proj_lo": 32,
-      "proj_hi": 56,
+      "proj_lo": 18,
+      "proj_hi": 66,
       "exp_games": 2.9,
       "exp_ppg": 15.3
     },
@@ -10777,7 +10777,7 @@
       ],
       "proj_v2": 13,
       "proj_lo": 0,
-      "proj_hi": 16,
+      "proj_hi": 24,
       "exp_games": 1.3,
       "exp_ppg": 10.1
     },
@@ -10842,7 +10842,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 1.3,
       "exp_ppg": 2.4
     },
@@ -10907,7 +10907,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 8,
       "exp_games": 1.4,
       "exp_ppg": 3.0
     },
@@ -11037,7 +11037,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -11166,8 +11166,8 @@
         ]
       ],
       "proj_v2": 59,
-      "proj_lo": 42,
-      "proj_hi": 74,
+      "proj_lo": 24,
+      "proj_hi": 86,
       "exp_games": 2.9,
       "exp_ppg": 20.2
     },
@@ -11232,7 +11232,7 @@
       ],
       "proj_v2": 12,
       "proj_lo": 0,
-      "proj_hi": 15,
+      "proj_hi": 23,
       "exp_games": 0.8,
       "exp_ppg": 16.1
     },
@@ -11296,8 +11296,8 @@
         ]
       ],
       "proj_v2": 70,
-      "proj_lo": 50,
-      "proj_hi": 87,
+      "proj_lo": 29,
+      "proj_hi": 102,
       "exp_games": 2.8,
       "exp_ppg": 25.2
     },
@@ -11362,7 +11362,7 @@
       ],
       "proj_v2": 34,
       "proj_lo": 0,
-      "proj_hi": 43,
+      "proj_hi": 65,
       "exp_games": 2.6,
       "exp_ppg": 13.2
     },
@@ -11492,7 +11492,7 @@
       ],
       "proj_v2": 12,
       "proj_lo": 0,
-      "proj_hi": 15,
+      "proj_hi": 23,
       "exp_games": 2.5,
       "exp_ppg": 4.9
     },
@@ -11622,7 +11622,7 @@
       ],
       "proj_v2": 27,
       "proj_lo": 0,
-      "proj_hi": 33,
+      "proj_hi": 50,
       "exp_games": 2.5,
       "exp_ppg": 10.8
     },
@@ -11687,7 +11687,7 @@
       ],
       "proj_v2": 18,
       "proj_lo": 0,
-      "proj_hi": 22,
+      "proj_hi": 34,
       "exp_games": 2.5,
       "exp_ppg": 7.3
     },
@@ -11752,7 +11752,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.5
     },
@@ -11816,8 +11816,8 @@
         ]
       ],
       "proj_v2": 47,
-      "proj_lo": 34,
-      "proj_hi": 59,
+      "proj_lo": 19,
+      "proj_hi": 69,
       "exp_games": 2.9,
       "exp_ppg": 16.1
     },
@@ -11882,7 +11882,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 6,
+      "proj_hi": 9,
       "exp_games": 2.0,
       "exp_ppg": 2.3
     },
@@ -11947,7 +11947,7 @@
       ],
       "proj_v2": 26,
       "proj_lo": 0,
-      "proj_hi": 33,
+      "proj_hi": 50,
       "exp_games": 2.9,
       "exp_ppg": 9.0
     },
@@ -12077,7 +12077,7 @@
       ],
       "proj_v2": 14,
       "proj_lo": 0,
-      "proj_hi": 18,
+      "proj_hi": 27,
       "exp_games": 2.9,
       "exp_ppg": 4.9
     },
@@ -12142,7 +12142,7 @@
       ],
       "proj_v2": 15,
       "proj_lo": 0,
-      "proj_hi": 19,
+      "proj_hi": 29,
       "exp_games": 2.6,
       "exp_ppg": 5.9
     },
@@ -12207,7 +12207,7 @@
       ],
       "proj_v2": 36,
       "proj_lo": 0,
-      "proj_hi": 44,
+      "proj_hi": 67,
       "exp_games": 2.6,
       "exp_ppg": 13.6
     },
@@ -12337,7 +12337,7 @@
       ],
       "proj_v2": 21,
       "proj_lo": 0,
-      "proj_hi": 26,
+      "proj_hi": 40,
       "exp_games": 2.8,
       "exp_ppg": 7.7
     },
@@ -12402,7 +12402,7 @@
       ],
       "proj_v2": 20,
       "proj_lo": 0,
-      "proj_hi": 24,
+      "proj_hi": 37,
       "exp_games": 2.5,
       "exp_ppg": 8.0
     },
@@ -12467,7 +12467,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.6,
       "exp_ppg": 6.0
     },
@@ -12532,7 +12532,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.3,
       "exp_ppg": 9.4
     },
@@ -12597,7 +12597,7 @@
       ],
       "proj_v2": 11,
       "proj_lo": 0,
-      "proj_hi": 14,
+      "proj_hi": 21,
       "exp_games": 0.9,
       "exp_ppg": 12.8
     },
@@ -12662,7 +12662,7 @@
       ],
       "proj_v2": 16,
       "proj_lo": 0,
-      "proj_hi": 20,
+      "proj_hi": 30,
       "exp_games": 2.9,
       "exp_ppg": 5.4
     },
@@ -12727,7 +12727,7 @@
       ],
       "proj_v2": 12,
       "proj_lo": 0,
-      "proj_hi": 16,
+      "proj_hi": 24,
       "exp_games": 1.2,
       "exp_ppg": 10.4
     },
@@ -12792,7 +12792,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.2,
       "exp_ppg": 6.9
     },
@@ -12857,7 +12857,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -12922,7 +12922,7 @@
       ],
       "proj_v2": 9,
       "proj_lo": 0,
-      "proj_hi": 11,
+      "proj_hi": 17,
       "exp_games": 2.0,
       "exp_ppg": 4.5
     },
@@ -12986,8 +12986,8 @@
         ]
       ],
       "proj_v2": 66,
-      "proj_lo": 47,
-      "proj_hi": 82,
+      "proj_lo": 27,
+      "proj_hi": 96,
       "exp_games": 2.9,
       "exp_ppg": 22.4
     },
@@ -13052,7 +13052,7 @@
       ],
       "proj_v2": 37,
       "proj_lo": 0,
-      "proj_hi": 46,
+      "proj_hi": 70,
       "exp_games": 2.9,
       "exp_ppg": 12.7
     },
@@ -13117,7 +13117,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 3.2
     },
@@ -13182,7 +13182,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.0
     },
@@ -13246,8 +13246,8 @@
         ]
       ],
       "proj_v2": 80,
-      "proj_lo": 58,
-      "proj_hi": 95,
+      "proj_lo": 47,
+      "proj_hi": 102,
       "exp_games": 2.6,
       "exp_ppg": 30.7
     },
@@ -13312,7 +13312,7 @@
       ],
       "proj_v2": 24,
       "proj_lo": 0,
-      "proj_hi": 30,
+      "proj_hi": 45,
       "exp_games": 2.5,
       "exp_ppg": 9.7
     },
@@ -13377,7 +13377,7 @@
       ],
       "proj_v2": 17,
       "proj_lo": 0,
-      "proj_hi": 22,
+      "proj_hi": 33,
       "exp_games": 2.0,
       "exp_ppg": 8.8
     },
@@ -13441,8 +13441,8 @@
         ]
       ],
       "proj_v2": 55,
-      "proj_lo": 39,
-      "proj_hi": 68,
+      "proj_lo": 22,
+      "proj_hi": 80,
       "exp_games": 2.9,
       "exp_ppg": 18.7
     },
@@ -13507,7 +13507,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 6,
+      "proj_hi": 9,
       "exp_games": 1.8,
       "exp_ppg": 2.7
     },
@@ -13571,8 +13571,8 @@
         ]
       ],
       "proj_v2": 62,
-      "proj_lo": 45,
-      "proj_hi": 78,
+      "proj_lo": 26,
+      "proj_hi": 91,
       "exp_games": 2.8,
       "exp_ppg": 22.4
     },
@@ -13637,7 +13637,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 7,
       "exp_games": 2.0,
       "exp_ppg": 2.0
     },
@@ -13702,7 +13702,7 @@
       ],
       "proj_v2": 23,
       "proj_lo": 0,
-      "proj_hi": 28,
+      "proj_hi": 43,
       "exp_games": 2.0,
       "exp_ppg": 11.5
     },
@@ -13766,8 +13766,8 @@
         ]
       ],
       "proj_v2": 44,
-      "proj_lo": 31,
-      "proj_hi": 54,
+      "proj_lo": 18,
+      "proj_hi": 64,
       "exp_games": 2.5,
       "exp_ppg": 17.7
     },
@@ -13832,7 +13832,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 9,
+      "proj_hi": 13,
       "exp_games": 1.5,
       "exp_ppg": 4.6
     },
@@ -13857,10 +13857,10 @@
       "next_round_games": 3,
       "round_after_games": 3,
       "owned": 0.08,
-      "injury": "Out \u00b7 Knee",
-      "injury_status": "Out",
-      "injury_detail": "Furphy (knee) is practicing with the G League's Noblesville Boom, per Alex Golden of SI.com.",
-      "injury_return": "2027-01-02",
+      "injury": null,
+      "injury_status": null,
+      "injury_detail": null,
+      "injury_return": null,
       "photo": "https://a.espncdn.com/i/headshots/nba/players/full/5157066.png",
       "status": "watchlist",
       "trend": [
@@ -13895,10 +13895,10 @@
           5880000
         ]
       ],
-      "proj_v2": 0,
+      "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 0,
-      "exp_games": 0.0,
+      "proj_hi": 5,
+      "exp_games": 0.3,
       "exp_ppg": 11.5
     },
     {
@@ -13924,7 +13924,7 @@
       "owned": 15.04,
       "injury": "Out \u00b7 Hamstring",
       "injury_status": "Out",
-      "injury_detail": "Haliburton (hamstring) is expected to miss at least two more weeks, Shams Charania of ESPN reports.",
+      "injury_detail": "Haliburton (hamstring) was assigned to the G League's Noblesville Boom on Tuesday.",
       "injury_return": "2026-12-13",
       "photo": "https://a.espncdn.com/i/headshots/nba/players/full/4396993.png",
       "status": "watchlist",
@@ -14027,7 +14027,7 @@
       ],
       "proj_v2": 20,
       "proj_lo": 0,
-      "proj_hi": 25,
+      "proj_hi": 38,
       "exp_games": 2.6,
       "exp_ppg": 7.7
     },
@@ -14091,8 +14091,8 @@
         ]
       ],
       "proj_v2": 42,
-      "proj_lo": 30,
-      "proj_hi": 52,
+      "proj_lo": 17,
+      "proj_hi": 61,
       "exp_games": 2.9,
       "exp_ppg": 14.2
     },
@@ -14119,7 +14119,7 @@
       "owned": 0.11,
       "injury": "Day-To-Day \u00b7 Hamstring",
       "injury_status": "Day-To-Day",
-      "injury_detail": "McConnell is out for Monday's game against the Thunder due to left hamstring soreness.",
+      "injury_detail": "McConnell (hamstring) was assigned to the G League's Noblesville Boom on Tuesday.",
       "injury_return": "2026-11-27",
       "photo": "https://a.espncdn.com/i/headshots/nba/players/full/2530530.png",
       "status": "watchlist",
@@ -14157,7 +14157,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 6,
+      "proj_hi": 9,
       "exp_games": 0.4,
       "exp_ppg": 13.6
     },
@@ -14222,7 +14222,7 @@
       ],
       "proj_v2": 12,
       "proj_lo": 0,
-      "proj_hi": 15,
+      "proj_hi": 23,
       "exp_games": 1.8,
       "exp_ppg": 6.7
     },
@@ -14287,7 +14287,7 @@
       ],
       "proj_v2": 39,
       "proj_lo": 0,
-      "proj_hi": 48,
+      "proj_hi": 73,
       "exp_games": 2.3,
       "exp_ppg": 16.9
     },
@@ -14352,7 +14352,7 @@
       ],
       "proj_v2": 18,
       "proj_lo": 0,
-      "proj_hi": 22,
+      "proj_hi": 34,
       "exp_games": 1.6,
       "exp_ppg": 11.1
     },
@@ -14417,7 +14417,7 @@
       ],
       "proj_v2": 35,
       "proj_lo": 0,
-      "proj_hi": 44,
+      "proj_hi": 67,
       "exp_games": 2.6,
       "exp_ppg": 13.5
     },
@@ -14546,8 +14546,8 @@
         ]
       ],
       "proj_v2": 68,
-      "proj_lo": 49,
-      "proj_hi": 84,
+      "proj_lo": 28,
+      "proj_hi": 99,
       "exp_games": 2.8,
       "exp_ppg": 24.4
     },
@@ -14612,7 +14612,7 @@
       ],
       "proj_v2": 29,
       "proj_lo": 0,
-      "proj_hi": 36,
+      "proj_hi": 55,
       "exp_games": 2.6,
       "exp_ppg": 11.2
     },
@@ -14677,7 +14677,7 @@
       ],
       "proj_v2": 19,
       "proj_lo": 0,
-      "proj_hi": 24,
+      "proj_hi": 37,
       "exp_games": 2.0,
       "exp_ppg": 9.8
     },
@@ -14742,7 +14742,7 @@
       ],
       "proj_v2": 28,
       "proj_lo": 0,
-      "proj_hi": 35,
+      "proj_hi": 52,
       "exp_games": 2.5,
       "exp_ppg": 11.3
     },
@@ -14807,7 +14807,7 @@
       ],
       "proj_v2": 24,
       "proj_lo": 0,
-      "proj_hi": 30,
+      "proj_hi": 46,
       "exp_games": 2.8,
       "exp_ppg": 8.8
     },
@@ -14872,7 +14872,7 @@
       ],
       "proj_v2": 40,
       "proj_lo": 0,
-      "proj_hi": 49,
+      "proj_hi": 75,
       "exp_games": 2.1,
       "exp_ppg": 18.5
     },
@@ -15002,7 +15002,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 2.9
     },
@@ -15067,7 +15067,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 8,
       "exp_games": 2.3,
       "exp_ppg": 1.9
     },
@@ -15132,7 +15132,7 @@
       ],
       "proj_v2": 25,
       "proj_lo": 0,
-      "proj_hi": 31,
+      "proj_hi": 48,
       "exp_games": 3.9,
       "exp_ppg": 6.5
     },
@@ -15196,8 +15196,8 @@
         ]
       ],
       "proj_v2": 44,
-      "proj_lo": 31,
-      "proj_hi": 55,
+      "proj_lo": 18,
+      "proj_hi": 64,
       "exp_games": 3.9,
       "exp_ppg": 11.2
     },
@@ -15261,8 +15261,8 @@
         ]
       ],
       "proj_v2": 64,
-      "proj_lo": 46,
-      "proj_hi": 80,
+      "proj_lo": 26,
+      "proj_hi": 93,
       "exp_games": 3.9,
       "exp_ppg": 16.4
     },
@@ -15326,8 +15326,8 @@
         ]
       ],
       "proj_v2": 46,
-      "proj_lo": 33,
-      "proj_hi": 58,
+      "proj_lo": 19,
+      "proj_hi": 68,
       "exp_games": 3.4,
       "exp_ppg": 13.5
     },
@@ -15392,7 +15392,7 @@
       ],
       "proj_v2": 6,
       "proj_lo": 0,
-      "proj_hi": 8,
+      "proj_hi": 12,
       "exp_games": 0.4,
       "exp_ppg": 17.0
     },
@@ -15456,8 +15456,8 @@
         ]
       ],
       "proj_v2": 44,
-      "proj_lo": 31,
-      "proj_hi": 54,
+      "proj_lo": 18,
+      "proj_hi": 64,
       "exp_games": 3.7,
       "exp_ppg": 11.9
     },
@@ -15521,8 +15521,8 @@
         ]
       ],
       "proj_v2": 42,
-      "proj_lo": 30,
-      "proj_hi": 52,
+      "proj_lo": 17,
+      "proj_hi": 61,
       "exp_games": 3.7,
       "exp_ppg": 11.4
     },
@@ -15587,7 +15587,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.4,
       "exp_ppg": 4.2
     },
@@ -15651,8 +15651,8 @@
         ]
       ],
       "proj_v2": 63,
-      "proj_lo": 45,
-      "proj_hi": 78,
+      "proj_lo": 26,
+      "proj_hi": 91,
       "exp_games": 3.9,
       "exp_ppg": 16.0
     },
@@ -15717,7 +15717,7 @@
       ],
       "proj_v2": 6,
       "proj_lo": 0,
-      "proj_hi": 7,
+      "proj_hi": 11,
       "exp_games": 1.8,
       "exp_ppg": 3.1
     },
@@ -15782,7 +15782,7 @@
       ],
       "proj_v2": 16,
       "proj_lo": 0,
-      "proj_hi": 20,
+      "proj_hi": 30,
       "exp_games": 3.4,
       "exp_ppg": 4.7
     },
@@ -15912,7 +15912,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.4,
       "exp_ppg": 4.8
     },
@@ -15977,7 +15977,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 8,
+      "proj_hi": 13,
       "exp_games": 0.8,
       "exp_ppg": 8.0
     },
@@ -16042,7 +16042,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 6,
+      "proj_hi": 9,
       "exp_games": 1.8,
       "exp_ppg": 2.8
     },
@@ -16107,7 +16107,7 @@
       ],
       "proj_v2": 29,
       "proj_lo": 0,
-      "proj_hi": 36,
+      "proj_hi": 55,
       "exp_games": 3.9,
       "exp_ppg": 7.5
     },
@@ -16172,7 +16172,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -16237,7 +16237,7 @@
       ],
       "proj_v2": 25,
       "proj_lo": 0,
-      "proj_hi": 31,
+      "proj_hi": 47,
       "exp_games": 2.5,
       "exp_ppg": 10.0
     },
@@ -16302,7 +16302,7 @@
       ],
       "proj_v2": 37,
       "proj_lo": 0,
-      "proj_hi": 45,
+      "proj_hi": 69,
       "exp_games": 3.9,
       "exp_ppg": 9.4
     },
@@ -16367,7 +16367,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 7,
       "exp_games": 1.4,
       "exp_ppg": 2.6
     },
@@ -16431,8 +16431,8 @@
         ]
       ],
       "proj_v2": 72,
-      "proj_lo": 52,
-      "proj_hi": 90,
+      "proj_lo": 30,
+      "proj_hi": 105,
       "exp_games": 2.6,
       "exp_ppg": 27.5
     },
@@ -16497,7 +16497,7 @@
       ],
       "proj_v2": 39,
       "proj_lo": 0,
-      "proj_hi": 48,
+      "proj_hi": 73,
       "exp_games": 2.6,
       "exp_ppg": 14.7
     },
@@ -16562,7 +16562,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 1.5,
       "exp_ppg": 1.9
     },
@@ -16627,7 +16627,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 4,
       "exp_games": 1.4,
       "exp_ppg": 1.7
     },
@@ -16692,7 +16692,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.5
     },
@@ -16756,8 +16756,8 @@
         ]
       ],
       "proj_v2": 60,
-      "proj_lo": 43,
-      "proj_hi": 75,
+      "proj_lo": 25,
+      "proj_hi": 88,
       "exp_games": 2.8,
       "exp_ppg": 21.8
     },
@@ -16822,7 +16822,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 8,
       "exp_games": 0.9,
       "exp_ppg": 4.9
     },
@@ -16887,7 +16887,7 @@
       ],
       "proj_v2": 24,
       "proj_lo": 0,
-      "proj_hi": 30,
+      "proj_hi": 45,
       "exp_games": 2.8,
       "exp_ppg": 8.6
     },
@@ -16952,7 +16952,7 @@
       ],
       "proj_v2": 6,
       "proj_lo": 0,
-      "proj_hi": 8,
+      "proj_hi": 12,
       "exp_games": 1.4,
       "exp_ppg": 4.5
     },
@@ -17017,7 +17017,7 @@
       ],
       "proj_v2": 30,
       "proj_lo": 0,
-      "proj_hi": 37,
+      "proj_hi": 56,
       "exp_games": 2.9,
       "exp_ppg": 10.1
     },
@@ -17082,7 +17082,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.6,
       "exp_ppg": 3.1
     },
@@ -17147,7 +17147,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.5
     },
@@ -17212,7 +17212,7 @@
       ],
       "proj_v2": 12,
       "proj_lo": 0,
-      "proj_hi": 15,
+      "proj_hi": 23,
       "exp_games": 0.6,
       "exp_ppg": 18.9
     },
@@ -17277,7 +17277,7 @@
       ],
       "proj_v2": 25,
       "proj_lo": 0,
-      "proj_hi": 31,
+      "proj_hi": 47,
       "exp_games": 2.8,
       "exp_ppg": 8.9
     },
@@ -17342,7 +17342,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 8,
       "exp_games": 1.2,
       "exp_ppg": 3.4
     },
@@ -17407,7 +17407,7 @@
       ],
       "proj_v2": 35,
       "proj_lo": 0,
-      "proj_hi": 44,
+      "proj_hi": 67,
       "exp_games": 2.9,
       "exp_ppg": 12.0
     },
@@ -17472,7 +17472,7 @@
       ],
       "proj_v2": 14,
       "proj_lo": 0,
-      "proj_hi": 17,
+      "proj_hi": 26,
       "exp_games": 2.1,
       "exp_ppg": 6.5
     },
@@ -17537,7 +17537,7 @@
       ],
       "proj_v2": 22,
       "proj_lo": 0,
-      "proj_hi": 27,
+      "proj_hi": 42,
       "exp_games": 2.5,
       "exp_ppg": 8.9
     },
@@ -17667,7 +17667,7 @@
       ],
       "proj_v2": 17,
       "proj_lo": 0,
-      "proj_hi": 21,
+      "proj_hi": 33,
       "exp_games": 1.9,
       "exp_ppg": 9.3
     },
@@ -17731,8 +17731,8 @@
         ]
       ],
       "proj_v2": 74,
-      "proj_lo": 53,
-      "proj_hi": 93,
+      "proj_lo": 30,
+      "proj_hi": 108,
       "exp_games": 3.7,
       "exp_ppg": 20.1
     },
@@ -17796,8 +17796,8 @@
         ]
       ],
       "proj_v2": 46,
-      "proj_lo": 33,
-      "proj_hi": 57,
+      "proj_lo": 19,
+      "proj_hi": 67,
       "exp_games": 3.1,
       "exp_ppg": 14.9
     },
@@ -17927,7 +17927,7 @@
       ],
       "proj_v2": 9,
       "proj_lo": 0,
-      "proj_hi": 11,
+      "proj_hi": 17,
       "exp_games": 1.6,
       "exp_ppg": 5.7
     },
@@ -17992,7 +17992,7 @@
       ],
       "proj_v2": 31,
       "proj_lo": 0,
-      "proj_hi": 39,
+      "proj_hi": 59,
       "exp_games": 2.9,
       "exp_ppg": 10.9
     },
@@ -18057,7 +18057,7 @@
       ],
       "proj_v2": 19,
       "proj_lo": 0,
-      "proj_hi": 23,
+      "proj_hi": 36,
       "exp_games": 2.9,
       "exp_ppg": 6.6
     },
@@ -18121,8 +18121,8 @@
         ]
       ],
       "proj_v2": 53,
-      "proj_lo": 38,
-      "proj_hi": 66,
+      "proj_lo": 22,
+      "proj_hi": 77,
       "exp_games": 2.9,
       "exp_ppg": 18.5
     },
@@ -18187,7 +18187,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 8,
       "exp_games": 1.6,
       "exp_ppg": 2.7
     },
@@ -18252,7 +18252,7 @@
       ],
       "proj_v2": 10,
       "proj_lo": 0,
-      "proj_hi": 12,
+      "proj_hi": 18,
       "exp_games": 2.0,
       "exp_ppg": 4.7
     },
@@ -18317,7 +18317,7 @@
       ],
       "proj_v2": 12,
       "proj_lo": 0,
-      "proj_hi": 15,
+      "proj_hi": 23,
       "exp_games": 3.1,
       "exp_ppg": 4.0
     },
@@ -18382,7 +18382,7 @@
       ],
       "proj_v2": 13,
       "proj_lo": 0,
-      "proj_hi": 17,
+      "proj_hi": 25,
       "exp_games": 2.0,
       "exp_ppg": 6.8
     },
@@ -18512,7 +18512,7 @@
       ],
       "proj_v2": 12,
       "proj_lo": 0,
-      "proj_hi": 15,
+      "proj_hi": 23,
       "exp_games": 2.7,
       "exp_ppg": 4.6
     },
@@ -18577,7 +18577,7 @@
       ],
       "proj_v2": 19,
       "proj_lo": 0,
-      "proj_hi": 24,
+      "proj_hi": 36,
       "exp_games": 2.7,
       "exp_ppg": 7.3
     },
@@ -18642,7 +18642,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 0.3,
       "exp_ppg": 7.3
     },
@@ -18772,7 +18772,7 @@
       ],
       "proj_v2": 26,
       "proj_lo": 0,
-      "proj_hi": 32,
+      "proj_hi": 49,
       "exp_games": 2.2,
       "exp_ppg": 11.6
     },
@@ -18836,8 +18836,8 @@
         ]
       ],
       "proj_v2": 62,
-      "proj_lo": 45,
-      "proj_hi": 78,
+      "proj_lo": 26,
+      "proj_hi": 91,
       "exp_games": 3.9,
       "exp_ppg": 15.9
     },
@@ -18902,7 +18902,7 @@
       ],
       "proj_v2": 31,
       "proj_lo": 0,
-      "proj_hi": 39,
+      "proj_hi": 59,
       "exp_games": 2.9,
       "exp_ppg": 11.0
     },
@@ -18966,8 +18966,8 @@
         ]
       ],
       "proj_v2": 42,
-      "proj_lo": 30,
-      "proj_hi": 53,
+      "proj_lo": 17,
+      "proj_hi": 62,
       "exp_games": 3.9,
       "exp_ppg": 10.8
     },
@@ -19031,8 +19031,8 @@
         ]
       ],
       "proj_v2": 84,
-      "proj_lo": 61,
-      "proj_hi": 99,
+      "proj_lo": 49,
+      "proj_hi": 106,
       "exp_games": 2.9,
       "exp_ppg": 28.6
     },
@@ -19096,8 +19096,8 @@
         ]
       ],
       "proj_v2": 65,
-      "proj_lo": 47,
-      "proj_hi": 81,
+      "proj_lo": 27,
+      "proj_hi": 95,
       "exp_games": 1.8,
       "exp_ppg": 36.7
     },
@@ -19162,7 +19162,7 @@
       ],
       "proj_v2": 23,
       "proj_lo": 0,
-      "proj_hi": 28,
+      "proj_hi": 43,
       "exp_games": 2.6,
       "exp_ppg": 8.8
     },
@@ -19227,7 +19227,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.8,
       "exp_ppg": 2.1
     },
@@ -19292,7 +19292,7 @@
       ],
       "proj_v2": 13,
       "proj_lo": 0,
-      "proj_hi": 16,
+      "proj_hi": 25,
       "exp_games": 1.9,
       "exp_ppg": 6.8
     },
@@ -19357,7 +19357,7 @@
       ],
       "proj_v2": 13,
       "proj_lo": 0,
-      "proj_hi": 16,
+      "proj_hi": 24,
       "exp_games": 1.9,
       "exp_ppg": 6.6
     },
@@ -19422,7 +19422,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.1
     },
@@ -19487,7 +19487,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -19552,7 +19552,7 @@
       ],
       "proj_v2": 10,
       "proj_lo": 0,
-      "proj_hi": 12,
+      "proj_hi": 19,
       "exp_games": 2.1,
       "exp_ppg": 4.7
     },
@@ -19617,7 +19617,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 8,
       "exp_games": 0.6,
       "exp_ppg": 6.9
     },
@@ -19682,7 +19682,7 @@
       ],
       "proj_v2": 14,
       "proj_lo": 0,
-      "proj_hi": 18,
+      "proj_hi": 27,
       "exp_games": 1.9,
       "exp_ppg": 7.4
     },
@@ -19747,7 +19747,7 @@
       ],
       "proj_v2": 37,
       "proj_lo": 0,
-      "proj_hi": 45,
+      "proj_hi": 69,
       "exp_games": 2.4,
       "exp_ppg": 15.0
     },
@@ -19811,8 +19811,8 @@
         ]
       ],
       "proj_v2": 71,
-      "proj_lo": 51,
-      "proj_hi": 88,
+      "proj_lo": 29,
+      "proj_hi": 103,
       "exp_games": 2.9,
       "exp_ppg": 24.2
     },
@@ -19877,7 +19877,7 @@
       ],
       "proj_v2": 31,
       "proj_lo": 0,
-      "proj_hi": 38,
+      "proj_hi": 58,
       "exp_games": 2.9,
       "exp_ppg": 10.4
     },
@@ -19942,7 +19942,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 6,
+      "proj_hi": 8,
       "exp_games": 1.4,
       "exp_ppg": 3.1
     },
@@ -20007,7 +20007,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 7,
+      "proj_hi": 10,
       "exp_games": 1.4,
       "exp_ppg": 3.8
     },
@@ -20072,7 +20072,7 @@
       ],
       "proj_v2": 39,
       "proj_lo": 0,
-      "proj_hi": 49,
+      "proj_hi": 74,
       "exp_games": 2.8,
       "exp_ppg": 14.2
     },
@@ -20137,7 +20137,7 @@
       ],
       "proj_v2": 32,
       "proj_lo": 0,
-      "proj_hi": 40,
+      "proj_hi": 61,
       "exp_games": 2.9,
       "exp_ppg": 11.0
     },
@@ -20202,7 +20202,7 @@
       ],
       "proj_v2": 26,
       "proj_lo": 0,
-      "proj_hi": 32,
+      "proj_hi": 48,
       "exp_games": 3.5,
       "exp_ppg": 7.3
     },
@@ -20266,8 +20266,8 @@
         ]
       ],
       "proj_v2": 49,
-      "proj_lo": 35,
-      "proj_hi": 62,
+      "proj_lo": 20,
+      "proj_hi": 72,
       "exp_games": 3.9,
       "exp_ppg": 12.6
     },
@@ -20332,7 +20332,7 @@
       ],
       "proj_v2": 13,
       "proj_lo": 0,
-      "proj_hi": 16,
+      "proj_hi": 25,
       "exp_games": 2.4,
       "exp_ppg": 5.4
     },
@@ -20397,7 +20397,7 @@
       ],
       "proj_v2": 20,
       "proj_lo": 0,
-      "proj_hi": 24,
+      "proj_hi": 37,
       "exp_games": 3.7,
       "exp_ppg": 5.3
     },
@@ -20461,8 +20461,8 @@
         ]
       ],
       "proj_v2": 64,
-      "proj_lo": 46,
-      "proj_hi": 80,
+      "proj_lo": 26,
+      "proj_hi": 94,
       "exp_games": 3.7,
       "exp_ppg": 17.3
     },
@@ -20527,7 +20527,7 @@
       ],
       "proj_v2": 39,
       "proj_lo": 0,
-      "proj_hi": 48,
+      "proj_hi": 74,
       "exp_games": 3.7,
       "exp_ppg": 10.5
     },
@@ -20591,8 +20591,8 @@
         ]
       ],
       "proj_v2": 49,
-      "proj_lo": 36,
-      "proj_hi": 62,
+      "proj_lo": 20,
+      "proj_hi": 72,
       "exp_games": 3.9,
       "exp_ppg": 12.6
     },
@@ -20657,7 +20657,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 4,
       "exp_games": 0.3,
       "exp_ppg": 5.7
     },
@@ -20721,8 +20721,8 @@
         ]
       ],
       "proj_v2": 45,
-      "proj_lo": 32,
-      "proj_hi": 56,
+      "proj_lo": 18,
+      "proj_hi": 66,
       "exp_games": 3.7,
       "exp_ppg": 12.2
     },
@@ -20787,7 +20787,7 @@
       ],
       "proj_v2": 8,
       "proj_lo": 0,
-      "proj_hi": 10,
+      "proj_hi": 15,
       "exp_games": 1.0,
       "exp_ppg": 8.3
     },
@@ -20852,7 +20852,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 4.8
     },
@@ -20917,7 +20917,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 1.0,
       "exp_ppg": 3.4
     },
@@ -20982,7 +20982,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 7,
+      "proj_hi": 10,
       "exp_games": 0.8,
       "exp_ppg": 7.2
     },
@@ -21047,7 +21047,7 @@
       ],
       "proj_v2": 6,
       "proj_lo": 0,
-      "proj_hi": 8,
+      "proj_hi": 12,
       "exp_games": 0.3,
       "exp_ppg": 18.8
     },
@@ -21111,8 +21111,8 @@
         ]
       ],
       "proj_v2": 40,
-      "proj_lo": 29,
-      "proj_hi": 50,
+      "proj_lo": 17,
+      "proj_hi": 59,
       "exp_games": 3.5,
       "exp_ppg": 11.5
     },
@@ -21177,7 +21177,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 7,
       "exp_games": 0.3,
       "exp_ppg": 11.2
     },
@@ -21242,7 +21242,7 @@
       ],
       "proj_v2": 9,
       "proj_lo": 0,
-      "proj_hi": 11,
+      "proj_hi": 17,
       "exp_games": 2.7,
       "exp_ppg": 3.4
     },
@@ -21307,7 +21307,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 8,
+      "proj_hi": 12,
       "exp_games": 2.0,
       "exp_ppg": 3.2
     },
@@ -21371,8 +21371,8 @@
         ]
       ],
       "proj_v2": 46,
-      "proj_lo": 33,
-      "proj_hi": 57,
+      "proj_lo": 19,
+      "proj_hi": 67,
       "exp_games": 3.5,
       "exp_ppg": 13.1
     },
@@ -21436,8 +21436,8 @@
         ]
       ],
       "proj_v2": 50,
-      "proj_lo": 36,
-      "proj_hi": 63,
+      "proj_lo": 21,
+      "proj_hi": 73,
       "exp_games": 3.9,
       "exp_ppg": 12.8
     },
@@ -21501,8 +21501,8 @@
         ]
       ],
       "proj_v2": 57,
-      "proj_lo": 41,
-      "proj_hi": 72,
+      "proj_lo": 24,
+      "proj_hi": 84,
       "exp_games": 3.9,
       "exp_ppg": 14.7
     },
@@ -21567,7 +21567,7 @@
       ],
       "proj_v2": 37,
       "proj_lo": 0,
-      "proj_hi": 46,
+      "proj_hi": 70,
       "exp_games": 3.9,
       "exp_ppg": 9.5
     },
@@ -21632,7 +21632,7 @@
       ],
       "proj_v2": 9,
       "proj_lo": 0,
-      "proj_hi": 11,
+      "proj_hi": 17,
       "exp_games": 1.4,
       "exp_ppg": 6.6
     },
@@ -21659,8 +21659,8 @@
       "owned": 0.12,
       "injury": "Out \u00b7 Achilles",
       "injury_status": "Out",
-      "injury_detail": "DiVincenzo (Achilles) remains confident that he'll return during the 2026-27 season, Jon Krawczynski of The Athletic reports.",
-      "injury_return": "2027-04-02",
+      "injury_detail": "DiVincenzo (Achilles) has been cleared for team basketball activities and is targeting a return to game action in January, Jon Krawczynski of The Athletic reports.",
+      "injury_return": "2027-01-31",
       "photo": "https://a.espncdn.com/i/headshots/nba/players/full/3934673.png",
       "status": "watchlist",
       "trend": [
@@ -21761,8 +21761,8 @@
         ]
       ],
       "proj_v2": 63,
-      "proj_lo": 45,
-      "proj_hi": 78,
+      "proj_lo": 26,
+      "proj_hi": 91,
       "exp_games": 3.9,
       "exp_ppg": 16.0
     },
@@ -21892,7 +21892,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 1.8,
       "exp_ppg": 1.8
     },
@@ -21957,7 +21957,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.0
     },
@@ -22021,8 +22021,8 @@
         ]
       ],
       "proj_v2": 52,
-      "proj_lo": 38,
-      "proj_hi": 65,
+      "proj_lo": 21,
+      "proj_hi": 76,
       "exp_games": 3.7,
       "exp_ppg": 14.1
     },
@@ -22087,7 +22087,7 @@
       ],
       "proj_v2": 36,
       "proj_lo": 0,
-      "proj_hi": 44,
+      "proj_hi": 67,
       "exp_games": 3.9,
       "exp_ppg": 9.1
     },
@@ -22152,7 +22152,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 4.8
     },
@@ -22216,8 +22216,8 @@
         ]
       ],
       "proj_v2": 55,
-      "proj_lo": 40,
-      "proj_hi": 69,
+      "proj_lo": 23,
+      "proj_hi": 80,
       "exp_games": 3.7,
       "exp_ppg": 14.9
     },
@@ -22282,7 +22282,7 @@
       ],
       "proj_v2": 28,
       "proj_lo": 0,
-      "proj_hi": 34,
+      "proj_hi": 52,
       "exp_games": 3.9,
       "exp_ppg": 7.0
     },
@@ -22346,8 +22346,8 @@
         ]
       ],
       "proj_v2": 97,
-      "proj_lo": 71,
-      "proj_hi": 114,
+      "proj_lo": 57,
+      "proj_hi": 123,
       "exp_games": 3.9,
       "exp_ppg": 24.8
     },
@@ -22412,7 +22412,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 1.0,
       "exp_ppg": 3.5
     },
@@ -22477,7 +22477,7 @@
       ],
       "proj_v2": 37,
       "proj_lo": 0,
-      "proj_hi": 46,
+      "proj_hi": 70,
       "exp_games": 3.3,
       "exp_ppg": 11.2
     },
@@ -22542,7 +22542,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 2.2,
       "exp_ppg": 1.4
     },
@@ -22607,7 +22607,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 0.5,
       "exp_ppg": 4.6
     },
@@ -22671,8 +22671,8 @@
         ]
       ],
       "proj_v2": 47,
-      "proj_lo": 34,
-      "proj_hi": 59,
+      "proj_lo": 19,
+      "proj_hi": 69,
       "exp_games": 2.9,
       "exp_ppg": 16.1
     },
@@ -22737,7 +22737,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.2,
       "exp_ppg": 4.1
     },
@@ -22802,7 +22802,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 0.5,
       "exp_ppg": 4.4
     },
@@ -22866,8 +22866,8 @@
         ]
       ],
       "proj_v2": 63,
-      "proj_lo": 46,
-      "proj_hi": 79,
+      "proj_lo": 26,
+      "proj_hi": 92,
       "exp_games": 2.9,
       "exp_ppg": 21.6
     },
@@ -22997,7 +22997,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 7,
       "exp_games": 1.3,
       "exp_ppg": 3.1
     },
@@ -23062,7 +23062,7 @@
       ],
       "proj_v2": 22,
       "proj_lo": 0,
-      "proj_hi": 27,
+      "proj_hi": 41,
       "exp_games": 2.9,
       "exp_ppg": 7.4
     },
@@ -23127,7 +23127,7 @@
       ],
       "proj_v2": 11,
       "proj_lo": 0,
-      "proj_hi": 13,
+      "proj_hi": 20,
       "exp_games": 1.0,
       "exp_ppg": 11.0
     },
@@ -23192,7 +23192,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.2,
       "exp_ppg": 4.4
     },
@@ -23257,7 +23257,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.5,
       "exp_ppg": 5.9
     },
@@ -23322,7 +23322,7 @@
       ],
       "proj_v2": 22,
       "proj_lo": 0,
-      "proj_hi": 27,
+      "proj_hi": 42,
       "exp_games": 2.8,
       "exp_ppg": 7.9
     },
@@ -23387,7 +23387,7 @@
       ],
       "proj_v2": 13,
       "proj_lo": 0,
-      "proj_hi": 16,
+      "proj_hi": 24,
       "exp_games": 1.3,
       "exp_ppg": 9.9
     },
@@ -23452,7 +23452,7 @@
       ],
       "proj_v2": 19,
       "proj_lo": 0,
-      "proj_hi": 24,
+      "proj_hi": 37,
       "exp_games": 1.3,
       "exp_ppg": 15.1
     },
@@ -23517,7 +23517,7 @@
       ],
       "proj_v2": 35,
       "proj_lo": 0,
-      "proj_hi": 44,
+      "proj_hi": 67,
       "exp_games": 1.7,
       "exp_ppg": 20.3
     },
@@ -23582,7 +23582,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.1,
       "exp_ppg": 17.3
     },
@@ -23647,7 +23647,7 @@
       ],
       "proj_v2": 6,
       "proj_lo": 0,
-      "proj_hi": 7,
+      "proj_hi": 11,
       "exp_games": 1.3,
       "exp_ppg": 4.6
     },
@@ -23712,7 +23712,7 @@
       ],
       "proj_v2": 24,
       "proj_lo": 0,
-      "proj_hi": 30,
+      "proj_hi": 45,
       "exp_games": 2.0,
       "exp_ppg": 11.7
     },
@@ -23776,8 +23776,8 @@
         ]
       ],
       "proj_v2": 51,
-      "proj_lo": 37,
-      "proj_hi": 64,
+      "proj_lo": 21,
+      "proj_hi": 75,
       "exp_games": 2.9,
       "exp_ppg": 17.4
     },
@@ -23906,8 +23906,8 @@
         ]
       ],
       "proj_v2": 66,
-      "proj_lo": 48,
-      "proj_hi": 83,
+      "proj_lo": 27,
+      "proj_hi": 97,
       "exp_games": 2.6,
       "exp_ppg": 25.1
     },
@@ -23972,7 +23972,7 @@
       ],
       "proj_v2": 12,
       "proj_lo": 0,
-      "proj_hi": 15,
+      "proj_hi": 23,
       "exp_games": 1.8,
       "exp_ppg": 6.8
     },
@@ -24037,7 +24037,7 @@
       ],
       "proj_v2": 29,
       "proj_lo": 0,
-      "proj_hi": 37,
+      "proj_hi": 56,
       "exp_games": 1.6,
       "exp_ppg": 18.2
     },
@@ -24102,7 +24102,7 @@
       ],
       "proj_v2": 34,
       "proj_lo": 0,
-      "proj_hi": 42,
+      "proj_hi": 64,
       "exp_games": 2.9,
       "exp_ppg": 11.5
     },
@@ -24166,8 +24166,8 @@
         ]
       ],
       "proj_v2": 72,
-      "proj_lo": 51,
-      "proj_hi": 89,
+      "proj_lo": 29,
+      "proj_hi": 104,
       "exp_games": 2.9,
       "exp_ppg": 24.4
     },
@@ -24232,7 +24232,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.6,
       "exp_ppg": 4.8
     },
@@ -24297,7 +24297,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 6,
+      "proj_hi": 10,
       "exp_games": 1.2,
       "exp_ppg": 4.2
     },
@@ -24362,7 +24362,7 @@
       ],
       "proj_v2": 6,
       "proj_lo": 0,
-      "proj_hi": 8,
+      "proj_hi": 12,
       "exp_games": 1.4,
       "exp_ppg": 4.7
     },
@@ -24427,7 +24427,7 @@
       ],
       "proj_v2": 30,
       "proj_lo": 0,
-      "proj_hi": 37,
+      "proj_hi": 57,
       "exp_games": 2.9,
       "exp_ppg": 10.2
     },
@@ -24492,7 +24492,7 @@
       ],
       "proj_v2": 33,
       "proj_lo": 0,
-      "proj_hi": 41,
+      "proj_hi": 62,
       "exp_games": 2.5,
       "exp_ppg": 13.4
     },
@@ -24557,7 +24557,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -24622,7 +24622,7 @@
       ],
       "proj_v2": 20,
       "proj_lo": 0,
-      "proj_hi": 25,
+      "proj_hi": 38,
       "exp_games": 2.6,
       "exp_ppg": 7.6
     },
@@ -24687,7 +24687,7 @@
       ],
       "proj_v2": 13,
       "proj_lo": 0,
-      "proj_hi": 16,
+      "proj_hi": 24,
       "exp_games": 1.8,
       "exp_ppg": 7.1
     },
@@ -24752,7 +24752,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -24817,7 +24817,7 @@
       ],
       "proj_v2": 35,
       "proj_lo": 0,
-      "proj_hi": 43,
+      "proj_hi": 65,
       "exp_games": 2.9,
       "exp_ppg": 11.8
     },
@@ -24881,8 +24881,8 @@
         ]
       ],
       "proj_v2": 90,
-      "proj_lo": 65,
-      "proj_hi": 106,
+      "proj_lo": 52,
+      "proj_hi": 114,
       "exp_games": 2.8,
       "exp_ppg": 32.3
     },
@@ -24947,7 +24947,7 @@
       ],
       "proj_v2": 8,
       "proj_lo": 0,
-      "proj_hi": 10,
+      "proj_hi": 15,
       "exp_games": 1.8,
       "exp_ppg": 4.3
     },
@@ -25012,7 +25012,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 9,
+      "proj_hi": 13,
       "exp_games": 0.6,
       "exp_ppg": 10.9
     },
@@ -25077,7 +25077,7 @@
       ],
       "proj_v2": 9,
       "proj_lo": 0,
-      "proj_hi": 11,
+      "proj_hi": 17,
       "exp_games": 1.7,
       "exp_ppg": 5.5
     },
@@ -25141,8 +25141,8 @@
         ]
       ],
       "proj_v2": 80,
-      "proj_lo": 57,
-      "proj_hi": 99,
+      "proj_lo": 33,
+      "proj_hi": 116,
       "exp_games": 2.8,
       "exp_ppg": 28.7
     },
@@ -25206,8 +25206,8 @@
         ]
       ],
       "proj_v2": 58,
-      "proj_lo": 42,
-      "proj_hi": 73,
+      "proj_lo": 24,
+      "proj_hi": 85,
       "exp_games": 2.9,
       "exp_ppg": 19.8
     },
@@ -25337,7 +25337,7 @@
       ],
       "proj_v2": 33,
       "proj_lo": 0,
-      "proj_hi": 41,
+      "proj_hi": 63,
       "exp_games": 1.8,
       "exp_ppg": 18.6
     },
@@ -25401,8 +25401,8 @@
         ]
       ],
       "proj_v2": 41,
-      "proj_lo": 29,
-      "proj_hi": 51,
+      "proj_lo": 17,
+      "proj_hi": 60,
       "exp_games": 2.9,
       "exp_ppg": 13.9
     },
@@ -25466,8 +25466,8 @@
         ]
       ],
       "proj_v2": 46,
-      "proj_lo": 33,
-      "proj_hi": 58,
+      "proj_lo": 19,
+      "proj_hi": 67,
       "exp_games": 2.6,
       "exp_ppg": 17.6
     },
@@ -25532,7 +25532,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -25662,7 +25662,7 @@
       ],
       "proj_v2": 30,
       "proj_lo": 0,
-      "proj_hi": 37,
+      "proj_hi": 57,
       "exp_games": 2.9,
       "exp_ppg": 10.2
     },
@@ -25922,7 +25922,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.7,
       "exp_ppg": 5.0
     },
@@ -25987,7 +25987,7 @@
       ],
       "proj_v2": 32,
       "proj_lo": 0,
-      "proj_hi": 40,
+      "proj_hi": 61,
       "exp_games": 2.9,
       "exp_ppg": 11.1
     },
@@ -26116,8 +26116,8 @@
         ]
       ],
       "proj_v2": 47,
-      "proj_lo": 34,
-      "proj_hi": 58,
+      "proj_lo": 19,
+      "proj_hi": 68,
       "exp_games": 2.8,
       "exp_ppg": 16.9
     },
@@ -26182,7 +26182,7 @@
       ],
       "proj_v2": 22,
       "proj_lo": 0,
-      "proj_hi": 27,
+      "proj_hi": 41,
       "exp_games": 2.6,
       "exp_ppg": 8.3
     },
@@ -26246,8 +26246,8 @@
         ]
       ],
       "proj_v2": 44,
-      "proj_lo": 31,
-      "proj_hi": 55,
+      "proj_lo": 18,
+      "proj_hi": 64,
       "exp_games": 2.4,
       "exp_ppg": 18.0
     },
@@ -26312,7 +26312,7 @@
       ],
       "proj_v2": 12,
       "proj_lo": 0,
-      "proj_hi": 15,
+      "proj_hi": 22,
       "exp_games": 2.6,
       "exp_ppg": 4.6
     },
@@ -26377,7 +26377,7 @@
       ],
       "proj_v2": 12,
       "proj_lo": 0,
-      "proj_hi": 14,
+      "proj_hi": 22,
       "exp_games": 2.3,
       "exp_ppg": 5.1
     },
@@ -26441,8 +26441,8 @@
         ]
       ],
       "proj_v2": 45,
-      "proj_lo": 32,
-      "proj_hi": 56,
+      "proj_lo": 19,
+      "proj_hi": 66,
       "exp_games": 2.9,
       "exp_ppg": 15.4
     },
@@ -26507,7 +26507,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 0.9,
       "exp_ppg": 3.0
     },
@@ -26572,7 +26572,7 @@
       ],
       "proj_v2": 29,
       "proj_lo": 0,
-      "proj_hi": 36,
+      "proj_hi": 54,
       "exp_games": 2.6,
       "exp_ppg": 11.0
     },
@@ -26702,7 +26702,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 9,
+      "proj_hi": 13,
       "exp_games": 1.8,
       "exp_ppg": 3.9
     },
@@ -26897,7 +26897,7 @@
       ],
       "proj_v2": 11,
       "proj_lo": 0,
-      "proj_hi": 13,
+      "proj_hi": 20,
       "exp_games": 2.3,
       "exp_ppg": 4.8
     },
@@ -26962,7 +26962,7 @@
       ],
       "proj_v2": 20,
       "proj_lo": 0,
-      "proj_hi": 25,
+      "proj_hi": 38,
       "exp_games": 1.6,
       "exp_ppg": 12.7
     },
@@ -27027,7 +27027,7 @@
       ],
       "proj_v2": 20,
       "proj_lo": 0,
-      "proj_hi": 24,
+      "proj_hi": 37,
       "exp_games": 2.6,
       "exp_ppg": 7.5
     },
@@ -27091,8 +27091,8 @@
         ]
       ],
       "proj_v2": 70,
-      "proj_lo": 51,
-      "proj_hi": 88,
+      "proj_lo": 29,
+      "proj_hi": 103,
       "exp_games": 2.9,
       "exp_ppg": 24.0
     },
@@ -27157,7 +27157,7 @@
       ],
       "proj_v2": 6,
       "proj_lo": 0,
-      "proj_hi": 7,
+      "proj_hi": 11,
       "exp_games": 0.5,
       "exp_ppg": 10.6
     },
@@ -27222,7 +27222,7 @@
       ],
       "proj_v2": 13,
       "proj_lo": 0,
-      "proj_hi": 17,
+      "proj_hi": 25,
       "exp_games": 2.2,
       "exp_ppg": 6.0
     },
@@ -27286,8 +27286,8 @@
         ]
       ],
       "proj_v2": 71,
-      "proj_lo": 51,
-      "proj_hi": 88,
+      "proj_lo": 29,
+      "proj_hi": 103,
       "exp_games": 3.3,
       "exp_ppg": 21.6
     },
@@ -27352,7 +27352,7 @@
       ],
       "proj_v2": 34,
       "proj_lo": 0,
-      "proj_hi": 42,
+      "proj_hi": 64,
       "exp_games": 3.9,
       "exp_ppg": 8.7
     },
@@ -27416,8 +27416,8 @@
         ]
       ],
       "proj_v2": 73,
-      "proj_lo": 52,
-      "proj_hi": 91,
+      "proj_lo": 30,
+      "proj_hi": 106,
       "exp_games": 3.7,
       "exp_ppg": 19.7
     },
@@ -27482,7 +27482,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 1.8,
       "exp_ppg": 1.7
     },
@@ -27546,8 +27546,8 @@
         ]
       ],
       "proj_v2": 52,
-      "proj_lo": 37,
-      "proj_hi": 65,
+      "proj_lo": 21,
+      "proj_hi": 76,
       "exp_games": 2.3,
       "exp_ppg": 22.8
     },
@@ -27612,7 +27612,7 @@
       ],
       "proj_v2": 6,
       "proj_lo": 0,
-      "proj_hi": 8,
+      "proj_hi": 12,
       "exp_games": 1.4,
       "exp_ppg": 4.7
     },
@@ -27741,8 +27741,8 @@
         ]
       ],
       "proj_v2": 64,
-      "proj_lo": 46,
-      "proj_hi": 80,
+      "proj_lo": 26,
+      "proj_hi": 94,
       "exp_games": 3.1,
       "exp_ppg": 20.9
     },
@@ -27807,7 +27807,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 1.0,
       "exp_ppg": 3.3
     },
@@ -27871,8 +27871,8 @@
         ]
       ],
       "proj_v2": 85,
-      "proj_lo": 62,
-      "proj_hi": 100,
+      "proj_lo": 50,
+      "proj_hi": 108,
       "exp_games": 3.7,
       "exp_ppg": 23.0
     },
@@ -27937,7 +27937,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 4.8
     },
@@ -28002,7 +28002,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 4.8
     },
@@ -28067,7 +28067,7 @@
       ],
       "proj_v2": 8,
       "proj_lo": 0,
-      "proj_hi": 10,
+      "proj_hi": 16,
       "exp_games": 2.9,
       "exp_ppg": 2.9
     },
@@ -28132,7 +28132,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 8,
+      "proj_hi": 13,
       "exp_games": 1.0,
       "exp_ppg": 6.9
     },
@@ -28197,7 +28197,7 @@
       ],
       "proj_v2": 37,
       "proj_lo": 0,
-      "proj_hi": 46,
+      "proj_hi": 69,
       "exp_games": 3.9,
       "exp_ppg": 9.4
     },
@@ -28262,7 +28262,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 4.8
     },
@@ -28327,7 +28327,7 @@
       ],
       "proj_v2": 36,
       "proj_lo": 0,
-      "proj_hi": 44,
+      "proj_hi": 67,
       "exp_games": 3.1,
       "exp_ppg": 11.6
     },
@@ -28392,7 +28392,7 @@
       ],
       "proj_v2": 29,
       "proj_lo": 0,
-      "proj_hi": 36,
+      "proj_hi": 55,
       "exp_games": 3.1,
       "exp_ppg": 9.4
     },
@@ -28456,8 +28456,8 @@
         ]
       ],
       "proj_v2": 74,
-      "proj_lo": 53,
-      "proj_hi": 93,
+      "proj_lo": 31,
+      "proj_hi": 108,
       "exp_games": 3.9,
       "exp_ppg": 19.1
     },
@@ -28522,7 +28522,7 @@
       ],
       "proj_v2": 10,
       "proj_lo": 0,
-      "proj_hi": 12,
+      "proj_hi": 18,
       "exp_games": 2.0,
       "exp_ppg": 4.7
     },
@@ -28587,7 +28587,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.4,
       "exp_ppg": 4.0
     },
@@ -28651,8 +28651,8 @@
         ]
       ],
       "proj_v2": 72,
-      "proj_lo": 51,
-      "proj_hi": 89,
+      "proj_lo": 29,
+      "proj_hi": 104,
       "exp_games": 3.9,
       "exp_ppg": 18.3
     },
@@ -28716,8 +28716,8 @@
         ]
       ],
       "proj_v2": 45,
-      "proj_lo": 32,
-      "proj_hi": 56,
+      "proj_lo": 19,
+      "proj_hi": 66,
       "exp_games": 3.9,
       "exp_ppg": 11.6
     },
@@ -28782,7 +28782,7 @@
       ],
       "proj_v2": 30,
       "proj_lo": 0,
-      "proj_hi": 37,
+      "proj_hi": 57,
       "exp_games": 3.9,
       "exp_ppg": 7.7
     },
@@ -28847,7 +28847,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 6,
+      "proj_hi": 9,
       "exp_games": 1.6,
       "exp_ppg": 3.0
     },
@@ -28911,8 +28911,8 @@
         ]
       ],
       "proj_v2": 43,
-      "proj_lo": 31,
-      "proj_hi": 54,
+      "proj_lo": 18,
+      "proj_hi": 63,
       "exp_games": 3.9,
       "exp_ppg": 11.0
     },
@@ -28977,7 +28977,7 @@
       ],
       "proj_v2": 38,
       "proj_lo": 0,
-      "proj_hi": 47,
+      "proj_hi": 72,
       "exp_games": 3.0,
       "exp_ppg": 12.9
     },
@@ -29041,8 +29041,8 @@
         ]
       ],
       "proj_v2": 47,
-      "proj_lo": 34,
-      "proj_hi": 59,
+      "proj_lo": 19,
+      "proj_hi": 69,
       "exp_games": 3.9,
       "exp_ppg": 12.1
     },
@@ -29107,7 +29107,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.4,
       "exp_ppg": 7.8
     },
@@ -29172,7 +29172,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.4,
       "exp_ppg": 4.2
     },
@@ -29237,7 +29237,7 @@
       ],
       "proj_v2": 36,
       "proj_lo": 0,
-      "proj_hi": 44,
+      "proj_hi": 68,
       "exp_games": 3.4,
       "exp_ppg": 10.4
     },
@@ -29302,7 +29302,7 @@
       ],
       "proj_v2": 29,
       "proj_lo": 0,
-      "proj_hi": 36,
+      "proj_hi": 55,
       "exp_games": 3.7,
       "exp_ppg": 7.9
     },
@@ -29366,8 +29366,8 @@
         ]
       ],
       "proj_v2": 41,
-      "proj_lo": 29,
-      "proj_hi": 51,
+      "proj_lo": 17,
+      "proj_hi": 59,
       "exp_games": 3.9,
       "exp_ppg": 10.4
     },
@@ -29432,7 +29432,7 @@
       ],
       "proj_v2": 8,
       "proj_lo": 0,
-      "proj_hi": 10,
+      "proj_hi": 15,
       "exp_games": 2.7,
       "exp_ppg": 3.0
     },
@@ -29497,7 +29497,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 8,
+      "proj_hi": 13,
       "exp_games": 1.3,
       "exp_ppg": 5.1
     },
@@ -29626,8 +29626,8 @@
         ]
       ],
       "proj_v2": 81,
-      "proj_lo": 59,
-      "proj_hi": 95,
+      "proj_lo": 47,
+      "proj_hi": 102,
       "exp_games": 3.5,
       "exp_ppg": 23.3
     },
@@ -29691,8 +29691,8 @@
         ]
       ],
       "proj_v2": 42,
-      "proj_lo": 30,
-      "proj_hi": 52,
+      "proj_lo": 17,
+      "proj_hi": 61,
       "exp_games": 3.9,
       "exp_ppg": 10.6
     },
@@ -29757,7 +29757,7 @@
       ],
       "proj_v2": 18,
       "proj_lo": 0,
-      "proj_hi": 22,
+      "proj_hi": 34,
       "exp_games": 2.8,
       "exp_ppg": 6.4
     },
@@ -29822,7 +29822,7 @@
       ],
       "proj_v2": 39,
       "proj_lo": 0,
-      "proj_hi": 49,
+      "proj_hi": 74,
       "exp_games": 3.9,
       "exp_ppg": 10.1
     },
@@ -29886,8 +29886,8 @@
         ]
       ],
       "proj_v2": 88,
-      "proj_lo": 64,
-      "proj_hi": 103,
+      "proj_lo": 51,
+      "proj_hi": 111,
       "exp_games": 3.9,
       "exp_ppg": 22.5
     },
@@ -29952,7 +29952,7 @@
       ],
       "proj_v2": 23,
       "proj_lo": 0,
-      "proj_hi": 29,
+      "proj_hi": 44,
       "exp_games": 3.9,
       "exp_ppg": 5.9
     },
@@ -30016,8 +30016,8 @@
         ]
       ],
       "proj_v2": 63,
-      "proj_lo": 45,
-      "proj_hi": 79,
+      "proj_lo": 26,
+      "proj_hi": 92,
       "exp_games": 3.9,
       "exp_ppg": 16.2
     },
@@ -30082,7 +30082,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 9,
+      "proj_hi": 13,
       "exp_games": 1.9,
       "exp_ppg": 3.7
     },
@@ -30211,8 +30211,8 @@
         ]
       ],
       "proj_v2": 58,
-      "proj_lo": 42,
-      "proj_hi": 73,
+      "proj_lo": 24,
+      "proj_hi": 85,
       "exp_games": 3.9,
       "exp_ppg": 14.9
     },
@@ -30342,7 +30342,7 @@
       ],
       "proj_v2": 9,
       "proj_lo": 0,
-      "proj_hi": 11,
+      "proj_hi": 16,
       "exp_games": 2.1,
       "exp_ppg": 4.1
     },
@@ -30472,7 +30472,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 4,
       "exp_games": 0.4,
       "exp_ppg": 6.1
     },
@@ -30537,7 +30537,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 8,
       "exp_games": 1.0,
       "exp_ppg": 4.2
     },
@@ -30602,7 +30602,7 @@
       ],
       "proj_v2": 40,
       "proj_lo": 0,
-      "proj_hi": 49,
+      "proj_hi": 75,
       "exp_games": 3.2,
       "exp_ppg": 12.2
     },
@@ -30667,7 +30667,7 @@
       ],
       "proj_v2": 9,
       "proj_lo": 0,
-      "proj_hi": 11,
+      "proj_hi": 17,
       "exp_games": 2.4,
       "exp_ppg": 3.7
     },
@@ -30732,7 +30732,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.2,
       "exp_ppg": 4.7
     },
@@ -30797,7 +30797,7 @@
       ],
       "proj_v2": 37,
       "proj_lo": 0,
-      "proj_hi": 46,
+      "proj_hi": 71,
       "exp_games": 2.4,
       "exp_ppg": 15.4
     },
@@ -30861,8 +30861,8 @@
         ]
       ],
       "proj_v2": 63,
-      "proj_lo": 45,
-      "proj_hi": 78,
+      "proj_lo": 26,
+      "proj_hi": 92,
       "exp_games": 2.9,
       "exp_ppg": 21.4
     },
@@ -30927,7 +30927,7 @@
       ],
       "proj_v2": 22,
       "proj_lo": 0,
-      "proj_hi": 27,
+      "proj_hi": 42,
       "exp_games": 1.8,
       "exp_ppg": 12.5
     },
@@ -30992,7 +30992,7 @@
       ],
       "proj_v2": 15,
       "proj_lo": 0,
-      "proj_hi": 18,
+      "proj_hi": 28,
       "exp_games": 2.6,
       "exp_ppg": 5.6
     },
@@ -31057,7 +31057,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.0
     },
@@ -31121,8 +31121,8 @@
         ]
       ],
       "proj_v2": 40,
-      "proj_lo": 29,
-      "proj_hi": 50,
+      "proj_lo": 17,
+      "proj_hi": 59,
       "exp_games": 2.6,
       "exp_ppg": 15.5
     },
@@ -31187,7 +31187,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 1.4,
       "exp_ppg": 2.3
     },
@@ -31251,8 +31251,8 @@
         ]
       ],
       "proj_v2": 53,
-      "proj_lo": 38,
-      "proj_hi": 65,
+      "proj_lo": 22,
+      "proj_hi": 77,
       "exp_games": 2.8,
       "exp_ppg": 19.0
     },
@@ -31317,7 +31317,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 7,
+      "proj_hi": 10,
       "exp_games": 1.1,
       "exp_ppg": 4.9
     },
@@ -31382,7 +31382,7 @@
       ],
       "proj_v2": 20,
       "proj_lo": 0,
-      "proj_hi": 24,
+      "proj_hi": 37,
       "exp_games": 2.8,
       "exp_ppg": 7.1
     },
@@ -31447,7 +31447,7 @@
       ],
       "proj_v2": 25,
       "proj_lo": 0,
-      "proj_hi": 30,
+      "proj_hi": 46,
       "exp_games": 1.8,
       "exp_ppg": 13.9
     },
@@ -31512,7 +31512,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 9,
+      "proj_hi": 13,
       "exp_games": 2.1,
       "exp_ppg": 3.4
     },
@@ -31641,8 +31641,8 @@
         ]
       ],
       "proj_v2": 70,
-      "proj_lo": 51,
-      "proj_hi": 88,
+      "proj_lo": 29,
+      "proj_hi": 103,
       "exp_games": 2.8,
       "exp_ppg": 25.5
     },
@@ -31707,7 +31707,7 @@
       ],
       "proj_v2": 13,
       "proj_lo": 0,
-      "proj_hi": 17,
+      "proj_hi": 25,
       "exp_games": 2.9,
       "exp_ppg": 4.5
     },
@@ -31837,7 +31837,7 @@
       ],
       "proj_v2": 17,
       "proj_lo": 0,
-      "proj_hi": 21,
+      "proj_hi": 32,
       "exp_games": 3.5,
       "exp_ppg": 4.8
     },
@@ -31902,7 +31902,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 4,
       "exp_games": 0.5,
       "exp_ppg": 4.1
     },
@@ -31967,7 +31967,7 @@
       ],
       "proj_v2": 13,
       "proj_lo": 0,
-      "proj_hi": 16,
+      "proj_hi": 24,
       "exp_games": 3.7,
       "exp_ppg": 3.5
     },
@@ -32031,8 +32031,8 @@
         ]
       ],
       "proj_v2": 67,
-      "proj_lo": 48,
-      "proj_hi": 84,
+      "proj_lo": 28,
+      "proj_hi": 98,
       "exp_games": 3.9,
       "exp_ppg": 17.2
     },
@@ -32096,8 +32096,8 @@
         ]
       ],
       "proj_v2": 43,
-      "proj_lo": 31,
-      "proj_hi": 54,
+      "proj_lo": 18,
+      "proj_hi": 63,
       "exp_games": 3.9,
       "exp_ppg": 11.0
     },
@@ -32162,7 +32162,7 @@
       ],
       "proj_v2": 36,
       "proj_lo": 0,
-      "proj_hi": 45,
+      "proj_hi": 68,
       "exp_games": 2.7,
       "exp_ppg": 13.3
     },
@@ -32227,7 +32227,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 0.8,
       "exp_ppg": 3.7
     },
@@ -32421,8 +32421,8 @@
         ]
       ],
       "proj_v2": 48,
-      "proj_lo": 34,
-      "proj_hi": 59,
+      "proj_lo": 19,
+      "proj_hi": 69,
       "exp_games": 3.9,
       "exp_ppg": 12.1
     },
@@ -32487,7 +32487,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 4,
       "exp_games": 1.4,
       "exp_ppg": 1.7
     },
@@ -32552,7 +32552,7 @@
       ],
       "proj_v2": 26,
       "proj_lo": 0,
-      "proj_hi": 33,
+      "proj_hi": 50,
       "exp_games": 3.9,
       "exp_ppg": 6.7
     },
@@ -32617,7 +32617,7 @@
       ],
       "proj_v2": 17,
       "proj_lo": 0,
-      "proj_hi": 21,
+      "proj_hi": 32,
       "exp_games": 2.7,
       "exp_ppg": 6.4
     },
@@ -32747,7 +32747,7 @@
       ],
       "proj_v2": 10,
       "proj_lo": 0,
-      "proj_hi": 12,
+      "proj_hi": 18,
       "exp_games": 2.4,
       "exp_ppg": 3.9
     },
@@ -32811,8 +32811,8 @@
         ]
       ],
       "proj_v2": 46,
-      "proj_lo": 33,
-      "proj_hi": 58,
+      "proj_lo": 19,
+      "proj_hi": 68,
       "exp_games": 3.5,
       "exp_ppg": 13.3
     },
@@ -32876,8 +32876,8 @@
         ]
       ],
       "proj_v2": 108,
-      "proj_lo": 78,
-      "proj_hi": 127,
+      "proj_lo": 63,
+      "proj_hi": 137,
       "exp_games": 2.9,
       "exp_ppg": 37.0
     },
@@ -32942,7 +32942,7 @@
       ],
       "proj_v2": 8,
       "proj_lo": 0,
-      "proj_hi": 10,
+      "proj_hi": 15,
       "exp_games": 1.9,
       "exp_ppg": 4.2
     },
@@ -33006,8 +33006,8 @@
         ]
       ],
       "proj_v2": 56,
-      "proj_lo": 41,
-      "proj_hi": 70,
+      "proj_lo": 23,
+      "proj_hi": 82,
       "exp_games": 2.1,
       "exp_ppg": 26.9
     },
@@ -33137,7 +33137,7 @@
       ],
       "proj_v2": 27,
       "proj_lo": 0,
-      "proj_hi": 34,
+      "proj_hi": 52,
       "exp_games": 2.9,
       "exp_ppg": 9.3
     },
@@ -33267,7 +33267,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 7,
+      "proj_hi": 10,
       "exp_games": 1.8,
       "exp_ppg": 3.1
     },
@@ -33332,7 +33332,7 @@
       ],
       "proj_v2": 28,
       "proj_lo": 0,
-      "proj_hi": 35,
+      "proj_hi": 53,
       "exp_games": 2.9,
       "exp_ppg": 9.6
     },
@@ -33397,7 +33397,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.3
     },
@@ -33462,7 +33462,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 6.5
     },
@@ -33527,7 +33527,7 @@
       ],
       "proj_v2": 20,
       "proj_lo": 0,
-      "proj_hi": 24,
+      "proj_hi": 37,
       "exp_games": 2.1,
       "exp_ppg": 9.3
     },
@@ -33592,7 +33592,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 3.6
     },
@@ -33722,7 +33722,7 @@
       ],
       "proj_v2": 16,
       "proj_lo": 0,
-      "proj_hi": 20,
+      "proj_hi": 30,
       "exp_games": 2.8,
       "exp_ppg": 5.7
     },
@@ -33787,7 +33787,7 @@
       ],
       "proj_v2": 36,
       "proj_lo": 0,
-      "proj_hi": 45,
+      "proj_hi": 68,
       "exp_games": 2.6,
       "exp_ppg": 13.9
     },
@@ -33851,8 +33851,8 @@
         ]
       ],
       "proj_v2": 42,
-      "proj_lo": 30,
-      "proj_hi": 53,
+      "proj_lo": 17,
+      "proj_hi": 62,
       "exp_games": 2.6,
       "exp_ppg": 16.3
     },
@@ -33916,8 +33916,8 @@
         ]
       ],
       "proj_v2": 51,
-      "proj_lo": 36,
-      "proj_hi": 63,
+      "proj_lo": 21,
+      "proj_hi": 74,
       "exp_games": 2.6,
       "exp_ppg": 19.5
     },
@@ -33982,7 +33982,7 @@
       ],
       "proj_v2": 32,
       "proj_lo": 0,
-      "proj_hi": 40,
+      "proj_hi": 60,
       "exp_games": 2.9,
       "exp_ppg": 10.9
     },
@@ -34047,7 +34047,7 @@
       ],
       "proj_v2": 7,
       "proj_lo": 0,
-      "proj_hi": 9,
+      "proj_hi": 13,
       "exp_games": 0.9,
       "exp_ppg": 7.5
     },
@@ -34112,7 +34112,7 @@
       ],
       "proj_v2": 39,
       "proj_lo": 0,
-      "proj_hi": 48,
+      "proj_hi": 73,
       "exp_games": 2.9,
       "exp_ppg": 13.3
     },
@@ -34177,7 +34177,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.2,
       "exp_ppg": 6.3
     },
@@ -34241,8 +34241,8 @@
         ]
       ],
       "proj_v2": 45,
-      "proj_lo": 33,
-      "proj_hi": 57,
+      "proj_lo": 19,
+      "proj_hi": 66,
       "exp_games": 2.9,
       "exp_ppg": 15.4
     },
@@ -34307,7 +34307,7 @@
       ],
       "proj_v2": 37,
       "proj_lo": 0,
-      "proj_hi": 46,
+      "proj_hi": 71,
       "exp_games": 2.3,
       "exp_ppg": 16.0
     },
@@ -34437,7 +34437,7 @@
       ],
       "proj_v2": 23,
       "proj_lo": 0,
-      "proj_hi": 29,
+      "proj_hi": 44,
       "exp_games": 2.5,
       "exp_ppg": 9.3
     },
@@ -34502,7 +34502,7 @@
       ],
       "proj_v2": 8,
       "proj_lo": 0,
-      "proj_hi": 10,
+      "proj_hi": 16,
       "exp_games": 1.9,
       "exp_ppg": 4.4
     },
@@ -34566,8 +34566,8 @@
         ]
       ],
       "proj_v2": 57,
-      "proj_lo": 41,
-      "proj_hi": 71,
+      "proj_lo": 23,
+      "proj_hi": 84,
       "exp_games": 2.8,
       "exp_ppg": 20.5
     },
@@ -34632,7 +34632,7 @@
       ],
       "proj_v2": 17,
       "proj_lo": 0,
-      "proj_hi": 21,
+      "proj_hi": 32,
       "exp_games": 2.6,
       "exp_ppg": 6.4
     },
@@ -34697,7 +34697,7 @@
       ],
       "proj_v2": 23,
       "proj_lo": 0,
-      "proj_hi": 29,
+      "proj_hi": 44,
       "exp_games": 1.5,
       "exp_ppg": 15.6
     },
@@ -34762,7 +34762,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 0.2,
       "exp_ppg": 10.5
     },
@@ -34827,7 +34827,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.2,
       "exp_ppg": 3.6
     },
@@ -35022,7 +35022,7 @@
       ],
       "proj_v2": 27,
       "proj_lo": 0,
-      "proj_hi": 33,
+      "proj_hi": 51,
       "exp_games": 2.9,
       "exp_ppg": 9.1
     },
@@ -35152,7 +35152,7 @@
       ],
       "proj_v2": 21,
       "proj_lo": 0,
-      "proj_hi": 26,
+      "proj_hi": 39,
       "exp_games": 2.8,
       "exp_ppg": 7.4
     },
@@ -35216,8 +35216,8 @@
         ]
       ],
       "proj_v2": 47,
-      "proj_lo": 34,
-      "proj_hi": 59,
+      "proj_lo": 19,
+      "proj_hi": 69,
       "exp_games": 2.9,
       "exp_ppg": 16.1
     },
@@ -35282,7 +35282,7 @@
       ],
       "proj_v2": 37,
       "proj_lo": 0,
-      "proj_hi": 46,
+      "proj_hi": 70,
       "exp_games": 2.9,
       "exp_ppg": 12.7
     },
@@ -35347,7 +35347,7 @@
       ],
       "proj_v2": 17,
       "proj_lo": 0,
-      "proj_hi": 22,
+      "proj_hi": 33,
       "exp_games": 2.0,
       "exp_ppg": 8.9
     },
@@ -35412,7 +35412,7 @@
       ],
       "proj_v2": 13,
       "proj_lo": 0,
-      "proj_hi": 16,
+      "proj_hi": 24,
       "exp_games": 1.9,
       "exp_ppg": 6.8
     },
@@ -35542,7 +35542,7 @@
       ],
       "proj_v2": 28,
       "proj_lo": 0,
-      "proj_hi": 35,
+      "proj_hi": 53,
       "exp_games": 1.9,
       "exp_ppg": 15.0
     },
@@ -35606,8 +35606,8 @@
         ]
       ],
       "proj_v2": 66,
-      "proj_lo": 48,
-      "proj_hi": 83,
+      "proj_lo": 27,
+      "proj_hi": 97,
       "exp_games": 1.8,
       "exp_ppg": 37.8
     },
@@ -35672,7 +35672,7 @@
       ],
       "proj_v2": 35,
       "proj_lo": 0,
-      "proj_hi": 43,
+      "proj_hi": 65,
       "exp_games": 1.6,
       "exp_ppg": 22.1
     },
@@ -35736,8 +35736,8 @@
         ]
       ],
       "proj_v2": 43,
-      "proj_lo": 31,
-      "proj_hi": 53,
+      "proj_lo": 18,
+      "proj_hi": 62,
       "exp_games": 2.0,
       "exp_ppg": 21.8
     },
@@ -35802,7 +35802,7 @@
       ],
       "proj_v2": 15,
       "proj_lo": 0,
-      "proj_hi": 18,
+      "proj_hi": 28,
       "exp_games": 1.8,
       "exp_ppg": 8.3
     },
@@ -35827,10 +35827,10 @@
       "next_round_games": 3,
       "round_after_games": 4,
       "owned": 0.78,
-      "injury": null,
-      "injury_status": null,
-      "injury_detail": null,
-      "injury_return": null,
+      "injury": "Day-To-Day \u00b7 Illness",
+      "injury_status": "Day-To-Day",
+      "injury_detail": "Mann (illness) has been downgraded to questionable for Tuesday's game against Boston.",
+      "injury_return": "2026-11-24",
       "photo": "https://a.espncdn.com/i/headshots/nba/players/full/4432819.png",
       "status": "watchlist",
       "trend": [
@@ -35865,10 +35865,10 @@
           3790000
         ]
       ],
-      "proj_v2": 3,
+      "proj_v2": 0,
       "proj_lo": 0,
-      "proj_hi": 4,
-      "exp_games": 1.0,
+      "proj_hi": 0,
+      "exp_games": 0.0,
       "exp_ppg": 3.0
     },
     {
@@ -35932,7 +35932,7 @@
       ],
       "proj_v2": 9,
       "proj_lo": 0,
-      "proj_hi": 12,
+      "proj_hi": 18,
       "exp_games": 1.2,
       "exp_ppg": 8.0
     },
@@ -35997,7 +35997,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 4,
       "exp_games": 0.5,
       "exp_ppg": 4.3
     },
@@ -36062,7 +36062,7 @@
       ],
       "proj_v2": 6,
       "proj_lo": 0,
-      "proj_hi": 8,
+      "proj_hi": 12,
       "exp_games": 1.7,
       "exp_ppg": 3.7
     },
@@ -36126,8 +36126,8 @@
         ]
       ],
       "proj_v2": 41,
-      "proj_lo": 29,
-      "proj_hi": 51,
+      "proj_lo": 17,
+      "proj_hi": 59,
       "exp_games": 1.9,
       "exp_ppg": 21.9
     },
@@ -36321,8 +36321,8 @@
         ]
       ],
       "proj_v2": 48,
-      "proj_lo": 34,
-      "proj_hi": 59,
+      "proj_lo": 20,
+      "proj_hi": 69,
       "exp_games": 2.0,
       "exp_ppg": 24.3
     },
@@ -36387,7 +36387,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 0.3,
       "exp_ppg": 9.2
     },
@@ -36452,7 +36452,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 6,
+      "proj_hi": 9,
       "exp_games": 0.6,
       "exp_ppg": 7.1
     },
@@ -36582,7 +36582,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.3,
       "exp_ppg": 11.9
     },
@@ -36647,7 +36647,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 6.3
     },
@@ -36712,7 +36712,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -36842,7 +36842,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 4,
       "exp_games": 0.6,
       "exp_ppg": 3.6
     },
@@ -36907,7 +36907,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -37037,7 +37037,7 @@
       ],
       "proj_v2": 21,
       "proj_lo": 0,
-      "proj_hi": 26,
+      "proj_hi": 39,
       "exp_games": 2.3,
       "exp_ppg": 9.1
     },
@@ -37102,7 +37102,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 0.3,
       "exp_ppg": 9.3
     },
@@ -37167,7 +37167,7 @@
       ],
       "proj_v2": 8,
       "proj_lo": 0,
-      "proj_hi": 10,
+      "proj_hi": 15,
       "exp_games": 1.6,
       "exp_ppg": 4.8
     },
@@ -37232,7 +37232,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.2
     },
@@ -37297,7 +37297,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.7
     },
@@ -37362,7 +37362,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.3,
       "exp_ppg": 13.1
     },
@@ -37492,7 +37492,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -37557,7 +37557,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.0
     },
@@ -37622,7 +37622,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 7,
       "exp_games": 0.6,
       "exp_ppg": 6.6
     },
@@ -37687,7 +37687,7 @@
       ],
       "proj_v2": 4,
       "proj_lo": 0,
-      "proj_hi": 5,
+      "proj_hi": 7,
       "exp_games": 0.4,
       "exp_ppg": 10.0
     },
@@ -37752,7 +37752,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 5,
       "exp_games": 0.7,
       "exp_ppg": 3.9
     },
@@ -37817,7 +37817,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.4,
       "exp_ppg": 4.8
     },
@@ -37882,7 +37882,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 4.8
     },
@@ -37947,7 +37947,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.2
     },
@@ -38012,7 +38012,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.0
     },
@@ -38077,7 +38077,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 4,
       "exp_games": 0.3,
       "exp_ppg": 7.7
     },
@@ -38142,7 +38142,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -38207,7 +38207,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 5,
       "exp_games": 0.8,
       "exp_ppg": 3.6
     },
@@ -38272,7 +38272,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -38337,7 +38337,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.7
     },
@@ -38402,7 +38402,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -38467,7 +38467,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -38532,7 +38532,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.4,
       "exp_ppg": 4.8
     },
@@ -38597,7 +38597,7 @@
       ],
       "proj_v2": 12,
       "proj_lo": 0,
-      "proj_hi": 15,
+      "proj_hi": 23,
       "exp_games": 2.3,
       "exp_ppg": 5.4
     },
@@ -38662,7 +38662,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.3,
       "exp_ppg": 11.9
     },
@@ -38727,7 +38727,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -38792,7 +38792,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.7
     },
@@ -38857,7 +38857,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.0
     },
@@ -38922,7 +38922,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.2,
       "exp_ppg": 7.2
     },
@@ -38987,7 +38987,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -39052,7 +39052,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.7
     },
@@ -39117,7 +39117,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -39182,7 +39182,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.2
     },
@@ -39247,7 +39247,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.5
     },
@@ -39312,7 +39312,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.2,
       "exp_ppg": 7.2
     },
@@ -39377,7 +39377,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.4,
       "exp_ppg": 4.8
     },
@@ -39442,7 +39442,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.2,
       "exp_ppg": 5.7
     },
@@ -39507,7 +39507,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.4,
       "exp_ppg": 5.0
     },
@@ -39572,7 +39572,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -39637,7 +39637,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -39702,7 +39702,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 5,
       "exp_games": 0.3,
       "exp_ppg": 10.8
     },
@@ -39767,7 +39767,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -39832,7 +39832,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 6.3
     },
@@ -39897,7 +39897,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -39962,7 +39962,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.2,
       "exp_ppg": 6.9
     },
@@ -40027,7 +40027,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.7
     },
@@ -40092,7 +40092,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 6.4
     },
@@ -40157,7 +40157,7 @@
       ],
       "proj_v2": 11,
       "proj_lo": 0,
-      "proj_hi": 13,
+      "proj_hi": 20,
       "exp_games": 1.2,
       "exp_ppg": 9.0
     },
@@ -40222,7 +40222,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 4,
       "exp_games": 0.3,
       "exp_ppg": 7.1
     },
@@ -40287,7 +40287,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -40352,7 +40352,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.7
     },
@@ -40417,7 +40417,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.2,
       "exp_ppg": 8.1
     },
@@ -40482,7 +40482,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -40547,7 +40547,7 @@
       ],
       "proj_v2": 6,
       "proj_lo": 0,
-      "proj_hi": 7,
+      "proj_hi": 11,
       "exp_games": 1.8,
       "exp_ppg": 3.4
     },
@@ -40612,7 +40612,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 6,
+      "proj_hi": 10,
       "exp_games": 1.1,
       "exp_ppg": 4.6
     },
@@ -40677,7 +40677,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.0
     },
@@ -40742,7 +40742,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 4,
       "exp_games": 0.3,
       "exp_ppg": 8.4
     },
@@ -40807,7 +40807,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 6.3
     },
@@ -40872,7 +40872,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -40937,7 +40937,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 7,
+      "proj_hi": 10,
       "exp_games": 1.8,
       "exp_ppg": 3.0
     },
@@ -41002,7 +41002,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.7
     },
@@ -41067,7 +41067,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 4.8
     },
@@ -41132,7 +41132,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -41197,7 +41197,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 3,
+      "proj_hi": 4,
       "exp_games": 0.4,
       "exp_ppg": 5.5
     },
@@ -41262,7 +41262,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.3,
       "exp_ppg": 4.5
     },
@@ -41327,7 +41327,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -41392,7 +41392,7 @@
       ],
       "proj_v2": 3,
       "proj_lo": 0,
-      "proj_hi": 4,
+      "proj_hi": 6,
       "exp_games": 0.8,
       "exp_ppg": 3.9
     },
@@ -41457,7 +41457,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -41522,7 +41522,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 4.8
     },
@@ -41587,7 +41587,7 @@
       ],
       "proj_v2": 10,
       "proj_lo": 0,
-      "proj_hi": 12,
+      "proj_hi": 18,
       "exp_games": 1.4,
       "exp_ppg": 7.1
     },
@@ -41652,7 +41652,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.2,
       "exp_ppg": 5.7
     },
@@ -41717,7 +41717,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.7
     },
@@ -41782,7 +41782,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 7.2
     },
@@ -41847,7 +41847,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 4,
       "exp_games": 0.2,
       "exp_ppg": 11.7
     },
@@ -41912,7 +41912,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 4,
       "exp_games": 0.4,
       "exp_ppg": 5.0
     },
@@ -41977,7 +41977,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -42042,7 +42042,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -42172,7 +42172,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -42237,7 +42237,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -42302,7 +42302,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.2,
       "exp_ppg": 6.9
     },
@@ -42367,7 +42367,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 4,
       "exp_games": 0.4,
       "exp_ppg": 5.0
     },
@@ -42432,7 +42432,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.2,
       "exp_ppg": 6.9
     },
@@ -42497,7 +42497,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 1,
+      "proj_hi": 2,
       "exp_games": 0.2,
       "exp_ppg": 5.4
     },
@@ -42562,7 +42562,7 @@
       ],
       "proj_v2": 1,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 3,
       "exp_games": 0.3,
       "exp_ppg": 5.5
     },
@@ -42627,7 +42627,7 @@
       ],
       "proj_v2": 2,
       "proj_lo": 0,
-      "proj_hi": 2,
+      "proj_hi": 4,
       "exp_games": 0.6,
       "exp_ppg": 3.5
     },
@@ -42680,7 +42680,7 @@
       ],
       "proj_v2": 5,
       "proj_lo": 0,
-      "proj_hi": 6,
+      "proj_hi": 9,
       "exp_games": 0.9,
       "exp_ppg": 5.3
     }
@@ -42695,6 +42695,8 @@
   ],
   "projectionModel": {
     "version": 2,
-    "roundEnd": "2026-11-30"
+    "roundEnd": "2026-11-30",
+    "rangeLevel": 0.8,
+    "rangeCoverage": 0.868
   }
 }
