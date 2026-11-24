@@ -17,6 +17,7 @@ const IGNORE = [/cloudflareinsights\.com/, /cdn-cgi\/rum/];
 const ignored = (text) => IGNORE.some((re) => re.test(text));
 
 const VIEWPORTS = {
+  wide: { width: 2000, height: 1050 },
   desktop: { width: 1440, height: 900 },
   phone: { width: 390, height: 844, isMobile: true, hasTouch: true, deviceScaleFactor: 2 },
 };

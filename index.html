@@ -1106,6 +1106,15 @@
       background: rgba(255, 255, 255, 0.022);
     }
 
+    /* PROTOTYPE "Status & news" column */
+    /* Flexible trailing column (Form & price trend) */
+    .market-table td.flex-td { padding-left: 24px; font-size: 12.5px; color: var(--text-secondary); }
+    .market-table thead th.flex-th { padding-left: 24px; }
+    .form-cell { display: inline-flex; align-items: center; gap: 16px; vertical-align: middle; }
+    .form-cell svg { display: block; overflow: visible; }
+    .form-delta { font-family: var(--mono); font-size: 12px; font-weight: 600; white-space: nowrap; }
+    .form-delta .dim-text { font-weight: 400; font-size: 11px; }
+
     /* Spare width goes here, so data columns sit right next to the player */
     .market-table .col-fill { padding: 0 !important; cursor: default; }
 
@@ -1946,6 +1955,10 @@
                   <span>New Price</span>
                   <button type="button" class="mini-switch" data-col-toggle="newPrice"></button>
                 </div>
+                <div class="pop-row">
+                  <span>Form &amp; price trend (wide screens)</span>
+                  <button type="button" class="mini-switch" data-col-toggle="trendcol"></button>
+                </div>
                 <div class="divider"></div>
                 <button type="button" class="ghost-btn" id="resetColWidthsBtn" style="width:100%; justify-content:center; height:27px; font-size:11.5px;">Reset Column Widths</button>
               </div>
@@ -2200,7 +2213,8 @@
         form: true,
         avg3: false,
         avg5: false,
-        newPrice: false
+        newPrice: false,
+        trendcol: true
       },
       density: "comfortable",
       sidebarWidth: DEFAULT_SIDEBAR_W,
@@ -2419,6 +2433,7 @@
         injuryStatus: p.injury_status || (p.injury ? "Injured" : null),
         injuryDetail: p.injury_detail || null,
         injuryReturn: p.injury_return || null,
+        formHistory: Array.isArray(p.trend) ? p.trend : [],
         photo
       };
     }
@@ -2724,6 +2739,10 @@
       if (state.displayCols.avg5) cols.push({ key: "avg5", sort: "avg5", label: "5-Wk", align: "num" });
       cols.push({ key: "priceChange", sort: "priceChange", label: "Proj Chg", align: "num" });
       if (state.displayCols.newPrice) cols.push({ key: "newPrice", sort: "newPrice", label: "New Price", align: "num" });
+      // Form & price trend: fills spare width on wide screens (see marketExtras)
+      if (!isPhone() && marketExtras(cols).form) {
+        cols.push({ key: "trendcol", label: "Form (pts/game) · price trend", title: "Bars: points per game in the last 5 rounds (green beat the dashed line, red fell short). Dashed line: points per game needed to hold his price. Line: price since Round 1, ending at this round's projected price.", align: "flex-th", flex: true });
+      }
       // Phone: the decision numbers (BE, projected change) come first so they're visible without scrolling
       if (isPhone()) {
         const order = ["name", "be", "priceChange", "price", "proj", "form", "games", "owned", "avg3", "avg5", "newPrice"];
@@ -2733,6 +2752,56 @@
     }
 
     const isPhone = () => window.matchMedia("(max-width: 760px)").matches;
+    // What fits next to the Market table, given the screen width (most useful first):
+    // briefing panel (your squad's news) and the Form & price column, then each alone, then neither.
+    const BRIEFING_W = 380;   // keep in sync with .briefing width in briefing.js
+    const FORM_COL_W = 270;
+    function marketExtras(baseCols) {
+      if (isPhone()) return { briefing: false, form: false };
+      const cols = baseCols || getActiveColumns().filter((c) => !c.flex);
+      const tableW = cols.filter((c) => !c.flex).reduce((s, c) => s + getColWidth(c.key), 0);
+      const sidebar = document.getElementById("sidebar");
+      const avail = window.innerWidth - (sidebar ? sidebar.offsetWidth : DEFAULT_SIDEBAR_W) - 24;
+      const wantBriefing = !state.briefingHidden;
+      const wantForm = state.displayCols.trendcol !== false;
+      if (wantBriefing && wantForm && avail >= tableW + BRIEFING_W + FORM_COL_W) return { briefing: true, form: true };
+      if (wantBriefing && avail >= tableW + BRIEFING_W) return { briefing: true, form: false };
+      if (wantForm && avail >= tableW + FORM_COL_W) return { briefing: false, form: true };
+      return { briefing: false, form: false };
+    }
+
+    // Form & price cell: points-per-game bars for recent rounds against the per-game average needed
+    // to hold his current price (dashed line), plus a price line since Round 1.
+    function renderFormCell(p) {
+      const t = (p.formHistory || []).slice(-5);
+      if (!t.length) return `<span class="dim-text">—</span>`;
+      const magic = state.magicNumber || DEFAULT_MAGIC_NUMBER;
+      const holdPpg = p.price / magic;
+      const ppg = t.map(([, pts, g]) => (g > 0 ? pts / g : null));
+      const maxV = Math.max(holdPpg, ...ppg.filter((v) => v !== null), 1) * 1.08;
+      const H = 24, BW = 9, GAP = 4;
+      const bars = ppg.map((v, i) => {
+        const x = i * (BW + GAP);
+        if (v === null) return `<rect x="${x}" y="${H - 2}" width="${BW}" height="2" rx="1" fill="rgba(255,255,255,0.14)"><title>R${t[i][0]}: did not play</title></rect>`;
+        const h = Math.max(2, (Math.max(v, 0) / maxV) * H);
+        const fill = v >= holdPpg ? "var(--pos-bright)" : "var(--neg-soft)";
+        return `<rect x="${x}" y="${H - h}" width="${BW}" height="${h}" rx="1.5" fill="${fill}" opacity="0.85"><title>R${t[i][0]}: ${v.toFixed(1)} pts/game over ${t[i][2]} games</title></rect>`;
+      }).join("");
+      const bw = ppg.length * (BW + GAP) - GAP;
+      const lineY = H - (holdPpg / maxV) * H;
+      const barsSvg = `<svg width="${bw}" height="${H}" viewBox="0 0 ${bw} ${H}" class="form-bars" aria-label="Points per game, last ${ppg.length} rounds">${bars}<line x1="-2" x2="${bw + 2}" y1="${lineY}" y2="${lineY}" stroke="rgba(255,255,255,0.55)" stroke-width="1" stroke-dasharray="2 2"><title>Needs ${holdPpg.toFixed(1)} pts/game to hold $${(p.price / 1e6).toFixed(2)}M</title></line></svg>`;
+
+      const all = p.formHistory;
+      const start = all[0][3];
+      const series = [...all.map((r) => r[3]), p.newPrice];
+      const lo = Math.min(...series), hi = Math.max(...series);
+      const SW = 64;
+      const pts = series.map((v, i) => `${(i / Math.max(series.length - 1, 1)) * SW},${hi === lo ? H / 2 : (H - 2) - ((v - lo) / (hi - lo)) * (H - 4)}`).join(" ");
+      const delta = p.newPrice - start;
+      const col = delta > 0 ? "var(--pos-bright)" : delta < 0 ? "var(--neg-soft)" : "var(--text-tertiary)";
+      const priceSvg = `<svg width="${SW}" height="${H}" viewBox="-1 0 ${SW + 2} ${H}" class="form-price" aria-label="Price since Round ${all[0][0]}"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" /><title>Price after R${all[0][0]}: $${(start / 1e6).toFixed(2)}M → projected after this round: $${(p.newPrice / 1e6).toFixed(2)}M</title></svg>`;
+      return `<span class="form-cell">${barsSvg}${priceSvg}<span class="form-delta" style="color:${col}">${formatMoney(delta)}<span class="dim-text"> since R${all[0][0]}</span></span></span>`;
+    }
 
     function getColWidth(key) {
       const saved = Number(state.colWidths[key]);
@@ -2750,10 +2819,12 @@
       const cg = document.getElementById("tableColGroup");
       const tbl = document.getElementById("marketTable");
       if (!cg || !tbl) return;
-      const totalPx = cols.reduce((sum, c) => sum + getColWidth(c.key), 0);
+      const w = (c) => getColWidth(c.key);
+      const fixed = cols.filter((c) => !c.flex);
+      const totalPx = fixed.reduce((sum, c) => sum + w(c), 0) + (cols.some((c) => c.flex) ? FORM_COL_W : 0);
       tbl.style.minWidth = `${totalPx}px`;
-      cg.innerHTML = cols.map((c) => `<col data-col-key="${c.key}" style="width:${getColWidth(c.key)}px;" />`).join("")
-        + `<col class="col-fill" />`;
+      cg.innerHTML = cols.map((c) => (c.flex ? `<col data-col-key="${c.key}" />` : `<col data-col-key="${c.key}" style="width:${w(c)}px;" />`)).join("")
+        + `<col class="col-fill" ${cols.some((c) => c.flex) ? `style="width:0"` : ""} />`;
     }
 
     function renderActiveFilterChips() {
@@ -3077,6 +3148,7 @@
               if (c.key === "avg5") return `<td class="num mono muted-text">${p.avg5 !== null ? p.avg5.toFixed(1) : "—"}</td>`;
               if (c.key === "priceChange") return `<td class="num mono ${chgClass}" style="font-weight:600;">${formatMoney(p.priceChange)}</td>`;
               if (c.key === "newPrice") return `<td class="num mono muted-text">${formatPriceM(p.newPrice)}</td>`;
+              if (c.key === "trendcol") return `<td class="flex-td">${renderFormCell(p)}</td>`;
               return `<td></td>`;
             }).join("");
 
@@ -3337,6 +3409,7 @@
       renderSchedStrip,
       renderDismissibleTip,
       getState: () => state,
+      marketExtras: () => marketExtras(),
       savePrefs,
       render,
       setActiveNav,
@@ -3799,5 +3872,6 @@
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
   <script src="court.js?v=13"></script>
   <script src="tradelab.js?v=13"></script>
+  <script src="briefing.js?v=2"></script>
 </body>
 </html>

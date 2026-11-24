@@ -753,6 +753,28 @@ def build_round_dataset(
     }
 
 
+def attach_trends(live_data, rounds, target_round, keep=8):
+    """
+    Adds each player's completed-round history to the live data as compact rows
+    trend = [[round, points, games_played, price_after], ...] (oldest first, last `keep` rounds),
+    so the site can draw form bars and a price line without downloading every snapshot.
+    """
+    by_id = {p["id"]: [] for p in live_data["players"]}
+    for r in sorted(x for x in rounds if x < target_round)[-keep:]:
+        path = os.path.join(HISTORY_DIR, f"round_{r}.json")
+        try:
+            with open(path, encoding="utf-8") as f:
+                snap = json.load(f)
+        except Exception as err:
+            print(f"  trend: skipped Round {r} ({err})")
+            continue
+        for p in snap.get("players", []):
+            if p.get("id") in by_id and "price_after" in p:
+                by_id[p["id"]].append([r, int(p.get("actual_points") or 0), int(p.get("games_played") or 0), int(p["price_after"])])
+    for p in live_data["players"]:
+        p["trend"] = by_id.get(p["id"], [])
+
+
 def main():
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r", encoding="utf-8") as f:
@@ -875,6 +897,7 @@ def main():
     available_rounds.sort()
 
     live_data["availableRounds"] = available_rounds
+    attach_trends(live_data, available_rounds, target_round)
 
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(live_data, f, indent=2)
