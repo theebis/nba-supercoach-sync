@@ -50,6 +50,12 @@ const VIEWS = {
     await page.waitForTimeout(300);
   },
   tradelab: async (page) => openNav(page, "tradelab"),
+  // Live round tracker: waits for ESPN scores to load
+  live: async (page) => {
+    await openNav(page, "live");
+    await page.waitForSelector(".lv-grid, .lv-empty", { timeout: 20000 });
+    await page.waitForTimeout(1500);
+  },
   // Trade Lab after clicking "Choose who leaves" and picking the first player: the IN suggestions open
   "tradelab-picker": async (page) => {
     await openNav(page, "tradelab");
@@ -113,7 +119,11 @@ try {
   for (const [vpName, vp] of Object.entries(VIEWPORTS)) {
     for (const [viewName, go] of Object.entries(VIEWS)) {
       if (filter && !viewName.includes(filter)) continue;
-      const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, ...vp });
+      // ESPN (live scores) refuses the "HeadlessChrome" browser name, so present as a normal Edge
+      const userAgent = vp.isMobile
+        ? "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36"
+        : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0";
+      const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, ...vp, userAgent });
       // Seed a small demo squad so My Court / Trade Lab render with content
       await context.addInitScript(() => {
         if (!localStorage.getItem("schoops_terminal_v3") && window.__seedDemo !== false) {

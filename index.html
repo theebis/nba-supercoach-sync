@@ -1814,6 +1814,15 @@
           </span>
           <span class="sb-count" id="sbTradeCount">0</span>
         </button>
+
+        <!-- Live round tracker (live.js) -->
+        <button type="button" class="sb-item" data-nav="live">
+          <span class="sb-item-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <span>Live</span><span class="sb-live-dot" aria-hidden="true"></span>
+          </span>
+          <span class="sb-count" id="sbLiveCount"></span>
+        </button>
       </div>
 
       <!-- Smart Views -->
@@ -2475,6 +2484,9 @@
         projLo: p.proj_lo ?? null,
         projHi: p.proj_hi ?? null,
         expGames: (p.exp_games !== undefined && p.exp_games !== null) ? Number(p.exp_games) : null,
+        // SuperCoach's official score so far this round and how many games it covers (lags real time)
+        scRoundGames: Number(p.games_played) || 0,
+        scRoundPoints: Number(p.actual_points) || 0,
         gamesNext: futureGms.gamesNext,
         gamesAfter: futureGms.gamesAfter,
         owned, avg5, officialBe,
@@ -4061,6 +4073,7 @@
   <script src="tradelab.js?v=15"></script>
   <script src="briefing.js?v=4"></script>
   <script src="captains.js?v=1"></script>
+  <script src="live.js?v=2"></script>
   <script src="importmatch.js?v=1"></script>
   <script src="importer.js?v=2"></script>
 </body>
