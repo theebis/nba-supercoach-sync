@@ -2811,7 +2811,7 @@
     const BRIEFING_W = 380;   // keep in sync with .briefing width in briefing.js
     const FORM_COL_W = 270;
     function marketExtras(baseCols) {
-      if (isPhone()) return { briefing: false, form: false };
+      if (isPhone()) return { briefing: false, form: false, briefingW: BRIEFING_W, scale: 1 };
       const cols = baseCols || getActiveColumns().filter((c) => !c.flex);
       const tableW = cols.filter((c) => !c.flex).reduce((s, c) => s + getColWidth(c.key), 0);
       const sidebar = document.getElementById("sidebar");
@@ -4060,6 +4060,7 @@
   <script src="court.js?v=15"></script>
   <script src="tradelab.js?v=14"></script>
   <script src="briefing.js?v=4"></script>
+  <script src="captains.js?v=1"></script>
   <script src="importmatch.js?v=1"></script>
   <script src="importer.js?v=2"></script>
 </body>
