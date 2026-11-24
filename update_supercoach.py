@@ -343,6 +343,43 @@ def inspect_feed(base_url, round_num, out_path="debug/feed_inspection.json"):
     print(f"Players with injury fields or notes: {len(flagged)}")
 
 
+PRICE_HISTORY_FIELDS = (
+    "price", "price_change", "total_price_change", "points", "games", "total_points",
+    "total_games", "avg", "avg3", "avg5", "ppts", "ppts1", "updated_at",
+)
+
+
+def collect_price_history(base_url, max_round, out_path="debug/price_history.json"):
+    """
+    Calibration data (--inspect): every player's price, price change, score and games for each
+    round 1..max_round+1, as compact rows. Used to fit the real price formula / magic number.
+    """
+    report = {"generated": datetime.now(timezone.utc).isoformat(), "fields": ["id", *PRICE_HISTORY_FIELDS], "rounds": {}}
+    for r in range(1, max_round + 2):
+        try:
+            payload = fetch_json(f"{base_url}/players-cf?embed=player_stats&round={r}")
+        except Exception as err:
+            print(f"  price history round {r}: {err}")
+            continue
+        players = payload if isinstance(payload, list) else payload.get("players", [])
+        rows = []
+        for p in players:
+            stats = [s for s in (p.get("player_stats") or []) if isinstance(s, dict)]
+            row_stat = next((s for s in stats if s.get("round") == r), None)
+            if row_stat is None and len(stats) == 1:
+                row_stat = stats[0]
+            if row_stat is None:
+                continue
+            rows.append([str(p.get("id", "")), *[row_stat.get(f) for f in PRICE_HISTORY_FIELDS]])
+        stat_rounds = sorted({s.get("round") for p in players for s in (p.get("player_stats") or []) if isinstance(s, dict)})
+        report["rounds"][str(r)] = {"stat_rounds_returned": stat_rounds, "rows": rows}
+        print(f"  price history round {r}: {len(rows)} rows (stat rounds returned: {stat_rounds})")
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(report, f, separators=(",", ":"), default=str)
+    print(f"Price history saved to {out_path}.")
+
+
 def extract_supercoach_photo(p):
     """Checks whether the SuperCoach payload already includes a direct photo/headshot URL."""
     for key in ("photo", "headshot", "avatar", "image", "image_url", "portrait_url"):
@@ -686,7 +723,9 @@ def main():
         sys.exit(1)
 
     if "--inspect" in sys.argv:
-        inspect_feed(base_url, active_round or int(existing_data.get("round") or 1))
+        inspect_round = active_round or int(existing_data.get("round") or 1)
+        inspect_feed(base_url, inspect_round)
+        collect_price_history(base_url, inspect_round)
         return
 
     existing_round = int(existing_data.get("round") or 0)
