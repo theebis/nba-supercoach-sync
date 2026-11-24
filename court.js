@@ -1302,16 +1302,17 @@
     if (!squadPlayers.length) {
       if (headerActions) {
         headerActions.innerHTML = `
-          <button type="button" class="primary-btn" id="courtAddPlayerBtn">${ICON_PLUS}<span>Add Player</span></button>
+          <button type="button" class="ghost-btn" id="courtImportBtn">Import</button>
+          <button type="button" class="primary-btn" id="courtAddPlayerBtn">${ICON_PLUS}<span>Add players</span></button>
         `;
       }
       root.innerHTML = `
         <div class="lc-empty-page">
-          <h3>No squad tracked yet</h3>
-          <p style="margin-bottom:16px;">Add your 15 players right here or tag them with <strong>+</strong> in Market to unlock the tactical court and exact Best-9-of-10 optimiser.</p>
-          <div style="display:inline-flex; gap:8px;">
-            <button type="button" class="primary-btn" id="courtEmptyAddBtn">${ICON_PLUS}<span>Add Players</span></button>
-            <button type="button" class="ghost-btn" data-go-market="1">Browse Market</button>
+          <h3>No squad yet</h3>
+          <p style="margin-bottom:16px;">The quickest way: import a screenshot of your SuperCoach team. Or add your 15 players one by one.</p>
+          <div style="display:inline-flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+            <button type="button" class="primary-btn" id="courtEmptyImportBtn">Import from screenshot</button>
+            <button type="button" class="ghost-btn" id="courtEmptyAddBtn">${ICON_PLUS}<span>Add players</span></button>
           </div>
         </div>
         ${renderAddPlayerModal(state)}
@@ -1344,6 +1345,7 @@
     if (headerActions) {
       headerActions.innerHTML = `
         ${lockCount > 0 ? `<button type="button" class="ghost-btn" id="courtClearLocksBtn">Clear locks (${lockCount})</button>` : ""}
+        <button type="button" class="ghost-btn" id="courtImportBtn" title="Import your squad from a screenshot or a list of names">Import</button>
         <button type="button" class="${squadFull ? "ghost-btn" : "primary-btn"}" id="courtAddPlayerBtn" title="Add players to your squad">${ICON_PLUS}<span>Add players</span></button>
       `;
     }
@@ -1482,6 +1484,7 @@
   function handleActionClick(e) {
     if (e.target.closest("#courtOptimiseBtn")) { runOptimise(); return; }
     if (e.target.closest("#courtAddPlayerBtn")) { openAddPlayerPicker(null); return; }
+    if (e.target.closest("#courtImportBtn") && window.SchoopsImporter) { window.SchoopsImporter.open(); return; }
     if (e.target.closest("#courtClearLocksBtn")) {
       window.SCHOOPS.getState().court.lockedBenchIds = {};
       window.SCHOOPS.savePrefs();
@@ -1537,6 +1540,7 @@
     }
 
     if (e.target.closest("#courtEmptyAddBtn")) { openAddPlayerPicker(null); return; }
+    if (e.target.closest("#courtEmptyImportBtn") && window.SchoopsImporter) { window.SchoopsImporter.open(); return; }
     if (e.target.closest("[data-go-market]")) { window.SCHOOPS.setActiveNav("market", "all"); return; }
 
     // Undo Remove from Squad

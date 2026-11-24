@@ -139,7 +139,7 @@
           <div class="bf-start-text">Add your 15 players and this panel tracks their injuries, breakevens and price moves every round. Your squad is saved in this browser only.</div>
           <div class="bf-start-actions">
             <button type="button" class="primary-btn" data-bf-go="court">Add my players</button>
-            <button type="button" class="ghost-btn" disabled title="Coming next: upload a screenshot of your SuperCoach team">Import from screenshot · soon</button>
+            <button type="button" class="ghost-btn" data-bf-go="import" title="Upload or paste a screenshot of your SuperCoach team, or paste names">Import from screenshot</button>
           </div>
         </div>`;
 
@@ -206,6 +206,7 @@
       const b = e.target.closest("[data-bf-player]");
       if (b) window.SCHOOPS.openInspector(b.dataset.bfPlayer);
       if (e.target.closest('[data-bf-go="court"]')) window.SCHOOPS.setActiveNav("court");
+      if (e.target.closest('[data-bf-go="import"]') && window.SchoopsImporter) window.SchoopsImporter.open();
     });
     // Screen size decides what fits (briefing, Form column), so re-render the whole Market on resize
     let resizeTimer = null;

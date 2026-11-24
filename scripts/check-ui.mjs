@@ -63,6 +63,10 @@ const VIEWS = {
     await page.locator("#tlClonePlanBtn").click();
     await page.waitForTimeout(300);
   },
+  import: async (page) => {
+    await page.evaluate(() => window.SchoopsImporter.open());
+    await page.waitForTimeout(300);
+  },
   settings: async (page) => {
     await page.evaluate(() => openSettingsModal());
     await page.waitForTimeout(300);

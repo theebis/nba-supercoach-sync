@@ -1,13 +1,14 @@
-{
+﻿{
   "name": "schoops",
   "private": true,
   "description": "SCHOOPS - NBA SuperCoach breakeven terminal (static site + Python scraper)",
   "type": "module",
   "scripts": {
     "serve": "node scripts/serve.mjs",
-    "test": "node --test tests/pricing.test.js",
+    "test": "node --test tests/pricing.test.js tests/importmatch.test.js",
     "check:ui": "node scripts/check-ui.mjs",
-    "check:data": "python -I scripts/check_data.py"
+    "check:data": "python -I scripts/check_data.py",
+    "check:import": "node scripts/check-import.mjs"
   },
   "devDependencies": {
     "playwright": "1.49.1"
