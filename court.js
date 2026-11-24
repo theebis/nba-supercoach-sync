@@ -1,6 +1,6 @@
 /* SCHOOPS Modular Plugin — Phase 2 (Option A Proportions + Option 2 Palette):
  * My Court Tactical Board & Exact Lineup Optimiser
- * Loaded by index.html via <script src="court.js?v=9"></script>
+ * Loaded by index.html via <script src="court.js?v=10"></script>
  */
 (function () {
   "use strict";
@@ -40,7 +40,9 @@
   const ui = {
     selectedSource: null,
     bannerMsg: null,
-    bannerTimer: null
+    bannerTimer: null,
+    movedIds: new Set(),
+    movedTimer: null
   };
 
   function injectStyles() {
@@ -138,6 +140,20 @@
         border-color: rgba(239, 68, 68, 0.4);
       }
 
+      @keyframes scBannerIn {
+        from { opacity: 0; transform: translateY(-3px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      @keyframes scMovedPulse {
+        0% { box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.72), 0 6px 18px rgba(16, 185, 129, 0.18); }
+        100% { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 4px 12px rgba(0, 0, 0, 0.3); }
+      }
+
+      .court-banner {
+        animation: scBannerIn 160ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+      }
+
       .court-opt-btn {
         display: inline-flex;
         align-items: center;
@@ -152,11 +168,11 @@
         font-weight: 800;
         letter-spacing: 0.05em;
         cursor: pointer;
-        transition: filter 0.12s, transform 0.08s;
+        touch-action: manipulation;
+        transition: filter 140ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), transform 120ms var(--ease-press, cubic-bezier(0.25, 1, 0.5, 1));
       }
 
-      .court-opt-btn:hover { filter: brightness(1.08); }
-      .court-opt-btn:active { transform: translateY(1px); }
+      .court-opt-btn:active { transform: scale(0.96); }
 
       /* Main 2-Column Layout: Spacious Court Floor + Compact Bench Sidebar */
       .court-grid {
@@ -295,12 +311,13 @@
 
       /* Compact Option A Player Card */
       .mc-card {
-        background: rgba(19, 23, 31, 0.94);
-        border: 1px solid #2A3244;
+        background: rgba(18, 22, 31, 0.94);
+        border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 7px;
         padding: 9px 11px 8px 13px;
         cursor: pointer;
-        transition: border-color 0.12s, background 0.12s, box-shadow 0.12s, transform 0.1s;
+        touch-action: manipulation;
+        transition: border-color 140ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), background-color 140ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), transform 120ms var(--ease-press, cubic-bezier(0.25, 1, 0.5, 1)), opacity 140ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1));
         display: flex;
         flex-direction: column;
         gap: 6px;
@@ -308,7 +325,7 @@
         position: relative;
         overflow: hidden;
         user-select: none;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 4px 12px rgba(0, 0, 0, 0.3);
       }
 
       .mc-card::before {
@@ -321,9 +338,21 @@
         background: var(--team-accent, #525D73);
       }
 
-      .mc-card:hover {
-        background: #1B212E;
-        border-color: #414D66;
+      .mc-card:active {
+        transform: scale(0.985);
+      }
+
+      .mc-card.mc-just-moved {
+        animation: scMovedPulse 280ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)) both;
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        .court-opt-btn:hover { filter: brightness(1.08); }
+        .mc-card:hover {
+          background: #1B212F;
+          border-color: rgba(255, 255, 255, 0.18);
+        }
+        .mc-act:hover { color: #FFFFFF; border-color: #52607D; }
       }
 
       .mc-card.is-empty {
@@ -489,7 +518,7 @@
 
       .mc-act {
         background: #1A202C;
-        border: 1px solid #2F384B;
+        border: 1px solid rgba(255, 255, 255, 0.11);
         color: var(--text-muted);
         font-family: var(--mono);
         font-size: 9px;
@@ -499,13 +528,14 @@
         padding: 0 4px;
         border-radius: 3px;
         cursor: pointer;
+        touch-action: manipulation;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.1s;
+        transition: color 120ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), background-color 120ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), border-color 120ms var(--ease-out, cubic-bezier(0.23, 1, 0.32, 1)), transform 110ms var(--ease-press, cubic-bezier(0.25, 1, 0.5, 1));
       }
 
-      .mc-act:hover { color: #FFFFFF; border-color: #52607D; }
+      .mc-act:active { transform: scale(0.93); }
       .mc-act.on-c { background: var(--warn); color: #0D1015; border-color: var(--warn); }
       .mc-act.on-vc { background: #3B82F6; color: #FFFFFF; border-color: #3B82F6; }
       .mc-act.on-lock { background: var(--warn-bg); color: var(--warn-bright); border-color: rgba(245, 158, 11, 0.55); }
@@ -545,6 +575,27 @@
       }
 
       .court-empty-state h3 { color: var(--text); font-size: 14px; margin-bottom: 6px; }
+
+      /* Mobile-Native: Never hide C / VC / Lock behind mouse-only hover on touch devices */
+      @media (hover: none), (pointer: coarse) {
+        .mc-hover-btns {
+          opacity: 0.92;
+        }
+        .mc-act {
+          height: 24px;
+          min-width: 25px;
+          font-size: 9.5px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .court-banner, .mc-card.mc-just-moved {
+          animation: none !important;
+        }
+        .mc-card:active, .court-opt-btn:active, .mc-act:active {
+          transform: none !important;
+        }
+      }
     `;
     document.head.appendChild(style);
   }
@@ -886,6 +937,14 @@
     }, 6500);
   }
 
+  function flashMovedPlayers(ids) {
+    ui.movedIds = new Set(ids.filter(Boolean));
+    if (ui.movedTimer) clearTimeout(ui.movedTimer);
+    ui.movedTimer = setTimeout(() => {
+      ui.movedIds = new Set();
+    }, 340);
+  }
+
   function isValidSwap(source, targetSlotKey, slots, byId) {
     if (!source) return false;
     if (source.type === "slot") {
@@ -932,6 +991,7 @@
     if (isLockedBench) classes.push("is-locked-bench");
     if (isSelected) classes.push("selected");
     if (isTarget) classes.push("valid-target");
+    if (ui.movedIds.has(player.id)) classes.push("mc-just-moved");
 
     const gClass = player.games >= 4 ? "g4" : (player.games === 0 ? "g0" : (player.games <= 2 ? "g2" : ""));
     const beTxt = player.be === null ? "BE —" : `BE ${player.be}`;
@@ -952,7 +1012,7 @@
           <div class="mc-left">
             ${renderAvatar(player, 36)}
             <div class="mc-id-col">
-              <div class="mc-name">${escapeHtml(player.name)}</div>
+              <div class="mc-name" title="${escapeHtml(player.name)}">${escapeHtml(player.name)}</div>
               <div class="mc-sub">
                 <span class="team-dot" style="background:${accent};"></span>
                 <span>${escapeHtml(player.team)}</span>
@@ -971,10 +1031,10 @@
             ${pills.join("")}
             <div class="mc-hover-btns ${showBtnsAlways ? "always-show" : ""}">
               ${isStarter ? `
-                <button type="button" class="mc-act ${isCap ? "on-c" : ""}" data-set-cap="${escapeHtml(player.id)}" title="Set Captain (2×)">C</button>
-                <button type="button" class="mc-act ${isVc ? "on-vc" : ""}" data-set-vc="${escapeHtml(player.id)}" title="Set Vice-Captain">VC</button>
+                <button type="button" class="mc-act ${isCap ? "on-c" : ""}" data-set-cap="${escapeHtml(player.id)}" aria-pressed="${isCap}" aria-label="Set ${escapeHtml(player.name)} as Captain" title="Set Captain (2×)">C</button>
+                <button type="button" class="mc-act ${isVc ? "on-vc" : ""}" data-set-vc="${escapeHtml(player.id)}" aria-pressed="${isVc}" aria-label="Set ${escapeHtml(player.name)} as Vice-Captain" title="Set Vice-Captain">VC</button>
               ` : ""}
-              <button type="button" class="mc-act ${isLockedBench ? "on-lock" : ""}" data-toggle-lock="${escapeHtml(player.id)}" title="${isLockedBench ? "Unlock Bench pin" : "Pin to Bench for OPTIMISE"}">${isLockedBench ? ICON_LOCK_CLOSED : ICON_LOCK_OPEN}</button>
+              <button type="button" class="mc-act ${isLockedBench ? "on-lock" : ""}" data-toggle-lock="${escapeHtml(player.id)}" aria-pressed="${isLockedBench}" aria-label="${isLockedBench ? "Unlock" : "Lock"} ${escapeHtml(player.name)} to Bench" title="${isLockedBench ? "Unlock Bench pin" : "Pin to Bench for OPTIMISE"}">${isLockedBench ? ICON_LOCK_CLOSED : ICON_LOCK_OPEN}</button>
             </div>
           </div>
           <div class="mc-fin">
@@ -997,7 +1057,7 @@
           <div class="mc-left">
             ${renderAvatar(player, 34)}
             <div class="mc-id-col">
-              <div class="mc-name">${escapeHtml(player.name)}</div>
+              <div class="mc-name" title="${escapeHtml(player.name)}">${escapeHtml(player.name)}</div>
               <div class="mc-sub">
                 <span class="team-dot" style="background:${accent};"></span>
                 <span>${escapeHtml(player.team)}</span>
@@ -1198,10 +1258,22 @@
         renderCourt();
         return;
       }
+      const prevSlots = { ...state.court.slots };
+      const changedPlayerIds = [];
+      ALL_SLOTS.forEach((s) => {
+        if (solved.slots[s.key] && solved.slots[s.key] !== prevSlots[s.key]) {
+          changedPlayerIds.push(solved.slots[s.key]);
+        }
+      });
+      if (solved.captainId && solved.captainId !== state.court.captainId) {
+        changedPlayerIds.push(solved.captainId);
+      }
+
       state.court.slots = solved.slots;
       state.court.captainId = solved.captainId;
       state.court.viceCaptainId = solved.viceCaptainId;
       window.SCHOOPS.savePrefs();
+      flashMovedPlayers(changedPlayerIds);
 
       const after = evaluateLineup(state.court.slots, byId, state.court.captainId, state.court.viceCaptainId);
       const diff = after.totalProj - before.totalProj;
@@ -1303,16 +1375,27 @@
         return;
       }
 
+      const swappedIds = [];
       if (ui.selectedSource.type === "slot") {
         const srcKey = ui.selectedSource.key;
         const tmp = slots[srcKey];
-        if (slots[targetKey]) slots[srcKey] = slots[targetKey];
-        else delete slots[srcKey];
-        if (tmp) slots[targetKey] = tmp;
-        else delete slots[targetKey];
+        if (slots[targetKey]) {
+          slots[srcKey] = slots[targetKey];
+          swappedIds.push(slots[srcKey]);
+        } else {
+          delete slots[srcKey];
+        }
+        if (tmp) {
+          slots[targetKey] = tmp;
+          swappedIds.push(tmp);
+        } else {
+          delete slots[targetKey];
+        }
       } else if (ui.selectedSource.type === "overflow") {
         slots[targetKey] = ui.selectedSource.playerId;
+        swappedIds.push(ui.selectedSource.playerId);
       }
+      flashMovedPlayers(swappedIds);
 
       const starterIds = new Set(STARTER_SLOTS.map((s) => slots[s.key]).filter(Boolean));
       if (state.court.captainId && !starterIds.has(state.court.captainId)) state.court.captainId = null;
@@ -1331,6 +1414,12 @@
     injectStyles();
     const root = document.getElementById("courtViewRoot");
     if (root) root.addEventListener("click", handleCourtClick);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && ui.selectedSource) {
+        ui.selectedSource = null;
+        renderCourt();
+      }
+    });
     window.SCHOOPS.onRender(renderCourt);
     renderCourt();
   }
