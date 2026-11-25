@@ -240,9 +240,10 @@
       .ta-pri-go { font-size: 11.5px; color: var(--text-tertiary); white-space: nowrap; transition: color 120ms ease; }
       .ta-pri-row.on .ta-pri-go { color: #C7CCFF; font-weight: 600; }
       .ta-pri-empty { padding: 12px 14px 14px; font-size: 12.5px; color: var(--text-tertiary); }
-      .ta-pri-watch { padding: 10px 14px 12px; border-top: 1px solid rgba(255, 255, 255, 0.04); font-size: 11.5px; line-height: 1.55; color: var(--text-secondary); }
-      .ta-pri-watch b { color: #e8c25a; font-weight: 600; }
-      .ta-pri-watch span { color: var(--text-tertiary); }
+      /* Keep an eye on: day-to-day players, same rows as Sell first under their own amber heading */
+      .ta-pri-h-watch { margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--border-subtle); }
+      .ta-pri-h-watch > span:first-child { color: #e8c25a; }
+      .ta-pri-tag.t-watch { background: rgba(255, 196, 0, 0.12); color: #e8c25a; }
       .ta-focus { height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(110, 123, 242, 0.5); background: var(--accent-soft); color: #C7CCFF; font-size: 12.5px; font-weight: 600; cursor: pointer; }
       .ta-focus span { margin-left: 4px; }
       .ta-this { font-family: var(--mono); font-size: 10.5px; color: var(--text-tertiary); white-space: nowrap; }
@@ -771,7 +772,12 @@
       let score = 0, tag = "", why = "";
       // Day-to-day, or out but back within this round: usually a game or two at most. Not a sell, just watch it.
       if ((st && !st.startsWith("out")) || (st.startsWith("out") && h.roundsOut === 0 && h.ret)) {
-        return { p, score: 0, watch: true, why: st.startsWith("out") ? `back about ${fmtDate(h.ret)}` : `likely ${p.expGames ?? "?"} of ${p.games} games` };
+        const out = st.startsWith("out");
+        const status = out ? "Back soon" : st.charAt(0).toUpperCase() + st.slice(1);
+        const games = p.expGames !== null && p.expGames !== undefined ? `likely ${p.expGames} of ${p.games} games` : `${p.games} games`;
+        const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+        return { p, score: 0, watch: true, tag: status,
+          why: out ? `Out, back about ${fmtDate(h.ret)}: ${games} · projected ${p.proj}` : `${cap(games)} this round · projected ${p.proj}` };
       }
       if (st.startsWith("out")) {
         score = 1000 + h.roundsOut * 100;
@@ -829,7 +835,13 @@
       <section class="ta-pri-col out" aria-label="Sell first">
         <div class="ta-pri-h"><span>Sell first</span><span class="ta-pri-sub">long injuries, then price and form</span></div>
         ${sells.length ? sells.map((x) => row(x, "out")).join("") : `<div class="ta-pri-empty">Nobody in your squad is injured long-term, falling hard or out of form. Nice.</div>`}
-        ${watch.length ? `<div class="ta-pri-watch"><b>Keep an eye on</b> (no need to sell, check before lockout): ${watch.map((x) => `${escapeHtml(x.p.name)} <span>${escapeHtml(x.why)}</span>`).join(" · ")}</div>` : ""}
+        ${watch.length ? `<div class="ta-pri-h ta-pri-h-watch"><span>Keep an eye on</span><span class="ta-pri-sub">no need to sell, check news before lockout</span></div>
+        ${watch.map((x) => `<button type="button" class="ta-pri-row watch" data-ta-profile="${escapeHtml(x.p.id)}">
+          ${renderAvatar(x.p, 30)}
+          <span class="ta-pri-txt"><span class="ta-pri-name">${escapeHtml(x.p.name)} <span class="ta-pri-tag t-watch">${escapeHtml(x.tag)}</span></span>
+          <span class="ta-pri-why">${escapeHtml(x.why)}</span></span>
+          <span class="ta-pri-go">See news</span>
+        </button>`).join("")}` : ""}
       </section>
       <section class="ta-pri-col in" aria-label="Hot buys">
         <div class="ta-pri-h"><span>Hot buys</span><span class="ta-pri-sub">healthy, rising, in form</span></div>
@@ -1204,6 +1216,8 @@
   function handleClick(e) {
     const state = window.SCHOOPS.getState();
     if (e.target.closest("[data-go-court]")) { window.SCHOOPS.setActiveNav("court"); return; }
+    const prof = e.target.closest("[data-ta-profile]");
+    if (prof) { window.SCHOOPS.openInspector(prof.dataset.taProfile); return; }
     const plan = getActivePlan(state);
 
     const del = e.target.closest("[data-del-plan]");
