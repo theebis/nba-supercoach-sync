@@ -854,6 +854,15 @@
       gap: 5px;
     }
 
+    /* Market Cash / Points switch (same look as My Squad's Projected / Live switch) */
+    .mkt-mode { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: 2px; height: 30px; border-radius: 7px; background: var(--bg-input); border: 1px solid var(--border-subtle); flex-shrink: 0; }
+    .mkt-mode button { height: 24px; padding: 0 11px; border: none; border-radius: 5px; background: transparent; color: var(--text-tertiary);
+      font-size: 12px; font-weight: 600; cursor: pointer; transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-press); }
+    .mkt-mode button.on { background: var(--bg-active); color: var(--text-primary); box-shadow: 0 0 0 1px var(--border-default) inset; }
+    .mkt-mode button:active { transform: scale(0.96); }
+    @media (hover: hover) { .mkt-mode button:not(.on):hover { color: var(--text-secondary); } }
+    .mkt-mode button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
     .seg-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -2007,6 +2016,13 @@
           </span>
           <span class="sb-count" id="sbViewSquadCount">0</span>
         </button>
+        <button type="button" class="sb-item" data-view="topscorers" title="The 50 players expected to score the most over the next 3 rounds">
+          <span class="sb-item-left">
+            <span class="sb-dot" style="background:#38BDF8;"></span>
+            <span>Top Scorers</span>
+          </span>
+          <span class="sb-count" id="sbViewTopCount">0</span>
+        </button>
         <button type="button" class="sb-item" data-view="cows">
           <span class="sb-item-left">
             <span class="sb-dot" style="background:var(--pos-bright);"></span>
@@ -2117,6 +2133,11 @@
 
           <!-- Market-Only Header Controls -->
           <div class="vh-right" id="marketHeaderControls">
+            <!-- Market lens: Cash (breakevens, price moves) or Points (3-round points, value). Remembered per browser. -->
+            <div class="mkt-mode" id="marketModeSeg" role="group" aria-label="Market lens">
+              <button type="button" data-market-mode="cash" title="Cash: breakevens and projected price changes">Cash</button>
+              <button type="button" data-market-mode="points" title="Points: projected points over the next 3 rounds and points per $1M">Points</button>
+            </div>
             <div class="inline-search-wrap">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
               <input type="text" class="inline-search" id="searchInput" placeholder="Filter players..." autocomplete="off" />
@@ -2363,6 +2384,7 @@
     const DEFAULT_SIDEBAR_W = 248;
 
     const COW_THRESHOLD = 350000;
+    const TOP_SCORERS_N = 50;
     const BLEED_THRESHOLD = -350000;
     const RELEVANT_OUT_PRICE = 6500000;
     const RELEVANT_OUT_OWN = 3.0;
@@ -2378,7 +2400,10 @@
       avg3: 80,
       avg5: 80,
       priceChange: 108,
-      newPrice: 102
+      newPrice: 102,
+      ppgExp: 86,
+      pts3: 110,
+      ptsPerM: 94
     };
 
     const MIN_COL_WIDTHS = {
@@ -2392,13 +2417,17 @@
       avg3: 64,
       avg5: 64,
       priceChange: 88,
-      newPrice: 82
+      newPrice: 82,
+      ppgExp: 68,
+      pts3: 84,
+      ptsPerM: 72
     };
 
     const TAB_GUIDES = {
       market: {
         title: "How the Market works",
         bullets: [
+          "<strong>Cash / Points</strong> (top right) switches the lens. <strong>Cash</strong> shows breakevens and price changes. <strong>Points</strong> ranks players by points expected over the next 3 rounds (points per game × games × chance of playing, injury return dates included) and shows <strong>Pts / $1M</strong>, points for every $1M of price. Your choice is remembered.",
           "<strong>BE</strong> (breakeven) is the round total a player needs over this round's games to hold his price. The small number beside it is his projection minus his BE.",
           "Prices move after every round: each game played moves a player 4.15% of the way towards $712k × his points per game over the last two rounds. No games, no change.",
           "<strong>Captain picks</strong> (top of the page) suggest your Captain and Vice-Captain, with each player's chance of top-scoring. <strong>Use C &amp; VC</strong> sets them in My Squad.",
@@ -2480,6 +2509,7 @@
       },
       density: "comfortable",
       projSource: "schoops",   // "schoops" (our model) or "sc" (SuperCoach's projections)
+      marketMode: "cash",      // Market lens: "cash" (breakevens, price change) or "points" (3-round points, value)
       sidebarWidth: DEFAULT_SIDEBAR_W,
       colWidths: {},
       dismissedTips: {},
@@ -2619,6 +2649,10 @@
         if (parsed.colWidths && typeof parsed.colWidths === "object") state.colWidths = parsed.colWidths;
         if (parsed.dismissedTips && typeof parsed.dismissedTips === "object") state.dismissedTips = parsed.dismissedTips;
         if (parsed.projSource === "sc" || parsed.projSource === "schoops") state.projSource = parsed.projSource;
+        if (parsed.marketMode === "points" || parsed.marketMode === "cash") {
+          state.marketMode = parsed.marketMode;
+          if (state.marketMode === "points") { state.sortKey = "pts3"; state.sortCol = "pts3"; state.sortDir = "desc"; }
+        }
       } catch (e) {}
     }
 
@@ -2626,6 +2660,7 @@
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           projSource: state.projSource,
+          marketMode: state.marketMode,
           magicNumber: state.magicNumber,
           squadIds: state.squadIds,
           watchlistIds: state.watchlistIds,
@@ -2778,7 +2813,7 @@
         else if (priceChange <= BLEED_THRESHOLD) trend = "bleed";
       }
 
-      return {
+      const row = {
         ...base,
         price, r_minus_2: r2, r_minus_1: r1, proj, scProj, projIsOurs: useOurs,
         avg3: rolling3,
@@ -2787,6 +2822,58 @@
         isInactive, isRelevantOut, isFringeDnp, isZeroGames, isLikelyDnp,
         trend
       };
+      // Points mode: expected points over this round and the next two, and value for money
+      const h = horizonOf(row);
+      const known = [base.games, base.gamesNext, base.gamesAfter].filter((g) => g !== null && g !== undefined && !Number.isNaN(g));
+      row.pts3 = Math.round(h.r0 + h.r1 + h.r2);
+      row.ppgExp = h.ppg ? Math.round(h.ppg * 10) / 10 : 0;
+      row.games3 = known.length ? known.reduce((s, g) => s + g, 0) : null;
+      row.ptsPerM = price > 0 ? Math.round((row.pts3 / (price / 1000000)) * 10) / 10 : null;
+      row.horizon = h;
+      return row;
+    }
+
+    // ---------- Looking ahead: this round + the next two ----------
+    // Used by the Market's Points mode and the Trade Advisor. Per-game projection x each round's games x
+    // his chance of playing (injury return date: out = 0 until he's back, part of a round if he returns mid-round).
+    const DAY_MS = 864e5;
+    function roundWindow(k) {
+      // Rounds run Tuesday to Monday (Sydney). roundEnd = last day of the live round.
+      const end = state.roundEnd ? Date.parse(`${state.roundEnd}T23:59:00+11:00`) : Date.now() + 3 * DAY_MS;
+      return { start: end - 7 * DAY_MS + k * 7 * DAY_MS, end: end + k * 7 * DAY_MS };
+    }
+    function availIn(p, k) {
+      if (p.isInactive || p.isLikelyDnp) return 0;
+      const st = String(p.injuryStatus || "").toLowerCase();
+      if (st.startsWith("out")) {
+        const ret = p.injuryReturn ? Date.parse(`${p.injuryReturn}T12:00:00+11:00`) : null;
+        const w = roundWindow(k);
+        if (!ret || Number.isNaN(ret)) return k === 0 ? 0 : 0.5; // out with no date: unknown, assume he misses about half
+        if (ret > w.end) return 0;
+        if (ret > w.start) return Math.max(0, (w.end - ret) / (w.end - w.start));
+        return 1;
+      }
+      // Healthy (or day-to-day after this round): his usual share of games played
+      const usual = p.games && p.expGames !== null && p.expGames !== undefined && !st ? Math.min(1, p.expGames / p.games) : 0.92;
+      return Math.max(0.5, usual);
+    }
+    const horizonMemo = new Map();
+    function horizonOf(p) {
+      const key = `${p.id}|${state.round}|${state.roundEnd}|${p.proj}|${p.priceChange}|${p.injuryStatus}|${p.injuryReturn}|${p.gamesNext}|${p.gamesAfter}`;
+      if (horizonMemo.has(key)) return horizonMemo.get(key);
+      if (horizonMemo.size > 4000) horizonMemo.clear();
+      const ppg = p.expPpg || (p.games ? (p.proj || 0) / Math.max(1, p.expGames || p.games) : 0);
+      const g1 = p.gamesNext ?? 3.3, g2 = p.gamesAfter ?? 3.3;
+      const a1 = availIn(p, 1), a2 = availIn(p, 2);
+      const r1 = ppg * g1 * a1, r2 = ppg * g2 * a2;
+      // Price moves keep going while he plays; frozen while he's out
+      const cashAhead = (p.priceChange || 0) * (a1 + a2) * 0.6;
+      const ret = p.injuryReturn ? Date.parse(`${p.injuryReturn}T12:00:00+11:00`) : null;
+      const roundsOut = String(p.injuryStatus || "").toLowerCase().startsWith("out")
+        ? [0, 1, 2, 3].filter((k) => availIn(p, k) === 0).length : 0;
+      const h = { r0: p.proj || 0, r1, r2, ahead: r1 + r2, cashAhead, roundsOut, ret, ppg };
+      horizonMemo.set(key, h);
+      return h;
     }
 
     // NBA Cup 2026 knockouts (ESPN / Wikipedia): QF Dec 4–5, SF Dec 8–9, final Dec 11 (final doesn't count in SuperCoach).
@@ -3002,6 +3089,7 @@
       return allComputed.filter((p) => {
         if (state.activeView === "squad" && !p.inSquad) return false;
         if (state.activeView === "cows" && p.trend !== "cow") return false;
+        if (state.activeView === "topscorers" && !(state.topScorerIds && state.topScorerIds.has(p.id))) return false;
         if (state.activeView === "bleeding" && p.trend !== "bleed") return false;
         if (state.activeView === "fourgames" && p.games < 4) return false;
         if (state.activeView === "pods" && !(p.owned > 0 && p.owned < 5)) return false;
@@ -3046,6 +3134,25 @@
       ];
       if (state.displayCols.owned) cols.push({ key: "owned", sort: "owned", label: "Own %", align: "num" });
       if (state.displayCols.form) cols.push({ key: "form", sort: "r_minus_1", label: `W${Math.max(1, r - 2)}/W${Math.max(1, r - 1)} scores`, title: "Round totals for the last two rounds", align: "num" });
+      if (state.marketMode === "points") {
+        // Points mode: who scores the most over the next 3 rounds, and who scores the most per dollar
+        cols.push({ key: "games", sort: "games3", label: `R${r}·R${r + 1}·R${r + 2} games`, title: "Games each team plays this round and the next two. Sorts by the 3-round total.", align: "center" });
+        cols.push({ key: "proj", sort: "proj", label: `R${r} Proj`, align: "num",
+          title: state.projSource === "sc" ? "SuperCoach's projection for this round" : "SCHOOPS projection for this round: points per game x the games he's expected to play." });
+        cols.push({ key: "ppgExp", sort: "ppgExp", label: "Pts/Game", title: "Projected points per game when he plays", align: "num" });
+        cols.push({ key: "pts3", sort: "pts3", label: `R${r}–R${r + 2} Pts`, title: "Points expected over this round and the next two: points per game x games x his chance of playing (injury return dates included). Hover a number for the split.", align: "num" });
+        cols.push({ key: "ptsPerM", sort: "ptsPerM", label: "Pts / $1M", title: "3-round points for every $1M of his price. Higher = more points for your money.", align: "num" });
+        if (state.displayCols.avg3) cols.push({ key: "avg3", sort: "avg3", label: "3-Wk", align: "num" });
+        if (state.displayCols.avg5) cols.push({ key: "avg5", sort: "avg5", label: "5-Wk", align: "num" });
+        if (!isPhone() && marketExtras(cols).form) {
+          cols.push({ key: "trendcol", label: "Form (pts/game) · price trend", title: "Bars: points per game in the last 5 rounds (green beat the dashed line, red fell short). Dashed line: points per game needed to hold his price. Line: price since Round 1, ending at this round's projected price.", align: "flex-th", flex: true });
+        }
+        if (isPhone()) {
+          const order = ["name", "proj", "pts3", "ppgExp", "ptsPerM", "price", "games", "form", "owned", "avg3", "avg5"];
+          cols.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
+        }
+        return cols;
+      }
       cols.push({ key: "games", sort: "games", label: `R${r}·R${r + 1}·R${r + 2} games`, title: "Games each team plays this round and the next two", align: "center" });
       cols.push({ key: "be", sort: "be", label: "BE", align: "num", isBe: true });
       cols.push({ key: "proj", sort: "proj", label: `R${r} Proj`, align: "num",
@@ -3213,11 +3320,26 @@
         <div class="tip-dim" style="margin-top:4px">Projection = about ${p.expPpg ? Math.round(p.expPpg) : "?"} a game × the games he's expected to play. "Most games" is his usual per-game score when he plays (held ${held}% of the time in testing).</div>`;
     }
 
+    // Points mode: the 3-round total split by round, with games and any injury return
+    function pts3TipHtml(p) {
+      const h = p.horizon || horizonOf(p);
+      const r = state.round;
+      const g = [p.games, p.gamesNext, p.gamesAfter];
+      const rows = [h.r0, h.r1, h.r2].map((v, i) => {
+        const gm = g[i] === null || g[i] === undefined ? (i ? "games not out yet" : "") : `${g[i]} game${g[i] === 1 ? "" : "s"}`;
+        return `<div class="tip-row"><span>Round ${r + i}${gm ? ` <span class="tip-dim">· ${gm}</span>` : ""}</span><b class="${v < 1 ? "tip-neg" : ""}">${Math.round(v)}</b></div>`;
+      }).join("");
+      const inj = p.injuryStatus
+        ? `<div class="tip-neg">${escapeHtml(p.injury || p.injuryStatus)}${p.injuryReturn ? ` · back about ${escapeHtml(formatReturnDate(p.injuryReturn))}` : ""}</div>` : "";
+      return `<div class="tip-h">Points, Rounds ${r}–${r + 2}</div>${rows}${inj}
+        <div class="tip-dim" style="margin-top:4px">About ${h.ppg ? Math.round(h.ppg) : "?"} a game × games × his chance of playing. Later rounds use his usual share of games, or his injury return date.</div>`;
+    }
+
     function getColWidth(key) {
       const saved = Number(state.colWidths[key]);
       if (saved && !Number.isNaN(saved)) return Math.max(MIN_COL_WIDTHS[key] || 64, saved);
       if (isPhone()) {
-        const phoneWidths = { name: 190, be: 96, priceChange: 96 };
+        const phoneWidths = { name: 190, be: 96, priceChange: 96, proj: 74, pts3: 96 };
         if (phoneWidths[key]) return phoneWidths[key];
       }
       return DEFAULT_COL_WIDTHS[key] || 90;
@@ -3361,6 +3483,12 @@
       document.getElementById("sbTradeCount").textContent = String((state.tradeLab.plans || []).length);
       document.getElementById("sbViewSquadCount").textContent = String(squad.length);
       document.getElementById("sbViewCowsCount").textContent = String(cows.length);
+      document.getElementById("sbViewTopCount").textContent = String(state.topScorerIds ? state.topScorerIds.size : 0);
+      document.querySelectorAll("[data-market-mode]").forEach((b) => {
+        const on = b.dataset.marketMode === state.marketMode;
+        b.classList.toggle("on", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
       document.getElementById("sbViewBleedCount").textContent = String(bleed.length);
       document.getElementById("sbView4GCount").textContent = String(fourG.length);
       document.getElementById("sbViewPodCount").textContent = String(pods.length);
@@ -3391,7 +3519,7 @@
       });
 
       const viewNames = {
-        all: "All Players", squad: "My Players", cows: "Cash Cows",
+        all: "All Players", squad: "My Players", cows: "Cash Cows", topscorers: "Top Scorers",
         bleeding: "Bleeding", fourgames: "4-Games Round", pods: "PODs <5%", injured: "Injured", watchlist: "Watchlist"
       };
       const crumb = document.getElementById("vhCrumb");
@@ -3582,7 +3710,7 @@
       const t = e.target.closest && e.target.closest("[data-ctx]");
       if (!t) return;
       if (t.dataset.ctx === "cow") { if (t.dataset.player) openInspector(t.dataset.player); return; }
-      if (t.dataset.ctx === "cash") { state.sortKey = "priceChange"; state.sortCol = "priceChange"; state.sortDir = "desc"; }
+      if (t.dataset.ctx === "cash") setMarketMode("cash", true);
       setActiveNav("market", "squad");
     });
 
@@ -3606,6 +3734,9 @@
       const allComputed = state.players.map(computeRow);
       state.computedById = {};
       allComputed.forEach((p) => { state.computedById[p.id] = p; });
+      // Top Scorers view: the 50 players expected to score the most over the next 3 rounds
+      state.topScorerIds = new Set(allComputed.filter((p) => !p.isInactive && p.pts3 > 0)
+        .sort((a, b) => b.pts3 - a.pts3).slice(0, TOP_SCORERS_N).map((p) => p.id));
 
       const filtered = sortRows(getFilteredRows(allComputed));
       syncSidebarAndHeader(allComputed, filtered.length);
@@ -3693,6 +3824,9 @@
               if (c.key === "avg5") return `<td class="num mono muted-text">${p.avg5 !== null ? p.avg5.toFixed(1) : "—"}</td>`;
               if (c.key === "priceChange") return `<td class="num mono ${chgClass}" style="font-weight:600;">${formatMoney(p.priceChange)}</td>`;
               if (c.key === "newPrice") return `<td class="num mono muted-text">${formatPriceM(p.newPrice)}</td>`;
+              if (c.key === "ppgExp") return `<td class="num mono muted-text">${p.ppgExp ? p.ppgExp.toFixed(1) : "—"}</td>`;
+              if (c.key === "pts3") return `<td class="num mono" style="font-weight:600;"><span class="proj-tip" data-tip="${escapeHtml(pts3TipHtml(p))}">${p.pts3}</span></td>`;
+              if (c.key === "ptsPerM") return `<td class="num mono ${p.ptsPerM >= 15 ? "pos-text" : "muted-text"}">${p.ptsPerM === null ? "—" : p.ptsPerM.toFixed(1)}</td>`;
               if (c.key === "trendcol") return `<td class="flex-td">${renderFormCell(p)}</td>`;
               return `<td></td>`;
             }).join("");
@@ -3957,6 +4091,7 @@
       renderSchedStrip,
       renderDismissibleTip,
       getState: () => state,
+      horizon: (p) => (p && p.horizon) || horizonOf(p),
       // Trade window: trades lock at the first tip-off of a round. If the live round hasn't tipped off yet,
       // the window is open now; otherwise it reopens when this round ends (Monday afternoon AEDT).
       tradeWindow() {
@@ -4031,7 +4166,30 @@
     });
 
     document.querySelectorAll("#sbSmartViews .sb-item").forEach((btn) => {
-      btn.addEventListener("click", () => setActiveNav("market", btn.dataset.view));
+      btn.addEventListener("click", () => {
+        // The lens follows the view: Top Scorers is a points list, Cash Cows / Bleeding are cash lists
+        const v = btn.dataset.view;
+        if (v === "topscorers") setMarketMode("points", true);
+        else if (v === "cows" || v === "bleeding") setMarketMode("cash", true);
+        setActiveNav("market", v);
+      });
+    });
+
+    // Market Cash / Points switch: each lens has its own default sort
+    function setMarketMode(mode, quiet) {
+      if (mode !== "cash" && mode !== "points") return;
+      const changed = state.marketMode !== mode;
+      state.marketMode = mode;
+      if (changed || quiet) {
+        const key = mode === "points" ? "pts3" : "priceChange";
+        state.sortKey = key; state.sortCol = key; state.sortDir = "desc";
+      }
+      savePrefs();
+      if (!quiet) render();
+    }
+    document.getElementById("marketModeSeg").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-market-mode]");
+      if (b) setMarketMode(b.dataset.marketMode);
     });
 
     document.getElementById("mobileMenuBtn").addEventListener("click", () => {
@@ -4449,7 +4607,7 @@
   </script>
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
   <script src="court.js?v=20"></script>
-  <script src="tradelab.js?v=20"></script>
+  <script src="tradelab.js?v=21"></script>
   <script src="briefing.js?v=5"></script>
   <script src="captains.js?v=3"></script>
   <script src="live.js?v=9"></script>

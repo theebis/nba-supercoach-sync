@@ -60,6 +60,32 @@ async function suite(label, ctxOpts) {
     expect(before !== after, "first row did not change after sorting");
   });
 
+  await run("Market: Cash / Points switch changes the columns and sort, and is remembered", page, async (p) => {
+    await nav(p, "market");
+    const heads = async () => p.locator("#tableHead").innerText();
+    await p.locator("[data-market-mode=\"points\"]").click(); await p.waitForTimeout(300);
+    const ptsHead = await heads();
+    const st = await p.evaluate(() => { const s = window.SCHOOPS.getState(); return { mode: s.marketMode, sort: s.sortKey, saved: JSON.parse(localStorage.getItem("schoops_terminal_v3") || "{}").marketMode }; });
+    expect(ptsHead.includes("Pts / $1M") && !/\bBE\b/.test(ptsHead), `points header: ${ptsHead.replace(/\s+/g, " ")}`);
+    expect(st.mode === "points" && st.sort === "pts3" && st.saved === "points", JSON.stringify(st));
+    const pts = await p.evaluate(() => window.SCHOOPS.getState().visibleRows.slice(0, 5).map((r) => r.pts3));
+    expect(pts.every((v, i) => i === 0 || pts[i - 1] >= v), `not sorted by 3-round points: ${pts}`);
+    await p.reload(); await p.waitForFunction(() => window.SCHOOPS && window.SCHOOPS.getState().visibleRows, null, { timeout: 30000 });
+    expect(await p.evaluate(() => window.SCHOOPS.getState().marketMode) === "points", "Points mode not remembered after reload");
+    await p.locator("[data-market-mode=\"cash\"]").click(); await p.waitForTimeout(300);
+    expect(/\bBE\b/.test(await heads()), "Cash mode did not bring back BE");
+  });
+
+  await run("Market: Top Scorers view lists the top 3-round scorers in Points mode", page, async (p) => {
+    if (isPhone) { await p.evaluate(() => { document.querySelector("[data-view=\"topscorers\"]").click(); }); }
+    else { await p.locator("[data-view=\"topscorers\"]").click(); }
+    await p.waitForTimeout(300);
+    const st = await p.evaluate(() => { const s = window.SCHOOPS.getState(); return { mode: s.marketMode, n: s.visibleRows.length, view: s.activeView }; });
+    expect(st.view === "topscorers" && st.mode === "points" && st.n > 10 && st.n <= 50, JSON.stringify(st));
+    await p.locator("[data-market-mode=\"cash\"]").click(); await p.waitForTimeout(200);
+    await p.evaluate(() => window.SCHOOPS.setActiveNav("market", "all"));
+  });
+
   await run("Market: Injured view filters the list", page, async (p) => {
     if (isPhone) { await p.evaluate(() => window.SCHOOPS.setActiveNav("market", "injured")); }
     else { await p.locator('[data-view="injured"]').click(); }

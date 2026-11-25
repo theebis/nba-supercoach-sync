@@ -539,46 +539,9 @@
   }
 
   // ---------- looking ahead: the next 3 rounds ----------
-  // Points a player is expected to score in this round and the next two, using his per-game projection,
-  // each round's games, and his injury return date (out = 0 until he's back; part of a round if he returns mid-round).
-  const DAY = 864e5;
-  function roundWindow(state, k) {
-    // Rounds run Tuesday to Monday (Sydney). roundEnd = last day of the live round.
-    const end = state.roundEnd ? Date.parse(`${state.roundEnd}T23:59:00+11:00`) : Date.now() + 3 * DAY;
-    return { start: end - 7 * DAY + k * 7 * DAY, end: end + k * 7 * DAY };
-  }
-  function availIn(p, state, k) {
-    if (p.isInactive || p.isLikelyDnp) return 0;
-    const st = String(p.injuryStatus || "").toLowerCase();
-    if (st.startsWith("out")) {
-      const ret = p.injuryReturn ? Date.parse(`${p.injuryReturn}T12:00:00+11:00`) : null;
-      const w = roundWindow(state, k);
-      if (!ret || Number.isNaN(ret)) return k === 0 ? 0 : 0.5; // out with no date: unknown, assume he misses about half
-      if (ret > w.end) return 0;
-      if (ret > w.start) return Math.max(0, (w.end - ret) / (w.end - w.start));
-      return 1;
-    }
-    // Healthy (or day-to-day after this round): his usual share of games played
-    const usual = p.games && p.expGames !== null && p.expGames !== undefined && !st ? Math.min(1, p.expGames / p.games) : 0.92;
-    return Math.max(0.5, usual);
-  }
-  const horizonMemo = new Map();
-  function horizon(p, state) {
-    const key = `${p.id}|${state.round}|${p.proj}|${p.injuryStatus}|${p.injuryReturn}`;
-    if (horizonMemo.has(key)) return horizonMemo.get(key);
-    const ppg = p.expPpg || (p.games ? (p.proj || 0) / Math.max(1, p.expGames || p.games) : 0);
-    const g1 = p.gamesNext ?? 3.3, g2 = p.gamesAfter ?? 3.3;
-    const a1 = availIn(p, state, 1), a2 = availIn(p, state, 2);
-    const r1 = ppg * g1 * a1, r2 = ppg * g2 * a2;
-    // Price moves keep going while he plays; frozen while he's out
-    const cashAhead = (p.priceChange || 0) * (a1 + a2) * 0.6;
-    const ret = p.injuryReturn ? Date.parse(`${p.injuryReturn}T12:00:00+11:00`) : null;
-    const roundsOut = String(p.injuryStatus || "").toLowerCase().startsWith("out")
-      ? [0, 1, 2, 3].filter((k) => availIn(p, state, k) === 0).length : 0;
-    const h = { r0: p.proj || 0, r1, r2, ahead: r1 + r2, cashAhead, roundsOut, ret, ppg };
-    horizonMemo.set(key, h);
-    return h;
-  }
+  // Points expected this round and the next two (per-game projection x games x injury availability).
+  // Shared with the Market's Points mode: horizonOf() in index.html.
+  const horizon = (p) => window.SCHOOPS.horizon(p);
   // Future rounds aren't solver-exact (lineups change), so count them a little below face value
   const AHEAD_WEIGHT = 0.85;
 

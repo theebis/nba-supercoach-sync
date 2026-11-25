@@ -26,6 +26,11 @@ const VIEWPORTS = {
 // Each view: how to get there from a fresh load (runs in the page)
 const VIEWS = {
   market: async (page) => {},
+  // Market in Points mode (Cash / Points switch at the top)
+  "market-points": async (page) => {
+    await page.locator('[data-market-mode="points"]').click();
+    await page.waitForTimeout(300);
+  },
   // Captain picks opened (phones start with them shrunk to one line)
   "market-captains": async (page) => {
     const line = page.locator(".cp-line");
