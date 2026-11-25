@@ -81,3 +81,32 @@ Still to do: 4. Trade Advisor overhaul + rename (examples on request); 6. likely
 - Bug fixed: My Squad "Projected" button did nothing (its click was wired to the header-buttons handler).
 - **Likely range redone** (owner agreed): range is now per game *if he plays* ("Most games 17–33 a game"), with availability shown separately ("about 1.6 of 3"). Spread blends a league spread by scoring band (0–15 / 15–25 / 25+ a game; low scorers swing far more) with the player's own round-to-round consistency. Held 76% on rounds it wasn't built from (target 80%). Old round-total range kept only for internal maths (trade/captain chances). Stored as `ppg_lo`/`ppg_hi`; params `ppg_sd` in model/projection_params.json.
 - **Trade Lab renamed Trade Advisor and redesigned** (owner picked B, phones A): suggestion list (+ Add toggles in/out of the plan) beside a sticky "Your plan" scoreboard (points, price change, plan tabs, hand-picked trades, bank, apply, copy to compare); mid-size screens put numbers under the names; phones get cards and a bottom plan tray with Review.
+
+## Round 9 interview (25 Nov 2026): plan to launch
+Decisions:
+- Trade Advisor look: owner is happy enough for now. Make it smarter instead: look 3 rounds ahead, use injury return dates, and flag long-term injured players as sell priorities (Cameron Boozer, out ~4 weeks, ranked low because the advisor only valued this round and he sits on the bench).
+- Live: the captain sorts by his doubled score.
+- Safety net: automatic click-through tests of every page before shipping; alert if the Monday rollover doesn't happen (GitHub already emails on failed syncs).
+- Beta pill by the logo + "Send feedback" form (Tally, emailed to the owner).
+- Private visitor counter (GoatCounter: no cookies, dashboard behind the owner's login only) + "Don't count my visits" switch in Settings.
+- "Send to my phone" QR/link for the squad, AND optional sign-in (Supabase: email link, Google later) to sync squads across devices. Must say clearly that sign-in is optional and no feature needs it.
+- Round recap with a shareable portrait image each Monday.
+- Phone pass: every page, most useful info first, as polished as possible.
+- Player page + compare two players.
+- Off-season: season review + "back next season" (roadmap only, build ~March).
+
+Order (owner agreed):
+1. Captain sort fix + click-through safety tests
+2. Trade Advisor: 3-round horizon, injury return dates, sell-priority flags
+3. Beta pill, feedback form, private visitor counter
+4. Phone pass
+5. QR "send to my phone"
+6. Launch to a small group
+7. Optional sign-in (Supabase)
+8. Round recap + share image
+9. Multi-round planner
+10. Rival compare
+11. Player page + compare
+12. Off-season review (build ~March)
+
+Waiting on the owner (free sign-ups, steps given in chat): GoatCounter, Tally, Supabase.
