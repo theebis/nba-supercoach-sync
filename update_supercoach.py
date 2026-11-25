@@ -824,7 +824,8 @@ def attach_projections(live_data, target_round):
     except Exception:
         pinfo = {}
     live_data["projectionModel"] = {"version": 2, "roundEnd": round_end, "rangeLevel": pinfo.get("range_level", 0.5),
-                                    "rangeCoverage": pinfo.get("range_coverage_cv") or pinfo.get("range_coverage")}
+                                    "rangeCoverage": pinfo.get("range_coverage_cv") or pinfo.get("range_coverage"),
+                                    "ppgRangeCoverage": pinfo.get("ppg_range_coverage_cv")}
     print(f"Added SCHOOPS projections for {len(live_data['players'])} players (round ends {round_end}).")
 
 

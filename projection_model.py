@@ -16,6 +16,7 @@ Run directly to fit + backtest:  python projection_model.py   (writes model/proj
 The scraper imports project_player() to add proj_v2 / proj_lo / proj_hi / exp_games to the live data.
 Every backtest prediction only uses information from BEFORE that round.
 """
+import math
 import itertools
 import json
 import os
@@ -92,7 +93,8 @@ def backtest_rows(hist, rounds):
             if p.get("games", 0) <= 0 or p.get("proj", 0) <= 0 or "actual_points" not in p:
                 continue
             f = features(pid, r, hist)
-            rows.append({"r": r, "price": p["price"], "sc": p["proj"], "g": p["games"], "past": f["past"], "actual": p["actual_points"]})
+            rows.append({"r": r, "price": p["price"], "sc": p["proj"], "g": p["games"], "past": f["past"], "actual": p["actual_points"],
+                         "gp": int(p.get("games_played") or 0)})
     return rows
 
 
@@ -135,6 +137,49 @@ def range_quantiles(params, rows):
     return out or DEFAULT_PARAMS["range_q"]
 
 
+# Per-game range "if he plays": middle 80% of his per-game average, from a league-wide spread blended with
+# the player's own round-to-round consistency (more weight on his own as his history grows).
+PPG_Z = 1.2816          # middle 80%
+PPG_OWN_K = 3.0         # rounds of league-wide spread blended in
+
+
+PPG_BUCKETS = [0, 15, 25]   # per-game scoring bands: low scorers swing far more (relatively) than stars
+
+
+def ppg_log_sd(params, rows):
+    """League spread (log scale) of actual vs projected per-game average, per scoring band: [[from_ppg, sd], ...]."""
+    vals = {b: [] for b in PPG_BUCKETS}
+    for x in rows:
+        if x.get("gp", 0) > 0 and x["actual"] > 0:
+            ppg = project(params, x["price"], x["sc"], x["g"], x["past"])[2]
+            if ppg > 0:
+                b = max(v for v in PPG_BUCKETS if ppg >= v)
+                vals[b].append(math.log((x["actual"] / x["gp"]) / ppg))
+    return [[b, round(st.pstdev(v), 4) if len(v) > 20 else 0.45] for b, v in vals.items()]
+
+
+def band_sd(table, ppg):
+    if isinstance(table, (int, float)):
+        return float(table)
+    sd = table[0][1]
+    for b, v in table:
+        if ppg >= b:
+            sd = v
+    return sd
+
+
+def ppg_range(ppg, past, league_table):
+    """(low, high) per-game average he usually lands in when he plays."""
+    if ppg <= 0:
+        return 0.0, 0.0
+    league_sd = band_sd(league_table, ppg)
+    own = [math.log((pts / gp) / ppg) for pts, gp, _ in past if gp > 0 and pts > 0]
+    n = len(own)
+    own_var = st.pvariance(own) if n >= 2 else league_sd ** 2
+    sd = math.sqrt((n * own_var + PPG_OWN_K * league_sd ** 2) / (n + PPG_OWN_K))
+    return ppg * math.exp(-PPG_Z * sd), ppg * math.exp(PPG_Z * sd)
+
+
 def load_params():
     try:
         with open(PARAMS_FILE, encoding="utf-8") as f:
@@ -152,8 +197,9 @@ def project_player(params, live_player, pid, live_round, hist, round_end=None):
     for b_lo, q25, q75 in params.get("range_q", DEFAULT_PARAMS["range_q"]):
         if proj >= b_lo:
             lo_r, hi_r = q25, q75
+    g_lo, g_hi = ppg_range(ppg, f["past"], params.get("ppg_sd", 0.45))
     return {"proj_v2": round(proj), "proj_lo": round(proj * lo_r), "proj_hi": round(proj * hi_r),
-            "exp_games": round(eg, 1), "exp_ppg": round(ppg, 1)}
+            "exp_games": round(eg, 1), "exp_ppg": round(ppg, 1), "ppg_lo": round(g_lo), "ppg_hi": round(g_hi)}
 
 
 def train(hist, live_round, verbose=True):
@@ -219,14 +265,31 @@ def _finish(all_rows, done, cv, verbose):
     held = [inside_range(range_quantiles(params, [y for y in all_rows if y["r"] != r]), x)
             for r in done for x in all_rows if x["r"] == r]
     range_cv = round(sum(held) / len(held), 3) if held else None
+
+    # Per-game range, tested the same honest way (spread from the other rounds only)
+    params["ppg_sd"] = ppg_log_sd(params, all_rows)
+    g_held = []
+    for r in done:
+        sd_r = ppg_log_sd(params, [y for y in all_rows if y["r"] != r])
+        for x in all_rows:
+            if x["r"] != r or x.get("gp", 0) <= 0:
+                continue
+            ppg = project(params, x["price"], x["sc"], x["g"], x["past"])[2]
+            if ppg <= 0:
+                continue
+            lo, hi = ppg_range(ppg, x["past"], sd_r)
+            g_held.append(lo <= x["actual"] / x["gp"] <= hi)
+    ppg_cv = round(sum(g_held) / len(g_held), 3) if g_held else None
     os.makedirs(os.path.dirname(PARAMS_FILE), exist_ok=True)
     with open(PARAMS_FILE, "w", encoding="utf-8") as f:
         json.dump({"params": params, "fit_rounds": done, "rows": len(all_rows), "honest_test": cv,
                    "in_sample_mae": round(err, 2), "range_coverage": round(inside / len(all_rows), 3),
-                   "range_coverage_cv": range_cv, "range_level": round(RANGE_HI_Q - RANGE_LO_Q, 2)}, f, indent=2)
+                   "range_coverage_cv": range_cv, "range_level": round(RANGE_HI_Q - RANGE_LO_Q, 2),
+                   "ppg_range_coverage_cv": ppg_cv, "ppg_range_level": 0.8}, f, indent=2)
     if verbose:
         print(f"Final params: {params}")
         print(f"Likely range holds the actual score {inside / len(all_rows):.0%} of the time ({range_cv:.0%} on rounds it wasn't built from).")
+        print(f"Per-game range (if he plays) held {ppg_cv:.0%} on rounds it wasn't built from.")
     return params
 
 

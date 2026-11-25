@@ -21,6 +21,20 @@
         0.583,
         1.267
       ]
+    ],
+    "ppg_sd": [
+      [
+        0,
+        0.6705
+      ],
+      [
+        15,
+        0.3293
+      ],
+      [
+        25,
+        0.2876
+      ]
     ]
   },
   "fit_rounds": [
@@ -59,5 +73,7 @@
   "in_sample_mae": 11.05,
   "range_coverage": 0.871,
   "range_coverage_cv": 0.868,
-  "range_level": 0.8
+  "range_level": 0.8,
+  "ppg_range_coverage_cv": 0.755,
+  "ppg_range_level": 0.8
 }
