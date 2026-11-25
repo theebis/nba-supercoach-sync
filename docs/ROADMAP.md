@@ -110,3 +110,5 @@ Order (owner agreed):
 12. Off-season review (build ~March)
 
 Waiting on the owner (free sign-ups, steps given in chat): GoatCounter, Tally, Supabase.
+
+Progress (25 Nov 2026, branch preview/launch1, not pushed): steps 1-3 built and tested (captain sort, click-through check npm run check:clicks, rollover alarm scripts/check_rollover.py, 3-round advisor with Sell first / Hot buys, Beta pill, feedback via Tally form xVJAvG, Cloudflare analytics with a Don't count me switch). Supabase project for step 7: https://zbhvwaunbnwggqsfxxtk.supabase.co (publishable key given by owner in chat; public by design). Next: step 4 phone pass, step 5 QR link.

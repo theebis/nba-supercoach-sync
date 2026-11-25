@@ -66,6 +66,9 @@ jobs:
           git add supercoach_data.json history/
           git diff --quiet && git diff --staged --quiet || (git commit -m "chore: SuperCoach data refresh" && git pull --rebase && git push)
 
+      - name: Rollover safety net (fails, and GitHub emails you, if a finished round hasn't moved on)
+        run: python scripts/check_rollover.py
+
       - name: Publish private accuracy report (skipped until the ACCURACY_TOKEN secret exists)
         if: env.ACCURACY_TOKEN != ''
         run: |
