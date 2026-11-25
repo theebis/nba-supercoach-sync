@@ -143,7 +143,10 @@
       .lv-play:first-child { border-top: none; }
       .lv-play[data-lv-player] { cursor: pointer; }
       @media (hover: hover) { .lv-play[data-lv-player]:hover { background: var(--bg-hover); } }
-      .lv-play.mine { background: rgba(110, 123, 242, 0.07); box-shadow: inset 2px 0 0 var(--accent); }
+      /* Your players: soft accent wash from the left, ringed photo, points in an accent pill */
+      .lv-play.mine { background: linear-gradient(90deg in oklab, rgba(110, 123, 242, 0.16), rgba(110, 123, 242, 0.03) 60%); box-shadow: inset 3px 0 0 var(--accent); }
+      .lv-play.main-mine .sc-avatar { box-shadow: 0 0 0 2px #0F0F12, 0 0 0 3.5px var(--accent); }
+      .lv-play.mine .lv-play-t { color: #A5AEFF; }
       .lv-play-t { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); }
       .lv-play-txt { font-size: 12.5px; color: var(--text-primary); line-height: 1.4; text-wrap: pretty; min-width: 0; }
       .lv-play-ev { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
@@ -151,7 +154,8 @@
       .lv-ev small { font-family: var(--sans); font-size: 10.5px; font-weight: 500; color: var(--text-tertiary); }
       .lv-ev.pos { color: var(--pos-bright); }
       .lv-ev.neg { color: var(--neg-soft); }
-      .lv-ev.mine small { color: #A5AEFF; }
+      .lv-ev.mine { padding: 2px 8px 2px 7px; border-radius: 999px; background: rgba(110, 123, 242, 0.2); box-shadow: inset 0 0 0 1px rgba(110, 123, 242, 0.45); }
+      .lv-ev.mine small { color: #C7CCFF; font-weight: 600; }
       .lv-pre-cols .lv-prow { grid-template-columns: 22px minmax(0, 1fr) auto; }
 
       .lv-card { border: 1px solid var(--border-subtle); border-radius: 12px; background: #0F0F12; min-width: 0; overflow: hidden; }
@@ -751,7 +755,7 @@
       const main = byId[p.ev[0].id] || { id: p.ev[0].id, name: "" };
       const isMine = p.ev.some((e) => mine(e.id));
       const attrs = main.p ? `data-lv-player="${esc(main.p.id)}"` : "";
-      return `<li class="lv-play ${isMine ? "mine" : ""}" ${attrs}><span class="lv-play-t">${esc(p.clock)}</span>${face(main, 26)}<span class="lv-play-txt">${esc(p.text)}</span><span class="lv-play-ev">${p.ev.map(chip).join("")}</span></li>`;
+      return `<li class="lv-play ${isMine ? "mine" : ""} ${mine(main.id) ? "main-mine" : ""}" ${attrs}><span class="lv-play-t">${esc(p.clock)}</span>${face(main, 26)}<span class="lv-play-txt">${esc(p.text)}</span><span class="lv-play-ev">${p.ev.map(chip).join("")}</span></li>`;
     };
     const empty = live.feedMine ? "None of your players scored in this quarter." : "No scoring plays in this quarter yet.";
     return `<div class="lv-feed">${headHtml(qs, cur)}${list.length ? `<ol class="lv-plays">${list.map(item).join("")}</ol>` : `<div class="lv-pre">${empty}</div>`}</div>`;
@@ -872,11 +876,52 @@
       const e = perPlayer[id] || { lines: [] };
       return teamGames(p.team).map((g) => {
         const l = e.lines.find((x) => x.game.key === g.key);
-        return { eventId: g.eventId || g.key, state: g.state, detail: g.detail, sc: l && !l.row.dnp ? l.row.sc : 0,
-          dnp: !!(l && l.row.dnp), played: !!(l && !l.row.dnp), reason: l ? l.row.reason : "", vs: g.home === p.team ? g.away : g.home };
+        const home = g.home === p.team;
+        return { key: g.key, eventId: g.eventId || g.key, ms: g.ms, state: g.state, detail: g.detail, sc: l && !l.row.dnp ? l.row.sc : 0,
+          dnp: !!(l && l.row.dnp), played: !!(l && !l.row.dnp), reason: l ? l.row.reason : "", vs: home ? g.away : g.home, home,
+          us: home ? g.homeScore : g.awayScore, them: home ? g.awayScore : g.homeScore, min: l && !l.row.dnp ? l.row.min : 0 };
       });
     },
     round: () => live.round,
+    // Your team live, same rules as the Live page: best 9 of 10 starters + captain x2 (VC if the captain plays 0).
+    // null until this round's games are loaded or if you have no squad.
+    team() {
+      const state = window.SCHOOPS.getState();
+      if (!live.games.length) return null;
+      const squad = Object.values(state.computedById || {}).filter((p) => p.inSquad);
+      const lu = squad.length ? lineup(state, squad) : null;
+      if (!lu) return null;
+      const { ev } = lu;
+      const { perPlayer } = compute(state);
+      const players = {};
+      [...ev.starters, ...ev.bench].forEach((p) => {
+        const s = playerStatus(p, perPlayer);
+        players[p.id] = { sc: s.sc, finish: s.finish, official: s.official, played: s.played, total: s.total, left: s.left,
+          now: s.now ? s.now.detail : null, nowLine: s.nowLine && !s.nowLine.row.dnp ? statLine(s.nowLine.row) : null, pips: s.pips };
+      });
+      let cap = ev.captain;
+      const c = cap && players[cap.id];
+      if (c && c.played === 0 && c.left === 0 && !c.now && ev.viceCaptain) cap = ev.viceCaptain;
+      const total = (key) => {
+        const vals = ev.starters.map((p) => ({ id: p.id, v: players[p.id][key] }));
+        let drop = null;
+        if (vals.length === 10) drop = vals.filter((x) => !cap || x.id !== cap.id).sort((a, b) => a.v - b.v)[0];
+        const sum = vals.reduce((s, x) => s + (drop && x.id === drop.id ? 0 : x.v), 0) + (cap ? players[cap.id][key] : 0);
+        return { sum: Math.round(sum), drop: drop ? drop.id : null };
+      };
+      const soFar = total("sc"), finish = total("finish");
+      const doneGames = ev.starters.reduce((s, p) => s + (players[p.id].total - players[p.id].left - (players[p.id].now ? 1 : 0)), 0);
+      const allGames = ev.starters.reduce((s, p) => s + players[p.id].total, 0);
+      return { soFar: soFar.sum, finish: finish.sum, drop: finish.drop, capId: cap ? cap.id : null, players,
+        doneGames, allGames, onCourt: ev.starters.filter((p) => players[p.id].now).length, started: doneGames > 0 || ev.starters.some((p) => players[p.id].now) };
+    },
+    // Open the Live page on one game (from the player profile)
+    openGame(key) {
+      live.selected = key;
+      live.feedQ = null;
+      window.SCHOOPS.setActiveNav("live");
+      setTimeout(() => { const el = document.querySelector(".lv-gc"); if (el) el.scrollIntoView({ block: "start", behavior: "smooth" }); }, 80);
+    },
     player(id) {
       const state = window.SCHOOPS.getState();
       const p = state.computedById[id];
