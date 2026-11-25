@@ -922,6 +922,39 @@
     }
 
     /* Whisper-Quiet Context Bar + First-Visit Dismissible Tip */
+    /* Import-your-team banner (top of the Market until the squad is full) */
+    .imp-banner { flex-shrink: 0; display: flex; align-items: center; gap: 14px 18px; flex-wrap: wrap; margin: 14px 18px 4px; padding: 16px 18px;
+      border-radius: 12px; border: 1px solid rgba(110, 123, 242, 0.45);
+      background: linear-gradient(135deg in oklab, rgba(110, 123, 242, 0.2), rgba(110, 123, 242, 0.05) 70%), var(--bg-elevated); }
+    .imp-banner[hidden] { display: none; }
+    .imp-banner.partial { padding: 11px 14px; border-color: rgba(110, 123, 242, 0.3); background: linear-gradient(135deg in oklab, rgba(110, 123, 242, 0.12), rgba(110, 123, 242, 0.03) 70%), var(--bg-elevated); }
+    .imp-ico { width: 42px; height: 42px; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+      background: var(--accent); color: #fff; box-shadow: 0 6px 18px rgba(110, 123, 242, 0.35); }
+    .imp-ico svg { width: 20px; height: 20px; }
+    .imp-banner.partial .imp-ico { width: 32px; height: 32px; border-radius: 9px; box-shadow: none; }
+    .imp-banner.partial .imp-ico svg { width: 16px; height: 16px; }
+    .imp-copy { flex: 1 1 320px; min-width: 0; }
+    .imp-title { font-size: 16px; font-weight: 650; color: var(--text-primary); letter-spacing: -0.01em; }
+    .imp-banner.partial .imp-title { font-size: 13.5px; font-weight: 600; }
+    .imp-sub { margin-top: 3px; font-size: 12.5px; line-height: 1.5; color: var(--text-secondary); max-width: 68ch; text-wrap: pretty; }
+    .imp-btns { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .imp-main { height: 38px; padding: 0 16px; display: inline-flex; align-items: center; gap: 8px; border-radius: 9px; border: none;
+      background: var(--accent); color: #fff; font-size: 13.5px; font-weight: 600; cursor: pointer; white-space: nowrap;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.18) inset, 0 4px 14px rgba(110, 123, 242, 0.35);
+      transition: background-color 120ms ease, transform 160ms var(--ease-press); }
+    .imp-main svg { width: 16px; height: 16px; }
+    .imp-main:active { transform: scale(0.97); }
+    @media (hover: hover) { .imp-main:hover { background: #7C88F5; } }
+    .imp-main:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .imp-banner.partial .imp-main { height: 32px; font-size: 12.5px; }
+    @media (max-width: 760px) {
+      .imp-banner { margin: 10px 12px 2px; padding: 14px; }
+      .imp-banner.empty .imp-btns { width: 100%; }
+      .imp-banner.empty .imp-main { flex: 1; justify-content: center; height: 44px; font-size: 14.5px; }
+      .imp-banner.empty .ghost-btn { flex: 1; justify-content: center; height: 44px; }
+      .imp-banner.partial .imp-sub { display: none; }
+    }
+
     .context-strip {
       min-height: 38px;
       padding-top: 10px !important; padding-bottom: 10px !important;
@@ -1177,6 +1210,8 @@
     .sc-tip .tip-pos { color: var(--pos-bright) !important; }
     .sc-tip .tip-neg { color: var(--neg-soft) !important; }
     .sc-tip .tip-dim { color: var(--text-tertiary); }
+    .sc-tip .tip-cup { margin-top: 7px; padding-top: 7px; border-top: 1px solid rgba(255,255,255,0.08); color: var(--text-secondary); font-size: 11.5px; line-height: 1.45; }
+    .sc-tip .tip-cup-tag { display: inline-block; margin-right: 6px; padding: 0 6px; border-radius: 4px; background: rgba(255, 196, 0, 0.14); color: #E8C25A; font-size: 10px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; vertical-align: 1px; }
     .sc-tip div.tip-pos, .sc-tip div.tip-neg { margin-top: 3px; }
     .sc-tip .tip-range { position: relative; height: 8px; margin: 6px 0 7px; border-radius: 99px; background: rgba(255,255,255,0.06); }
     .sc-tip .tip-range-band { position: absolute; top: 0; bottom: 0; border-radius: 99px; background: rgba(110, 123, 242, 0.45); }
@@ -1576,6 +1611,27 @@
 
     .sim-metric { display: flex; flex-direction: column; gap: 2px; }
     .insp-live-top { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    /* His week inside the live panel */
+    .wk { margin-top: 12px; border: 1px solid var(--border-subtle); border-radius: 10px; overflow: hidden; }
+    .wk-h { padding: 8px 12px; font-size: 11px; font-weight: 600; color: var(--text-tertiary); border-bottom: 1px solid var(--border-subtle); }
+    .wk-row { width: 100%; display: grid; grid-template-columns: 92px minmax(0, 1fr) auto 14px; gap: 8px; align-items: center; padding: 9px 12px; border: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.04); background: transparent; color: var(--text-primary); font-size: 12.5px; text-align: left; }
+    .wk-row:first-of-type { border-top: none; }
+    div.wk-row { grid-template-columns: 92px minmax(0, 1fr) auto; }
+    button.wk-row { cursor: pointer; transition: background-color 100ms ease; }
+    @media (hover: hover) { button.wk-row:hover { background: var(--bg-hover); } button.wk-row:hover .wk-go { color: var(--text-primary); transform: translateX(2px); } }
+    button.wk-row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+    .wk-row.now { box-shadow: inset 2px 0 0 var(--neg-soft); }
+    .wk-day { color: var(--text-secondary); white-space: nowrap; }
+    .wk-vs { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wk-right { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; font-family: var(--mono); }
+    .wk-res { font-size: 11px; color: var(--text-tertiary); }
+    .wk-res.w { color: var(--text-secondary); }
+    .wk-sc { min-width: 26px; text-align: right; font-weight: 700; font-size: 13.5px; }
+    .wk-sc.dnp { font-size: 11px; color: var(--warn-bright); }
+    .wk-time { font-size: 11.5px; color: var(--text-tertiary); }
+    .wk-live { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--neg-soft); font-family: var(--sans); font-weight: 600; }
+    .wk-go { width: 14px; height: 14px; color: var(--text-tertiary); transition: color 120ms ease, transform 160ms var(--ease-out); }
     .insp-live-top > div { display: flex; flex-direction: column; gap: 2px; }
     .insp-live-l { font-size: 11px; color: var(--text-tertiary); }
     .insp-live-big { font-family: var(--mono); font-size: 24px; font-weight: 700; letter-spacing: -0.02em; color: var(--text-primary); }
@@ -2086,6 +2142,8 @@
 
         <!-- MARKET VIEW -->
         <div id="marketViewSection" style="display:flex; flex-direction:column; flex:1; overflow:hidden;">
+          <!-- Import your team: shown at the top of the Market until your squad has 15 players -->
+          <div class="imp-banner" id="importBanner" hidden></div>
           <div class="context-strip">
             <div class="ctx-metrics">
               <button type="button" class="ctx-tile" data-ctx="squad" data-tip="&lt;div class=&quot;tip-h&quot;&gt;Squad value&lt;/div&gt;&lt;div class=&quot;tip-dim&quot;&gt;What your 15 players are worth now. Click to list them.&lt;/div&gt;">
@@ -2270,10 +2328,10 @@
       },
       court: {
         title: "How My Squad works",
-        tip: "Click two cards to swap them · Add players or Import (top right) to build your squad",
+        tip: "Click two cards to swap them · Import team or Add players (top right) to build your squad",
         bullets: [
           "Scoring follows NBA SuperCoach rules: your <strong>best 9 of 10 starters</strong> count, your <strong>Captain scores double</strong>, and the bench scores nothing.",
-          "Build your squad with <strong>Add players</strong> or <strong>Import</strong> (a screenshot of your SuperCoach team, or a list of names), top right. Click <strong>×</strong> on a card to remove a player.",
+          "Build your squad with <strong>Import team</strong> (a screenshot of your SuperCoach team, or a list of names) or <strong>Add players</strong>, top right. Click <strong>×</strong> on a card to remove a player.",
           "Click two cards to swap them. Use <strong>C</strong> / <strong>VC</strong> on a card to pick your Captain and Vice-Captain, and the lock to pin an injured player to the bench.",
           "When the green <strong>Optimise lineup</strong> button appears, it shows how many points the best legal lineup would add. Click it to apply that lineup."
         ]
@@ -2645,6 +2703,24 @@
       };
     }
 
+    // NBA Cup 2026 knockouts (ESPN / Wikipedia): QF Dec 4–5, SF Dec 8–9, final Dec 11 (final doesn't count in SuperCoach).
+    // Those dates fall in Rounds 7–8. Until the 8 knockout teams are known this is a general note;
+    // list team codes in `teams` once the bracket is set. The note disappears after the final.
+    const NBA_CUP = { rounds: [7, 8], endsMs: Date.parse("2026-12-12T00:00:00Z"), teams: [] };
+    function cupNote(p, r) {
+      if (Date.now() > NBA_CUP.endsMs) return "";
+      const hit = NBA_CUP.rounds.filter((x) => x >= r && x <= r + 2);
+      if (!hit.length) return "";
+      const rounds = hit.map((x) => `Round ${x}`).join(" and ");
+      const known = NBA_CUP.teams.length > 0;
+      const text = !known
+        ? `NBA Cup knockouts (Dec 4–11) fall in ${rounds}. The 8 teams that qualify play extra Cup games, so these game counts may change once the bracket is set.`
+        : NBA_CUP.teams.includes(p.team)
+          ? `${escapeHtml(p.team)} are in the NBA Cup knockouts (Dec 4–11), so ${rounds} include Cup games. The Cup final doesn't count for SuperCoach.`
+          : `${escapeHtml(p.team)} missed the NBA Cup knockouts, so ${rounds} include the league's replacement games instead.`;
+      return `<div class="tip-cup"><span class="tip-cup-tag">NBA Cup</span>${text}</div>`;
+    }
+
     function renderSchedStrip(p, roundNum) {
       const r = Number(roundNum) || 6;
       const cells = [
@@ -2658,7 +2734,7 @@
         const label = `Round ${r + i}${i === 0 ? " (this round)" : ""}`;
         return `<div class="tip-row"><span>${label}</span><b class="${cls}">${v === null ? "not out yet" : `${v} game${v === 1 ? "" : "s"}`}</b></div>`;
       }).join("");
-      const tip = `<div class="tip-h">${escapeHtml(p.team)} games per round</div>${tipRows}<div class="tip-dim" style="margin-top:4px">More games = more points and bigger price moves.</div>`;
+      const tip = `<div class="tip-h">${escapeHtml(p.team)} games per round</div>${tipRows}${cupNote(p, r)}`;
       return `<div class="sched-strip" data-tip="${escapeHtml(tip)}">${cells.map((c) => {
         if (c.val === null || c.val === undefined || Number.isNaN(c.val)) {
           return `<span class="sched-box tbd">—</span>`;
@@ -3081,6 +3157,47 @@
       document.getElementById("filterPopBtn").classList.toggle("active", chips.length > 0);
     }
 
+    // The squad drives everything personal on the site, so importing it is front and centre until it's full
+    let importBannerShown = null;
+    function renderImportBanner(n) {
+      const el = document.getElementById("importBanner");
+      if (!el) return;
+      const mode = state.isHistorical || n >= 15 ? "none" : n === 0 ? "empty" : "partial";
+      if (mode === importBannerShown) {
+        if (mode === "partial") { const c = el.querySelector("[data-imp-count]"); if (c) c.textContent = String(n); }
+        return;
+      }
+      importBannerShown = mode;
+      el.hidden = mode === "none";
+      el.className = `imp-banner ${mode}`;
+      if (mode === "empty") {
+        el.innerHTML = `<span class="imp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+          <div class="imp-copy">
+            <div class="imp-title">Import your SuperCoach team</div>
+            <div class="imp-sub">Take a screenshot of your team in the SuperCoach app, then choose it here (or paste the player names). It takes about 30 seconds, stays on your device, and every page then works for your squad.</div>
+          </div>
+          <div class="imp-btns">
+            <button type="button" class="imp-main" data-imp-open><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span>Import my team</span></button>
+            <button type="button" class="ghost-btn" data-imp-add>Add players one by one</button>
+          </div>`;
+      } else if (mode === "partial") {
+        el.innerHTML = `<span class="imp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+          <div class="imp-copy"><div class="imp-title">Your squad has <span data-imp-count>${n}</span> of 15 players</div>
+          <div class="imp-sub">Import your SuperCoach team to fill it in one go, or add the rest yourself.</div></div>
+          <div class="imp-btns">
+            <button type="button" class="imp-main" data-imp-open><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span>Import my team</span></button>
+            <button type="button" class="ghost-btn" data-imp-add>Add players</button>
+          </div>`;
+      } else el.innerHTML = "";
+    }
+    document.addEventListener("click", (e) => {
+      if (e.target.closest("[data-imp-open]") && window.SchoopsImporter) { window.SchoopsImporter.open(); return; }
+      if (e.target.closest("[data-imp-add]")) {
+        setActiveNav("court");
+        setTimeout(() => { const b = document.getElementById("courtAddPlayerBtn") || document.getElementById("courtEmptyAddBtn"); if (b) b.click(); }, 40);
+      }
+    });
+
     function syncSidebarAndHeader(allComputed, filteredLen) {
       const squad = allComputed.filter((p) => p.inSquad);
       const cows = allComputed.filter((p) => p.trend === "cow");
@@ -3089,6 +3206,7 @@
       const pods = allComputed.filter((p) => p.owned > 0 && p.owned < 5 && !p.isFringeDnp);
       const watch = allComputed.filter((p) => p.inWatchlist);
       const injured = allComputed.filter((p) => p.injuryStatus);
+      renderImportBanner(squad.length);
       document.getElementById("sbViewInjCount").textContent = String(injured.length);
 
       document.getElementById("sbAllCount").textContent = String(allComputed.filter((p) => !p.isFringeDnp).length);
@@ -3180,8 +3298,7 @@
       let liveStatus;
       if (!lv) liveStatus = isLiveRound ? "Live scores appear here once his games tip off. Until then these use his projection." : "";
       else if (lv.now) liveStatus = `<span class="insp-live-dot"></span>${escapeHtml(lv.now)}${lv.nowLine ? ` · ${escapeHtml(lv.nowLine)}` : " · not on court yet"}`;
-      else if (allDone) liveStatus = `Round done for him: ${lv.played} of ${lv.total} games played.`;
-      else liveStatus = `${lv.done} of ${lv.total} games played · ${lv.left} to go`;
+      else liveStatus = "";
       const r = state.round;
 
       inner.innerHTML = `
@@ -3238,7 +3355,8 @@
           <div class="sim-box">
             <div class="insp-live-top">
               <div><span class="insp-live-l">Scored so far</span><span class="insp-live-big">${lv ? lv.sc : "—"}</span></div>
-              <div><span class="insp-live-l">${allDone ? "Final" : "Projected finish"}</span><span class="insp-live-big">${Math.round(finish)}</span></div>
+              <div><span class="insp-live-l">${allDone ? "Final" : "Heading for"}</span><span class="insp-live-big">${Math.round(finish)}</span>
+                ${lv && !allDone ? `<span class="insp-live-l">${lv.sc} so far + ${Math.max(0, Math.round(finish - lv.sc))} to come</span>` : ""}</div>
             </div>
             ${liveStatus ? `<div class="insp-live-status">${liveStatus}</div>` : ""}
             <div class="sim-grid">
@@ -3256,12 +3374,46 @@
               </div>
             </div>
           </div>
+          ${renderWeekSchedule(p)}
         </div>` : ""}
       `;
 
       panel.classList.add("open");
     }
 
+
+    // His games this round: date, opponent, then his score (played), live score, or tip-off time.
+    // Uses the Live tracker when it has loaded, else the round's fixture list. Each game opens on the Live page.
+    function renderWeekSchedule(p) {
+      const L = window.SchoopsLive;
+      let games = L && L.ready() ? L.games(p.id) : [];
+      if (!games.length) {
+        const fx = (state.fixtures || {})[String(state.fixturesRound || state.round)] || [];
+        games = fx.filter((g) => g.home === p.team || g.away === p.team).map((g) => {
+          const home = g.home === p.team;
+          return { key: null, ms: new Date(g.t).getTime(), state: "pre", vs: home ? g.away : g.home, home };
+        });
+      }
+      if (!games.length) return "";
+      const day = (ms) => new Date(ms).toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" });
+      const time = (ms) => new Date(ms).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+      const rows = games.map((g) => {
+        let right, cls = "";
+        if (g.state === "post") {
+          const res = g.us !== null && g.us !== undefined && g.them !== null ? `<span class="wk-res ${g.us > g.them ? "w" : "l"}">${g.us > g.them ? "W" : "L"} ${g.us}-${g.them}</span>` : "";
+          right = g.dnp ? `${res}<span class="wk-sc dnp">DNP</span>` : `${res}<span class="wk-sc">${g.sc}</span>`;
+          cls = "done";
+        } else if (g.state === "in") {
+          right = `<span class="wk-live"><span class="insp-live-dot"></span>${escapeHtml(g.detail || "Live")}</span><span class="wk-sc">${g.played ? g.sc : "–"}</span>`;
+          cls = "now";
+        } else right = `<span class="wk-time">${time(g.ms)}</span>`;
+        const inner = `<span class="wk-day">${day(g.ms)}</span><span class="wk-vs">${g.home ? "vs" : "@"} ${escapeHtml(g.vs)}</span><span class="wk-right">${right}</span>`;
+        return g.key
+          ? `<button type="button" class="wk-row ${cls}" data-open-game="${escapeHtml(g.key)}" aria-label="Open ${g.home ? "vs" : "at"} ${escapeHtml(g.vs)} on the Live page">${inner}<svg class="wk-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg></button>`
+          : `<div class="wk-row ${cls}">${inner}</div>`;
+      }).join("");
+      return `<div class="wk"><div class="wk-h">This week · ${games.length} game${games.length === 1 ? "" : "s"}</div>${rows}</div>`;
+    }
 
     function openInspector(playerId) {
       state.inspectorId = playerId;
@@ -3951,6 +4103,8 @@
         render();
         return;
       }
+      const gameBtn = e.target.closest("[data-open-game]");
+      if (gameBtn && window.SchoopsLive) { closeInspector(); window.SchoopsLive.openGame(gameBtn.dataset.openGame); return; }
       const trBtn = e.target.closest("[data-insp-trade]");
       if (trBtn) window.SCHOOPS.sendToTradeLab(trBtn.dataset.tradeDir, trBtn.dataset.inspTrade);
     });
@@ -4102,11 +4256,11 @@
     syncFromGitHub();
   </script>
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
-  <script src="court.js?v=16"></script>
+  <script src="court.js?v=17"></script>
   <script src="tradelab.js?v=16"></script>
   <script src="briefing.js?v=5"></script>
   <script src="captains.js?v=2"></script>
-  <script src="live.js?v=4"></script>
+  <script src="live.js?v=5"></script>
   <script src="notify.js?v=1"></script>
   <script src="importmatch.js?v=1"></script>
   <script src="importer.js?v=2"></script>

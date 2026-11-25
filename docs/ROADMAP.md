@@ -67,3 +67,12 @@ Built:
   - Live while the site is open: squad player "on fire" (>= ppg + 12 and 1.35x), final well above/below projection (>= max(15, 40%)), DNPs. Live ones pop up in the corner for 7 s.
   - No spam: squad only (watchlist for injuries), one per player per game per kind, catch-up items go to the panel without pop-ups, first-ever visit starts clean, live alerts switch.
 - Ideas still open: phone push alerts (needs the PWA), captain hindsight line on Live, breakeven progress bar in My Squad.
+
+## Round 7 answers (25 Nov 2026), preview on branch `preview/round6`
+Built:
+1. My Squad **Projected / Live** switch (defaults to Live once your starters' games have started; remembered). Live: hero "so far", heading for (vs projected), starter games played, on court now; red-tinted header; cards show live score, "→ finish", game pips, on-court glow. Totals come from `SchoopsLive.team()` so they match the Live page.
+2. Player profile: "This week" schedule (date, opponent, W/L + his score, live, or tip-off); each game opens it on the Live page. "Projected finish" renamed "Heading for" with "X so far + Y to come".
+3. Games hover box: general NBA Cup note for Rounds 7–8 (knockouts Dec 4–11) until the bracket is known; set `NBA_CUP.teams` in index.html once it is for team-specific notes. Disappears after Dec 11.
+5. SC feed: your players' plays get an accent wash, ringed photo (when he made the play) and points in an accent pill.
+7. Import made obvious: big "Import your SuperCoach team" banner at the top of the Market until the squad has 15 (slim version when partly filled); My Squad's main button is now "Import team".
+Still to do: 4. Trade Advisor overhaul + rename (examples on request); 6. likely-range approach (discuss).

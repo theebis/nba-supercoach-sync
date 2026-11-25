@@ -40,6 +40,7 @@
   const ICON_REMOVE = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
   const ICON_BOLT = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
   const ICON_CHECK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const ICON_UPLOAD = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`;
   const ICON_PLUS = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
 
   const ui = {
@@ -671,6 +672,46 @@
       }
 
       /* ---- Lineup hero bar: projected score + the Optimise call to action ---- */
+      /* Projected / Live switch and the live look */
+      .lc-mode { display: inline-grid; grid-auto-flow: column; gap: 2px; padding: 2px; margin-bottom: 8px; border-radius: 8px; background: var(--bg-input); border: 1px solid var(--border-subtle); width: max-content; }
+      .lc-mode button { height: 26px; padding: 0 11px; display: inline-flex; align-items: center; gap: 6px; border: none; border-radius: 6px; background: transparent;
+        color: var(--text-tertiary); font-size: 12px; font-weight: 600; cursor: pointer; transition: color 120ms ease, background-color 120ms ease; }
+      .lc-mode button i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.6; }
+      .lc-mode button.on { background: var(--bg-active); color: var(--text-primary); }
+      .lc-mode button.on.live { background: rgba(248, 113, 113, 0.16); color: #FCA5A5; }
+      .lc-mode button.on.live i { background: var(--neg); opacity: 1; }
+      @media (hover: hover) { .lc-mode button:not(.on):hover { color: var(--text-secondary); } }
+      .lc-mode button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+      .lc-hero-big.live { color: #fff; text-shadow: 0 0 24px rgba(248, 113, 113, 0.35); }
+      .lc-wrap.is-live .lc-hero { background: linear-gradient(180deg in oklab, rgba(248, 113, 113, 0.09), rgba(248, 113, 113, 0)); border-bottom-color: rgba(248, 113, 113, 0.22); }
+      .lc-hv-of { font-size: 13px; color: var(--text-tertiary); font-weight: 500; }
+      .lc-hprog { display: block; width: 110px; height: 4px; margin-top: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+      .lc-hprog i { display: block; height: 100%; background: #FCA5A5; transform-origin: left; }
+      .lc-pulse, .lc-now i { display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--neg); vertical-align: 2px; }
+      .lc-now i { width: 6px; height: 6px; margin-right: 5px; vertical-align: 1px; }
+      @media (prefers-reduced-motion: no-preference) { .lc-pulse, .lc-now i { animation: lcPulse 1.6s ease-in-out infinite; } }
+      @keyframes lcPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+      .lc-pts.live { font-size: 24px; }
+      .lc-pts.live.cap { color: var(--warn-bright); }
+      .lc-livepips { display: inline-flex; gap: 3px; margin-right: 7px; vertical-align: 0; }
+      .lc-live-to { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); white-space: nowrap; }
+      .lc-fin-live { display: inline-flex; align-items: center; white-space: nowrap; }
+      .lc-livepips i { width: 7px; height: 7px; border-radius: 2px; background: rgba(255, 255, 255, 0.12); }
+      .lc-livepips i.done { background: var(--text-secondary); }
+      .lc-livepips i.now { background: var(--neg-soft); }
+      .lc-livepips i.dnp { background: transparent; box-shadow: inset 0 0 0 1px var(--text-tertiary); }
+      .lc-fin-live { color: var(--text-tertiary); }
+      .lc-fin-live b { color: var(--text-primary); font-weight: 600; }
+      .lc-now { color: #FCA5A5; font-weight: 600; }
+      .lc-tile.is-now { box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.55), 0 0 18px rgba(248, 113, 113, 0.18); }
+      .lc-import-btn { height: 32px; padding: 0 14px; display: inline-flex; align-items: center; gap: 7px; border-radius: 8px; border: none;
+        background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.18) inset, 0 4px 12px rgba(110, 123, 242, 0.3);
+        transition: background-color 120ms ease, transform 160ms var(--ease-press); }
+      .lc-import-btn:active { transform: scale(0.97); }
+      @media (hover: hover) { .lc-import-btn:hover { background: #7C88F5; } }
+      .lc-import-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+      .lc-import-btn.big { height: 42px; padding: 0 18px; font-size: 14px; }
       .lc-hero {
         display: flex;
         align-items: center;
@@ -1189,6 +1230,18 @@
     `;
   }
 
+  // Projected / Live view. Remembered per browser; defaults to Live once your team's games have started.
+  const MODE_KEY = "schoops_court_mode";
+  function courtMode() {
+    const state = window.SCHOOPS.getState();
+    const L = window.SchoopsLive;
+    const team = state.round === state.liveRound && L && L.ready() ? L.team() : null;
+    let pick = null;
+    try { pick = localStorage.getItem(MODE_KEY); } catch (err) {}
+    const mode = team ? (pick || (team.started ? "live" : "proj")) : "proj";
+    return { mode, team, available: !!team };
+  }
+
   function renderTile(slotDef, player, ctx) {
     const { escapeHtml, formatMoney, getTeamColor, renderAvatar } = window.SCHOOPS;
     const isSel = ui.selectedSource && ui.selectedSource.type === "slot" && ui.selectedSource.key === slotDef.key;
@@ -1211,7 +1264,8 @@
     const isStarter = STARTER_KEYS.has(slotDef.key);
     const isCap = isStarter && ctx.evalRes.captain && ctx.evalRes.captain.id === player.id;
     const isVc = isStarter && ctx.evalRes.viceCaptain && ctx.evalRes.viceCaptain.id === player.id;
-    const isDrop = isStarter && ctx.evalRes.droppedPlayer && ctx.evalRes.droppedPlayer.id === player.id;
+    const lv = ctx.live ? ctx.live.players[player.id] : null;
+    const isDrop = isStarter && (ctx.live ? ctx.live.drop === player.id : (ctx.evalRes.droppedPlayer && ctx.evalRes.droppedPlayer.id === player.id));
     const isLocked = !!ctx.lockedBenchIds[player.id];
     const accent = getTeamColor(player.team);
     const avSz = ctx.compact ? 32 : 40;
@@ -1224,6 +1278,7 @@
     if (isSel) cls.push("selected");
     if (isTarget) cls.push("valid-target");
     if (ui.movedIds.has(player.id)) cls.push("just-moved");
+    if (lv && lv.now) cls.push("is-now");
 
     const gCls = player.games >= 4 ? "g4" : (player.games === 0 ? "g0" : (player.games <= 2 ? "g2" : ""));
     const displayPts = isCap ? Math.round(player.proj * 2) : Math.round(player.proj);
@@ -1249,8 +1304,12 @@
             </div>
           </div>
           <div class="lc-score-col">
+            ${lv ? `
+            <span class="lc-pts live ${isCap ? "cap" : (isDrop ? "struck" : "")}">${isCap ? lv.sc * 2 : lv.sc}</span>
+            <span class="lc-live-to" title="Heading for: his score so far plus his projection for the games he has left">→ ${isCap ? lv.finish * 2 : lv.finish}</span>`
+            : `
             <span class="lc-pts ${isCap ? "cap" : (isDrop ? "struck" : "")}">${displayPts}</span>
-            <span class="lc-g ${gCls}">${player.games}G</span>
+            <span class="lc-g ${gCls}">${player.games}G</span>`}
           </div>
         </div>
         <div class="lc-foot">
@@ -1266,7 +1325,8 @@
               <button type="button" class="lc-act-btn rem-btn" data-remove-squad="${escapeHtml(player.id)}" data-remove-slot="${slotDef.key}" title="Remove from Squad">${ICON_REMOVE}</button>
             </div>
           </div>
-          <div class="lc-fin">BE ${player.be === null ? "—" : player.be} · <span class="${player.priceChange >= 0 ? "pos-text" : "neg-text"}">${formatMoney(player.priceChange)}</span></div>
+          ${lv ? `<div class="lc-fin lc-fin-live"><span class="lc-livepips" aria-label="${lv.total - lv.left} of ${lv.total} games">${lv.pips.map((c) => `<i class="${c}"></i>`).join("")}</span>${lv.now ? `<span class="lc-now"><i></i>${escapeHtml(lv.now)}</span>` : (lv.left ? `${lv.left} to play` : "done")}</div>`
+          : `<div class="lc-fin">BE ${player.be === null ? "—" : player.be} · <span class="${player.priceChange >= 0 ? "pos-text" : "neg-text"}">${formatMoney(player.priceChange)}</span></div>`}
         </div>
       </div>
     `;
@@ -1318,16 +1378,16 @@
     if (!squadPlayers.length) {
       if (headerActions) {
         headerActions.innerHTML = `
-          <button type="button" class="ghost-btn" id="courtImportBtn">Import</button>
-          <button type="button" class="primary-btn" id="courtAddPlayerBtn">${ICON_PLUS}<span>Add players</span></button>
+          <button type="button" class="ghost-btn" id="courtAddPlayerBtn">${ICON_PLUS}<span>Add players</span></button>
+          <button type="button" class="lc-import-btn" id="courtImportBtn">${ICON_UPLOAD}<span>Import team</span></button>
         `;
       }
       root.innerHTML = `
         <div class="lc-empty-page">
-          <h3>No squad yet</h3>
-          <p style="margin-bottom:16px;">The quickest way: import a screenshot of your SuperCoach team. Or add your 15 players one by one.</p>
+          <h3>Import your SuperCoach team</h3>
+          <p style="margin-bottom:16px;">Take a screenshot of your team in the SuperCoach app, then choose it here (or paste the names). It takes about 30 seconds and stays on your device. Or add your 15 players one by one.</p>
           <div style="display:inline-flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-            <button type="button" class="primary-btn" id="courtEmptyImportBtn">Import from screenshot</button>
+            <button type="button" class="lc-import-btn big" id="courtEmptyImportBtn">${ICON_UPLOAD}<span>Import my team</span></button>
             <button type="button" class="ghost-btn" id="courtEmptyAddBtn">${ICON_PLUS}<span>Add players</span></button>
           </div>
         </div>
@@ -1361,8 +1421,8 @@
     if (headerActions) {
       headerActions.innerHTML = `
         ${lockCount > 0 ? `<button type="button" class="ghost-btn" id="courtClearLocksBtn">Clear locks (${lockCount})</button>` : ""}
-        <button type="button" class="ghost-btn" id="courtImportBtn" title="Import your squad from a screenshot or a list of names">Import</button>
-        <button type="button" class="${squadFull ? "ghost-btn" : "primary-btn"}" id="courtAddPlayerBtn" title="Add players to your squad">${ICON_PLUS}<span>Add players</span></button>
+        <button type="button" class="ghost-btn" id="courtAddPlayerBtn" title="Add players to your squad one by one">${ICON_PLUS}<span>Add players</span></button>
+        <button type="button" class="${squadFull ? "ghost-btn" : "lc-import-btn"}" id="courtImportBtn" title="Import your squad: a screenshot of your SuperCoach team, or a list of names">${ICON_UPLOAD}<span>Import team</span></button>
       `;
     }
 
@@ -1390,7 +1450,9 @@
 
     const assignedSet = new Set(Object.values(slots));
     const overflow = squadPlayers.filter((p) => !assignedSet.has(p.id));
-    const ctx = { slots, byId, lockedBenchIds, evalRes, compact: state.density === "compact", suggestFor };
+    const cm = courtMode();
+    const liveTeam = cm.mode === "live" ? cm.team : null;
+    const ctx = { slots, byId, lockedBenchIds, evalRes, compact: state.density === "compact", suggestFor, live: liveTeam };
     const card = (key) => renderTile(SLOT_BY_KEY[key], slots[key] ? byId[slots[key]] : null, ctx);
 
     let msgHtml = "";
@@ -1408,18 +1470,37 @@
     const pips = Array.from({ length: SQUAD_SIZE }, (_, i) => `<span class="lc-pip ${i < squadPlayers.length ? "on" : ""}"></span>`).join("");
 
     root.innerHTML = `
-      <div class="lc-wrap">
+      <div class="lc-wrap ${liveTeam ? "is-live" : ""}">
         <div class="lc-hero">
           <div class="lc-hero-score">
+            ${cm.available ? `<div class="lc-mode" role="group" aria-label="Show projected or live scores">
+              <button type="button" class="${liveTeam ? "" : "on"}" data-court-mode="proj" aria-pressed="${!liveTeam}">Projected</button>
+              <button type="button" class="${liveTeam ? "on live" : ""}" data-court-mode="live" aria-pressed="${!!liveTeam}"><i></i>Live</button>
+            </div>` : ""}
+            ${liveTeam ? `
+            <span class="lc-hero-label">Round ${state.round} so far</span>
+            <span class="lc-hero-big live">${liveTeam.soFar.toLocaleString()}<small>pts</small></span>` : `
             <span class="lc-hero-label">Round ${state.round} projected</span>
-            <span class="lc-hero-big">${evalRes.totalProj.toLocaleString()}<small>pts</small></span>
+            <span class="lc-hero-big">${evalRes.totalProj.toLocaleString()}<small>pts</small></span>`}
           </div>
+          ${liveTeam ? `
+          <div class="lc-hstat">
+            <span class="lc-hero-label">Heading for</span>
+            <span class="lc-hv mono">${liveTeam.finish}</span>
+            <span class="lc-hsub ${liveTeam.finish - evalRes.totalProj >= 0 ? "pos-text" : "neg-text"}">${liveTeam.finish - evalRes.totalProj >= 0 ? "+" : "−"}${Math.abs(liveTeam.finish - evalRes.totalProj)} vs projected ${evalRes.totalProj}</span>
+          </div>
+          <div class="lc-hstat">
+            <span class="lc-hero-label">Starter games played</span>
+            <span class="lc-hv mono">${liveTeam.doneGames}<small class="lc-hv-of">/${liveTeam.allGames}</small></span>
+            <span class="lc-hprog"><i style="transform:scaleX(${liveTeam.allGames ? (liveTeam.doneGames / liveTeam.allGames).toFixed(3) : 0})"></i></span>
+          </div>
+          ${liveTeam.onCourt ? `<div class="lc-hstat lc-hstat-now"><span class="lc-hero-label">On court now</span><span class="lc-hv mono"><i class="lc-pulse"></i>${liveTeam.onCourt}</span><span class="lc-hsub">of your starters</span></div>` : ""}` : ""}
           <div class="lc-hstat lc-hstat-cash ${squadCash > 0 ? "pos" : squadCash < 0 ? "neg" : ""}">
             <span class="lc-hero-label">Projected cash gen</span>
             <span class="lc-hv mono">${window.SCHOOPS.formatMoney(squadCash)}</span>
             <span class="lc-hsub">all 15 players this round</span>
           </div>
-          <div class="lc-hstat">
+          ${liveTeam ? "" : `<div class="lc-hstat">
             <span class="lc-hero-label">Captain</span>
             <span class="lc-hv">${evalRes.captain ? escapeHtml(evalRes.captain.name) : "—"}</span>
             <span class="lc-hsub">${evalRes.captain ? `proj ${Math.round(evalRes.captain.proj)} × 2 = ${Math.round(evalRes.captain.proj * 2)}` : "pick one with C"}</span>
@@ -1433,7 +1514,7 @@
             <span class="lc-hero-label">Not counted</span>
             <span class="lc-hv">${escapeHtml(evalRes.droppedPlayer.name)}</span>
             <span class="lc-hsub">lowest starter · proj ${Math.round(evalRes.droppedPlayer.proj)}</span>
-          </div>` : ""}
+          </div>` : ""}`}
           <div class="lc-hstat lc-hero-squad">
             <span class="lc-hero-label">Squad ${squadPlayers.length}/${SQUAD_SIZE}</span>
             <span class="lc-hv mono">$${(squadValue / 1000000).toFixed(2)}M</span>
@@ -1518,6 +1599,8 @@
     if (e.target.closest("#courtOptimiseBtn")) { runOptimise(); return; }
     if (e.target.closest("#courtAddPlayerBtn")) { openAddPlayerPicker(null); return; }
     if (e.target.closest("#courtImportBtn") && window.SchoopsImporter) { window.SchoopsImporter.open(); return; }
+    const modeBtn = e.target.closest("[data-court-mode]");
+    if (modeBtn) { try { localStorage.setItem(MODE_KEY, modeBtn.dataset.courtMode); } catch (err) {} renderCourt(); return; }
     if (e.target.closest("#courtClearLocksBtn")) {
       window.SCHOOPS.getState().court.lockedBenchIds = {};
       window.SCHOOPS.savePrefs();
@@ -1759,6 +1842,8 @@
       }
     });
     window.SCHOOPS.onRender(renderCourt);
+    // New live scores: refresh My Squad (it may be showing live numbers, or the switch may now be available)
+    document.addEventListener("schoops:live", () => { if (window.SCHOOPS.getState().activeNav === "court") renderCourt(); });
     renderCourt();
   }
 
