@@ -994,12 +994,15 @@
       border-radius: 12px; border: 1px solid rgba(110, 123, 242, 0.45);
       background: linear-gradient(135deg in oklab, rgba(110, 123, 242, 0.2), rgba(110, 123, 242, 0.05) 70%), var(--bg-elevated); }
     .imp-banner[hidden] { display: none; }
-    .imp-banner.partial { padding: 11px 14px; border-color: rgba(110, 123, 242, 0.3); background: linear-gradient(135deg in oklab, rgba(110, 123, 242, 0.12), rgba(110, 123, 242, 0.03) 70%), var(--bg-elevated); }
+    .imp-banner.partial { margin-top: 10px; padding: 6px 8px 6px 12px; gap: 8px 12px; border-color: rgba(110, 123, 242, 0.3); background: linear-gradient(135deg in oklab, rgba(110, 123, 242, 0.12), rgba(110, 123, 242, 0.03) 70%), var(--bg-elevated); }
     .imp-ico { width: 42px; height: 42px; border-radius: 11px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
       background: var(--accent); color: #fff; box-shadow: 0 6px 18px rgba(110, 123, 242, 0.35); }
     .imp-ico svg { width: 20px; height: 20px; }
-    .imp-banner.partial .imp-ico { width: 32px; height: 32px; border-radius: 9px; box-shadow: none; }
-    .imp-banner.partial .imp-ico svg { width: 16px; height: 16px; }
+    .imp-banner.partial .imp-ico { width: 24px; height: 24px; border-radius: 7px; box-shadow: none; }
+    .imp-banner.partial .imp-ico svg { width: 13px; height: 13px; }
+    .imp-banner.partial .imp-sub { display: none; }
+    .imp-banner.partial .imp-copy { flex-basis: 200px; }
+    .imp-banner.partial .ghost-btn { height: 28px; }
     .imp-copy { flex: 1 1 320px; min-width: 0; }
     .imp-title { font-size: 16px; font-weight: 650; color: var(--text-primary); letter-spacing: -0.01em; }
     .imp-banner.partial .imp-title { font-size: 13.5px; font-weight: 600; }
@@ -1013,7 +1016,8 @@
     .imp-main:active { transform: scale(0.97); }
     @media (hover: hover) { .imp-main:hover { background: #7C88F5; } }
     .imp-main:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-    .imp-banner.partial .imp-main { height: 32px; font-size: 12.5px; }
+    .imp-banner.partial .imp-main { height: 28px; padding: 0 12px; font-size: 12.5px; box-shadow: none; }
+    .imp-banner.partial .imp-main svg { width: 14px; height: 14px; }
     @media (max-width: 760px) {
       .imp-banner { margin: 10px 12px 2px; padding: 14px; }
       .imp-banner.empty .imp-btns { width: 100%; }
@@ -1060,6 +1064,12 @@
     .ctx-v strong { font-family: var(--mono); font-size: 17px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .ctx-sub { font-family: var(--mono); font-size: 11.5px; color: var(--text-tertiary); white-space: nowrap; }
     .ctx-sub.pos-text { color: var(--pos-bright); }
+    /* Slim line: label and value side by side, so the table starts higher */
+    .context-strip { min-height: 0; padding-top: 7px !important; padding-bottom: 7px !important; }
+    .ctx-metrics { gap: 6px; }
+    .ctx-tile { flex-direction: row; align-items: baseline; gap: 8px; padding: 4px 11px 5px; border-radius: 7px; }
+    .ctx-v strong { font-size: 13.5px; }
+    .ctx-sub { font-size: 11px; }
 
     .ctx-stat {
       display: inline-flex;
@@ -1319,8 +1329,10 @@
       .context-strip { padding: 6px 12px; }
       .ctx-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; gap: 6px; align-items: stretch; }
       .ctx-tile { justify-content: flex-start; }
-      .ctx-tile { padding: 6px 9px 7px; }
+      .ctx-tile { padding: 5px 9px 6px; flex-direction: column; align-items: flex-start; gap: 1px; }
       .ctx-v { flex-direction: column; gap: 0; }
+      .yr:not([hidden]) + .context-strip .ctx-metrics { display: none; }
+      .yr:not([hidden]) + .context-strip:not(:has(.filter-chip)) { display: none; }
       .ctx-v strong { font-size: 14.5px; max-width: 100%; }
       .ctx-l { font-size: 10.5px; }
       .ctx-metrics { gap: 6px 14px; }
@@ -2044,13 +2056,6 @@
           </span>
           <span class="sb-count" id="sbView4GCount">0</span>
         </button>
-        <button type="button" class="sb-item" data-view="pods">
-          <span class="sb-item-left">
-            <span class="sb-dot" style="background:var(--warn-bright);"></span>
-            <span>PODs &lt;5%</span>
-          </span>
-          <span class="sb-count" id="sbViewPodCount">0</span>
-        </button>
         <button type="button" class="sb-item" data-view="injured">
           <span class="sb-item-left">
             <span class="sb-dot" style="background:var(--warn);"></span>
@@ -2443,7 +2448,8 @@
           "Scoring follows NBA SuperCoach rules: your <strong>best 9 of 10 starters</strong> count, your <strong>Captain scores double</strong>, and the bench scores nothing.",
           "Build your squad with <strong>Import team</strong> (a screenshot of your SuperCoach team, or a list of names) or <strong>Add players</strong>, top right. Click <strong>×</strong> on a card to remove a player.",
           "Click two cards to swap them. Use <strong>C</strong> / <strong>VC</strong> on a card to pick your Captain and Vice-Captain, and the lock to pin an injured player to the bench.",
-          "When the green <strong>Optimise lineup</strong> button appears, it shows how many points the best legal lineup would add. Click it to apply that lineup."
+          "When the green <strong>Optimise lineup</strong> button appears, it shows how many points the best legal lineup would add. Click it to apply that lineup.",
+          "<strong>Send to phone</strong> (<strong>Share</strong> on phones) shows a QR code and link that open your squad on another device. The squad travels inside the link, so nothing is uploaded and no sign-in is needed."
         ]
       },
       tradelab: {
@@ -3471,7 +3477,6 @@
       const cows = allComputed.filter((p) => p.trend === "cow");
       const bleed = allComputed.filter((p) => p.trend === "bleed");
       const fourG = allComputed.filter((p) => p.games >= 4 && !p.isFringeDnp);
-      const pods = allComputed.filter((p) => p.owned > 0 && p.owned < 5 && !p.isFringeDnp);
       const watch = allComputed.filter((p) => p.inWatchlist);
       const injured = allComputed.filter((p) => p.injuryStatus);
       renderImportBanner(squad.length);
@@ -3491,7 +3496,6 @@
       });
       document.getElementById("sbViewBleedCount").textContent = String(bleed.length);
       document.getElementById("sbView4GCount").textContent = String(fourG.length);
-      document.getElementById("sbViewPodCount").textContent = String(pods.length);
       document.getElementById("sbViewWatchCount").textContent = String(watch.length);
 
       const squadVal = squad.reduce((s, p) => s + p.price, 0);
@@ -4606,7 +4610,7 @@
     syncFromGitHub();
   </script>
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
-  <script src="court.js?v=20"></script>
+  <script src="court.js?v=22"></script>
   <script src="tradelab.js?v=22"></script>
   <script src="briefing.js?v=5"></script>
   <script src="captains.js?v=3"></script>
@@ -4614,5 +4618,6 @@
   <script src="notify.js?v=1"></script>
   <script src="importmatch.js?v=1"></script>
   <script src="importer.js?v=2"></script>
+  <script src="share.js?v=2"></script>
 </body>
 </html>

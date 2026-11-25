@@ -41,6 +41,7 @@
   const ICON_BOLT = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
   const ICON_CHECK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
   const ICON_UPLOAD = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`;
+  const ICON_PHONE = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><line x1="11" y1="18" x2="13" y2="18"/></svg>`;
   const ICON_PLUS = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
 
   const ui = {
@@ -673,6 +674,9 @@
 
       /* ---- Lineup hero bar: projected score + the Optimise call to action ---- */
       /* Projected / Live switch and the live look */
+      /* Send to phone button: "Share" on phones, where the header is narrow */
+      .lc-share-short { display: none; }
+      @media (max-width: 760px) { #courtSendPhoneBtn .lc-share-long { display: none; } #courtSendPhoneBtn .lc-share-short { display: inline; } }
       .lc-mode { display: inline-grid; grid-auto-flow: column; gap: 2px; padding: 2px; margin-bottom: 8px; border-radius: 8px; background: var(--bg-input); border: 1px solid var(--border-subtle); width: max-content; }
       .lc-mode button { height: 26px; padding: 0 11px; display: inline-flex; align-items: center; gap: 6px; border: none; border-radius: 6px; background: transparent;
         color: var(--text-tertiary); font-size: 12px; font-weight: 600; cursor: pointer; transition: color 120ms ease, background-color 120ms ease; }
@@ -1433,6 +1437,7 @@
     if (headerActions) {
       headerActions.innerHTML = `
         ${lockCount > 0 ? `<button type="button" class="ghost-btn" id="courtClearLocksBtn">Clear locks (${lockCount})</button>` : ""}
+        <button type="button" class="ghost-btn" id="courtSendPhoneBtn" title="Open your squad on your phone: a QR code and link that carry your squad">${ICON_PHONE}<span class="lc-share-long">Send to phone</span><span class="lc-share-short">Share</span></button>
         <button type="button" class="ghost-btn" id="courtAddPlayerBtn" title="Add players to your squad one by one">${ICON_PLUS}<span>Add players</span></button>
         <button type="button" class="${squadFull ? "ghost-btn" : "lc-import-btn"}" id="courtImportBtn" title="Import your squad: a screenshot of your SuperCoach team, or a list of names">${ICON_UPLOAD}<span>Import team</span></button>
       `;
@@ -1595,6 +1600,7 @@
   function handleActionClick(e) {
     if (e.target.closest("#courtOptimiseBtn")) { runOptimise(); return; }
     if (e.target.closest("#courtAddPlayerBtn")) { openAddPlayerPicker(null); return; }
+    if (e.target.closest("#courtSendPhoneBtn") && window.SchoopsShare) { window.SchoopsShare.open(); return; }
     if (e.target.closest("#courtImportBtn") && window.SchoopsImporter) { window.SchoopsImporter.open(); return; }
     if (e.target.closest("#courtClearLocksBtn")) {
       window.SCHOOPS.getState().court.lockedBenchIds = {};

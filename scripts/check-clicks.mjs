@@ -138,6 +138,27 @@ async function suite(label, ctxOpts) {
     await p.locator(`[data-set-cap="${was}"]`).first().click({ force: true }); await p.waitForTimeout(200);
   });
 
+  await run("My Squad: Send to phone shows a QR code, and the link loads the squad on another device", page, async (p) => {
+    await nav(p, "court");
+    await p.locator("#courtSendPhoneBtn").click();
+    await p.waitForSelector("#shQr svg", { timeout: 15000 });
+    const link = await p.locator("#shLinkInput").inputValue();
+    expect(/#s=[^&]+/.test(link) && link.startsWith("https://theebis.github.io/"), `link ${link}`);
+    await p.keyboard.press("Escape"); await p.waitForTimeout(200);
+    expect(await p.locator("#shBackdrop").count() === 0, "dialog did not close");
+    const want = await p.evaluate(() => window.SCHOOPS.getSquadPlayers().map((x) => x.id).sort().join(","));
+    // A fresh device (empty storage) opens the link
+    const other = await p.context().browser().newContext(ctxOpts);
+    const q = await other.newPage();
+    await q.goto(BASE + link.slice(link.indexOf("#")));
+    await q.waitForSelector("[data-sh-load]", { timeout: 30000 });
+    await q.locator("[data-sh-load]").click(); await q.waitForTimeout(400);
+    const got = await q.evaluate(() => ({ ids: window.SCHOOPS.getSquadPlayers().map((x) => x.id).sort().join(","), nav: window.SCHOOPS.getState().activeNav, hash: location.hash }));
+    await other.close();
+    expect(got.ids === want, "loaded squad differs from the sent one");
+    expect(got.nav === "court" && !got.hash, `after load: ${got.nav} ${got.hash}`);
+  });
+
   await run("Trade Advisor: goal + trade count recalculate, + Add puts a trade in the plan and takes it out", page, async (p) => {
     await nav(p, "tradelab");
     await p.waitForSelector(".ta-sug", { timeout: 30000 });

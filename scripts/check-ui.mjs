@@ -54,6 +54,13 @@ const VIEWS = {
     });
     await page.waitForTimeout(300);
   },
+  // Send to phone: QR code dialog from My Squad
+  "court-share": async (page) => {
+    await openNav(page, "court");
+    await page.locator("#courtSendPhoneBtn").click();
+    await page.waitForSelector("#shQr svg", { timeout: 15000 });
+    await page.waitForTimeout(300);
+  },
   tradelab: async (page) => openNav(page, "tradelab"),
   // Live round tracker: waits for ESPN scores to load
   live: async (page) => {
