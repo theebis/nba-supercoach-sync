@@ -8,7 +8,7 @@
     "calibratedOn": "2026-27 Rounds 3-5 (1,231 price changes)"
   },
   "totalPlayersScraped": 643,
-  "lastUpdated": "2026-11-25T02:34:35.858269+00:00",
+  "lastUpdated": "2026-11-25T03:38:27.922577+00:00",
   "injurySource": "ESPN",
   "team_schedule": {
     "ATL": {
@@ -964,7 +964,9 @@
       "proj_lo": 19,
       "proj_hi": 68,
       "exp_games": 2.0,
-      "exp_ppg": 24.0
+      "exp_ppg": 24.0,
+      "ppg_lo": 17,
+      "ppg_hi": 34
     },
     {
       "id": "2",
@@ -986,7 +988,7 @@
       "price_after": 15310000,
       "next_round_games": 3,
       "round_after_games": 4,
-      "owned": 3.65,
+      "owned": 3.66,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -1029,7 +1031,9 @@
       "proj_lo": 23,
       "proj_hi": 83,
       "exp_games": 2.0,
-      "exp_ppg": 29.1
+      "exp_ppg": 29.1,
+      "ppg_lo": 20,
+      "ppg_hi": 43
     },
     {
       "id": "3",
@@ -1094,7 +1098,9 @@
       "proj_lo": 0,
       "proj_hi": 10,
       "exp_games": 0.6,
-      "exp_ppg": 9.3
+      "exp_ppg": 9.3,
+      "ppg_lo": 5,
+      "ppg_hi": 18
     },
     {
       "id": "4",
@@ -1159,7 +1165,9 @@
       "proj_lo": 0,
       "proj_hi": 49,
       "exp_games": 2.0,
-      "exp_ppg": 13.2
+      "exp_ppg": 13.2,
+      "ppg_lo": 7,
+      "ppg_hi": 24
     },
     {
       "id": "5",
@@ -1224,7 +1232,9 @@
       "proj_lo": 0,
       "proj_hi": 21,
       "exp_games": 1.3,
-      "exp_ppg": 8.5
+      "exp_ppg": 8.5,
+      "ppg_lo": 4,
+      "ppg_hi": 20
     },
     {
       "id": "6",
@@ -1289,7 +1299,9 @@
       "proj_lo": 0,
       "proj_hi": 44,
       "exp_games": 1.5,
-      "exp_ppg": 15.0
+      "exp_ppg": 15.0,
+      "ppg_lo": 9,
+      "ppg_hi": 25
     },
     {
       "id": "7",
@@ -1354,7 +1366,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.2,
-      "exp_ppg": 10.2
+      "exp_ppg": 10.2,
+      "ppg_lo": 4,
+      "ppg_hi": 24
     },
     {
       "id": "8",
@@ -1419,7 +1433,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 10.5
+      "exp_ppg": 10.5,
+      "ppg_lo": 4,
+      "ppg_hi": 25
     },
     {
       "id": "9",
@@ -1484,7 +1500,9 @@
       "proj_lo": 0,
       "proj_hi": 58,
       "exp_games": 2.6,
-      "exp_ppg": 11.7
+      "exp_ppg": 11.7,
+      "ppg_lo": 6,
+      "ppg_hi": 24
     },
     {
       "id": "10",
@@ -1506,7 +1524,7 @@
       "price_after": 18710000,
       "next_round_games": 3,
       "round_after_games": 4,
-      "owned": 3.96,
+      "owned": 3.97,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -1549,7 +1567,9 @@
       "proj_lo": 20,
       "proj_hi": 72,
       "exp_games": 1.6,
-      "exp_ppg": 30.2
+      "exp_ppg": 30.2,
+      "ppg_lo": 22,
+      "ppg_hi": 42
     },
     {
       "id": "11",
@@ -1614,7 +1634,9 @@
       "proj_lo": 0,
       "proj_hi": 29,
       "exp_games": 1.2,
-      "exp_ppg": 12.7
+      "exp_ppg": 12.7,
+      "ppg_lo": 5,
+      "ppg_hi": 30
     },
     {
       "id": "12",
@@ -1679,7 +1701,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 15.5
+      "exp_ppg": 15.5,
+      "ppg_lo": 11,
+      "ppg_hi": 21
     },
     {
       "id": "13",
@@ -1744,7 +1768,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 23.7
+      "exp_ppg": 23.7,
+      "ppg_lo": 16,
+      "ppg_hi": 34
     },
     {
       "id": "14",
@@ -1809,7 +1835,9 @@
       "proj_lo": 0,
       "proj_hi": 14,
       "exp_games": 0.8,
-      "exp_ppg": 9.1
+      "exp_ppg": 9.1,
+      "ppg_lo": 5,
+      "ppg_hi": 18
     },
     {
       "id": "15",
@@ -1874,7 +1902,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 9.0
+      "exp_ppg": 9.0,
+      "ppg_lo": 3,
+      "ppg_hi": 24
     },
     {
       "id": "16",
@@ -1939,7 +1969,9 @@
       "proj_lo": 21,
       "proj_hi": 76,
       "exp_games": 2.0,
-      "exp_ppg": 26.6
+      "exp_ppg": 26.6,
+      "ppg_lo": 19,
+      "ppg_hi": 38
     },
     {
       "id": "17",
@@ -2004,7 +2036,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 6.9
+      "exp_ppg": 6.9,
+      "ppg_lo": 3,
+      "ppg_hi": 16
     },
     {
       "id": "18",
@@ -2069,7 +2103,9 @@
       "proj_lo": 0,
       "proj_hi": 57,
       "exp_games": 2.0,
-      "exp_ppg": 15.5
+      "exp_ppg": 15.5,
+      "ppg_lo": 11,
+      "ppg_hi": 22
     },
     {
       "id": "19",
@@ -2134,7 +2170,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.2,
-      "exp_ppg": 10.0
+      "exp_ppg": 10.0,
+      "ppg_lo": 4,
+      "ppg_hi": 24
     },
     {
       "id": "20",
@@ -2199,7 +2237,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.4,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "21",
@@ -2264,7 +2304,9 @@
       "proj_lo": 0,
       "proj_hi": 42,
       "exp_games": 3.0,
-      "exp_ppg": 7.6
+      "exp_ppg": 7.6,
+      "ppg_lo": 4,
+      "ppg_hi": 13
     },
     {
       "id": "22",
@@ -2329,7 +2371,9 @@
       "proj_lo": 0,
       "proj_hi": 60,
       "exp_games": 3.9,
-      "exp_ppg": 8.2
+      "exp_ppg": 8.2,
+      "ppg_lo": 4,
+      "ppg_hi": 17
     },
     {
       "id": "23",
@@ -2394,7 +2438,9 @@
       "proj_lo": 0,
       "proj_hi": 39,
       "exp_games": 2.5,
-      "exp_ppg": 8.4
+      "exp_ppg": 8.4,
+      "ppg_lo": 4,
+      "ppg_hi": 17
     },
     {
       "id": "24",
@@ -2459,7 +2505,9 @@
       "proj_lo": 0,
       "proj_hi": 50,
       "exp_games": 3.7,
-      "exp_ppg": 7.2
+      "exp_ppg": 7.2,
+      "ppg_lo": 4,
+      "ppg_hi": 14
     },
     {
       "id": "25",
@@ -2524,7 +2572,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.6,
-      "exp_ppg": 3.6
+      "exp_ppg": 3.6,
+      "ppg_lo": 2,
+      "ppg_hi": 8
     },
     {
       "id": "26",
@@ -2589,7 +2639,9 @@
       "proj_lo": 0,
       "proj_hi": 40,
       "exp_games": 3.7,
-      "exp_ppg": 5.7
+      "exp_ppg": 5.7,
+      "ppg_lo": 3,
+      "ppg_hi": 11
     },
     {
       "id": "27",
@@ -2654,7 +2706,9 @@
       "proj_lo": 0,
       "proj_hi": 15,
       "exp_games": 2.3,
-      "exp_ppg": 3.5
+      "exp_ppg": 3.5,
+      "ppg_lo": 1,
+      "ppg_hi": 9
     },
     {
       "id": "28",
@@ -2719,7 +2773,9 @@
       "proj_lo": 0,
       "proj_hi": 18,
       "exp_games": 2.7,
-      "exp_ppg": 3.5
+      "exp_ppg": 3.5,
+      "ppg_lo": 1,
+      "ppg_hi": 12
     },
     {
       "id": "29",
@@ -2784,7 +2840,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.4,
-      "exp_ppg": 5.9
+      "exp_ppg": 5.9,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "30",
@@ -2849,7 +2907,9 @@
       "proj_lo": 27,
       "proj_hi": 97,
       "exp_games": 3.7,
-      "exp_ppg": 18.1
+      "exp_ppg": 18.1,
+      "ppg_lo": 13,
+      "ppg_hi": 24
     },
     {
       "id": "31",
@@ -2914,7 +2974,9 @@
       "proj_lo": 0,
       "proj_hi": 9,
       "exp_games": 1.6,
-      "exp_ppg": 3.1
+      "exp_ppg": 3.1,
+      "ppg_lo": 1,
+      "ppg_hi": 6
     },
     {
       "id": "32",
@@ -2979,7 +3041,9 @@
       "proj_lo": 31,
       "proj_hi": 109,
       "exp_games": 3.9,
-      "exp_ppg": 19.1
+      "exp_ppg": 19.1,
+      "ppg_lo": 14,
+      "ppg_hi": 26
     },
     {
       "id": "33",
@@ -3044,7 +3108,9 @@
       "proj_lo": 0,
       "proj_hi": 9,
       "exp_games": 0.6,
-      "exp_ppg": 8.1
+      "exp_ppg": 8.1,
+      "ppg_lo": 3,
+      "ppg_hi": 19
     },
     {
       "id": "34",
@@ -3109,7 +3175,9 @@
       "proj_lo": 29,
       "proj_hi": 104,
       "exp_games": 3.9,
-      "exp_ppg": 18.3
+      "exp_ppg": 18.3,
+      "ppg_lo": 13,
+      "ppg_hi": 26
     },
     {
       "id": "35",
@@ -3174,7 +3242,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 12.4
+      "exp_ppg": 12.4,
+      "ppg_lo": 6,
+      "ppg_hi": 25
     },
     {
       "id": "36",
@@ -3239,7 +3309,9 @@
       "proj_lo": 0,
       "proj_hi": 74,
       "exp_games": 3.9,
-      "exp_ppg": 10.0
+      "exp_ppg": 10.0,
+      "ppg_lo": 5,
+      "ppg_hi": 20
     },
     {
       "id": "37",
@@ -3304,7 +3376,9 @@
       "proj_lo": 0,
       "proj_hi": 53,
       "exp_games": 2.7,
-      "exp_ppg": 10.3
+      "exp_ppg": 10.3,
+      "ppg_lo": 5,
+      "ppg_hi": 20
     },
     {
       "id": "38",
@@ -3369,7 +3443,9 @@
       "proj_lo": 0,
       "proj_hi": 13,
       "exp_games": 1.5,
-      "exp_ppg": 4.6
+      "exp_ppg": 4.6,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "39",
@@ -3434,7 +3510,9 @@
       "proj_lo": 0,
       "proj_hi": 25,
       "exp_games": 1.2,
-      "exp_ppg": 11.2
+      "exp_ppg": 11.2,
+      "ppg_lo": 4,
+      "ppg_hi": 28
     },
     {
       "id": "40",
@@ -3499,7 +3577,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "41",
@@ -3512,11 +3592,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 4,
       "proj": 25,
-      "avg5": 26.0,
+      "avg5": 26.6,
       "be": null,
       "games": 3,
       "games_played": 1,
-      "actual_points": 9,
+      "actual_points": 12,
       "actual_price_change": 0,
       "price_after": 6630000,
       "next_round_games": 3,
@@ -3564,7 +3644,9 @@
       "proj_lo": 0,
       "proj_hi": 43,
       "exp_games": 2.9,
-      "exp_ppg": 7.8
+      "exp_ppg": 7.8,
+      "ppg_lo": 4,
+      "ppg_hi": 15
     },
     {
       "id": "42",
@@ -3577,11 +3659,11 @@
       "r_minus_2_games": 2,
       "r_minus_1_games": 3,
       "proj": 62,
-      "avg5": 56.2,
+      "avg5": 57.8,
       "be": null,
       "games": 3,
       "games_played": 1,
-      "actual_points": 29,
+      "actual_points": 33,
       "actual_price_change": 0,
       "price_after": 14210000,
       "next_round_games": 3,
@@ -3629,7 +3711,9 @@
       "proj_lo": 21,
       "proj_hi": 75,
       "exp_games": 2.5,
-      "exp_ppg": 20.7
+      "exp_ppg": 20.7,
+      "ppg_lo": 15,
+      "ppg_hi": 28
     },
     {
       "id": "43",
@@ -3642,11 +3726,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 4,
       "proj": 21,
-      "avg5": 19.8,
+      "avg5": 20.6,
       "be": null,
       "games": 3,
       "games_played": 1,
-      "actual_points": 2,
+      "actual_points": 6,
       "actual_price_change": 0,
       "price_after": 4590000,
       "next_round_games": 3,
@@ -3694,7 +3778,9 @@
       "proj_lo": 0,
       "proj_hi": 36,
       "exp_games": 2.9,
-      "exp_ppg": 6.6
+      "exp_ppg": 6.6,
+      "ppg_lo": 3,
+      "ppg_hi": 17
     },
     {
       "id": "44",
@@ -3707,11 +3793,11 @@
       "r_minus_2_games": 2,
       "r_minus_1_games": 2,
       "proj": 15,
-      "avg5": 3.8,
+      "avg5": 3.4,
       "be": null,
       "games": 3,
       "games_played": 1,
-      "actual_points": -1,
+      "actual_points": -2,
       "actual_price_change": 0,
       "price_after": 3790000,
       "next_round_games": 3,
@@ -3759,7 +3845,9 @@
       "proj_lo": 0,
       "proj_hi": 14,
       "exp_games": 1.7,
-      "exp_ppg": 4.5
+      "exp_ppg": 4.5,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "45",
@@ -3772,11 +3860,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 4,
       "proj": 32,
-      "avg5": 32.0,
+      "avg5": 32.2,
       "be": null,
       "games": 3,
       "games_played": 1,
-      "actual_points": 6,
+      "actual_points": 8,
       "actual_price_change": 0,
       "price_after": 7440000,
       "next_round_games": 3,
@@ -3824,7 +3912,9 @@
       "proj_lo": 0,
       "proj_hi": 59,
       "exp_games": 2.9,
-      "exp_ppg": 10.7
+      "exp_ppg": 10.7,
+      "ppg_lo": 6,
+      "ppg_hi": 19
     },
     {
       "id": "46",
@@ -3889,7 +3979,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.4,
-      "exp_ppg": 4.6
+      "exp_ppg": 4.6,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "47",
@@ -3902,11 +3994,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 4,
       "proj": 46,
-      "avg5": 43.8,
+      "avg5": 44.6,
       "be": null,
       "games": 3,
       "games_played": 1,
-      "actual_points": 6,
+      "actual_points": 10,
       "actual_price_change": 0,
       "price_after": 11160000,
       "next_round_games": 3,
@@ -3954,7 +4046,9 @@
       "proj_lo": 17,
       "proj_hi": 62,
       "exp_games": 2.9,
-      "exp_ppg": 14.5
+      "exp_ppg": 14.5,
+      "ppg_lo": 8,
+      "ppg_hi": 26
     },
     {
       "id": "48",
@@ -3967,11 +4061,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 3,
       "proj": 51,
-      "avg5": 50.8,
+      "avg5": 52.4,
       "be": null,
       "games": 3,
       "games_played": 1,
-      "actual_points": 22,
+      "actual_points": 30,
       "actual_price_change": 0,
       "price_after": 12650000,
       "next_round_games": 3,
@@ -4019,7 +4113,9 @@
       "proj_lo": 20,
       "proj_hi": 70,
       "exp_games": 2.8,
-      "exp_ppg": 17.4
+      "exp_ppg": 17.4,
+      "ppg_lo": 13,
+      "ppg_hi": 23
     },
     {
       "id": "49",
@@ -4084,7 +4180,9 @@
       "proj_lo": 0,
       "proj_hi": 20,
       "exp_games": 1.0,
-      "exp_ppg": 10.9
+      "exp_ppg": 10.9,
+      "ppg_lo": 6,
+      "ppg_hi": 19
     },
     {
       "id": "50",
@@ -4097,11 +4195,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 4,
       "proj": 29,
-      "avg5": 27.6,
+      "avg5": 27.8,
       "be": null,
       "games": 3,
       "games_played": 1,
-      "actual_points": -3,
+      "actual_points": 7,
       "actual_price_change": 0,
       "price_after": 6550000,
       "next_round_games": 3,
@@ -4149,7 +4247,9 @@
       "proj_lo": 0,
       "proj_hi": 49,
       "exp_games": 2.9,
-      "exp_ppg": 8.9
+      "exp_ppg": 8.9,
+      "ppg_lo": 4,
+      "ppg_hi": 20
     },
     {
       "id": "51",
@@ -4162,11 +4262,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 3,
       "proj": 86,
-      "avg5": 77.8,
+      "avg5": 77.6,
       "be": null,
       "games": 3,
       "games_played": 1,
-      "actual_points": 34,
+      "actual_points": 41,
       "actual_price_change": 0,
       "price_after": 18310000,
       "next_round_games": 3,
@@ -4214,7 +4314,9 @@
       "proj_lo": 29,
       "proj_hi": 104,
       "exp_games": 2.6,
-      "exp_ppg": 27.2
+      "exp_ppg": 27.2,
+      "ppg_lo": 21,
+      "ppg_hi": 34
     },
     {
       "id": "52",
@@ -4279,7 +4381,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "53",
@@ -4296,7 +4400,7 @@
       "be": null,
       "games": 3,
       "games_played": 1,
-      "actual_points": 1,
+      "actual_points": 2,
       "actual_price_change": 0,
       "price_after": 5360000,
       "next_round_games": 3,
@@ -4344,7 +4448,9 @@
       "proj_lo": 0,
       "proj_hi": 32,
       "exp_games": 2.9,
-      "exp_ppg": 5.8
+      "exp_ppg": 5.8,
+      "ppg_lo": 3,
+      "ppg_hi": 11
     },
     {
       "id": "54",
@@ -4357,11 +4463,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 3,
       "proj": 42,
-      "avg5": 44.8,
+      "avg5": 45.2,
       "be": null,
       "games": 3,
       "games_played": 1,
-      "actual_points": 13,
+      "actual_points": 12,
       "actual_price_change": 0,
       "price_after": 12410000,
       "next_round_games": 3,
@@ -4409,7 +4515,9 @@
       "proj_lo": 0,
       "proj_hi": 74,
       "exp_games": 2.8,
-      "exp_ppg": 14.2
+      "exp_ppg": 14.2,
+      "ppg_lo": 8,
+      "ppg_hi": 26
     },
     {
       "id": "55",
@@ -4474,7 +4582,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.2
+      "exp_ppg": 4.2,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "56",
@@ -4539,7 +4649,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "57",
@@ -4604,7 +4716,9 @@
       "proj_lo": 0,
       "proj_hi": 30,
       "exp_games": 1.1,
-      "exp_ppg": 14.8
+      "exp_ppg": 14.8,
+      "ppg_lo": 8,
+      "ppg_hi": 27
     },
     {
       "id": "58",
@@ -4669,7 +4783,9 @@
       "proj_lo": 0,
       "proj_hi": 29,
       "exp_games": 2.8,
-      "exp_ppg": 5.6
+      "exp_ppg": 5.6,
+      "ppg_lo": 3,
+      "ppg_hi": 11
     },
     {
       "id": "59",
@@ -4734,7 +4850,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "60",
@@ -4799,7 +4917,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.0
+      "exp_ppg": 4.0,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "61",
@@ -4864,7 +4984,9 @@
       "proj_lo": 23,
       "proj_hi": 82,
       "exp_games": 2.6,
-      "exp_ppg": 21.8
+      "exp_ppg": 21.8,
+      "ppg_lo": 16,
+      "ppg_hi": 30
     },
     {
       "id": "62",
@@ -4929,7 +5051,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 0.7,
-      "exp_ppg": 4.6
+      "exp_ppg": 4.6,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "63",
@@ -4994,7 +5118,9 @@
       "proj_lo": 0,
       "proj_hi": 8,
       "exp_games": 0.6,
-      "exp_ppg": 6.5
+      "exp_ppg": 6.5,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "64",
@@ -5059,7 +5185,9 @@
       "proj_lo": 0,
       "proj_hi": 32,
       "exp_games": 1.9,
-      "exp_ppg": 8.9
+      "exp_ppg": 8.9,
+      "ppg_lo": 4,
+      "ppg_hi": 18
     },
     {
       "id": "65",
@@ -5124,7 +5252,9 @@
       "proj_lo": 0,
       "proj_hi": 43,
       "exp_games": 1.9,
-      "exp_ppg": 11.9
+      "exp_ppg": 11.9,
+      "ppg_lo": 7,
+      "ppg_hi": 21
     },
     {
       "id": "66",
@@ -5189,7 +5319,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 14.3
+      "exp_ppg": 14.3,
+      "ppg_lo": 6,
+      "ppg_hi": 34
     },
     {
       "id": "67",
@@ -5254,7 +5386,9 @@
       "proj_lo": 0,
       "proj_hi": 9,
       "exp_games": 1.9,
-      "exp_ppg": 2.6
+      "exp_ppg": 2.6,
+      "ppg_lo": 1,
+      "ppg_hi": 7
     },
     {
       "id": "68",
@@ -5319,7 +5453,9 @@
       "proj_lo": 0,
       "proj_hi": 75,
       "exp_games": 2.6,
-      "exp_ppg": 15.5
+      "exp_ppg": 15.5,
+      "ppg_lo": 6,
+      "ppg_hi": 42
     },
     {
       "id": "69",
@@ -5384,7 +5520,9 @@
       "proj_lo": 0,
       "proj_hi": 41,
       "exp_games": 2.9,
-      "exp_ppg": 7.3
+      "exp_ppg": 7.3,
+      "ppg_lo": 4,
+      "ppg_hi": 13
     },
     {
       "id": "70",
@@ -5449,7 +5587,9 @@
       "proj_lo": 20,
       "proj_hi": 72,
       "exp_games": 2.9,
-      "exp_ppg": 16.8
+      "exp_ppg": 16.8,
+      "ppg_lo": 12,
+      "ppg_hi": 23
     },
     {
       "id": "71",
@@ -5514,7 +5654,9 @@
       "proj_lo": 0,
       "proj_hi": 32,
       "exp_games": 2.8,
-      "exp_ppg": 6.1
+      "exp_ppg": 6.1,
+      "ppg_lo": 3,
+      "ppg_hi": 13
     },
     {
       "id": "72",
@@ -5579,7 +5721,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 10.5
+      "exp_ppg": 10.5,
+      "ppg_lo": 5,
+      "ppg_hi": 21
     },
     {
       "id": "73",
@@ -5644,7 +5788,9 @@
       "proj_lo": 0,
       "proj_hi": 13,
       "exp_games": 1.2,
-      "exp_ppg": 5.8
+      "exp_ppg": 5.8,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "74",
@@ -5709,7 +5855,9 @@
       "proj_lo": 0,
       "proj_hi": 36,
       "exp_games": 1.7,
-      "exp_ppg": 11.3
+      "exp_ppg": 11.3,
+      "ppg_lo": 3,
+      "ppg_hi": 37
     },
     {
       "id": "75",
@@ -5774,7 +5922,9 @@
       "proj_lo": 0,
       "proj_hi": 15,
       "exp_games": 0.8,
-      "exp_ppg": 9.7
+      "exp_ppg": 9.7,
+      "ppg_lo": 5,
+      "ppg_hi": 19
     },
     {
       "id": "76",
@@ -5839,7 +5989,9 @@
       "proj_lo": 0,
       "proj_hi": 12,
       "exp_games": 0.9,
-      "exp_ppg": 7.1
+      "exp_ppg": 7.1,
+      "ppg_lo": 3,
+      "ppg_hi": 16
     },
     {
       "id": "77",
@@ -5904,7 +6056,9 @@
       "proj_lo": 18,
       "proj_hi": 66,
       "exp_games": 2.9,
-      "exp_ppg": 15.4
+      "exp_ppg": 15.4,
+      "ppg_lo": 11,
+      "ppg_hi": 21
     },
     {
       "id": "78",
@@ -5969,7 +6123,9 @@
       "proj_lo": 0,
       "proj_hi": 35,
       "exp_games": 1.3,
-      "exp_ppg": 14.8
+      "exp_ppg": 14.8,
+      "ppg_lo": 8,
+      "ppg_hi": 27
     },
     {
       "id": "79",
@@ -6034,7 +6190,9 @@
       "proj_lo": 0,
       "proj_hi": 26,
       "exp_games": 2.1,
-      "exp_ppg": 6.5
+      "exp_ppg": 6.5,
+      "ppg_lo": 4,
+      "ppg_hi": 12
     },
     {
       "id": "80",
@@ -6099,7 +6257,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.3,
-      "exp_ppg": 10.2
+      "exp_ppg": 10.2,
+      "ppg_lo": 4,
+      "ppg_hi": 24
     },
     {
       "id": "81",
@@ -6164,7 +6324,9 @@
       "proj_lo": 0,
       "proj_hi": 31,
       "exp_games": 2.8,
-      "exp_ppg": 6.0
+      "exp_ppg": 6.0,
+      "ppg_lo": 3,
+      "ppg_hi": 12
     },
     {
       "id": "82",
@@ -6229,7 +6391,9 @@
       "proj_lo": 25,
       "proj_hi": 89,
       "exp_games": 2.9,
-      "exp_ppg": 20.8
+      "exp_ppg": 20.8,
+      "ppg_lo": 15,
+      "ppg_hi": 30
     },
     {
       "id": "83",
@@ -6294,7 +6458,9 @@
       "proj_lo": 17,
       "proj_hi": 61,
       "exp_games": 2.9,
-      "exp_ppg": 14.2
+      "exp_ppg": 14.2,
+      "ppg_lo": 8,
+      "ppg_hi": 25
     },
     {
       "id": "84",
@@ -6359,7 +6525,9 @@
       "proj_lo": 0,
       "proj_hi": 33,
       "exp_games": 2.3,
-      "exp_ppg": 7.6
+      "exp_ppg": 7.6,
+      "ppg_lo": 4,
+      "ppg_hi": 16
     },
     {
       "id": "85",
@@ -6424,7 +6592,9 @@
       "proj_lo": 0,
       "proj_hi": 58,
       "exp_games": 2.9,
-      "exp_ppg": 10.5
+      "exp_ppg": 10.5,
+      "ppg_lo": 5,
+      "ppg_hi": 20
     },
     {
       "id": "86",
@@ -6489,7 +6659,9 @@
       "proj_lo": 0,
       "proj_hi": 30,
       "exp_games": 0.9,
-      "exp_ppg": 17.2
+      "exp_ppg": 17.2,
+      "ppg_lo": 10,
+      "ppg_hi": 29
     },
     {
       "id": "87",
@@ -6554,7 +6726,9 @@
       "proj_lo": 0,
       "proj_hi": 12,
       "exp_games": 1.3,
-      "exp_ppg": 5.1
+      "exp_ppg": 5.1,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "88",
@@ -6619,7 +6793,9 @@
       "proj_lo": 0,
       "proj_hi": 73,
       "exp_games": 1.6,
-      "exp_ppg": 24.1
+      "exp_ppg": 24.1,
+      "ppg_lo": 17,
+      "ppg_hi": 33
     },
     {
       "id": "89",
@@ -6684,7 +6860,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 0.9,
-      "exp_ppg": 3.4
+      "exp_ppg": 3.4,
+      "ppg_lo": 2,
+      "ppg_hi": 7
     },
     {
       "id": "90",
@@ -6749,7 +6927,9 @@
       "proj_lo": 0,
       "proj_hi": 29,
       "exp_games": 1.8,
-      "exp_ppg": 8.6
+      "exp_ppg": 8.6,
+      "ppg_lo": 3,
+      "ppg_hi": 22
     },
     {
       "id": "91",
@@ -6814,7 +6994,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 17.7
+      "exp_ppg": 17.7,
+      "ppg_lo": 13,
+      "ppg_hi": 24
     },
     {
       "id": "92",
@@ -6879,7 +7061,9 @@
       "proj_lo": 21,
       "proj_hi": 76,
       "exp_games": 2.5,
-      "exp_ppg": 21.0
+      "exp_ppg": 21.0,
+      "ppg_lo": 13,
+      "ppg_hi": 34
     },
     {
       "id": "93",
@@ -6944,7 +7128,9 @@
       "proj_lo": 0,
       "proj_hi": 43,
       "exp_games": 2.0,
-      "exp_ppg": 11.4
+      "exp_ppg": 11.4,
+      "ppg_lo": 6,
+      "ppg_hi": 22
     },
     {
       "id": "94",
@@ -7009,7 +7195,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 6.3
+      "exp_ppg": 6.3,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "95",
@@ -7074,7 +7262,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 0.7,
-      "exp_ppg": 4.6
+      "exp_ppg": 4.6,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "96",
@@ -7139,7 +7329,9 @@
       "proj_lo": 29,
       "proj_hi": 102,
       "exp_games": 2.8,
-      "exp_ppg": 25.2
+      "exp_ppg": 25.2,
+      "ppg_lo": 18,
+      "ppg_hi": 35
     },
     {
       "id": "97",
@@ -7204,7 +7396,9 @@
       "proj_lo": 0,
       "proj_hi": 74,
       "exp_games": 2.9,
-      "exp_ppg": 13.4
+      "exp_ppg": 13.4,
+      "ppg_lo": 8,
+      "ppg_hi": 23
     },
     {
       "id": "98",
@@ -7269,7 +7463,9 @@
       "proj_lo": 0,
       "proj_hi": 33,
       "exp_games": 2.0,
-      "exp_ppg": 8.8
+      "exp_ppg": 8.8,
+      "ppg_lo": 5,
+      "ppg_hi": 16
     },
     {
       "id": "99",
@@ -7334,7 +7530,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 0.9,
-      "exp_ppg": 3.7
+      "exp_ppg": 3.7,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "100",
@@ -7399,7 +7597,9 @@
       "proj_lo": 27,
       "proj_hi": 98,
       "exp_games": 2.8,
-      "exp_ppg": 24.1
+      "exp_ppg": 24.1,
+      "ppg_lo": 18,
+      "ppg_hi": 32
     },
     {
       "id": "101",
@@ -7464,7 +7664,9 @@
       "proj_lo": 0,
       "proj_hi": 28,
       "exp_games": 0.6,
-      "exp_ppg": 22.8
+      "exp_ppg": 22.8,
+      "ppg_lo": 15,
+      "ppg_hi": 34
     },
     {
       "id": "102",
@@ -7529,7 +7731,9 @@
       "proj_lo": 0,
       "proj_hi": 30,
       "exp_games": 2.3,
-      "exp_ppg": 7.0
+      "exp_ppg": 7.0,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "103",
@@ -7594,7 +7798,9 @@
       "proj_lo": 0,
       "proj_hi": 56,
       "exp_games": 2.8,
-      "exp_ppg": 10.6
+      "exp_ppg": 10.6,
+      "ppg_lo": 5,
+      "ppg_hi": 22
     },
     {
       "id": "104",
@@ -7659,7 +7865,9 @@
       "proj_lo": 0,
       "proj_hi": 58,
       "exp_games": 2.5,
-      "exp_ppg": 12.4
+      "exp_ppg": 12.4,
+      "ppg_lo": 7,
+      "ppg_hi": 23
     },
     {
       "id": "105",
@@ -7724,7 +7932,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 7.7
+      "exp_ppg": 7.7,
+      "ppg_lo": 3,
+      "ppg_hi": 18
     },
     {
       "id": "106",
@@ -7789,7 +7999,9 @@
       "proj_lo": 0,
       "proj_hi": 36,
       "exp_games": 1.5,
-      "exp_ppg": 12.5
+      "exp_ppg": 12.5,
+      "ppg_lo": 7,
+      "ppg_hi": 23
     },
     {
       "id": "107",
@@ -7854,7 +8066,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "108",
@@ -7919,7 +8133,9 @@
       "proj_lo": 0,
       "proj_hi": 58,
       "exp_games": 2.3,
-      "exp_ppg": 13.4
+      "exp_ppg": 13.4,
+      "ppg_lo": 7,
+      "ppg_hi": 25
     },
     {
       "id": "109",
@@ -7984,7 +8200,9 @@
       "proj_lo": 0,
       "proj_hi": 17,
       "exp_games": 1.0,
-      "exp_ppg": 9.1
+      "exp_ppg": 9.1,
+      "ppg_lo": 4,
+      "ppg_hi": 23
     },
     {
       "id": "110",
@@ -8049,7 +8267,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 6.2
+      "exp_ppg": 6.2,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "111",
@@ -8114,7 +8334,9 @@
       "proj_lo": 0,
       "proj_hi": 23,
       "exp_games": 1.6,
-      "exp_ppg": 7.3
+      "exp_ppg": 7.3,
+      "ppg_lo": 4,
+      "ppg_hi": 14
     },
     {
       "id": "112",
@@ -8179,7 +8401,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 1.2,
-      "exp_ppg": 2.1
+      "exp_ppg": 2.1,
+      "ppg_lo": 1,
+      "ppg_hi": 6
     },
     {
       "id": "113",
@@ -8244,7 +8468,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 5.3
+      "exp_ppg": 5.3,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "114",
@@ -8257,16 +8483,16 @@
       "r_minus_2_games": 4,
       "r_minus_1_games": 3,
       "proj": 74,
-      "avg5": 92.6,
+      "avg5": 81.0,
       "be": null,
       "games": 2,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": 4,
       "actual_price_change": 0,
       "price_after": 17730000,
       "next_round_games": 2,
       "round_after_games": 4,
-      "owned": 24.03,
+      "owned": 24.04,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -8309,7 +8535,9 @@
       "proj_lo": 24,
       "proj_hi": 86,
       "exp_games": 1.9,
-      "exp_ppg": 32.0
+      "exp_ppg": 32.0,
+      "ppg_lo": 24,
+      "ppg_hi": 42
     },
     {
       "id": "115",
@@ -8322,10 +8550,10 @@
       "r_minus_2_games": 4,
       "r_minus_1_games": 3,
       "proj": 38,
-      "avg5": 58.6,
+      "avg5": 48.8,
       "be": null,
       "games": 2,
-      "games_played": 0,
+      "games_played": 1,
       "actual_points": 0,
       "actual_price_change": 0,
       "price_after": 11670000,
@@ -8374,7 +8602,9 @@
       "proj_lo": 0,
       "proj_hi": 66,
       "exp_games": 2.0,
-      "exp_ppg": 17.8
+      "exp_ppg": 17.8,
+      "ppg_lo": 12,
+      "ppg_hi": 26
     },
     {
       "id": "116",
@@ -8439,7 +8669,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.9,
-      "exp_ppg": 3.0
+      "exp_ppg": 3.0,
+      "ppg_lo": 1,
+      "ppg_hi": 8
     },
     {
       "id": "117",
@@ -8452,11 +8684,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 3,
       "proj": 40,
-      "avg5": 62.0,
+      "avg5": 54.0,
       "be": null,
       "games": 2,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": -4,
       "actual_price_change": 0,
       "price_after": 14510000,
       "next_round_games": 2,
@@ -8504,7 +8736,9 @@
       "proj_lo": 0,
       "proj_hi": 64,
       "exp_games": 1.6,
-      "exp_ppg": 20.6
+      "exp_ppg": 20.6,
+      "ppg_lo": 15,
+      "ppg_hi": 28
     },
     {
       "id": "118",
@@ -8569,7 +8803,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 5.4
+      "exp_ppg": 5.4,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "119",
@@ -8582,11 +8818,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 3,
       "proj": 17,
-      "avg5": 28.8,
+      "avg5": 25.6,
       "be": null,
       "games": 2,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": 5,
       "actual_price_change": 0,
       "price_after": 5600000,
       "next_round_games": 2,
@@ -8634,7 +8870,9 @@
       "proj_lo": 0,
       "proj_hi": 30,
       "exp_games": 1.9,
-      "exp_ppg": 8.5
+      "exp_ppg": 8.5,
+      "ppg_lo": 4,
+      "ppg_hi": 19
     },
     {
       "id": "120",
@@ -8699,7 +8937,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 2.8
+      "exp_ppg": 2.8,
+      "ppg_lo": 1,
+      "ppg_hi": 6
     },
     {
       "id": "121",
@@ -8764,7 +9004,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 11.9
+      "exp_ppg": 11.9,
+      "ppg_lo": 5,
+      "ppg_hi": 28
     },
     {
       "id": "122",
@@ -8777,11 +9019,11 @@
       "r_minus_2_games": 4,
       "r_minus_1_games": 3,
       "proj": 21,
-      "avg5": 45.8,
+      "avg5": 36.6,
       "be": null,
       "games": 2,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": 5,
       "actual_price_change": 0,
       "price_after": 10420000,
       "next_round_games": 2,
@@ -8829,7 +9071,9 @@
       "proj_lo": 0,
       "proj_hi": 36,
       "exp_games": 1.6,
-      "exp_ppg": 11.7
+      "exp_ppg": 11.7,
+      "ppg_lo": 7,
+      "ppg_hi": 21
     },
     {
       "id": "123",
@@ -8842,11 +9086,11 @@
       "r_minus_2_games": 4,
       "r_minus_1_games": 3,
       "proj": 23,
-      "avg5": 37.0,
+      "avg5": 30.6,
       "be": null,
       "games": 2,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": 8,
       "actual_price_change": 0,
       "price_after": 5990000,
       "next_round_games": 2,
@@ -8894,7 +9138,9 @@
       "proj_lo": 0,
       "proj_hi": 34,
       "exp_games": 1.5,
-      "exp_ppg": 11.8
+      "exp_ppg": 11.8,
+      "ppg_lo": 5,
+      "ppg_hi": 26
     },
     {
       "id": "124",
@@ -8959,7 +9205,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.2,
-      "exp_ppg": 8.8
+      "exp_ppg": 8.8,
+      "ppg_lo": 4,
+      "ppg_hi": 21
     },
     {
       "id": "125",
@@ -8972,10 +9220,10 @@
       "r_minus_2_games": 4,
       "r_minus_1_games": 3,
       "proj": 26,
-      "avg5": 45.4,
+      "avg5": 35.2,
       "be": null,
       "games": 2,
-      "games_played": 0,
+      "games_played": 1,
       "actual_points": 0,
       "actual_price_change": 0,
       "price_after": 8490000,
@@ -9024,7 +9272,9 @@
       "proj_lo": 0,
       "proj_hi": 47,
       "exp_games": 2.0,
-      "exp_ppg": 12.7
+      "exp_ppg": 12.7,
+      "ppg_lo": 7,
+      "ppg_hi": 24
     },
     {
       "id": "126",
@@ -9089,7 +9339,9 @@
       "proj_lo": 0,
       "proj_hi": 11,
       "exp_games": 1.4,
-      "exp_ppg": 4.1
+      "exp_ppg": 4.1,
+      "ppg_lo": 1,
+      "ppg_hi": 11
     },
     {
       "id": "127",
@@ -9102,20 +9354,20 @@
       "r_minus_2_games": 4,
       "r_minus_1_games": 1,
       "proj": 32,
-      "avg5": 49.6,
+      "avg5": 40.0,
       "be": null,
       "games": 2,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": 10,
       "actual_price_change": 0,
       "price_after": 11550000,
       "next_round_games": 2,
       "round_after_games": 4,
       "owned": 0.29,
-      "injury": "Day-To-Day \u00b7 Illness",
-      "injury_status": "Day-To-Day",
-      "injury_detail": "Washington (illness) is questionable for Tuesday's game against the Nuggets.",
-      "injury_return": "2026-11-24",
+      "injury": null,
+      "injury_status": null,
+      "injury_detail": null,
+      "injury_return": null,
       "photo": "https://a.espncdn.com/i/headshots/nba/players/full/4278078.png",
       "status": "watchlist",
       "trend": [
@@ -9150,11 +9402,13 @@
           11550000
         ]
       ],
-      "proj_v2": 13,
+      "proj_v2": 29,
       "proj_lo": 0,
-      "proj_hi": 24,
-      "exp_games": 0.7,
-      "exp_ppg": 16.7
+      "proj_hi": 55,
+      "exp_games": 1.7,
+      "exp_ppg": 16.7,
+      "ppg_lo": 11,
+      "ppg_hi": 26
     },
     {
       "id": "128",
@@ -9219,7 +9473,9 @@
       "proj_lo": 0,
       "proj_hi": 48,
       "exp_games": 2.9,
-      "exp_ppg": 8.7
+      "exp_ppg": 8.7,
+      "ppg_lo": 5,
+      "ppg_hi": 15
     },
     {
       "id": "129",
@@ -9232,11 +9488,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 4,
       "proj": 64,
-      "avg5": 57.0,
+      "avg5": 51.2,
       "be": null,
       "games": 3,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": 3,
       "actual_price_change": 0,
       "price_after": 11620000,
       "next_round_games": 3,
@@ -9284,7 +9540,9 @@
       "proj_lo": 25,
       "proj_hi": 87,
       "exp_games": 2.9,
-      "exp_ppg": 20.4
+      "exp_ppg": 20.4,
+      "ppg_lo": 15,
+      "ppg_hi": 28
     },
     {
       "id": "130",
@@ -9300,13 +9558,13 @@
       "avg5": 31.4,
       "be": null,
       "games": 3,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": 1,
       "actual_price_change": 0,
       "price_after": 5230000,
       "next_round_games": 3,
       "round_after_games": 3,
-      "owned": 9.57,
+      "owned": 9.58,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -9349,7 +9607,9 @@
       "proj_lo": 0,
       "proj_hi": 52,
       "exp_games": 2.9,
-      "exp_ppg": 9.3
+      "exp_ppg": 9.3,
+      "ppg_lo": 5,
+      "ppg_hi": 17
     },
     {
       "id": "131",
@@ -9365,8 +9625,8 @@
       "avg5": 24.4,
       "be": null,
       "games": 3,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": -1,
       "actual_price_change": 0,
       "price_after": 9880000,
       "next_round_games": 3,
@@ -9414,7 +9674,9 @@
       "proj_lo": 0,
       "proj_hi": 47,
       "exp_games": 2.8,
-      "exp_ppg": 9.1
+      "exp_ppg": 9.1,
+      "ppg_lo": 5,
+      "ppg_hi": 17
     },
     {
       "id": "132",
@@ -9479,7 +9741,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 1.0,
-      "exp_ppg": 2.8
+      "exp_ppg": 2.8,
+      "ppg_lo": 1,
+      "ppg_hi": 7
     },
     {
       "id": "133",
@@ -9492,11 +9756,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 4,
       "proj": 39,
-      "avg5": 43.4,
+      "avg5": 36.2,
       "be": null,
       "games": 3,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": 1,
       "actual_price_change": 0,
       "price_after": 11130000,
       "next_round_games": 3,
@@ -9544,7 +9808,9 @@
       "proj_lo": 17,
       "proj_hi": 60,
       "exp_games": 2.9,
-      "exp_ppg": 14.0
+      "exp_ppg": 14.0,
+      "ppg_lo": 8,
+      "ppg_hi": 25
     },
     {
       "id": "134",
@@ -9609,7 +9875,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 1.0,
-      "exp_ppg": 2.9
+      "exp_ppg": 2.9,
+      "ppg_lo": 1,
+      "ppg_hi": 6
     },
     {
       "id": "135",
@@ -9631,7 +9899,7 @@
       "price_after": 4040000,
       "next_round_games": 3,
       "round_after_games": 3,
-      "owned": 0.45,
+      "owned": 0.46,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -9674,7 +9942,9 @@
       "proj_lo": 0,
       "proj_hi": 15,
       "exp_games": 1.7,
-      "exp_ppg": 4.6
+      "exp_ppg": 4.6,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "136",
@@ -9687,10 +9957,10 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 4,
       "proj": 44,
-      "avg5": 33.2,
+      "avg5": 32.4,
       "be": null,
       "games": 3,
-      "games_played": 0,
+      "games_played": 1,
       "actual_points": 0,
       "actual_price_change": 0,
       "price_after": 9950000,
@@ -9739,7 +10009,9 @@
       "proj_lo": 0,
       "proj_hi": 65,
       "exp_games": 2.4,
-      "exp_ppg": 14.5
+      "exp_ppg": 14.5,
+      "ppg_lo": 8,
+      "ppg_hi": 26
     },
     {
       "id": "137",
@@ -9752,11 +10024,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 4,
       "proj": 105,
-      "avg5": 113.8,
+      "avg5": 102.0,
       "be": null,
       "games": 3,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": 10,
       "actual_price_change": 0,
       "price_after": 27880000,
       "next_round_games": 3,
@@ -9804,7 +10076,9 @@
       "proj_lo": 64,
       "proj_hi": 139,
       "exp_games": 2.9,
-      "exp_ppg": 37.5
+      "exp_ppg": 37.5,
+      "ppg_lo": 29,
+      "ppg_hi": 48
     },
     {
       "id": "138",
@@ -9820,8 +10094,8 @@
       "avg5": 15.7,
       "be": null,
       "games": 3,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": 2,
       "actual_price_change": 0,
       "price_after": 5510000,
       "next_round_games": 3,
@@ -9869,7 +10143,9 @@
       "proj_lo": 0,
       "proj_hi": 20,
       "exp_games": 1.7,
-      "exp_ppg": 6.4
+      "exp_ppg": 6.4,
+      "ppg_lo": 2,
+      "ppg_hi": 17
     },
     {
       "id": "139",
@@ -9934,7 +10210,9 @@
       "proj_lo": 0,
       "proj_hi": 20,
       "exp_games": 2.9,
-      "exp_ppg": 3.6
+      "exp_ppg": 3.6,
+      "ppg_lo": 2,
+      "ppg_hi": 8
     },
     {
       "id": "140",
@@ -9947,16 +10225,16 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 4,
       "proj": 104,
-      "avg5": 89.8,
+      "avg5": 81.4,
       "be": null,
       "games": 3,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": 1,
       "actual_price_change": 0,
       "price_after": 19690000,
       "next_round_games": 3,
       "round_after_games": 3,
-      "owned": 6.23,
+      "owned": 6.25,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -9999,7 +10277,9 @@
       "proj_lo": 56,
       "proj_hi": 121,
       "exp_games": 2.9,
-      "exp_ppg": 32.6
+      "exp_ppg": 32.6,
+      "ppg_lo": 24,
+      "ppg_hi": 43
     },
     {
       "id": "141",
@@ -10064,7 +10344,9 @@
       "proj_lo": 0,
       "proj_hi": 7,
       "exp_games": 0.6,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "142",
@@ -10129,7 +10411,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.2
+      "exp_ppg": 4.2,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "143",
@@ -10194,7 +10478,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.3,
-      "exp_ppg": 7.8
+      "exp_ppg": 7.8,
+      "ppg_lo": 3,
+      "ppg_hi": 18
     },
     {
       "id": "144",
@@ -10259,7 +10545,9 @@
       "proj_lo": 17,
       "proj_hi": 62,
       "exp_games": 2.9,
-      "exp_ppg": 14.5
+      "exp_ppg": 14.5,
+      "ppg_lo": 8,
+      "ppg_hi": 27
     },
     {
       "id": "145",
@@ -10324,7 +10612,9 @@
       "proj_lo": 0,
       "proj_hi": 67,
       "exp_games": 1.3,
-      "exp_ppg": 27.9
+      "exp_ppg": 27.9,
+      "ppg_lo": 20,
+      "ppg_hi": 39
     },
     {
       "id": "146",
@@ -10389,7 +10679,9 @@
       "proj_lo": 0,
       "proj_hi": 52,
       "exp_games": 2.9,
-      "exp_ppg": 9.4
+      "exp_ppg": 9.4,
+      "ppg_lo": 5,
+      "ppg_hi": 17
     },
     {
       "id": "147",
@@ -10454,7 +10746,9 @@
       "proj_lo": 0,
       "proj_hi": 10,
       "exp_games": 0.9,
-      "exp_ppg": 5.8
+      "exp_ppg": 5.8,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "148",
@@ -10519,7 +10813,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 6.8
+      "exp_ppg": 6.8,
+      "ppg_lo": 3,
+      "ppg_hi": 16
     },
     {
       "id": "149",
@@ -10584,7 +10880,9 @@
       "proj_lo": 0,
       "proj_hi": 36,
       "exp_games": 2.4,
-      "exp_ppg": 7.8
+      "exp_ppg": 7.8,
+      "ppg_lo": 4,
+      "ppg_hi": 16
     },
     {
       "id": "150",
@@ -10649,7 +10947,9 @@
       "proj_lo": 0,
       "proj_hi": 70,
       "exp_games": 2.9,
-      "exp_ppg": 12.7
+      "exp_ppg": 12.7,
+      "ppg_lo": 6,
+      "ppg_hi": 25
     },
     {
       "id": "151",
@@ -10714,7 +11014,9 @@
       "proj_lo": 18,
       "proj_hi": 66,
       "exp_games": 2.9,
-      "exp_ppg": 15.3
+      "exp_ppg": 15.3,
+      "ppg_lo": 11,
+      "ppg_hi": 22
     },
     {
       "id": "152",
@@ -10779,7 +11081,9 @@
       "proj_lo": 0,
       "proj_hi": 24,
       "exp_games": 1.3,
-      "exp_ppg": 10.1
+      "exp_ppg": 10.1,
+      "ppg_lo": 5,
+      "ppg_hi": 21
     },
     {
       "id": "153",
@@ -10844,7 +11148,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 1.3,
-      "exp_ppg": 2.4
+      "exp_ppg": 2.4,
+      "ppg_lo": 1,
+      "ppg_hi": 6
     },
     {
       "id": "154",
@@ -10909,7 +11215,9 @@
       "proj_lo": 0,
       "proj_hi": 8,
       "exp_games": 1.4,
-      "exp_ppg": 3.0
+      "exp_ppg": 3.0,
+      "ppg_lo": 2,
+      "ppg_hi": 6
     },
     {
       "id": "155",
@@ -10974,7 +11282,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 2.9
+      "exp_ppg": 2.9,
+      "ppg_lo": 1,
+      "ppg_hi": 6
     },
     {
       "id": "156",
@@ -11039,7 +11349,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "157",
@@ -11104,7 +11416,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 10.2
+      "exp_ppg": 10.2,
+      "ppg_lo": 4,
+      "ppg_hi": 24
     },
     {
       "id": "158",
@@ -11169,7 +11483,9 @@
       "proj_lo": 24,
       "proj_hi": 86,
       "exp_games": 2.9,
-      "exp_ppg": 20.2
+      "exp_ppg": 20.2,
+      "ppg_lo": 15,
+      "ppg_hi": 27
     },
     {
       "id": "159",
@@ -11234,7 +11550,9 @@
       "proj_lo": 0,
       "proj_hi": 23,
       "exp_games": 0.8,
-      "exp_ppg": 16.1
+      "exp_ppg": 16.1,
+      "ppg_lo": 12,
+      "ppg_hi": 22
     },
     {
       "id": "160",
@@ -11256,7 +11574,7 @@
       "price_after": 14020000,
       "next_round_games": 3,
       "round_after_games": 4,
-      "owned": 3.28,
+      "owned": 3.27,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -11299,7 +11617,9 @@
       "proj_lo": 29,
       "proj_hi": 102,
       "exp_games": 2.8,
-      "exp_ppg": 25.2
+      "exp_ppg": 25.2,
+      "ppg_lo": 18,
+      "ppg_hi": 34
     },
     {
       "id": "161",
@@ -11364,7 +11684,9 @@
       "proj_lo": 0,
       "proj_hi": 65,
       "exp_games": 2.6,
-      "exp_ppg": 13.2
+      "exp_ppg": 13.2,
+      "ppg_lo": 7,
+      "ppg_hi": 25
     },
     {
       "id": "162",
@@ -11429,7 +11751,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 20.9
+      "exp_ppg": 20.9,
+      "ppg_lo": 14,
+      "ppg_hi": 32
     },
     {
       "id": "163",
@@ -11494,7 +11818,9 @@
       "proj_lo": 0,
       "proj_hi": 23,
       "exp_games": 2.5,
-      "exp_ppg": 4.9
+      "exp_ppg": 4.9,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "164",
@@ -11559,7 +11885,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 20.4
+      "exp_ppg": 20.4,
+      "ppg_lo": 13,
+      "ppg_hi": 33
     },
     {
       "id": "165",
@@ -11624,7 +11952,9 @@
       "proj_lo": 0,
       "proj_hi": 50,
       "exp_games": 2.5,
-      "exp_ppg": 10.8
+      "exp_ppg": 10.8,
+      "ppg_lo": 6,
+      "ppg_hi": 19
     },
     {
       "id": "166",
@@ -11689,7 +12019,9 @@
       "proj_lo": 0,
       "proj_hi": 34,
       "exp_games": 2.5,
-      "exp_ppg": 7.3
+      "exp_ppg": 7.3,
+      "ppg_lo": 4,
+      "ppg_hi": 13
     },
     {
       "id": "167",
@@ -11754,7 +12086,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.5
+      "exp_ppg": 4.5,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "168",
@@ -11776,7 +12110,7 @@
       "price_after": 10120000,
       "next_round_games": 2,
       "round_after_games": 4,
-      "owned": 65.43,
+      "owned": 65.42,
       "injury": "Day-To-Day \u00b7 Illness",
       "injury_status": "Day-To-Day",
       "injury_detail": "Lendeborg is questionable for Wednesday's game against the Kings with an illness.",
@@ -11819,7 +12153,9 @@
       "proj_lo": 0,
       "proj_hi": 59,
       "exp_games": 1.9,
-      "exp_ppg": 16.1
+      "exp_ppg": 16.1,
+      "ppg_lo": 12,
+      "ppg_hi": 22
     },
     {
       "id": "169",
@@ -11884,7 +12220,9 @@
       "proj_lo": 0,
       "proj_hi": 9,
       "exp_games": 2.0,
-      "exp_ppg": 2.3
+      "exp_ppg": 2.3,
+      "ppg_lo": 1,
+      "ppg_hi": 6
     },
     {
       "id": "170",
@@ -11949,7 +12287,9 @@
       "proj_lo": 0,
       "proj_hi": 50,
       "exp_games": 2.9,
-      "exp_ppg": 9.0
+      "exp_ppg": 9.0,
+      "ppg_lo": 5,
+      "ppg_hi": 18
     },
     {
       "id": "171",
@@ -12014,7 +12354,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 11.4
+      "exp_ppg": 11.4,
+      "ppg_lo": 5,
+      "ppg_hi": 27
     },
     {
       "id": "172",
@@ -12079,7 +12421,9 @@
       "proj_lo": 0,
       "proj_hi": 27,
       "exp_games": 2.9,
-      "exp_ppg": 4.9
+      "exp_ppg": 4.9,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "173",
@@ -12144,7 +12488,9 @@
       "proj_lo": 0,
       "proj_hi": 29,
       "exp_games": 2.6,
-      "exp_ppg": 5.9
+      "exp_ppg": 5.9,
+      "ppg_lo": 2,
+      "ppg_hi": 15
     },
     {
       "id": "174",
@@ -12209,7 +12555,9 @@
       "proj_lo": 0,
       "proj_hi": 67,
       "exp_games": 2.6,
-      "exp_ppg": 13.6
+      "exp_ppg": 13.6,
+      "ppg_lo": 8,
+      "ppg_hi": 24
     },
     {
       "id": "175",
@@ -12274,7 +12622,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 15.8
+      "exp_ppg": 15.8,
+      "ppg_lo": 10,
+      "ppg_hi": 24
     },
     {
       "id": "176",
@@ -12339,7 +12689,9 @@
       "proj_lo": 0,
       "proj_hi": 40,
       "exp_games": 2.8,
-      "exp_ppg": 7.7
+      "exp_ppg": 7.7,
+      "ppg_lo": 4,
+      "ppg_hi": 15
     },
     {
       "id": "177",
@@ -12404,7 +12756,9 @@
       "proj_lo": 0,
       "proj_hi": 37,
       "exp_games": 2.5,
-      "exp_ppg": 8.0
+      "exp_ppg": 8.0,
+      "ppg_lo": 3,
+      "ppg_hi": 19
     },
     {
       "id": "178",
@@ -12469,7 +12823,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 0.6,
-      "exp_ppg": 6.0
+      "exp_ppg": 6.0,
+      "ppg_lo": 3,
+      "ppg_hi": 14
     },
     {
       "id": "179",
@@ -12534,7 +12890,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 0.3,
-      "exp_ppg": 9.4
+      "exp_ppg": 9.4,
+      "ppg_lo": 4,
+      "ppg_hi": 21
     },
     {
       "id": "180",
@@ -12599,7 +12957,9 @@
       "proj_lo": 0,
       "proj_hi": 21,
       "exp_games": 0.9,
-      "exp_ppg": 12.8
+      "exp_ppg": 12.8,
+      "ppg_lo": 7,
+      "ppg_hi": 25
     },
     {
       "id": "181",
@@ -12664,7 +13024,9 @@
       "proj_lo": 0,
       "proj_hi": 30,
       "exp_games": 2.9,
-      "exp_ppg": 5.4
+      "exp_ppg": 5.4,
+      "ppg_lo": 2,
+      "ppg_hi": 18
     },
     {
       "id": "182",
@@ -12729,7 +13091,9 @@
       "proj_lo": 0,
       "proj_hi": 24,
       "exp_games": 1.2,
-      "exp_ppg": 10.4
+      "exp_ppg": 10.4,
+      "ppg_lo": 4,
+      "ppg_hi": 25
     },
     {
       "id": "183",
@@ -12794,7 +13158,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 6.9
+      "exp_ppg": 6.9,
+      "ppg_lo": 3,
+      "ppg_hi": 16
     },
     {
       "id": "184",
@@ -12859,7 +13225,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "185",
@@ -12924,7 +13292,9 @@
       "proj_lo": 0,
       "proj_hi": 17,
       "exp_games": 2.0,
-      "exp_ppg": 4.5
+      "exp_ppg": 4.5,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "186",
@@ -12989,7 +13359,9 @@
       "proj_lo": 27,
       "proj_hi": 96,
       "exp_games": 2.9,
-      "exp_ppg": 22.4
+      "exp_ppg": 22.4,
+      "ppg_lo": 17,
+      "ppg_hi": 30
     },
     {
       "id": "187",
@@ -13054,7 +13426,9 @@
       "proj_lo": 0,
       "proj_hi": 70,
       "exp_games": 2.9,
-      "exp_ppg": 12.7
+      "exp_ppg": 12.7,
+      "ppg_lo": 7,
+      "ppg_hi": 22
     },
     {
       "id": "188",
@@ -13119,7 +13493,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 3.2
+      "exp_ppg": 3.2,
+      "ppg_lo": 1,
+      "ppg_hi": 8
     },
     {
       "id": "189",
@@ -13184,7 +13560,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.0
+      "exp_ppg": 4.0,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "190",
@@ -13249,7 +13627,9 @@
       "proj_lo": 47,
       "proj_hi": 102,
       "exp_games": 2.6,
-      "exp_ppg": 30.7
+      "exp_ppg": 30.7,
+      "ppg_lo": 23,
+      "ppg_hi": 41
     },
     {
       "id": "191",
@@ -13314,7 +13694,9 @@
       "proj_lo": 0,
       "proj_hi": 45,
       "exp_games": 2.5,
-      "exp_ppg": 9.7
+      "exp_ppg": 9.7,
+      "ppg_lo": 5,
+      "ppg_hi": 17
     },
     {
       "id": "192",
@@ -13379,7 +13761,9 @@
       "proj_lo": 0,
       "proj_hi": 33,
       "exp_games": 2.0,
-      "exp_ppg": 8.8
+      "exp_ppg": 8.8,
+      "ppg_lo": 4,
+      "ppg_hi": 19
     },
     {
       "id": "193",
@@ -13444,7 +13828,9 @@
       "proj_lo": 22,
       "proj_hi": 80,
       "exp_games": 2.9,
-      "exp_ppg": 18.7
+      "exp_ppg": 18.7,
+      "ppg_lo": 13,
+      "ppg_hi": 27
     },
     {
       "id": "194",
@@ -13509,7 +13895,9 @@
       "proj_lo": 0,
       "proj_hi": 9,
       "exp_games": 1.8,
-      "exp_ppg": 2.7
+      "exp_ppg": 2.7,
+      "ppg_lo": 1,
+      "ppg_hi": 6
     },
     {
       "id": "195",
@@ -13574,7 +13962,9 @@
       "proj_lo": 26,
       "proj_hi": 91,
       "exp_games": 2.8,
-      "exp_ppg": 22.4
+      "exp_ppg": 22.4,
+      "ppg_lo": 16,
+      "ppg_hi": 31
     },
     {
       "id": "196",
@@ -13639,7 +14029,9 @@
       "proj_lo": 0,
       "proj_hi": 7,
       "exp_games": 2.0,
-      "exp_ppg": 2.0
+      "exp_ppg": 2.0,
+      "ppg_lo": 1,
+      "ppg_hi": 4
     },
     {
       "id": "197",
@@ -13704,7 +14096,9 @@
       "proj_lo": 0,
       "proj_hi": 43,
       "exp_games": 2.0,
-      "exp_ppg": 11.5
+      "exp_ppg": 11.5,
+      "ppg_lo": 5,
+      "ppg_hi": 24
     },
     {
       "id": "198",
@@ -13769,7 +14163,9 @@
       "proj_lo": 18,
       "proj_hi": 64,
       "exp_games": 2.5,
-      "exp_ppg": 17.7
+      "exp_ppg": 17.7,
+      "ppg_lo": 13,
+      "ppg_hi": 23
     },
     {
       "id": "199",
@@ -13834,7 +14230,9 @@
       "proj_lo": 0,
       "proj_hi": 13,
       "exp_games": 1.5,
-      "exp_ppg": 4.6
+      "exp_ppg": 4.6,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "200",
@@ -13899,7 +14297,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.3,
-      "exp_ppg": 11.5
+      "exp_ppg": 11.5,
+      "ppg_lo": 5,
+      "ppg_hi": 27
     },
     {
       "id": "201",
@@ -13964,7 +14364,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 27.3
+      "exp_ppg": 27.3,
+      "ppg_lo": 21,
+      "ppg_hi": 36
     },
     {
       "id": "202",
@@ -14029,7 +14431,9 @@
       "proj_lo": 0,
       "proj_hi": 38,
       "exp_games": 2.6,
-      "exp_ppg": 7.7
+      "exp_ppg": 7.7,
+      "ppg_lo": 4,
+      "ppg_hi": 17
     },
     {
       "id": "203",
@@ -14094,7 +14498,9 @@
       "proj_lo": 17,
       "proj_hi": 61,
       "exp_games": 2.9,
-      "exp_ppg": 14.2
+      "exp_ppg": 14.2,
+      "ppg_lo": 8,
+      "ppg_hi": 25
     },
     {
       "id": "204",
@@ -14159,7 +14565,9 @@
       "proj_lo": 0,
       "proj_hi": 9,
       "exp_games": 0.4,
-      "exp_ppg": 13.6
+      "exp_ppg": 13.6,
+      "ppg_lo": 7,
+      "ppg_hi": 26
     },
     {
       "id": "205",
@@ -14224,7 +14632,9 @@
       "proj_lo": 0,
       "proj_hi": 23,
       "exp_games": 1.8,
-      "exp_ppg": 6.7
+      "exp_ppg": 6.7,
+      "ppg_lo": 4,
+      "ppg_hi": 13
     },
     {
       "id": "206",
@@ -14289,7 +14699,9 @@
       "proj_lo": 0,
       "proj_hi": 73,
       "exp_games": 2.3,
-      "exp_ppg": 16.9
+      "exp_ppg": 16.9,
+      "ppg_lo": 12,
+      "ppg_hi": 23
     },
     {
       "id": "207",
@@ -14354,7 +14766,9 @@
       "proj_lo": 0,
       "proj_hi": 34,
       "exp_games": 1.6,
-      "exp_ppg": 11.1
+      "exp_ppg": 11.1,
+      "ppg_lo": 6,
+      "ppg_hi": 19
     },
     {
       "id": "208",
@@ -14419,7 +14833,9 @@
       "proj_lo": 0,
       "proj_hi": 67,
       "exp_games": 2.6,
-      "exp_ppg": 13.5
+      "exp_ppg": 13.5,
+      "ppg_lo": 6,
+      "ppg_hi": 32
     },
     {
       "id": "209",
@@ -14484,7 +14900,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 7.9
+      "exp_ppg": 7.9,
+      "ppg_lo": 3,
+      "ppg_hi": 19
     },
     {
       "id": "210",
@@ -14549,7 +14967,9 @@
       "proj_lo": 28,
       "proj_hi": 99,
       "exp_games": 2.8,
-      "exp_ppg": 24.4
+      "exp_ppg": 24.4,
+      "ppg_lo": 19,
+      "ppg_hi": 32
     },
     {
       "id": "211",
@@ -14614,7 +15034,9 @@
       "proj_lo": 0,
       "proj_hi": 55,
       "exp_games": 2.6,
-      "exp_ppg": 11.2
+      "exp_ppg": 11.2,
+      "ppg_lo": 6,
+      "ppg_hi": 21
     },
     {
       "id": "212",
@@ -14679,7 +15101,9 @@
       "proj_lo": 0,
       "proj_hi": 37,
       "exp_games": 2.0,
-      "exp_ppg": 9.8
+      "exp_ppg": 9.8,
+      "ppg_lo": 2,
+      "ppg_hi": 55
     },
     {
       "id": "213",
@@ -14744,7 +15168,9 @@
       "proj_lo": 0,
       "proj_hi": 52,
       "exp_games": 2.5,
-      "exp_ppg": 11.3
+      "exp_ppg": 11.3,
+      "ppg_lo": 6,
+      "ppg_hi": 21
     },
     {
       "id": "214",
@@ -14809,7 +15235,9 @@
       "proj_lo": 0,
       "proj_hi": 46,
       "exp_games": 2.8,
-      "exp_ppg": 8.8
+      "exp_ppg": 8.8,
+      "ppg_lo": 4,
+      "ppg_hi": 21
     },
     {
       "id": "215",
@@ -14874,7 +15302,9 @@
       "proj_lo": 0,
       "proj_hi": 75,
       "exp_games": 2.1,
-      "exp_ppg": 18.5
+      "exp_ppg": 18.5,
+      "ppg_lo": 13,
+      "ppg_hi": 26
     },
     {
       "id": "216",
@@ -14939,7 +15369,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 9.9
+      "exp_ppg": 9.9,
+      "ppg_lo": 4,
+      "ppg_hi": 23
     },
     {
       "id": "217",
@@ -15004,7 +15436,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 2.9
+      "exp_ppg": 2.9,
+      "ppg_lo": 1,
+      "ppg_hi": 7
     },
     {
       "id": "218",
@@ -15069,7 +15503,9 @@
       "proj_lo": 0,
       "proj_hi": 8,
       "exp_games": 2.3,
-      "exp_ppg": 1.9
+      "exp_ppg": 1.9,
+      "ppg_lo": 1,
+      "ppg_hi": 5
     },
     {
       "id": "219",
@@ -15134,7 +15570,9 @@
       "proj_lo": 0,
       "proj_hi": 48,
       "exp_games": 3.9,
-      "exp_ppg": 6.5
+      "exp_ppg": 6.5,
+      "ppg_lo": 3,
+      "ppg_hi": 16
     },
     {
       "id": "220",
@@ -15199,7 +15637,9 @@
       "proj_lo": 18,
       "proj_hi": 64,
       "exp_games": 3.9,
-      "exp_ppg": 11.2
+      "exp_ppg": 11.2,
+      "ppg_lo": 6,
+      "ppg_hi": 22
     },
     {
       "id": "221",
@@ -15264,7 +15704,9 @@
       "proj_lo": 26,
       "proj_hi": 93,
       "exp_games": 3.9,
-      "exp_ppg": 16.4
+      "exp_ppg": 16.4,
+      "ppg_lo": 12,
+      "ppg_hi": 23
     },
     {
       "id": "222",
@@ -15329,7 +15771,9 @@
       "proj_lo": 19,
       "proj_hi": 68,
       "exp_games": 3.4,
-      "exp_ppg": 13.5
+      "exp_ppg": 13.5,
+      "ppg_lo": 7,
+      "ppg_hi": 27
     },
     {
       "id": "223",
@@ -15394,7 +15838,9 @@
       "proj_lo": 0,
       "proj_hi": 12,
       "exp_games": 0.4,
-      "exp_ppg": 17.0
+      "exp_ppg": 17.0,
+      "ppg_lo": 11,
+      "ppg_hi": 26
     },
     {
       "id": "224",
@@ -15459,7 +15905,9 @@
       "proj_lo": 18,
       "proj_hi": 64,
       "exp_games": 3.7,
-      "exp_ppg": 11.9
+      "exp_ppg": 11.9,
+      "ppg_lo": 7,
+      "ppg_hi": 21
     },
     {
       "id": "225",
@@ -15524,7 +15972,9 @@
       "proj_lo": 17,
       "proj_hi": 61,
       "exp_games": 3.7,
-      "exp_ppg": 11.4
+      "exp_ppg": 11.4,
+      "ppg_lo": 6,
+      "ppg_hi": 22
     },
     {
       "id": "226",
@@ -15589,7 +16039,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.4,
-      "exp_ppg": 4.2
+      "exp_ppg": 4.2,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "227",
@@ -15654,7 +16106,9 @@
       "proj_lo": 26,
       "proj_hi": 91,
       "exp_games": 3.9,
-      "exp_ppg": 16.0
+      "exp_ppg": 16.0,
+      "ppg_lo": 10,
+      "ppg_hi": 26
     },
     {
       "id": "228",
@@ -15719,7 +16173,9 @@
       "proj_lo": 0,
       "proj_hi": 11,
       "exp_games": 1.8,
-      "exp_ppg": 3.1
+      "exp_ppg": 3.1,
+      "ppg_lo": 1,
+      "ppg_hi": 8
     },
     {
       "id": "229",
@@ -15784,7 +16240,9 @@
       "proj_lo": 0,
       "proj_hi": 30,
       "exp_games": 3.4,
-      "exp_ppg": 4.7
+      "exp_ppg": 4.7,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "230",
@@ -15849,7 +16307,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 11.5
+      "exp_ppg": 11.5,
+      "ppg_lo": 5,
+      "ppg_hi": 27
     },
     {
       "id": "231",
@@ -15914,7 +16374,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.4,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "232",
@@ -15979,7 +16441,9 @@
       "proj_lo": 0,
       "proj_hi": 13,
       "exp_games": 0.8,
-      "exp_ppg": 8.0
+      "exp_ppg": 8.0,
+      "ppg_lo": 3,
+      "ppg_hi": 19
     },
     {
       "id": "233",
@@ -16044,7 +16508,9 @@
       "proj_lo": 0,
       "proj_hi": 9,
       "exp_games": 1.8,
-      "exp_ppg": 2.8
+      "exp_ppg": 2.8,
+      "ppg_lo": 2,
+      "ppg_hi": 5
     },
     {
       "id": "234",
@@ -16109,7 +16575,9 @@
       "proj_lo": 0,
       "proj_hi": 55,
       "exp_games": 3.9,
-      "exp_ppg": 7.5
+      "exp_ppg": 7.5,
+      "ppg_lo": 4,
+      "ppg_hi": 14
     },
     {
       "id": "235",
@@ -16174,7 +16642,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "236",
@@ -16239,7 +16709,9 @@
       "proj_lo": 0,
       "proj_hi": 47,
       "exp_games": 2.5,
-      "exp_ppg": 10.0
+      "exp_ppg": 10.0,
+      "ppg_lo": 5,
+      "ppg_hi": 18
     },
     {
       "id": "237",
@@ -16304,7 +16776,9 @@
       "proj_lo": 0,
       "proj_hi": 69,
       "exp_games": 3.9,
-      "exp_ppg": 9.4
+      "exp_ppg": 9.4,
+      "ppg_lo": 5,
+      "ppg_hi": 16
     },
     {
       "id": "238",
@@ -16369,7 +16843,9 @@
       "proj_lo": 0,
       "proj_hi": 7,
       "exp_games": 1.4,
-      "exp_ppg": 2.6
+      "exp_ppg": 2.6,
+      "ppg_lo": 1,
+      "ppg_hi": 8
     },
     {
       "id": "239",
@@ -16434,7 +16910,9 @@
       "proj_lo": 30,
       "proj_hi": 105,
       "exp_games": 2.6,
-      "exp_ppg": 27.5
+      "exp_ppg": 27.5,
+      "ppg_lo": 20,
+      "ppg_hi": 39
     },
     {
       "id": "240",
@@ -16499,7 +16977,9 @@
       "proj_lo": 0,
       "proj_hi": 73,
       "exp_games": 2.6,
-      "exp_ppg": 14.7
+      "exp_ppg": 14.7,
+      "ppg_lo": 7,
+      "ppg_hi": 31
     },
     {
       "id": "241",
@@ -16564,7 +17044,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 1.5,
-      "exp_ppg": 1.9
+      "exp_ppg": 1.9,
+      "ppg_lo": 1,
+      "ppg_hi": 4
     },
     {
       "id": "242",
@@ -16629,7 +17111,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 1.4,
-      "exp_ppg": 1.7
+      "exp_ppg": 1.7,
+      "ppg_lo": 1,
+      "ppg_hi": 3
     },
     {
       "id": "243",
@@ -16694,7 +17178,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.5
+      "exp_ppg": 4.5,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "244",
@@ -16759,7 +17245,9 @@
       "proj_lo": 25,
       "proj_hi": 88,
       "exp_games": 2.8,
-      "exp_ppg": 21.8
+      "exp_ppg": 21.8,
+      "ppg_lo": 16,
+      "ppg_hi": 30
     },
     {
       "id": "245",
@@ -16824,7 +17312,9 @@
       "proj_lo": 0,
       "proj_hi": 8,
       "exp_games": 0.9,
-      "exp_ppg": 4.9
+      "exp_ppg": 4.9,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "246",
@@ -16889,7 +17379,9 @@
       "proj_lo": 0,
       "proj_hi": 45,
       "exp_games": 2.8,
-      "exp_ppg": 8.6
+      "exp_ppg": 8.6,
+      "ppg_lo": 5,
+      "ppg_hi": 15
     },
     {
       "id": "247",
@@ -16954,7 +17446,9 @@
       "proj_lo": 0,
       "proj_hi": 12,
       "exp_games": 1.4,
-      "exp_ppg": 4.5
+      "exp_ppg": 4.5,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "248",
@@ -16976,7 +17470,7 @@
       "price_after": 9710000,
       "next_round_games": 2,
       "round_after_games": 4,
-      "owned": 1.28,
+      "owned": 1.27,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -17019,7 +17513,9 @@
       "proj_lo": 0,
       "proj_hi": 56,
       "exp_games": 2.9,
-      "exp_ppg": 10.1
+      "exp_ppg": 10.1,
+      "ppg_lo": 5,
+      "ppg_hi": 19
     },
     {
       "id": "249",
@@ -17084,7 +17580,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.6,
-      "exp_ppg": 3.1
+      "exp_ppg": 3.1,
+      "ppg_lo": 1,
+      "ppg_hi": 7
     },
     {
       "id": "250",
@@ -17149,7 +17647,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.5
+      "exp_ppg": 4.5,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "251",
@@ -17214,7 +17714,9 @@
       "proj_lo": 0,
       "proj_hi": 23,
       "exp_games": 0.6,
-      "exp_ppg": 18.9
+      "exp_ppg": 18.9,
+      "ppg_lo": 13,
+      "ppg_hi": 27
     },
     {
       "id": "252",
@@ -17279,7 +17781,9 @@
       "proj_lo": 0,
       "proj_hi": 47,
       "exp_games": 2.8,
-      "exp_ppg": 8.9
+      "exp_ppg": 8.9,
+      "ppg_lo": 5,
+      "ppg_hi": 16
     },
     {
       "id": "253",
@@ -17344,7 +17848,9 @@
       "proj_lo": 0,
       "proj_hi": 8,
       "exp_games": 1.2,
-      "exp_ppg": 3.4
+      "exp_ppg": 3.4,
+      "ppg_lo": 2,
+      "ppg_hi": 8
     },
     {
       "id": "254",
@@ -17409,7 +17915,9 @@
       "proj_lo": 0,
       "proj_hi": 67,
       "exp_games": 2.9,
-      "exp_ppg": 12.0
+      "exp_ppg": 12.0,
+      "ppg_lo": 7,
+      "ppg_hi": 21
     },
     {
       "id": "255",
@@ -17474,7 +17982,9 @@
       "proj_lo": 0,
       "proj_hi": 26,
       "exp_games": 2.1,
-      "exp_ppg": 6.5
+      "exp_ppg": 6.5,
+      "ppg_lo": 4,
+      "ppg_hi": 11
     },
     {
       "id": "256",
@@ -17539,7 +18049,9 @@
       "proj_lo": 0,
       "proj_hi": 42,
       "exp_games": 2.5,
-      "exp_ppg": 8.9
+      "exp_ppg": 8.9,
+      "ppg_lo": 4,
+      "ppg_hi": 20
     },
     {
       "id": "257",
@@ -17604,7 +18116,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 20.2
+      "exp_ppg": 20.2,
+      "ppg_lo": 14,
+      "ppg_hi": 29
     },
     {
       "id": "258",
@@ -17620,7 +18134,7 @@
       "avg5": 33.0,
       "be": null,
       "games": 2,
-      "games_played": 0,
+      "games_played": 1,
       "actual_points": 0,
       "actual_price_change": 0,
       "price_after": 6960000,
@@ -17669,7 +18183,9 @@
       "proj_lo": 0,
       "proj_hi": 33,
       "exp_games": 1.9,
-      "exp_ppg": 9.3
+      "exp_ppg": 9.3,
+      "ppg_lo": 5,
+      "ppg_hi": 18
     },
     {
       "id": "259",
@@ -17734,7 +18250,9 @@
       "proj_lo": 30,
       "proj_hi": 108,
       "exp_games": 3.7,
-      "exp_ppg": 20.1
+      "exp_ppg": 20.1,
+      "ppg_lo": 15,
+      "ppg_hi": 27
     },
     {
       "id": "260",
@@ -17799,7 +18317,9 @@
       "proj_lo": 19,
       "proj_hi": 67,
       "exp_games": 3.1,
-      "exp_ppg": 14.9
+      "exp_ppg": 14.9,
+      "ppg_lo": 8,
+      "ppg_hi": 27
     },
     {
       "id": "261",
@@ -17864,7 +18384,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 9.9
+      "exp_ppg": 9.9,
+      "ppg_lo": 5,
+      "ppg_hi": 19
     },
     {
       "id": "262",
@@ -17929,7 +18451,9 @@
       "proj_lo": 0,
       "proj_hi": 17,
       "exp_games": 1.6,
-      "exp_ppg": 5.7
+      "exp_ppg": 5.7,
+      "ppg_lo": 2,
+      "ppg_hi": 20
     },
     {
       "id": "263",
@@ -17994,7 +18518,9 @@
       "proj_lo": 0,
       "proj_hi": 59,
       "exp_games": 2.9,
-      "exp_ppg": 10.9
+      "exp_ppg": 10.9,
+      "ppg_lo": 4,
+      "ppg_hi": 27
     },
     {
       "id": "264",
@@ -18059,7 +18585,9 @@
       "proj_lo": 0,
       "proj_hi": 36,
       "exp_games": 2.9,
-      "exp_ppg": 6.6
+      "exp_ppg": 6.6,
+      "ppg_lo": 3,
+      "ppg_hi": 13
     },
     {
       "id": "265",
@@ -18124,7 +18652,9 @@
       "proj_lo": 22,
       "proj_hi": 77,
       "exp_games": 2.9,
-      "exp_ppg": 18.5
+      "exp_ppg": 18.5,
+      "ppg_lo": 11,
+      "ppg_hi": 30
     },
     {
       "id": "266",
@@ -18189,7 +18719,9 @@
       "proj_lo": 0,
       "proj_hi": 8,
       "exp_games": 1.6,
-      "exp_ppg": 2.7
+      "exp_ppg": 2.7,
+      "ppg_lo": 2,
+      "ppg_hi": 5
     },
     {
       "id": "267",
@@ -18254,7 +18786,9 @@
       "proj_lo": 0,
       "proj_hi": 18,
       "exp_games": 2.0,
-      "exp_ppg": 4.7
+      "exp_ppg": 4.7,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "268",
@@ -18319,7 +18853,9 @@
       "proj_lo": 0,
       "proj_hi": 23,
       "exp_games": 3.1,
-      "exp_ppg": 4.0
+      "exp_ppg": 4.0,
+      "ppg_lo": 2,
+      "ppg_hi": 7
     },
     {
       "id": "269",
@@ -18384,7 +18920,9 @@
       "proj_lo": 0,
       "proj_hi": 25,
       "exp_games": 2.0,
-      "exp_ppg": 6.8
+      "exp_ppg": 6.8,
+      "ppg_lo": 2,
+      "ppg_hi": 21
     },
     {
       "id": "270",
@@ -18449,7 +18987,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 9.5
+      "exp_ppg": 9.5,
+      "ppg_lo": 5,
+      "ppg_hi": 20
     },
     {
       "id": "271",
@@ -18514,7 +19054,9 @@
       "proj_lo": 0,
       "proj_hi": 23,
       "exp_games": 2.7,
-      "exp_ppg": 4.6
+      "exp_ppg": 4.6,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "272",
@@ -18579,7 +19121,9 @@
       "proj_lo": 0,
       "proj_hi": 36,
       "exp_games": 2.7,
-      "exp_ppg": 7.3
+      "exp_ppg": 7.3,
+      "ppg_lo": 4,
+      "ppg_hi": 14
     },
     {
       "id": "273",
@@ -18644,7 +19188,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.3,
-      "exp_ppg": 7.3
+      "exp_ppg": 7.3,
+      "ppg_lo": 3,
+      "ppg_hi": 17
     },
     {
       "id": "274",
@@ -18709,7 +19255,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "275",
@@ -18774,7 +19322,9 @@
       "proj_lo": 0,
       "proj_hi": 49,
       "exp_games": 2.2,
-      "exp_ppg": 11.6
+      "exp_ppg": 11.6,
+      "ppg_lo": 6,
+      "ppg_hi": 23
     },
     {
       "id": "276",
@@ -18839,7 +19389,9 @@
       "proj_lo": 26,
       "proj_hi": 91,
       "exp_games": 3.9,
-      "exp_ppg": 15.9
+      "exp_ppg": 15.9,
+      "ppg_lo": 10,
+      "ppg_hi": 25
     },
     {
       "id": "277",
@@ -18904,7 +19456,9 @@
       "proj_lo": 0,
       "proj_hi": 59,
       "exp_games": 2.9,
-      "exp_ppg": 11.0
+      "exp_ppg": 11.0,
+      "ppg_lo": 6,
+      "ppg_hi": 19
     },
     {
       "id": "278",
@@ -18969,7 +19523,9 @@
       "proj_lo": 17,
       "proj_hi": 62,
       "exp_games": 3.9,
-      "exp_ppg": 10.8
+      "exp_ppg": 10.8,
+      "ppg_lo": 6,
+      "ppg_hi": 20
     },
     {
       "id": "279",
@@ -18991,7 +19547,7 @@
       "price_after": 18450000,
       "next_round_games": 3,
       "round_after_games": 4,
-      "owned": 1.94,
+      "owned": 1.97,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -19034,7 +19590,9 @@
       "proj_lo": 49,
       "proj_hi": 106,
       "exp_games": 2.9,
-      "exp_ppg": 28.6
+      "exp_ppg": 28.6,
+      "ppg_lo": 21,
+      "ppg_hi": 39
     },
     {
       "id": "280",
@@ -19099,7 +19657,9 @@
       "proj_lo": 27,
       "proj_hi": 95,
       "exp_games": 1.8,
-      "exp_ppg": 36.7
+      "exp_ppg": 36.7,
+      "ppg_lo": 28,
+      "ppg_hi": 48
     },
     {
       "id": "281",
@@ -19164,7 +19724,9 @@
       "proj_lo": 0,
       "proj_hi": 43,
       "exp_games": 2.6,
-      "exp_ppg": 8.8
+      "exp_ppg": 8.8,
+      "ppg_lo": 4,
+      "ppg_hi": 22
     },
     {
       "id": "282",
@@ -19186,7 +19748,7 @@
       "price_after": 3790000,
       "next_round_games": 3,
       "round_after_games": 4,
-      "owned": 0.14,
+      "owned": 0.13,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -19229,7 +19791,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.8,
-      "exp_ppg": 2.1
+      "exp_ppg": 2.1,
+      "ppg_lo": 1,
+      "ppg_hi": 5
     },
     {
       "id": "283",
@@ -19294,7 +19858,9 @@
       "proj_lo": 0,
       "proj_hi": 25,
       "exp_games": 1.9,
-      "exp_ppg": 6.8
+      "exp_ppg": 6.8,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "284",
@@ -19316,7 +19882,7 @@
       "price_after": 3880000,
       "next_round_games": 3,
       "round_after_games": 4,
-      "owned": 0.31,
+      "owned": 0.3,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -19359,7 +19925,9 @@
       "proj_lo": 0,
       "proj_hi": 24,
       "exp_games": 1.9,
-      "exp_ppg": 6.6
+      "exp_ppg": 6.6,
+      "ppg_lo": 2,
+      "ppg_hi": 19
     },
     {
       "id": "285",
@@ -19424,7 +19992,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.1
+      "exp_ppg": 4.1,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "286",
@@ -19489,7 +20059,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "287",
@@ -19554,7 +20126,9 @@
       "proj_lo": 0,
       "proj_hi": 19,
       "exp_games": 2.1,
-      "exp_ppg": 4.7
+      "exp_ppg": 4.7,
+      "ppg_lo": 3,
+      "ppg_hi": 9
     },
     {
       "id": "288",
@@ -19619,7 +20193,9 @@
       "proj_lo": 0,
       "proj_hi": 8,
       "exp_games": 0.6,
-      "exp_ppg": 6.9
+      "exp_ppg": 6.9,
+      "ppg_lo": 3,
+      "ppg_hi": 16
     },
     {
       "id": "289",
@@ -19684,7 +20260,9 @@
       "proj_lo": 0,
       "proj_hi": 27,
       "exp_games": 1.9,
-      "exp_ppg": 7.4
+      "exp_ppg": 7.4,
+      "ppg_lo": 2,
+      "ppg_hi": 27
     },
     {
       "id": "290",
@@ -19749,7 +20327,9 @@
       "proj_lo": 0,
       "proj_hi": 69,
       "exp_games": 2.4,
-      "exp_ppg": 15.0
+      "exp_ppg": 15.0,
+      "ppg_lo": 11,
+      "ppg_hi": 21
     },
     {
       "id": "291",
@@ -19771,7 +20351,7 @@
       "price_after": 13160000,
       "next_round_games": 3,
       "round_after_games": 4,
-      "owned": 3.03,
+      "owned": 3.05,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -19814,7 +20394,9 @@
       "proj_lo": 29,
       "proj_hi": 103,
       "exp_games": 2.9,
-      "exp_ppg": 24.2
+      "exp_ppg": 24.2,
+      "ppg_lo": 18,
+      "ppg_hi": 33
     },
     {
       "id": "292",
@@ -19836,7 +20418,7 @@
       "price_after": 8850000,
       "next_round_games": 3,
       "round_after_games": 4,
-      "owned": 0.26,
+      "owned": 0.27,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -19879,7 +20461,9 @@
       "proj_lo": 0,
       "proj_hi": 58,
       "exp_games": 2.9,
-      "exp_ppg": 10.4
+      "exp_ppg": 10.4,
+      "ppg_lo": 5,
+      "ppg_hi": 20
     },
     {
       "id": "293",
@@ -19944,7 +20528,9 @@
       "proj_lo": 0,
       "proj_hi": 8,
       "exp_games": 1.4,
-      "exp_ppg": 3.1
+      "exp_ppg": 3.1,
+      "ppg_lo": 1,
+      "ppg_hi": 9
     },
     {
       "id": "294",
@@ -20009,7 +20595,9 @@
       "proj_lo": 0,
       "proj_hi": 10,
       "exp_games": 1.4,
-      "exp_ppg": 3.8
+      "exp_ppg": 3.8,
+      "ppg_lo": 2,
+      "ppg_hi": 8
     },
     {
       "id": "295",
@@ -20031,7 +20619,7 @@
       "price_after": 8420000,
       "next_round_games": 3,
       "round_after_games": 4,
-      "owned": 5.36,
+      "owned": 5.38,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -20074,7 +20662,9 @@
       "proj_lo": 0,
       "proj_hi": 74,
       "exp_games": 2.8,
-      "exp_ppg": 14.2
+      "exp_ppg": 14.2,
+      "ppg_lo": 7,
+      "ppg_hi": 28
     },
     {
       "id": "296",
@@ -20096,7 +20686,7 @@
       "price_after": 9880000,
       "next_round_games": 3,
       "round_after_games": 4,
-      "owned": 0.51,
+      "owned": 0.52,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -20139,7 +20729,9 @@
       "proj_lo": 0,
       "proj_hi": 61,
       "exp_games": 2.9,
-      "exp_ppg": 11.0
+      "exp_ppg": 11.0,
+      "ppg_lo": 6,
+      "ppg_hi": 21
     },
     {
       "id": "297",
@@ -20204,7 +20796,9 @@
       "proj_lo": 0,
       "proj_hi": 48,
       "exp_games": 3.5,
-      "exp_ppg": 7.3
+      "exp_ppg": 7.3,
+      "ppg_lo": 3,
+      "ppg_hi": 20
     },
     {
       "id": "298",
@@ -20269,7 +20863,9 @@
       "proj_lo": 20,
       "proj_hi": 72,
       "exp_games": 3.9,
-      "exp_ppg": 12.6
+      "exp_ppg": 12.6,
+      "ppg_lo": 7,
+      "ppg_hi": 24
     },
     {
       "id": "299",
@@ -20334,7 +20930,9 @@
       "proj_lo": 0,
       "proj_hi": 25,
       "exp_games": 2.4,
-      "exp_ppg": 5.4
+      "exp_ppg": 5.4,
+      "ppg_lo": 3,
+      "ppg_hi": 11
     },
     {
       "id": "300",
@@ -20399,7 +20997,9 @@
       "proj_lo": 0,
       "proj_hi": 37,
       "exp_games": 3.7,
-      "exp_ppg": 5.3
+      "exp_ppg": 5.3,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "301",
@@ -20464,7 +21064,9 @@
       "proj_lo": 26,
       "proj_hi": 94,
       "exp_games": 3.7,
-      "exp_ppg": 17.3
+      "exp_ppg": 17.3,
+      "ppg_lo": 12,
+      "ppg_hi": 25
     },
     {
       "id": "302",
@@ -20529,7 +21131,9 @@
       "proj_lo": 0,
       "proj_hi": 74,
       "exp_games": 3.7,
-      "exp_ppg": 10.5
+      "exp_ppg": 10.5,
+      "ppg_lo": 5,
+      "ppg_hi": 22
     },
     {
       "id": "303",
@@ -20594,7 +21198,9 @@
       "proj_lo": 20,
       "proj_hi": 72,
       "exp_games": 3.9,
-      "exp_ppg": 12.6
+      "exp_ppg": 12.6,
+      "ppg_lo": 7,
+      "ppg_hi": 24
     },
     {
       "id": "304",
@@ -20659,7 +21265,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.3,
-      "exp_ppg": 5.7
+      "exp_ppg": 5.7,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "305",
@@ -20724,7 +21332,9 @@
       "proj_lo": 18,
       "proj_hi": 66,
       "exp_games": 3.7,
-      "exp_ppg": 12.2
+      "exp_ppg": 12.2,
+      "ppg_lo": 7,
+      "ppg_hi": 21
     },
     {
       "id": "306",
@@ -20789,7 +21399,9 @@
       "proj_lo": 0,
       "proj_hi": 15,
       "exp_games": 1.0,
-      "exp_ppg": 8.3
+      "exp_ppg": 8.3,
+      "ppg_lo": 4,
+      "ppg_hi": 20
     },
     {
       "id": "307",
@@ -20854,7 +21466,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "308",
@@ -20919,7 +21533,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 1.0,
-      "exp_ppg": 3.4
+      "exp_ppg": 3.4,
+      "ppg_lo": 2,
+      "ppg_hi": 7
     },
     {
       "id": "309",
@@ -20984,7 +21600,9 @@
       "proj_lo": 0,
       "proj_hi": 10,
       "exp_games": 0.8,
-      "exp_ppg": 7.2
+      "exp_ppg": 7.2,
+      "ppg_lo": 3,
+      "ppg_hi": 16
     },
     {
       "id": "310",
@@ -21049,7 +21667,9 @@
       "proj_lo": 0,
       "proj_hi": 12,
       "exp_games": 0.3,
-      "exp_ppg": 18.8
+      "exp_ppg": 18.8,
+      "ppg_lo": 12,
+      "ppg_hi": 29
     },
     {
       "id": "311",
@@ -21114,7 +21734,9 @@
       "proj_lo": 17,
       "proj_hi": 59,
       "exp_games": 3.5,
-      "exp_ppg": 11.5
+      "exp_ppg": 11.5,
+      "ppg_lo": 7,
+      "ppg_hi": 20
     },
     {
       "id": "312",
@@ -21179,7 +21801,9 @@
       "proj_lo": 0,
       "proj_hi": 7,
       "exp_games": 0.3,
-      "exp_ppg": 11.2
+      "exp_ppg": 11.2,
+      "ppg_lo": 5,
+      "ppg_hi": 26
     },
     {
       "id": "313",
@@ -21244,7 +21868,9 @@
       "proj_lo": 0,
       "proj_hi": 17,
       "exp_games": 2.7,
-      "exp_ppg": 3.4
+      "exp_ppg": 3.4,
+      "ppg_lo": 1,
+      "ppg_hi": 8
     },
     {
       "id": "314",
@@ -21309,7 +21935,9 @@
       "proj_lo": 0,
       "proj_hi": 12,
       "exp_games": 2.0,
-      "exp_ppg": 3.2
+      "exp_ppg": 3.2,
+      "ppg_lo": 2,
+      "ppg_hi": 7
     },
     {
       "id": "315",
@@ -21374,7 +22002,9 @@
       "proj_lo": 19,
       "proj_hi": 67,
       "exp_games": 3.5,
-      "exp_ppg": 13.1
+      "exp_ppg": 13.1,
+      "ppg_lo": 8,
+      "ppg_hi": 23
     },
     {
       "id": "316",
@@ -21439,7 +22069,9 @@
       "proj_lo": 21,
       "proj_hi": 73,
       "exp_games": 3.9,
-      "exp_ppg": 12.8
+      "exp_ppg": 12.8,
+      "ppg_lo": 6,
+      "ppg_hi": 28
     },
     {
       "id": "317",
@@ -21504,7 +22136,9 @@
       "proj_lo": 24,
       "proj_hi": 84,
       "exp_games": 3.9,
-      "exp_ppg": 14.7
+      "exp_ppg": 14.7,
+      "ppg_lo": 8,
+      "ppg_hi": 27
     },
     {
       "id": "318",
@@ -21569,7 +22203,9 @@
       "proj_lo": 0,
       "proj_hi": 70,
       "exp_games": 3.9,
-      "exp_ppg": 9.5
+      "exp_ppg": 9.5,
+      "ppg_lo": 5,
+      "ppg_hi": 17
     },
     {
       "id": "319",
@@ -21634,7 +22270,9 @@
       "proj_lo": 0,
       "proj_hi": 17,
       "exp_games": 1.4,
-      "exp_ppg": 6.6
+      "exp_ppg": 6.6,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "320",
@@ -21699,7 +22337,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 10.7
+      "exp_ppg": 10.7,
+      "ppg_lo": 5,
+      "ppg_hi": 25
     },
     {
       "id": "321",
@@ -21764,7 +22404,9 @@
       "proj_lo": 26,
       "proj_hi": 91,
       "exp_games": 3.9,
-      "exp_ppg": 16.0
+      "exp_ppg": 16.0,
+      "ppg_lo": 12,
+      "ppg_hi": 22
     },
     {
       "id": "322",
@@ -21829,7 +22471,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 22.6
+      "exp_ppg": 22.6,
+      "ppg_lo": 15,
+      "ppg_hi": 34
     },
     {
       "id": "323",
@@ -21894,7 +22538,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 1.8,
-      "exp_ppg": 1.8
+      "exp_ppg": 1.8,
+      "ppg_lo": 1,
+      "ppg_hi": 4
     },
     {
       "id": "324",
@@ -21959,7 +22605,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.0
+      "exp_ppg": 5.0,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "325",
@@ -22024,7 +22672,9 @@
       "proj_lo": 21,
       "proj_hi": 76,
       "exp_games": 3.7,
-      "exp_ppg": 14.1
+      "exp_ppg": 14.1,
+      "ppg_lo": 8,
+      "ppg_hi": 24
     },
     {
       "id": "326",
@@ -22089,7 +22739,9 @@
       "proj_lo": 0,
       "proj_hi": 67,
       "exp_games": 3.9,
-      "exp_ppg": 9.1
+      "exp_ppg": 9.1,
+      "ppg_lo": 4,
+      "ppg_hi": 19
     },
     {
       "id": "327",
@@ -22154,7 +22806,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "328",
@@ -22219,7 +22873,9 @@
       "proj_lo": 23,
       "proj_hi": 80,
       "exp_games": 3.7,
-      "exp_ppg": 14.9
+      "exp_ppg": 14.9,
+      "ppg_lo": 9,
+      "ppg_hi": 25
     },
     {
       "id": "329",
@@ -22284,7 +22940,9 @@
       "proj_lo": 0,
       "proj_hi": 52,
       "exp_games": 3.9,
-      "exp_ppg": 7.0
+      "exp_ppg": 7.0,
+      "ppg_lo": 4,
+      "ppg_hi": 14
     },
     {
       "id": "330",
@@ -22349,7 +23007,9 @@
       "proj_lo": 57,
       "proj_hi": 123,
       "exp_games": 3.9,
-      "exp_ppg": 24.8
+      "exp_ppg": 24.8,
+      "ppg_lo": 19,
+      "ppg_hi": 33
     },
     {
       "id": "331",
@@ -22414,7 +23074,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 1.0,
-      "exp_ppg": 3.5
+      "exp_ppg": 3.5,
+      "ppg_lo": 2,
+      "ppg_hi": 7
     },
     {
       "id": "332",
@@ -22479,7 +23141,9 @@
       "proj_lo": 0,
       "proj_hi": 70,
       "exp_games": 3.3,
-      "exp_ppg": 11.2
+      "exp_ppg": 11.2,
+      "ppg_lo": 5,
+      "ppg_hi": 24
     },
     {
       "id": "333",
@@ -22544,7 +23208,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 2.2,
-      "exp_ppg": 1.4
+      "exp_ppg": 1.4,
+      "ppg_lo": 1,
+      "ppg_hi": 3
     },
     {
       "id": "334",
@@ -22609,7 +23275,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.5,
-      "exp_ppg": 4.6
+      "exp_ppg": 4.6,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "335",
@@ -22674,7 +23342,9 @@
       "proj_lo": 19,
       "proj_hi": 69,
       "exp_games": 2.9,
-      "exp_ppg": 16.1
+      "exp_ppg": 16.1,
+      "ppg_lo": 12,
+      "ppg_hi": 21
     },
     {
       "id": "336",
@@ -22739,7 +23409,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 4.1
+      "exp_ppg": 4.1,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "337",
@@ -22804,7 +23476,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.5,
-      "exp_ppg": 4.4
+      "exp_ppg": 4.4,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "338",
@@ -22869,7 +23543,9 @@
       "proj_lo": 26,
       "proj_hi": 92,
       "exp_games": 2.9,
-      "exp_ppg": 21.6
+      "exp_ppg": 21.6,
+      "ppg_lo": 11,
+      "ppg_hi": 44
     },
     {
       "id": "339",
@@ -22934,7 +23610,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 5.4
+      "exp_ppg": 5.4,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "340",
@@ -22999,7 +23677,9 @@
       "proj_lo": 0,
       "proj_hi": 7,
       "exp_games": 1.3,
-      "exp_ppg": 3.1
+      "exp_ppg": 3.1,
+      "ppg_lo": 2,
+      "ppg_hi": 6
     },
     {
       "id": "341",
@@ -23064,7 +23744,9 @@
       "proj_lo": 0,
       "proj_hi": 41,
       "exp_games": 2.9,
-      "exp_ppg": 7.4
+      "exp_ppg": 7.4,
+      "ppg_lo": 4,
+      "ppg_hi": 15
     },
     {
       "id": "342",
@@ -23129,7 +23811,9 @@
       "proj_lo": 0,
       "proj_hi": 20,
       "exp_games": 1.0,
-      "exp_ppg": 11.0
+      "exp_ppg": 11.0,
+      "ppg_lo": 6,
+      "ppg_hi": 22
     },
     {
       "id": "343",
@@ -23194,7 +23878,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 4.4
+      "exp_ppg": 4.4,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "344",
@@ -23259,7 +23945,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 0.5,
-      "exp_ppg": 5.9
+      "exp_ppg": 5.9,
+      "ppg_lo": 3,
+      "ppg_hi": 12
     },
     {
       "id": "345",
@@ -23324,7 +24012,9 @@
       "proj_lo": 0,
       "proj_hi": 42,
       "exp_games": 2.8,
-      "exp_ppg": 7.9
+      "exp_ppg": 7.9,
+      "ppg_lo": 2,
+      "ppg_hi": 32
     },
     {
       "id": "346",
@@ -23389,7 +24079,9 @@
       "proj_lo": 0,
       "proj_hi": 24,
       "exp_games": 1.3,
-      "exp_ppg": 9.9
+      "exp_ppg": 9.9,
+      "ppg_lo": 3,
+      "ppg_hi": 38
     },
     {
       "id": "347",
@@ -23454,7 +24146,9 @@
       "proj_lo": 0,
       "proj_hi": 37,
       "exp_games": 1.3,
-      "exp_ppg": 15.1
+      "exp_ppg": 15.1,
+      "ppg_lo": 10,
+      "ppg_hi": 22
     },
     {
       "id": "348",
@@ -23519,7 +24213,9 @@
       "proj_lo": 0,
       "proj_hi": 67,
       "exp_games": 1.7,
-      "exp_ppg": 20.3
+      "exp_ppg": 20.3,
+      "ppg_lo": 15,
+      "ppg_hi": 28
     },
     {
       "id": "349",
@@ -23584,7 +24280,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.1,
-      "exp_ppg": 17.3
+      "exp_ppg": 17.3,
+      "ppg_lo": 10,
+      "ppg_hi": 29
     },
     {
       "id": "350",
@@ -23649,7 +24347,9 @@
       "proj_lo": 0,
       "proj_hi": 11,
       "exp_games": 1.3,
-      "exp_ppg": 4.6
+      "exp_ppg": 4.6,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "351",
@@ -23714,7 +24414,9 @@
       "proj_lo": 0,
       "proj_hi": 45,
       "exp_games": 2.0,
-      "exp_ppg": 11.7
+      "exp_ppg": 11.7,
+      "ppg_lo": 5,
+      "ppg_hi": 27
     },
     {
       "id": "352",
@@ -23779,7 +24481,9 @@
       "proj_lo": 21,
       "proj_hi": 75,
       "exp_games": 2.9,
-      "exp_ppg": 17.4
+      "exp_ppg": 17.4,
+      "ppg_lo": 13,
+      "ppg_hi": 24
     },
     {
       "id": "353",
@@ -23844,7 +24548,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 9.2
+      "exp_ppg": 9.2,
+      "ppg_lo": 5,
+      "ppg_hi": 18
     },
     {
       "id": "354",
@@ -23909,7 +24615,9 @@
       "proj_lo": 27,
       "proj_hi": 97,
       "exp_games": 2.6,
-      "exp_ppg": 25.1
+      "exp_ppg": 25.1,
+      "ppg_lo": 20,
+      "ppg_hi": 32
     },
     {
       "id": "355",
@@ -23974,7 +24682,9 @@
       "proj_lo": 0,
       "proj_hi": 23,
       "exp_games": 1.8,
-      "exp_ppg": 6.8
+      "exp_ppg": 6.8,
+      "ppg_lo": 3,
+      "ppg_hi": 13
     },
     {
       "id": "356",
@@ -24039,7 +24749,9 @@
       "proj_lo": 0,
       "proj_hi": 38,
       "exp_games": 1.1,
-      "exp_ppg": 18.2
+      "exp_ppg": 18.2,
+      "ppg_lo": 14,
+      "ppg_hi": 24
     },
     {
       "id": "357",
@@ -24104,7 +24816,9 @@
       "proj_lo": 0,
       "proj_hi": 64,
       "exp_games": 2.9,
-      "exp_ppg": 11.5
+      "exp_ppg": 11.5,
+      "ppg_lo": 6,
+      "ppg_hi": 23
     },
     {
       "id": "358",
@@ -24126,7 +24840,7 @@
       "price_after": 15940000,
       "next_round_games": 3,
       "round_after_games": 3,
-      "owned": 9.91,
+      "owned": 9.92,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -24169,7 +24883,9 @@
       "proj_lo": 29,
       "proj_hi": 104,
       "exp_games": 2.9,
-      "exp_ppg": 24.4
+      "exp_ppg": 24.4,
+      "ppg_lo": 18,
+      "ppg_hi": 34
     },
     {
       "id": "359",
@@ -24234,7 +24950,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 0.6,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "360",
@@ -24299,7 +25017,9 @@
       "proj_lo": 0,
       "proj_hi": 10,
       "exp_games": 1.2,
-      "exp_ppg": 4.2
+      "exp_ppg": 4.2,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "361",
@@ -24364,7 +25084,9 @@
       "proj_lo": 0,
       "proj_hi": 12,
       "exp_games": 1.4,
-      "exp_ppg": 4.7
+      "exp_ppg": 4.7,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "362",
@@ -24429,7 +25151,9 @@
       "proj_lo": 0,
       "proj_hi": 57,
       "exp_games": 2.9,
-      "exp_ppg": 10.2
+      "exp_ppg": 10.2,
+      "ppg_lo": 6,
+      "ppg_hi": 17
     },
     {
       "id": "363",
@@ -24494,7 +25218,9 @@
       "proj_lo": 0,
       "proj_hi": 37,
       "exp_games": 1.5,
-      "exp_ppg": 13.4
+      "exp_ppg": 13.4,
+      "ppg_lo": 7,
+      "ppg_hi": 27
     },
     {
       "id": "364",
@@ -24559,7 +25285,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "365",
@@ -24581,7 +25309,7 @@
       "price_after": 5110000,
       "next_round_games": 3,
       "round_after_games": 3,
-      "owned": 2.66,
+      "owned": 2.67,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -24624,7 +25352,9 @@
       "proj_lo": 0,
       "proj_hi": 38,
       "exp_games": 2.6,
-      "exp_ppg": 7.6
+      "exp_ppg": 7.6,
+      "ppg_lo": 4,
+      "ppg_hi": 14
     },
     {
       "id": "366",
@@ -24689,7 +25419,9 @@
       "proj_lo": 0,
       "proj_hi": 24,
       "exp_games": 1.8,
-      "exp_ppg": 7.1
+      "exp_ppg": 7.1,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "367",
@@ -24754,7 +25486,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "368",
@@ -24819,7 +25553,9 @@
       "proj_lo": 0,
       "proj_hi": 65,
       "exp_games": 2.9,
-      "exp_ppg": 11.8
+      "exp_ppg": 11.8,
+      "ppg_lo": 6,
+      "ppg_hi": 23
     },
     {
       "id": "369",
@@ -24841,7 +25577,7 @@
       "price_after": 20380000,
       "next_round_games": 3,
       "round_after_games": 3,
-      "owned": 14.79,
+      "owned": 14.75,
       "injury": "Day-To-Day \u00b7 Knee",
       "injury_status": "Day-To-Day",
       "injury_detail": "Towns (knee) is questionable for Wednesday's game against Cleveland.",
@@ -24884,7 +25620,9 @@
       "proj_lo": 24,
       "proj_hi": 84,
       "exp_games": 1.8,
-      "exp_ppg": 32.3
+      "exp_ppg": 32.3,
+      "ppg_lo": 25,
+      "ppg_hi": 42
     },
     {
       "id": "370",
@@ -24949,7 +25687,9 @@
       "proj_lo": 0,
       "proj_hi": 15,
       "exp_games": 1.8,
-      "exp_ppg": 4.3
+      "exp_ppg": 4.3,
+      "ppg_lo": 1,
+      "ppg_hi": 14
     },
     {
       "id": "371",
@@ -25014,7 +25754,9 @@
       "proj_lo": 0,
       "proj_hi": 44,
       "exp_games": 2.1,
-      "exp_ppg": 10.9
+      "exp_ppg": 10.9,
+      "ppg_lo": 4,
+      "ppg_hi": 28
     },
     {
       "id": "372",
@@ -25079,7 +25821,9 @@
       "proj_lo": 0,
       "proj_hi": 17,
       "exp_games": 1.7,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 1,
+      "ppg_hi": 22
     },
     {
       "id": "373",
@@ -25144,7 +25888,9 @@
       "proj_lo": 33,
       "proj_hi": 116,
       "exp_games": 2.8,
-      "exp_ppg": 28.7
+      "exp_ppg": 28.7,
+      "ppg_lo": 22,
+      "ppg_hi": 37
     },
     {
       "id": "374",
@@ -25209,7 +25955,9 @@
       "proj_lo": 24,
       "proj_hi": 85,
       "exp_games": 2.9,
-      "exp_ppg": 19.8
+      "exp_ppg": 19.8,
+      "ppg_lo": 14,
+      "ppg_hi": 28
     },
     {
       "id": "375",
@@ -25274,7 +26022,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 23.6
+      "exp_ppg": 23.6,
+      "ppg_lo": 15,
+      "ppg_hi": 36
     },
     {
       "id": "376",
@@ -25339,7 +26089,9 @@
       "proj_lo": 0,
       "proj_hi": 45,
       "exp_games": 1.3,
-      "exp_ppg": 18.6
+      "exp_ppg": 18.6,
+      "ppg_lo": 10,
+      "ppg_hi": 33
     },
     {
       "id": "377",
@@ -25404,7 +26156,9 @@
       "proj_lo": 17,
       "proj_hi": 60,
       "exp_games": 2.9,
-      "exp_ppg": 13.9
+      "exp_ppg": 13.9,
+      "ppg_lo": 7,
+      "ppg_hi": 26
     },
     {
       "id": "378",
@@ -25469,7 +26223,9 @@
       "proj_lo": 19,
       "proj_hi": 67,
       "exp_games": 2.6,
-      "exp_ppg": 17.6
+      "exp_ppg": 17.6,
+      "ppg_lo": 12,
+      "ppg_hi": 25
     },
     {
       "id": "379",
@@ -25534,7 +26290,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "380",
@@ -25599,7 +26357,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "381",
@@ -25664,7 +26424,9 @@
       "proj_lo": 0,
       "proj_hi": 57,
       "exp_games": 2.9,
-      "exp_ppg": 10.2
+      "exp_ppg": 10.2,
+      "ppg_lo": 3,
+      "ppg_hi": 37
     },
     {
       "id": "382",
@@ -25729,7 +26491,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 5.6
+      "exp_ppg": 5.6,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "383",
@@ -25794,7 +26558,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 11.3
+      "exp_ppg": 11.3,
+      "ppg_lo": 5,
+      "ppg_hi": 27
     },
     {
       "id": "384",
@@ -25859,7 +26625,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 17.7
+      "exp_ppg": 17.7,
+      "ppg_lo": 12,
+      "ppg_hi": 27
     },
     {
       "id": "385",
@@ -25924,7 +26692,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 5.0
+      "exp_ppg": 5.0,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "386",
@@ -25989,7 +26759,9 @@
       "proj_lo": 0,
       "proj_hi": 61,
       "exp_games": 2.9,
-      "exp_ppg": 11.1
+      "exp_ppg": 11.1,
+      "ppg_lo": 6,
+      "ppg_hi": 22
     },
     {
       "id": "387",
@@ -26054,7 +26826,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 21.1
+      "exp_ppg": 21.1,
+      "ppg_lo": 14,
+      "ppg_hi": 32
     },
     {
       "id": "388",
@@ -26119,7 +26893,9 @@
       "proj_lo": 19,
       "proj_hi": 68,
       "exp_games": 2.8,
-      "exp_ppg": 16.9
+      "exp_ppg": 16.9,
+      "ppg_lo": 12,
+      "ppg_hi": 25
     },
     {
       "id": "389",
@@ -26184,7 +26960,9 @@
       "proj_lo": 0,
       "proj_hi": 41,
       "exp_games": 2.6,
-      "exp_ppg": 8.3
+      "exp_ppg": 8.3,
+      "ppg_lo": 4,
+      "ppg_hi": 16
     },
     {
       "id": "390",
@@ -26249,7 +27027,9 @@
       "proj_lo": 18,
       "proj_hi": 64,
       "exp_games": 2.4,
-      "exp_ppg": 18.0
+      "exp_ppg": 18.0,
+      "ppg_lo": 14,
+      "ppg_hi": 24
     },
     {
       "id": "391",
@@ -26314,7 +27094,9 @@
       "proj_lo": 0,
       "proj_hi": 22,
       "exp_games": 2.6,
-      "exp_ppg": 4.6
+      "exp_ppg": 4.6,
+      "ppg_lo": 1,
+      "ppg_hi": 18
     },
     {
       "id": "392",
@@ -26379,7 +27161,9 @@
       "proj_lo": 0,
       "proj_hi": 22,
       "exp_games": 2.3,
-      "exp_ppg": 5.1
+      "exp_ppg": 5.1,
+      "ppg_lo": 3,
+      "ppg_hi": 9
     },
     {
       "id": "393",
@@ -26444,7 +27228,9 @@
       "proj_lo": 19,
       "proj_hi": 66,
       "exp_games": 2.9,
-      "exp_ppg": 15.4
+      "exp_ppg": 15.4,
+      "ppg_lo": 11,
+      "ppg_hi": 22
     },
     {
       "id": "394",
@@ -26509,7 +27295,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.9,
-      "exp_ppg": 3.0
+      "exp_ppg": 3.0,
+      "ppg_lo": 1,
+      "ppg_hi": 8
     },
     {
       "id": "395",
@@ -26574,7 +27362,9 @@
       "proj_lo": 0,
       "proj_hi": 54,
       "exp_games": 2.6,
-      "exp_ppg": 11.0
+      "exp_ppg": 11.0,
+      "ppg_lo": 6,
+      "ppg_hi": 20
     },
     {
       "id": "396",
@@ -26639,7 +27429,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 4.3
+      "exp_ppg": 4.3,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "397",
@@ -26704,7 +27496,9 @@
       "proj_lo": 0,
       "proj_hi": 13,
       "exp_games": 1.8,
-      "exp_ppg": 3.9
+      "exp_ppg": 3.9,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "398",
@@ -26769,7 +27563,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 4.5
+      "exp_ppg": 4.5,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "399",
@@ -26834,7 +27630,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 4.3
+      "exp_ppg": 4.3,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "400",
@@ -26899,7 +27697,9 @@
       "proj_lo": 0,
       "proj_hi": 20,
       "exp_games": 2.3,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "401",
@@ -26964,7 +27764,9 @@
       "proj_lo": 0,
       "proj_hi": 38,
       "exp_games": 1.6,
-      "exp_ppg": 12.7
+      "exp_ppg": 12.7,
+      "ppg_lo": 7,
+      "ppg_hi": 25
     },
     {
       "id": "402",
@@ -27029,7 +27831,9 @@
       "proj_lo": 0,
       "proj_hi": 37,
       "exp_games": 2.6,
-      "exp_ppg": 7.5
+      "exp_ppg": 7.5,
+      "ppg_lo": 4,
+      "ppg_hi": 16
     },
     {
       "id": "403",
@@ -27094,7 +27898,9 @@
       "proj_lo": 29,
       "proj_hi": 103,
       "exp_games": 2.9,
-      "exp_ppg": 24.0
+      "exp_ppg": 24.0,
+      "ppg_lo": 16,
+      "ppg_hi": 35
     },
     {
       "id": "404",
@@ -27159,7 +27965,9 @@
       "proj_lo": 0,
       "proj_hi": 11,
       "exp_games": 0.5,
-      "exp_ppg": 10.6
+      "exp_ppg": 10.6,
+      "ppg_lo": 5,
+      "ppg_hi": 25
     },
     {
       "id": "405",
@@ -27224,7 +28032,9 @@
       "proj_lo": 0,
       "proj_hi": 25,
       "exp_games": 2.2,
-      "exp_ppg": 6.0
+      "exp_ppg": 6.0,
+      "ppg_lo": 3,
+      "ppg_hi": 12
     },
     {
       "id": "406",
@@ -27289,7 +28099,9 @@
       "proj_lo": 29,
       "proj_hi": 103,
       "exp_games": 3.3,
-      "exp_ppg": 21.6
+      "exp_ppg": 21.6,
+      "ppg_lo": 15,
+      "ppg_hi": 32
     },
     {
       "id": "407",
@@ -27354,7 +28166,9 @@
       "proj_lo": 0,
       "proj_hi": 64,
       "exp_games": 3.9,
-      "exp_ppg": 8.7
+      "exp_ppg": 8.7,
+      "ppg_lo": 5,
+      "ppg_hi": 15
     },
     {
       "id": "408",
@@ -27419,7 +28233,9 @@
       "proj_lo": 30,
       "proj_hi": 106,
       "exp_games": 3.7,
-      "exp_ppg": 19.7
+      "exp_ppg": 19.7,
+      "ppg_lo": 14,
+      "ppg_hi": 27
     },
     {
       "id": "409",
@@ -27484,7 +28300,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 1.8,
-      "exp_ppg": 1.7
+      "exp_ppg": 1.7,
+      "ppg_lo": 1,
+      "ppg_hi": 4
     },
     {
       "id": "410",
@@ -27506,7 +28324,7 @@
       "price_after": 17090000,
       "next_round_games": 3,
       "round_after_games": 2,
-      "owned": 1.86,
+      "owned": 1.85,
       "injury": "Day-To-Day \u00b7 Illness",
       "injury_status": "Day-To-Day",
       "injury_detail": "Embiid (illness) is listed as doubtful for Wednesday's game versus Miami.",
@@ -27549,7 +28367,9 @@
       "proj_lo": 21,
       "proj_hi": 76,
       "exp_games": 2.3,
-      "exp_ppg": 22.8
+      "exp_ppg": 22.8,
+      "ppg_lo": 15,
+      "ppg_hi": 34
     },
     {
       "id": "411",
@@ -27614,7 +28434,9 @@
       "proj_lo": 0,
       "proj_hi": 12,
       "exp_games": 1.4,
-      "exp_ppg": 4.7
+      "exp_ppg": 4.7,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "412",
@@ -27679,7 +28501,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 5.0
+      "exp_ppg": 5.0,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "413",
@@ -27744,7 +28568,9 @@
       "proj_lo": 26,
       "proj_hi": 94,
       "exp_games": 3.1,
-      "exp_ppg": 20.9
+      "exp_ppg": 20.9,
+      "ppg_lo": 15,
+      "ppg_hi": 28
     },
     {
       "id": "414",
@@ -27809,7 +28635,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 1.0,
-      "exp_ppg": 3.3
+      "exp_ppg": 3.3,
+      "ppg_lo": 1,
+      "ppg_hi": 8
     },
     {
       "id": "415",
@@ -27874,7 +28702,9 @@
       "proj_lo": 50,
       "proj_hi": 108,
       "exp_games": 3.7,
-      "exp_ppg": 23.0
+      "exp_ppg": 23.0,
+      "ppg_lo": 18,
+      "ppg_hi": 30
     },
     {
       "id": "416",
@@ -27939,7 +28769,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "417",
@@ -28004,7 +28836,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "418",
@@ -28069,7 +28903,9 @@
       "proj_lo": 0,
       "proj_hi": 16,
       "exp_games": 2.9,
-      "exp_ppg": 2.9
+      "exp_ppg": 2.9,
+      "ppg_lo": 2,
+      "ppg_hi": 6
     },
     {
       "id": "419",
@@ -28134,7 +28970,9 @@
       "proj_lo": 0,
       "proj_hi": 13,
       "exp_games": 1.0,
-      "exp_ppg": 6.9
+      "exp_ppg": 6.9,
+      "ppg_lo": 3,
+      "ppg_hi": 14
     },
     {
       "id": "420",
@@ -28199,7 +29037,9 @@
       "proj_lo": 0,
       "proj_hi": 69,
       "exp_games": 3.9,
-      "exp_ppg": 9.4
+      "exp_ppg": 9.4,
+      "ppg_lo": 4,
+      "ppg_hi": 24
     },
     {
       "id": "421",
@@ -28264,7 +29104,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "422",
@@ -28329,7 +29171,9 @@
       "proj_lo": 0,
       "proj_hi": 67,
       "exp_games": 3.1,
-      "exp_ppg": 11.6
+      "exp_ppg": 11.6,
+      "ppg_lo": 6,
+      "ppg_hi": 23
     },
     {
       "id": "423",
@@ -28394,7 +29238,9 @@
       "proj_lo": 0,
       "proj_hi": 55,
       "exp_games": 3.1,
-      "exp_ppg": 9.4
+      "exp_ppg": 9.4,
+      "ppg_lo": 5,
+      "ppg_hi": 19
     },
     {
       "id": "424",
@@ -28459,7 +29305,9 @@
       "proj_lo": 31,
       "proj_hi": 108,
       "exp_games": 3.9,
-      "exp_ppg": 19.1
+      "exp_ppg": 19.1,
+      "ppg_lo": 12,
+      "ppg_hi": 31
     },
     {
       "id": "425",
@@ -28524,7 +29372,9 @@
       "proj_lo": 0,
       "proj_hi": 18,
       "exp_games": 2.0,
-      "exp_ppg": 4.7
+      "exp_ppg": 4.7,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "426",
@@ -28589,7 +29439,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.4,
-      "exp_ppg": 4.0
+      "exp_ppg": 4.0,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "427",
@@ -28654,7 +29506,9 @@
       "proj_lo": 29,
       "proj_hi": 104,
       "exp_games": 3.9,
-      "exp_ppg": 18.3
+      "exp_ppg": 18.3,
+      "ppg_lo": 12,
+      "ppg_hi": 28
     },
     {
       "id": "428",
@@ -28719,7 +29573,9 @@
       "proj_lo": 19,
       "proj_hi": 66,
       "exp_games": 3.9,
-      "exp_ppg": 11.6
+      "exp_ppg": 11.6,
+      "ppg_lo": 5,
+      "ppg_hi": 26
     },
     {
       "id": "429",
@@ -28784,7 +29640,9 @@
       "proj_lo": 0,
       "proj_hi": 57,
       "exp_games": 3.9,
-      "exp_ppg": 7.7
+      "exp_ppg": 7.7,
+      "ppg_lo": 4,
+      "ppg_hi": 14
     },
     {
       "id": "430",
@@ -28849,7 +29707,9 @@
       "proj_lo": 0,
       "proj_hi": 9,
       "exp_games": 1.6,
-      "exp_ppg": 3.0
+      "exp_ppg": 3.0,
+      "ppg_lo": 1,
+      "ppg_hi": 6
     },
     {
       "id": "431",
@@ -28914,7 +29774,9 @@
       "proj_lo": 18,
       "proj_hi": 63,
       "exp_games": 3.9,
-      "exp_ppg": 11.0
+      "exp_ppg": 11.0,
+      "ppg_lo": 6,
+      "ppg_hi": 21
     },
     {
       "id": "432",
@@ -28979,7 +29841,9 @@
       "proj_lo": 0,
       "proj_hi": 72,
       "exp_games": 3.0,
-      "exp_ppg": 12.9
+      "exp_ppg": 12.9,
+      "ppg_lo": 7,
+      "ppg_hi": 23
     },
     {
       "id": "433",
@@ -29044,7 +29908,9 @@
       "proj_lo": 19,
       "proj_hi": 69,
       "exp_games": 3.9,
-      "exp_ppg": 12.1
+      "exp_ppg": 12.1,
+      "ppg_lo": 6,
+      "ppg_hi": 23
     },
     {
       "id": "434",
@@ -29109,7 +29975,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 0.4,
-      "exp_ppg": 7.8
+      "exp_ppg": 7.8,
+      "ppg_lo": 3,
+      "ppg_hi": 18
     },
     {
       "id": "435",
@@ -29174,7 +30042,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.4,
-      "exp_ppg": 4.2
+      "exp_ppg": 4.2,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "436",
@@ -29239,7 +30109,9 @@
       "proj_lo": 0,
       "proj_hi": 68,
       "exp_games": 3.4,
-      "exp_ppg": 10.4
+      "exp_ppg": 10.4,
+      "ppg_lo": 6,
+      "ppg_hi": 18
     },
     {
       "id": "437",
@@ -29304,7 +30176,9 @@
       "proj_lo": 0,
       "proj_hi": 55,
       "exp_games": 3.7,
-      "exp_ppg": 7.9
+      "exp_ppg": 7.9,
+      "ppg_lo": 4,
+      "ppg_hi": 15
     },
     {
       "id": "438",
@@ -29369,7 +30243,9 @@
       "proj_lo": 17,
       "proj_hi": 59,
       "exp_games": 3.9,
-      "exp_ppg": 10.4
+      "exp_ppg": 10.4,
+      "ppg_lo": 6,
+      "ppg_hi": 18
     },
     {
       "id": "439",
@@ -29434,7 +30310,9 @@
       "proj_lo": 0,
       "proj_hi": 15,
       "exp_games": 2.7,
-      "exp_ppg": 3.0
+      "exp_ppg": 3.0,
+      "ppg_lo": 1,
+      "ppg_hi": 6
     },
     {
       "id": "440",
@@ -29499,7 +30377,9 @@
       "proj_lo": 0,
       "proj_hi": 13,
       "exp_games": 1.3,
-      "exp_ppg": 5.1
+      "exp_ppg": 5.1,
+      "ppg_lo": 3,
+      "ppg_hi": 10
     },
     {
       "id": "441",
@@ -29564,7 +30444,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 17.7
+      "exp_ppg": 17.7,
+      "ppg_lo": 12,
+      "ppg_hi": 27
     },
     {
       "id": "442",
@@ -29629,7 +30511,9 @@
       "proj_lo": 47,
       "proj_hi": 102,
       "exp_games": 3.5,
-      "exp_ppg": 23.3
+      "exp_ppg": 23.3,
+      "ppg_lo": 17,
+      "ppg_hi": 32
     },
     {
       "id": "443",
@@ -29694,7 +30578,9 @@
       "proj_lo": 17,
       "proj_hi": 61,
       "exp_games": 3.9,
-      "exp_ppg": 10.6
+      "exp_ppg": 10.6,
+      "ppg_lo": 6,
+      "ppg_hi": 20
     },
     {
       "id": "444",
@@ -29759,7 +30645,9 @@
       "proj_lo": 0,
       "proj_hi": 34,
       "exp_games": 2.8,
-      "exp_ppg": 6.4
+      "exp_ppg": 6.4,
+      "ppg_lo": 3,
+      "ppg_hi": 12
     },
     {
       "id": "445",
@@ -29824,7 +30712,9 @@
       "proj_lo": 0,
       "proj_hi": 74,
       "exp_games": 3.9,
-      "exp_ppg": 10.1
+      "exp_ppg": 10.1,
+      "ppg_lo": 6,
+      "ppg_hi": 18
     },
     {
       "id": "446",
@@ -29889,7 +30779,9 @@
       "proj_lo": 51,
       "proj_hi": 111,
       "exp_games": 3.9,
-      "exp_ppg": 22.5
+      "exp_ppg": 22.5,
+      "ppg_lo": 16,
+      "ppg_hi": 31
     },
     {
       "id": "447",
@@ -29954,7 +30846,9 @@
       "proj_lo": 0,
       "proj_hi": 44,
       "exp_games": 3.9,
-      "exp_ppg": 5.9
+      "exp_ppg": 5.9,
+      "ppg_lo": 3,
+      "ppg_hi": 11
     },
     {
       "id": "448",
@@ -30019,7 +30913,9 @@
       "proj_lo": 26,
       "proj_hi": 92,
       "exp_games": 3.9,
-      "exp_ppg": 16.2
+      "exp_ppg": 16.2,
+      "ppg_lo": 12,
+      "ppg_hi": 22
     },
     {
       "id": "449",
@@ -30084,7 +30980,9 @@
       "proj_lo": 0,
       "proj_hi": 13,
       "exp_games": 1.9,
-      "exp_ppg": 3.7
+      "exp_ppg": 3.7,
+      "ppg_lo": 2,
+      "ppg_hi": 7
     },
     {
       "id": "450",
@@ -30149,7 +31047,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 4.6
+      "exp_ppg": 4.6,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "451",
@@ -30214,7 +31114,9 @@
       "proj_lo": 24,
       "proj_hi": 85,
       "exp_games": 3.9,
-      "exp_ppg": 14.9
+      "exp_ppg": 14.9,
+      "ppg_lo": 8,
+      "ppg_hi": 27
     },
     {
       "id": "452",
@@ -30279,7 +31181,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 18.5
+      "exp_ppg": 18.5,
+      "ppg_lo": 13,
+      "ppg_hi": 26
     },
     {
       "id": "453",
@@ -30344,7 +31248,9 @@
       "proj_lo": 0,
       "proj_hi": 16,
       "exp_games": 2.1,
-      "exp_ppg": 4.1
+      "exp_ppg": 4.1,
+      "ppg_lo": 1,
+      "ppg_hi": 11
     },
     {
       "id": "454",
@@ -30409,7 +31315,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 14.8
+      "exp_ppg": 14.8,
+      "ppg_lo": 6,
+      "ppg_hi": 35
     },
     {
       "id": "455",
@@ -30474,7 +31382,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.4,
-      "exp_ppg": 6.1
+      "exp_ppg": 6.1,
+      "ppg_lo": 3,
+      "ppg_hi": 14
     },
     {
       "id": "456",
@@ -30539,7 +31449,9 @@
       "proj_lo": 0,
       "proj_hi": 8,
       "exp_games": 1.0,
-      "exp_ppg": 4.2
+      "exp_ppg": 4.2,
+      "ppg_lo": 2,
+      "ppg_hi": 8
     },
     {
       "id": "457",
@@ -30604,7 +31516,9 @@
       "proj_lo": 0,
       "proj_hi": 75,
       "exp_games": 3.2,
-      "exp_ppg": 12.2
+      "exp_ppg": 12.2,
+      "ppg_lo": 7,
+      "ppg_hi": 21
     },
     {
       "id": "458",
@@ -30669,7 +31583,9 @@
       "proj_lo": 0,
       "proj_hi": 17,
       "exp_games": 2.4,
-      "exp_ppg": 3.7
+      "exp_ppg": 3.7,
+      "ppg_lo": 1,
+      "ppg_hi": 10
     },
     {
       "id": "459",
@@ -30734,7 +31650,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 4.7
+      "exp_ppg": 4.7,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "460",
@@ -30799,7 +31717,9 @@
       "proj_lo": 0,
       "proj_hi": 71,
       "exp_games": 2.4,
-      "exp_ppg": 15.4
+      "exp_ppg": 15.4,
+      "ppg_lo": 9,
+      "ppg_hi": 26
     },
     {
       "id": "461",
@@ -30864,7 +31784,9 @@
       "proj_lo": 26,
       "proj_hi": 92,
       "exp_games": 2.9,
-      "exp_ppg": 21.4
+      "exp_ppg": 21.4,
+      "ppg_lo": 14,
+      "ppg_hi": 32
     },
     {
       "id": "462",
@@ -30929,7 +31851,9 @@
       "proj_lo": 0,
       "proj_hi": 42,
       "exp_games": 1.8,
-      "exp_ppg": 12.5
+      "exp_ppg": 12.5,
+      "ppg_lo": 6,
+      "ppg_hi": 25
     },
     {
       "id": "463",
@@ -30994,7 +31918,9 @@
       "proj_lo": 0,
       "proj_hi": 28,
       "exp_games": 2.6,
-      "exp_ppg": 5.6
+      "exp_ppg": 5.6,
+      "ppg_lo": 2,
+      "ppg_hi": 16
     },
     {
       "id": "464",
@@ -31059,7 +31985,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.0
+      "exp_ppg": 4.0,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "465",
@@ -31124,7 +32052,9 @@
       "proj_lo": 17,
       "proj_hi": 59,
       "exp_games": 2.6,
-      "exp_ppg": 15.5
+      "exp_ppg": 15.5,
+      "ppg_lo": 8,
+      "ppg_hi": 28
     },
     {
       "id": "466",
@@ -31189,7 +32119,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 1.4,
-      "exp_ppg": 2.3
+      "exp_ppg": 2.3,
+      "ppg_lo": 1,
+      "ppg_hi": 6
     },
     {
       "id": "467",
@@ -31254,7 +32186,9 @@
       "proj_lo": 22,
       "proj_hi": 77,
       "exp_games": 2.8,
-      "exp_ppg": 19.0
+      "exp_ppg": 19.0,
+      "ppg_lo": 14,
+      "ppg_hi": 26
     },
     {
       "id": "468",
@@ -31319,7 +32253,9 @@
       "proj_lo": 0,
       "proj_hi": 10,
       "exp_games": 1.1,
-      "exp_ppg": 4.9
+      "exp_ppg": 4.9,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "469",
@@ -31384,7 +32320,9 @@
       "proj_lo": 0,
       "proj_hi": 37,
       "exp_games": 2.8,
-      "exp_ppg": 7.1
+      "exp_ppg": 7.1,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "470",
@@ -31449,7 +32387,9 @@
       "proj_lo": 0,
       "proj_hi": 46,
       "exp_games": 1.8,
-      "exp_ppg": 13.9
+      "exp_ppg": 13.9,
+      "ppg_lo": 7,
+      "ppg_hi": 28
     },
     {
       "id": "471",
@@ -31514,7 +32454,9 @@
       "proj_lo": 0,
       "proj_hi": 13,
       "exp_games": 2.1,
-      "exp_ppg": 3.4
+      "exp_ppg": 3.4,
+      "ppg_lo": 2,
+      "ppg_hi": 7
     },
     {
       "id": "472",
@@ -31579,7 +32521,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 19.4
+      "exp_ppg": 19.4,
+      "ppg_lo": 13,
+      "ppg_hi": 30
     },
     {
       "id": "473",
@@ -31644,7 +32588,9 @@
       "proj_lo": 29,
       "proj_hi": 103,
       "exp_games": 2.8,
-      "exp_ppg": 25.5
+      "exp_ppg": 25.5,
+      "ppg_lo": 18,
+      "ppg_hi": 36
     },
     {
       "id": "474",
@@ -31709,7 +32655,9 @@
       "proj_lo": 0,
       "proj_hi": 25,
       "exp_games": 2.9,
-      "exp_ppg": 4.5
+      "exp_ppg": 4.5,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "475",
@@ -31774,7 +32722,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 6.8
+      "exp_ppg": 6.8,
+      "ppg_lo": 3,
+      "ppg_hi": 16
     },
     {
       "id": "476",
@@ -31839,7 +32789,9 @@
       "proj_lo": 0,
       "proj_hi": 32,
       "exp_games": 3.5,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 15
     },
     {
       "id": "477",
@@ -31904,7 +32856,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.5,
-      "exp_ppg": 4.1
+      "exp_ppg": 4.1,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "478",
@@ -31969,7 +32923,9 @@
       "proj_lo": 0,
       "proj_hi": 24,
       "exp_games": 3.7,
-      "exp_ppg": 3.5
+      "exp_ppg": 3.5,
+      "ppg_lo": 1,
+      "ppg_hi": 11
     },
     {
       "id": "479",
@@ -32034,7 +32990,9 @@
       "proj_lo": 28,
       "proj_hi": 98,
       "exp_games": 3.9,
-      "exp_ppg": 17.2
+      "exp_ppg": 17.2,
+      "ppg_lo": 13,
+      "ppg_hi": 23
     },
     {
       "id": "480",
@@ -32099,7 +33057,9 @@
       "proj_lo": 18,
       "proj_hi": 63,
       "exp_games": 3.9,
-      "exp_ppg": 11.0
+      "exp_ppg": 11.0,
+      "ppg_lo": 6,
+      "ppg_hi": 19
     },
     {
       "id": "481",
@@ -32164,7 +33124,9 @@
       "proj_lo": 0,
       "proj_hi": 68,
       "exp_games": 2.7,
-      "exp_ppg": 13.3
+      "exp_ppg": 13.3,
+      "ppg_lo": 7,
+      "ppg_hi": 26
     },
     {
       "id": "482",
@@ -32229,7 +33191,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.8,
-      "exp_ppg": 3.7
+      "exp_ppg": 3.7,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "483",
@@ -32294,7 +33258,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 18.6
+      "exp_ppg": 18.6,
+      "ppg_lo": 14,
+      "ppg_hi": 25
     },
     {
       "id": "484",
@@ -32359,7 +33325,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 14.6
+      "exp_ppg": 14.6,
+      "ppg_lo": 6,
+      "ppg_hi": 34
     },
     {
       "id": "485",
@@ -32424,7 +33392,9 @@
       "proj_lo": 19,
       "proj_hi": 69,
       "exp_games": 3.9,
-      "exp_ppg": 12.1
+      "exp_ppg": 12.1,
+      "ppg_lo": 7,
+      "ppg_hi": 21
     },
     {
       "id": "486",
@@ -32489,7 +33459,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 1.4,
-      "exp_ppg": 1.7
+      "exp_ppg": 1.7,
+      "ppg_lo": 1,
+      "ppg_hi": 3
     },
     {
       "id": "487",
@@ -32554,7 +33526,9 @@
       "proj_lo": 0,
       "proj_hi": 50,
       "exp_games": 3.9,
-      "exp_ppg": 6.7
+      "exp_ppg": 6.7,
+      "ppg_lo": 4,
+      "ppg_hi": 12
     },
     {
       "id": "488",
@@ -32619,7 +33593,9 @@
       "proj_lo": 0,
       "proj_hi": 32,
       "exp_games": 2.7,
-      "exp_ppg": 6.4
+      "exp_ppg": 6.4,
+      "ppg_lo": 3,
+      "ppg_hi": 14
     },
     {
       "id": "489",
@@ -32684,7 +33660,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "490",
@@ -32749,7 +33727,9 @@
       "proj_lo": 0,
       "proj_hi": 18,
       "exp_games": 2.4,
-      "exp_ppg": 3.9
+      "exp_ppg": 3.9,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "491",
@@ -32814,7 +33794,9 @@
       "proj_lo": 19,
       "proj_hi": 68,
       "exp_games": 3.5,
-      "exp_ppg": 13.3
+      "exp_ppg": 13.3,
+      "ppg_lo": 7,
+      "ppg_hi": 24
     },
     {
       "id": "492",
@@ -32879,7 +33861,9 @@
       "proj_lo": 63,
       "proj_hi": 137,
       "exp_games": 2.9,
-      "exp_ppg": 37.0
+      "exp_ppg": 37.0,
+      "ppg_lo": 27,
+      "ppg_hi": 51
     },
     {
       "id": "493",
@@ -32944,7 +33928,9 @@
       "proj_lo": 0,
       "proj_hi": 15,
       "exp_games": 1.9,
-      "exp_ppg": 4.2
+      "exp_ppg": 4.2,
+      "ppg_lo": 2,
+      "ppg_hi": 8
     },
     {
       "id": "494",
@@ -33009,7 +33995,9 @@
       "proj_lo": 23,
       "proj_hi": 82,
       "exp_games": 2.1,
-      "exp_ppg": 26.9
+      "exp_ppg": 26.9,
+      "ppg_lo": 20,
+      "ppg_hi": 37
     },
     {
       "id": "495",
@@ -33074,7 +34062,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 20.7
+      "exp_ppg": 20.7,
+      "ppg_lo": 16,
+      "ppg_hi": 27
     },
     {
       "id": "496",
@@ -33139,7 +34129,9 @@
       "proj_lo": 0,
       "proj_hi": 52,
       "exp_games": 2.9,
-      "exp_ppg": 9.3
+      "exp_ppg": 9.3,
+      "ppg_lo": 5,
+      "ppg_hi": 16
     },
     {
       "id": "497",
@@ -33204,7 +34196,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "498",
@@ -33269,7 +34263,9 @@
       "proj_lo": 0,
       "proj_hi": 10,
       "exp_games": 1.8,
-      "exp_ppg": 3.1
+      "exp_ppg": 3.1,
+      "ppg_lo": 1,
+      "ppg_hi": 7
     },
     {
       "id": "499",
@@ -33334,7 +34330,9 @@
       "proj_lo": 0,
       "proj_hi": 53,
       "exp_games": 2.9,
-      "exp_ppg": 9.6
+      "exp_ppg": 9.6,
+      "ppg_lo": 4,
+      "ppg_hi": 24
     },
     {
       "id": "500",
@@ -33399,7 +34397,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.3
+      "exp_ppg": 4.3,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "501",
@@ -33464,7 +34464,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 6.5
+      "exp_ppg": 6.5,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "502",
@@ -33529,7 +34531,9 @@
       "proj_lo": 0,
       "proj_hi": 37,
       "exp_games": 2.1,
-      "exp_ppg": 9.3
+      "exp_ppg": 9.3,
+      "ppg_lo": 4,
+      "ppg_hi": 21
     },
     {
       "id": "503",
@@ -33594,7 +34598,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 3.6
+      "exp_ppg": 3.6,
+      "ppg_lo": 2,
+      "ppg_hi": 8
     },
     {
       "id": "504",
@@ -33659,7 +34665,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 26.8
+      "exp_ppg": 26.8,
+      "ppg_lo": 19,
+      "ppg_hi": 39
     },
     {
       "id": "505",
@@ -33724,7 +34732,9 @@
       "proj_lo": 0,
       "proj_hi": 30,
       "exp_games": 2.8,
-      "exp_ppg": 5.7
+      "exp_ppg": 5.7,
+      "ppg_lo": 2,
+      "ppg_hi": 19
     },
     {
       "id": "506",
@@ -33789,7 +34799,9 @@
       "proj_lo": 0,
       "proj_hi": 68,
       "exp_games": 2.6,
-      "exp_ppg": 13.9
+      "exp_ppg": 13.9,
+      "ppg_lo": 8,
+      "ppg_hi": 25
     },
     {
       "id": "507",
@@ -33854,7 +34866,9 @@
       "proj_lo": 17,
       "proj_hi": 62,
       "exp_games": 2.6,
-      "exp_ppg": 16.3
+      "exp_ppg": 16.3,
+      "ppg_lo": 11,
+      "ppg_hi": 25
     },
     {
       "id": "508",
@@ -33919,7 +34933,9 @@
       "proj_lo": 21,
       "proj_hi": 74,
       "exp_games": 2.6,
-      "exp_ppg": 19.5
+      "exp_ppg": 19.5,
+      "ppg_lo": 15,
+      "ppg_hi": 26
     },
     {
       "id": "509",
@@ -33984,7 +35000,9 @@
       "proj_lo": 0,
       "proj_hi": 60,
       "exp_games": 2.9,
-      "exp_ppg": 10.9
+      "exp_ppg": 10.9,
+      "ppg_lo": 5,
+      "ppg_hi": 22
     },
     {
       "id": "510",
@@ -34049,7 +35067,9 @@
       "proj_lo": 0,
       "proj_hi": 13,
       "exp_games": 0.9,
-      "exp_ppg": 7.5
+      "exp_ppg": 7.5,
+      "ppg_lo": 3,
+      "ppg_hi": 18
     },
     {
       "id": "511",
@@ -34114,7 +35134,9 @@
       "proj_lo": 0,
       "proj_hi": 73,
       "exp_games": 2.9,
-      "exp_ppg": 13.3
+      "exp_ppg": 13.3,
+      "ppg_lo": 7,
+      "ppg_hi": 25
     },
     {
       "id": "512",
@@ -34179,7 +35201,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.2,
-      "exp_ppg": 6.3
+      "exp_ppg": 6.3,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "513",
@@ -34244,7 +35268,9 @@
       "proj_lo": 19,
       "proj_hi": 66,
       "exp_games": 2.9,
-      "exp_ppg": 15.4
+      "exp_ppg": 15.4,
+      "ppg_lo": 10,
+      "ppg_hi": 23
     },
     {
       "id": "514",
@@ -34309,7 +35335,9 @@
       "proj_lo": 0,
       "proj_hi": 71,
       "exp_games": 2.3,
-      "exp_ppg": 16.0
+      "exp_ppg": 16.0,
+      "ppg_lo": 12,
+      "ppg_hi": 21
     },
     {
       "id": "515",
@@ -34374,7 +35402,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "516",
@@ -34439,7 +35469,9 @@
       "proj_lo": 0,
       "proj_hi": 44,
       "exp_games": 2.5,
-      "exp_ppg": 9.3
+      "exp_ppg": 9.3,
+      "ppg_lo": 5,
+      "ppg_hi": 17
     },
     {
       "id": "517",
@@ -34504,7 +35536,9 @@
       "proj_lo": 0,
       "proj_hi": 16,
       "exp_games": 1.9,
-      "exp_ppg": 4.4
+      "exp_ppg": 4.4,
+      "ppg_lo": 2,
+      "ppg_hi": 8
     },
     {
       "id": "518",
@@ -34569,7 +35603,9 @@
       "proj_lo": 23,
       "proj_hi": 84,
       "exp_games": 2.8,
-      "exp_ppg": 20.5
+      "exp_ppg": 20.5,
+      "ppg_lo": 15,
+      "ppg_hi": 28
     },
     {
       "id": "519",
@@ -34634,7 +35670,9 @@
       "proj_lo": 0,
       "proj_hi": 32,
       "exp_games": 2.6,
-      "exp_ppg": 6.4
+      "exp_ppg": 6.4,
+      "ppg_lo": 3,
+      "ppg_hi": 16
     },
     {
       "id": "520",
@@ -34699,7 +35737,9 @@
       "proj_lo": 0,
       "proj_hi": 44,
       "exp_games": 1.5,
-      "exp_ppg": 15.6
+      "exp_ppg": 15.6,
+      "ppg_lo": 12,
+      "ppg_hi": 21
     },
     {
       "id": "521",
@@ -34764,7 +35804,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.2,
-      "exp_ppg": 10.5
+      "exp_ppg": 10.5,
+      "ppg_lo": 4,
+      "ppg_hi": 25
     },
     {
       "id": "522",
@@ -34829,7 +35871,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 3.6
+      "exp_ppg": 3.6,
+      "ppg_lo": 2,
+      "ppg_hi": 8
     },
     {
       "id": "523",
@@ -34894,7 +35938,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 19.6
+      "exp_ppg": 19.6,
+      "ppg_lo": 12,
+      "ppg_hi": 33
     },
     {
       "id": "524",
@@ -34959,7 +36005,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 19.6
+      "exp_ppg": 19.6,
+      "ppg_lo": 11,
+      "ppg_hi": 35
     },
     {
       "id": "525",
@@ -35024,7 +36072,9 @@
       "proj_lo": 0,
       "proj_hi": 51,
       "exp_games": 2.9,
-      "exp_ppg": 9.1
+      "exp_ppg": 9.1,
+      "ppg_lo": 4,
+      "ppg_hi": 23
     },
     {
       "id": "526",
@@ -35089,7 +36139,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 23.4
+      "exp_ppg": 23.4,
+      "ppg_lo": 15,
+      "ppg_hi": 36
     },
     {
       "id": "527",
@@ -35154,7 +36206,9 @@
       "proj_lo": 0,
       "proj_hi": 39,
       "exp_games": 2.8,
-      "exp_ppg": 7.4
+      "exp_ppg": 7.4,
+      "ppg_lo": 4,
+      "ppg_hi": 15
     },
     {
       "id": "528",
@@ -35219,7 +36273,9 @@
       "proj_lo": 19,
       "proj_hi": 69,
       "exp_games": 2.9,
-      "exp_ppg": 16.1
+      "exp_ppg": 16.1,
+      "ppg_lo": 11,
+      "ppg_hi": 23
     },
     {
       "id": "529",
@@ -35284,7 +36340,9 @@
       "proj_lo": 0,
       "proj_hi": 70,
       "exp_games": 2.9,
-      "exp_ppg": 12.7
+      "exp_ppg": 12.7,
+      "ppg_lo": 5,
+      "ppg_hi": 33
     },
     {
       "id": "530",
@@ -35349,7 +36407,9 @@
       "proj_lo": 0,
       "proj_hi": 33,
       "exp_games": 2.0,
-      "exp_ppg": 8.9
+      "exp_ppg": 8.9,
+      "ppg_lo": 4,
+      "ppg_hi": 18
     },
     {
       "id": "531",
@@ -35362,11 +36422,11 @@
       "r_minus_2_games": 4,
       "r_minus_1_games": 3,
       "proj": 18,
-      "avg5": 19.6,
+      "avg5": 14.8,
       "be": null,
       "games": 2,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": 3,
       "actual_price_change": 0,
       "price_after": 5970000,
       "next_round_games": 3,
@@ -35414,7 +36474,9 @@
       "proj_lo": 0,
       "proj_hi": 24,
       "exp_games": 1.9,
-      "exp_ppg": 6.8
+      "exp_ppg": 6.8,
+      "ppg_lo": 2,
+      "ppg_hi": 21
     },
     {
       "id": "532",
@@ -35479,7 +36541,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 20.3
+      "exp_ppg": 20.3,
+      "ppg_lo": 10,
+      "ppg_hi": 42
     },
     {
       "id": "533",
@@ -35492,11 +36556,11 @@
       "r_minus_2_games": 3,
       "r_minus_1_games": 4,
       "proj": 36,
-      "avg5": 31.0,
+      "avg5": 33.6,
       "be": null,
       "games": 2,
       "games_played": 1,
-      "actual_points": -2,
+      "actual_points": 11,
       "actual_price_change": 0,
       "price_after": 9250000,
       "next_round_games": 3,
@@ -35544,7 +36608,9 @@
       "proj_lo": 0,
       "proj_hi": 53,
       "exp_games": 1.9,
-      "exp_ppg": 15.0
+      "exp_ppg": 15.0,
+      "ppg_lo": 11,
+      "ppg_hi": 21
     },
     {
       "id": "534",
@@ -35557,11 +36623,11 @@
       "r_minus_2_games": 4,
       "r_minus_1_games": 4,
       "proj": 90,
-      "avg5": 87.4,
+      "avg5": 91.8,
       "be": null,
       "games": 2,
       "games_played": 1,
-      "actual_points": 23,
+      "actual_points": 40,
       "actual_price_change": 0,
       "price_after": 19850000,
       "next_round_games": 3,
@@ -35609,7 +36675,9 @@
       "proj_lo": 27,
       "proj_hi": 97,
       "exp_games": 1.8,
-      "exp_ppg": 37.8
+      "exp_ppg": 37.8,
+      "ppg_lo": 28,
+      "ppg_hi": 51
     },
     {
       "id": "535",
@@ -35622,16 +36690,16 @@
       "r_minus_2_games": 4,
       "r_minus_1_games": 4,
       "proj": 54,
-      "avg5": 51.4,
+      "avg5": 53.4,
       "be": null,
       "games": 2,
       "games_played": 1,
-      "actual_points": 12,
+      "actual_points": 23,
       "actual_price_change": 0,
       "price_after": 7830000,
       "next_round_games": 3,
       "round_after_games": 4,
-      "owned": 55.5,
+      "owned": 55.49,
       "injury": null,
       "injury_status": null,
       "injury_detail": null,
@@ -35674,7 +36742,9 @@
       "proj_lo": 0,
       "proj_hi": 65,
       "exp_games": 1.6,
-      "exp_ppg": 22.1
+      "exp_ppg": 22.1,
+      "ppg_lo": 15,
+      "ppg_hi": 33
     },
     {
       "id": "536",
@@ -35687,11 +36757,11 @@
       "r_minus_2_games": 4,
       "r_minus_1_games": 4,
       "proj": 49,
-      "avg5": 63.6,
+      "avg5": 65.4,
       "be": null,
       "games": 2,
       "games_played": 1,
-      "actual_points": 21,
+      "actual_points": 26,
       "actual_price_change": 0,
       "price_after": 13010000,
       "next_round_games": 3,
@@ -35739,7 +36809,9 @@
       "proj_lo": 18,
       "proj_hi": 62,
       "exp_games": 2.0,
-      "exp_ppg": 21.8
+      "exp_ppg": 21.8,
+      "ppg_lo": 15,
+      "ppg_hi": 31
     },
     {
       "id": "537",
@@ -35804,7 +36876,9 @@
       "proj_lo": 0,
       "proj_hi": 28,
       "exp_games": 1.8,
-      "exp_ppg": 8.3
+      "exp_ppg": 8.3,
+      "ppg_lo": 4,
+      "ppg_hi": 18
     },
     {
       "id": "538",
@@ -35820,8 +36894,8 @@
       "avg5": 3.2,
       "be": null,
       "games": 2,
-      "games_played": 0,
-      "actual_points": 0,
+      "games_played": 1,
+      "actual_points": 1,
       "actual_price_change": 0,
       "price_after": 3790000,
       "next_round_games": 3,
@@ -35869,7 +36943,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 1.0,
-      "exp_ppg": 3.0
+      "exp_ppg": 3.0,
+      "ppg_lo": 1,
+      "ppg_hi": 9
     },
     {
       "id": "539",
@@ -35882,11 +36958,11 @@
       "r_minus_2_games": 1,
       "r_minus_1_games": 4,
       "proj": 16,
-      "avg5": 10.6,
+      "avg5": 11.2,
       "be": null,
       "games": 2,
       "games_played": 1,
-      "actual_points": -3,
+      "actual_points": 1,
       "actual_price_change": 0,
       "price_after": 5810000,
       "next_round_games": 3,
@@ -35934,7 +37010,9 @@
       "proj_lo": 0,
       "proj_hi": 18,
       "exp_games": 1.2,
-      "exp_ppg": 8.0
+      "exp_ppg": 8.0,
+      "ppg_lo": 3,
+      "ppg_hi": 22
     },
     {
       "id": "540",
@@ -35999,7 +37077,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.5,
-      "exp_ppg": 4.3
+      "exp_ppg": 4.3,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "541",
@@ -36016,7 +37096,7 @@
       "be": null,
       "games": 2,
       "games_played": 1,
-      "actual_points": 2,
+      "actual_points": 3,
       "actual_price_change": 0,
       "price_after": 4790000,
       "next_round_games": 3,
@@ -36064,7 +37144,9 @@
       "proj_lo": 0,
       "proj_hi": 12,
       "exp_games": 1.7,
-      "exp_ppg": 3.7
+      "exp_ppg": 3.7,
+      "ppg_lo": 1,
+      "ppg_hi": 11
     },
     {
       "id": "542",
@@ -36077,11 +37159,11 @@
       "r_minus_2_games": 4,
       "r_minus_1_games": 4,
       "proj": 51,
-      "avg5": 53.8,
+      "avg5": 54.6,
       "be": null,
       "games": 2,
       "games_played": 1,
-      "actual_points": 4,
+      "actual_points": 6,
       "actual_price_change": 0,
       "price_after": 14070000,
       "next_round_games": 3,
@@ -36129,7 +37211,9 @@
       "proj_lo": 17,
       "proj_hi": 59,
       "exp_games": 1.9,
-      "exp_ppg": 21.9
+      "exp_ppg": 21.9,
+      "ppg_lo": 16,
+      "ppg_hi": 30
     },
     {
       "id": "543",
@@ -36194,7 +37278,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 13.5
+      "exp_ppg": 13.5,
+      "ppg_lo": 6,
+      "ppg_hi": 32
     },
     {
       "id": "544",
@@ -36259,7 +37345,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 18.5
+      "exp_ppg": 18.5,
+      "ppg_lo": 12,
+      "ppg_hi": 28
     },
     {
       "id": "545",
@@ -36272,11 +37360,11 @@
       "r_minus_2_games": 4,
       "r_minus_1_games": 4,
       "proj": 61,
-      "avg5": 57.4,
+      "avg5": 60.6,
       "be": null,
       "games": 2,
       "games_played": 1,
-      "actual_points": 13,
+      "actual_points": 26,
       "actual_price_change": 0,
       "price_after": 13310000,
       "next_round_games": 3,
@@ -36324,7 +37412,9 @@
       "proj_lo": 20,
       "proj_hi": 69,
       "exp_games": 2.0,
-      "exp_ppg": 24.3
+      "exp_ppg": 24.3,
+      "ppg_lo": 18,
+      "ppg_hi": 33
     },
     {
       "id": "546",
@@ -36389,7 +37479,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.3,
-      "exp_ppg": 9.2
+      "exp_ppg": 9.2,
+      "ppg_lo": 4,
+      "ppg_hi": 22
     },
     {
       "id": "547",
@@ -36454,7 +37546,9 @@
       "proj_lo": 0,
       "proj_hi": 9,
       "exp_games": 0.6,
-      "exp_ppg": 7.1
+      "exp_ppg": 7.1,
+      "ppg_lo": 4,
+      "ppg_hi": 14
     },
     {
       "id": "548",
@@ -36519,7 +37613,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 25.2
+      "exp_ppg": 25.2,
+      "ppg_lo": 17,
+      "ppg_hi": 36
     },
     {
       "id": "549",
@@ -36584,7 +37680,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 0.3,
-      "exp_ppg": 11.9
+      "exp_ppg": 11.9,
+      "ppg_lo": 5,
+      "ppg_hi": 28
     },
     {
       "id": "550",
@@ -36649,7 +37747,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 6.3
+      "exp_ppg": 6.3,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "551",
@@ -36714,7 +37814,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "552",
@@ -36779,7 +37881,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "553",
@@ -36844,7 +37948,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.6,
-      "exp_ppg": 3.6
+      "exp_ppg": 3.6,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "554",
@@ -36909,7 +38015,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "555",
@@ -36974,7 +38082,9 @@
       "proj_lo": 0,
       "proj_hi": 0,
       "exp_games": 0.0,
-      "exp_ppg": 5.8
+      "exp_ppg": 5.8,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "556",
@@ -37039,7 +38149,9 @@
       "proj_lo": 0,
       "proj_hi": 39,
       "exp_games": 2.3,
-      "exp_ppg": 9.1
+      "exp_ppg": 9.1,
+      "ppg_lo": 4,
+      "ppg_hi": 19
     },
     {
       "id": "557",
@@ -37104,7 +38216,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.3,
-      "exp_ppg": 9.3
+      "exp_ppg": 9.3,
+      "ppg_lo": 4,
+      "ppg_hi": 22
     },
     {
       "id": "558",
@@ -37169,7 +38283,9 @@
       "proj_lo": 0,
       "proj_hi": 15,
       "exp_games": 1.6,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "559",
@@ -37234,7 +38350,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.2
+      "exp_ppg": 5.2,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "560",
@@ -37299,7 +38417,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.7
+      "exp_ppg": 5.7,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "561",
@@ -37364,7 +38484,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 0.3,
-      "exp_ppg": 13.1
+      "exp_ppg": 13.1,
+      "ppg_lo": 6,
+      "ppg_hi": 31
     },
     {
       "id": "562",
@@ -37429,7 +38551,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "563",
@@ -37494,7 +38618,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "564",
@@ -37559,7 +38685,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.0
+      "exp_ppg": 5.0,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "565",
@@ -37624,7 +38752,9 @@
       "proj_lo": 0,
       "proj_hi": 7,
       "exp_games": 0.6,
-      "exp_ppg": 6.6
+      "exp_ppg": 6.6,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "566",
@@ -37689,7 +38819,9 @@
       "proj_lo": 0,
       "proj_hi": 7,
       "exp_games": 0.4,
-      "exp_ppg": 10.0
+      "exp_ppg": 10.0,
+      "ppg_lo": 4,
+      "ppg_hi": 24
     },
     {
       "id": "567",
@@ -37754,7 +38886,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.7,
-      "exp_ppg": 3.9
+      "exp_ppg": 3.9,
+      "ppg_lo": 2,
+      "ppg_hi": 8
     },
     {
       "id": "568",
@@ -37819,7 +38953,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.4,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "569",
@@ -37884,7 +39020,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "570",
@@ -37949,7 +39087,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.2
+      "exp_ppg": 5.2,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "571",
@@ -38014,7 +39154,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.0
+      "exp_ppg": 5.0,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "572",
@@ -38079,7 +39221,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.3,
-      "exp_ppg": 7.7
+      "exp_ppg": 7.7,
+      "ppg_lo": 3,
+      "ppg_hi": 18
     },
     {
       "id": "573",
@@ -38144,7 +39288,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "574",
@@ -38209,7 +39355,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.8,
-      "exp_ppg": 3.6
+      "exp_ppg": 3.6,
+      "ppg_lo": 2,
+      "ppg_hi": 7
     },
     {
       "id": "575",
@@ -38274,7 +39422,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "576",
@@ -38339,7 +39489,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.7
+      "exp_ppg": 5.7,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "577",
@@ -38404,7 +39556,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "578",
@@ -38469,7 +39623,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "579",
@@ -38534,7 +39690,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.4,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "580",
@@ -38599,7 +39757,9 @@
       "proj_lo": 0,
       "proj_hi": 23,
       "exp_games": 2.3,
-      "exp_ppg": 5.4
+      "exp_ppg": 5.4,
+      "ppg_lo": 2,
+      "ppg_hi": 19
     },
     {
       "id": "581",
@@ -38664,7 +39824,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 0.3,
-      "exp_ppg": 11.9
+      "exp_ppg": 11.9,
+      "ppg_lo": 5,
+      "ppg_hi": 28
     },
     {
       "id": "582",
@@ -38729,7 +39891,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "583",
@@ -38794,7 +39958,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.7
+      "exp_ppg": 5.7,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "584",
@@ -38859,7 +40025,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.0
+      "exp_ppg": 5.0,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "585",
@@ -38924,7 +40092,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 7.2
+      "exp_ppg": 7.2,
+      "ppg_lo": 3,
+      "ppg_hi": 17
     },
     {
       "id": "586",
@@ -38989,7 +40159,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "587",
@@ -39054,7 +40226,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.7
+      "exp_ppg": 4.7,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "588",
@@ -39119,7 +40293,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "589",
@@ -39184,7 +40360,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.2
+      "exp_ppg": 4.2,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "590",
@@ -39249,7 +40427,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.5
+      "exp_ppg": 4.5,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "591",
@@ -39314,7 +40494,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 7.2
+      "exp_ppg": 7.2,
+      "ppg_lo": 3,
+      "ppg_hi": 17
     },
     {
       "id": "592",
@@ -39379,7 +40561,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.4,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "593",
@@ -39444,7 +40628,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 5.7
+      "exp_ppg": 5.7,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "594",
@@ -39509,7 +40695,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.4,
-      "exp_ppg": 5.0
+      "exp_ppg": 5.0,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "595",
@@ -39574,7 +40762,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "596",
@@ -39639,7 +40829,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "597",
@@ -39704,7 +40896,9 @@
       "proj_lo": 0,
       "proj_hi": 5,
       "exp_games": 0.3,
-      "exp_ppg": 10.8
+      "exp_ppg": 10.8,
+      "ppg_lo": 5,
+      "ppg_hi": 26
     },
     {
       "id": "598",
@@ -39769,7 +40963,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "599",
@@ -39834,7 +41030,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 6.3
+      "exp_ppg": 6.3,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "600",
@@ -39899,7 +41097,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "601",
@@ -39964,7 +41164,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 6.9
+      "exp_ppg": 6.9,
+      "ppg_lo": 3,
+      "ppg_hi": 16
     },
     {
       "id": "602",
@@ -40029,7 +41231,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.7
+      "exp_ppg": 5.7,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "603",
@@ -40094,7 +41298,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 6.4
+      "exp_ppg": 6.4,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "604",
@@ -40159,7 +41365,9 @@
       "proj_lo": 0,
       "proj_hi": 20,
       "exp_games": 1.2,
-      "exp_ppg": 9.0
+      "exp_ppg": 9.0,
+      "ppg_lo": 4,
+      "ppg_hi": 21
     },
     {
       "id": "605",
@@ -40224,7 +41432,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.3,
-      "exp_ppg": 7.1
+      "exp_ppg": 7.1,
+      "ppg_lo": 3,
+      "ppg_hi": 17
     },
     {
       "id": "606",
@@ -40289,7 +41499,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "607",
@@ -40354,7 +41566,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.7
+      "exp_ppg": 5.7,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "608",
@@ -40419,7 +41633,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.2,
-      "exp_ppg": 8.1
+      "exp_ppg": 8.1,
+      "ppg_lo": 3,
+      "ppg_hi": 19
     },
     {
       "id": "609",
@@ -40484,7 +41700,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "610",
@@ -40549,7 +41767,9 @@
       "proj_lo": 0,
       "proj_hi": 11,
       "exp_games": 1.8,
-      "exp_ppg": 3.4
+      "exp_ppg": 3.4,
+      "ppg_lo": 1,
+      "ppg_hi": 8
     },
     {
       "id": "611",
@@ -40614,7 +41834,9 @@
       "proj_lo": 0,
       "proj_hi": 10,
       "exp_games": 1.1,
-      "exp_ppg": 4.6
+      "exp_ppg": 4.6,
+      "ppg_lo": 2,
+      "ppg_hi": 10
     },
     {
       "id": "612",
@@ -40679,7 +41901,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.0
+      "exp_ppg": 5.0,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "613",
@@ -40744,7 +41968,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.3,
-      "exp_ppg": 8.4
+      "exp_ppg": 8.4,
+      "ppg_lo": 4,
+      "ppg_hi": 20
     },
     {
       "id": "614",
@@ -40809,7 +42035,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 6.3
+      "exp_ppg": 6.3,
+      "ppg_lo": 3,
+      "ppg_hi": 15
     },
     {
       "id": "615",
@@ -40874,7 +42102,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "616",
@@ -40939,7 +42169,9 @@
       "proj_lo": 0,
       "proj_hi": 10,
       "exp_games": 1.8,
-      "exp_ppg": 3.0
+      "exp_ppg": 3.0,
+      "ppg_lo": 2,
+      "ppg_hi": 6
     },
     {
       "id": "617",
@@ -41004,7 +42236,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.7
+      "exp_ppg": 5.7,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "618",
@@ -41069,7 +42303,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "619",
@@ -41134,7 +42370,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "620",
@@ -41199,7 +42437,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.4,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "621",
@@ -41264,7 +42504,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.3,
-      "exp_ppg": 4.5
+      "exp_ppg": 4.5,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "622",
@@ -41329,7 +42571,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "623",
@@ -41394,7 +42638,9 @@
       "proj_lo": 0,
       "proj_hi": 6,
       "exp_games": 0.8,
-      "exp_ppg": 3.9
+      "exp_ppg": 3.9,
+      "ppg_lo": 2,
+      "ppg_hi": 9
     },
     {
       "id": "624",
@@ -41459,7 +42705,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "625",
@@ -41524,7 +42772,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 4.8
+      "exp_ppg": 4.8,
+      "ppg_lo": 2,
+      "ppg_hi": 11
     },
     {
       "id": "626",
@@ -41589,7 +42839,9 @@
       "proj_lo": 0,
       "proj_hi": 18,
       "exp_games": 1.4,
-      "exp_ppg": 7.1
+      "exp_ppg": 7.1,
+      "ppg_lo": 3,
+      "ppg_hi": 19
     },
     {
       "id": "627",
@@ -41654,7 +42906,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.2,
-      "exp_ppg": 5.7
+      "exp_ppg": 5.7,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "628",
@@ -41719,7 +42973,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.7
+      "exp_ppg": 5.7,
+      "ppg_lo": 2,
+      "ppg_hi": 14
     },
     {
       "id": "629",
@@ -41784,7 +43040,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 7.2
+      "exp_ppg": 7.2,
+      "ppg_lo": 3,
+      "ppg_hi": 17
     },
     {
       "id": "630",
@@ -41849,7 +43107,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.2,
-      "exp_ppg": 11.7
+      "exp_ppg": 11.7,
+      "ppg_lo": 5,
+      "ppg_hi": 28
     },
     {
       "id": "631",
@@ -41914,7 +43174,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.4,
-      "exp_ppg": 5.0
+      "exp_ppg": 5.0,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "632",
@@ -41979,7 +43241,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "633",
@@ -42044,7 +43308,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "634",
@@ -42109,7 +43375,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "635",
@@ -42174,7 +43442,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "636",
@@ -42239,7 +43509,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "637",
@@ -42304,7 +43576,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 6.9
+      "exp_ppg": 6.9,
+      "ppg_lo": 3,
+      "ppg_hi": 16
     },
     {
       "id": "638",
@@ -42369,7 +43643,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.4,
-      "exp_ppg": 5.0
+      "exp_ppg": 5.0,
+      "ppg_lo": 2,
+      "ppg_hi": 12
     },
     {
       "id": "639",
@@ -42434,7 +43710,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 6.9
+      "exp_ppg": 6.9,
+      "ppg_lo": 3,
+      "ppg_hi": 16
     },
     {
       "id": "640",
@@ -42499,7 +43777,9 @@
       "proj_lo": 0,
       "proj_hi": 2,
       "exp_games": 0.2,
-      "exp_ppg": 5.4
+      "exp_ppg": 5.4,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "641",
@@ -42564,7 +43844,9 @@
       "proj_lo": 0,
       "proj_hi": 3,
       "exp_games": 0.3,
-      "exp_ppg": 5.5
+      "exp_ppg": 5.5,
+      "ppg_lo": 2,
+      "ppg_hi": 13
     },
     {
       "id": "642",
@@ -42629,7 +43911,9 @@
       "proj_lo": 0,
       "proj_hi": 4,
       "exp_games": 0.6,
-      "exp_ppg": 3.5
+      "exp_ppg": 3.5,
+      "ppg_lo": 1,
+      "ppg_hi": 8
     },
     {
       "id": "643",
@@ -42682,7 +43966,9 @@
       "proj_lo": 0,
       "proj_hi": 9,
       "exp_games": 0.9,
-      "exp_ppg": 5.3
+      "exp_ppg": 5.3,
+      "ppg_lo": 3,
+      "ppg_hi": 11
     }
   ],
   "availableRounds": [
@@ -42697,6 +43983,7 @@
     "version": 2,
     "roundEnd": "2026-11-30",
     "rangeLevel": 0.8,
-    "rangeCoverage": 0.868
+    "rangeCoverage": 0.868,
+    "ppgRangeCoverage": 0.755
   }
 }
