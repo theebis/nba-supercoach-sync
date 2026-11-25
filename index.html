@@ -1916,7 +1916,7 @@
         <button type="button" class="sb-item" data-nav="tradelab">
           <span class="sb-item-left">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-            <span>Trade Lab</span>
+            <span>Trade Advisor</span>
           </span>
           <span class="sb-count" id="sbTradeCount">0</span>
         </button>
@@ -2240,7 +2240,7 @@
             <button type="button" class="chip-btn" data-proj-source="schoops">SCHOOPS model</button>
             <button type="button" class="chip-btn" data-proj-source="sc">SuperCoach</button>
           </div>
-          <div class="field-hint">SCHOOPS projects points per game from recent form, price and SuperCoach's projection, then multiplies by the games each player is actually expected to play (injuries, rest). Tested on every finished round, it misses by less than SuperCoach's own projections. Used for projected price changes, the optimiser and Trade Lab.</div>
+          <div class="field-hint">SCHOOPS projects points per game from recent form, price and SuperCoach's projection, then multiplies by the games each player is actually expected to play (injuries, rest). Tested on every finished round, it misses by less than SuperCoach's own projections. Used for projected price changes, the optimiser and the Trade Advisor.</div>
         </div>
 
         <div class="field-group">
@@ -2337,13 +2337,14 @@
         ]
       },
       tradelab: {
-        title: "How Trade Lab works",
-        tip: "Type your bank into the right-hand panel, then build or compare plans",
+        title: "How the Trade Advisor works",
+        tip: "Pick trades on the left · your plan on the right adds them up",
         bullets: [
-          "Type your unspent cash into <strong>Your bank</strong> in the right-hand panel (below the plan on phones). Every plan is checked against it.",
-          "The <strong>Trade advisor</strong> ranks trades for your squad by goal (Most points, Balanced, Most cash) for 1 to 4 trades. <strong>+ Add</strong> puts a single swap into your current plan, so you can mix swaps from different suggestions.",
-          "Each plan holds up to 4 <strong>OUT → IN</strong> trades. Use <strong>New plan</strong> or <strong>Duplicate to compare</strong> to see plans side by side in <strong>Compare plans</strong>.",
-          "The banner at the top shows whether trades are open and counts down to the next lockout. Trading opens after each round ends (Monday afternoon) and locks at the first tip-off.",
+          "Choose a goal (<strong>Most points</strong>, <strong>Balanced</strong> or <strong>Most cash</strong>) and how many trades (1 to 4). The list shows the best trades for your squad this round.",
+          "<strong>+ Add</strong> puts a trade into your plan; click it again (<strong>✓</strong>) to take it out. Mix trades from different suggestions. On phones, <strong>Review</strong> in the bottom bar jumps to your plan.",
+          "<strong>Your plan</strong> (right-hand panel; below the list on phones) adds up the points and price change, and checks <strong>Your bank</strong> (type your unspent cash there). <strong>Add a trade yourself</strong> lets you pick any players.",
+          "Plans A, B, C… sit in the tabs at the top of the plan. <strong>+</strong> starts a new one and <strong>Copy to compare</strong> duplicates this one; with two or more, <strong>Compare plans</strong> appears below.",
+          "The pill at the top right counts down to the next lockout. Trading opens after each round ends (Monday afternoon) and locks at the first tip-off.",
           "When you're happy, <strong>Apply to my squad</strong> swaps the players in your saved squad."
         ]
       }
@@ -2613,6 +2614,10 @@
         projV2: (p.proj_v2 !== undefined && p.proj_v2 !== null) ? Number(p.proj_v2) : null,
         projLo: p.proj_lo ?? null,
         projHi: p.proj_hi ?? null,
+        // Per-game range if he plays (middle 80% of his per-game average) and projected points per game
+        ppgLo: p.ppg_lo ?? null,
+        ppgHi: p.ppg_hi ?? null,
+        expPpg: p.exp_ppg ?? null,
         expGames: (p.exp_games !== undefined && p.exp_games !== null) ? Number(p.exp_games) : null,
         // SuperCoach's official score so far this round and how many games it covers (lags real time)
         scRoundGames: Number(p.games_played) || 0,
@@ -2842,6 +2847,7 @@
       const pm = data.projectionModel || {};
       state.rangeLevel = Number(pm.rangeLevel) || 0.5;
       state.rangeCoverage = Number(pm.rangeCoverage) || null;
+      state.ppgCoverage = Number(pm.ppgRangeCoverage) || null;
       if (data.fixtures && typeof data.fixtures === "object") { state.fixtures = data.fixtures; state.fixturesRound = roundNum; }
       const scheduleMap = data.team_schedule || data.teamSchedule || {};
       state.teamScheduleMap = (scheduleMap && typeof scheduleMap === "object") ? scheduleMap : {};
@@ -2961,7 +2967,7 @@
       cols.push({ key: "games", sort: "games", label: `R${r}·R${r + 1}·R${r + 2} games`, title: "Games each team plays this round and the next two", align: "center" });
       cols.push({ key: "be", sort: "be", label: "BE", align: "num", isBe: true });
       cols.push({ key: "proj", sort: "proj", label: `R${r} Proj`, align: "num",
-        title: state.projSource === "sc" ? "SuperCoach's projection for this round" : "SCHOOPS projection: points per game x the games he's expected to play. Hover a number for its likely range." });
+        title: state.projSource === "sc" ? "SuperCoach's projection for this round" : "SCHOOPS projection: points per game x the games he's expected to play. Hover a number for his usual range per game." });
       if (state.displayCols.avg3) cols.push({ key: "avg3", sort: "avg3", label: "3-Wk", align: "num" });
       if (state.displayCols.avg5) cols.push({ key: "avg5", sort: "avg5", label: "5-Wk", align: "num" });
       cols.push({ key: "priceChange", sort: "priceChange", label: "Proj Chg", align: "num" });
@@ -3093,31 +3099,36 @@
         <span class="form-delta" style="color:${col}">${formatMoney(delta)}<span class="dim-text"> this round</span></span></span>`;
     }
 
-    // Tooltip for a projection: the number, its likely range (drawn as a bar), expected games and SuperCoach's figure
+    // Availability in plain words: "all 3", "2.3 of 3 (day-to-day)", "out all round"
+    function availText(p) {
+      const g = p.games || 0, e = p.expGames;
+      if (!g) return "no games";
+      if (e === null || e === undefined || e >= g - 0.05) return `plays all ${g}`;
+      if (e <= 0.05) return `out all ${g}`;
+      return `about ${e} of ${g}`;
+    }
+
+    // Tooltip for a projection: the number, his usual per-game range, games he's expected to play, SuperCoach's figure
     function projTipHtml(p) {
       const head = `<div class="tip-h">Round ${state.round} projection</div>`;
       if (!p.projIsOurs || p.projLo === null) {
         return `${head}<div class="tip-row"><span>SuperCoach</span><b>${p.proj}</b></div><div class="tip-dim">Switch to SCHOOPS projections in Settings for ranges.</div>`;
       }
-      const lo = p.projLo, hi = Math.max(p.projHi, lo + 1);
-      const scale = Math.max(hi, p.scProj, p.proj) * 1.1 || 1;
-      const pct = (v) => Math.max(0, Math.min(100, (v / scale) * 100));
-      const bar = `<div class="tip-range"><span class="tip-range-band" style="left:${pct(lo)}%; width:${pct(hi) - pct(lo)}%"></span>`
-        + `<span class="tip-range-mark" style="left:${pct(p.proj)}%"></span>`
-        + `<span class="tip-range-sc" style="left:${pct(p.scProj)}%" title="SuperCoach"></span></div>`;
-      const games = p.expGames !== null && p.expGames < p.games
-        ? `<div class="tip-row"><span>Expected games</span><b>${p.expGames} of ${p.games}</b></div>` : `<div class="tip-row"><span>Games</span><b>${p.games}</b></div>`;
-      const why = p.injuryStatus ? `<div class="tip-neg">${escapeHtml(p.injury || p.injuryStatus)}: fewer games expected</div>` : "";
-      return `${head}
-        <div class="tip-row"><span>SCHOOPS</span><b>${p.proj}</b></div>
-        <div class="tip-row"><span>Likely range</span><b>${lo}–${hi}</b></div>
-        ${bar}
-        ${games}
-        <div class="tip-row"><span>SuperCoach</span><b class="tip-dim">${p.scProj}</b></div>
-        ${why}
-        <div class="tip-dim" style="margin-top:3px">${state.rangeLevel >= 0.8
-          ? `In testing, ${state.rangeCoverage ? Math.round(state.rangeCoverage * 100) : "about 85"}% of real scores landed inside this range.`
-          : "The middle of his likely outcomes: a quarter of scores land above it, a quarter below."}</div>`;
+      const rows = [`<div class="tip-row"><span>SCHOOPS</span><b>${p.proj}</b></div>`];
+      // Per game when he plays (the range), shown on a per-game bar with his projected average marked
+      if (p.ppgLo !== null && p.ppgHi !== null && p.expPpg) {
+        const lo = p.ppgLo, hi = Math.max(p.ppgHi, lo + 1);
+        const scale = hi * 1.15 || 1;
+        const pct = (v) => Math.max(0, Math.min(100, (v / scale) * 100));
+        rows.push(`<div class="tip-row"><span>Most games</span><b>${lo}–${hi} a game</b></div>`,
+          `<div class="tip-range"><span class="tip-range-band" style="left:${pct(lo)}%; width:${pct(hi) - pct(lo)}%"></span><span class="tip-range-mark" style="left:${pct(p.expPpg)}%"></span></div>`);
+      }
+      rows.push(`<div class="tip-row"><span>Games</span><b>${availText(p)}</b></div>`);
+      rows.push(`<div class="tip-row"><span>SuperCoach</span><b class="tip-dim">${p.scProj}</b></div>`);
+      if (p.injuryStatus) rows.push(`<div class="tip-neg">${escapeHtml(p.injury || p.injuryStatus)}</div>`);
+      const held = state.ppgCoverage ? Math.round(state.ppgCoverage * 100) : 80;
+      return `${head}${rows.join("")}
+        <div class="tip-dim" style="margin-top:4px">Projection = about ${p.expPpg ? Math.round(p.expPpg) : "?"} a game × the games he's expected to play. "Most games" is his usual per-game score when he plays (held ${held}% of the time in testing).</div>`;
     }
 
     function getColWidth(key) {
@@ -3265,7 +3276,7 @@
         mktCtrl.style.display = "none";
         modCtrl.style.display = "flex";
       } else {
-        crumb.innerHTML = `Trade Lab`;
+        crumb.innerHTML = `Trade Advisor`;
         countEl.textContent = `${(state.tradeLab.plans || []).length} plan${(state.tradeLab.plans || []).length === 1 ? "" : "s"}`;
         mktCtrl.style.display = "none";
         modCtrl.style.display = "flex";
@@ -3331,7 +3342,7 @@
             ${p.inWatchlist ? "★ Watchlisted" : "☆ Watchlist"}
           </button>
           <button type="button" class="ghost-btn full" data-insp-trade="${escapeHtml(p.id)}" data-trade-dir="${p.inSquad ? "out" : "in"}" style="justify-content:center;">
-            ${p.inSquad ? "→ Test Trading OUT in Trade Lab" : "→ Test Trading IN in Trade Lab"}
+            ${p.inSquad ? "→ Test Trading OUT in Trade Advisor" : "→ Test Trading IN in Trade Advisor"}
           </button>
         </div>
 
@@ -3339,8 +3350,9 @@
           <div class="insp-section-title">Properties</div>
           <div class="prop-list">
             <div class="prop-row"><span class="prop-key">Breakeven</span><span class="prop-val">${p.be === null ? "—" : p.be}</span></div>
-            <div class="prop-row"><span class="prop-key">Round ${r} projection</span><span class="prop-val">${p.proj}${p.projIsOurs && p.projLo !== null ? ` <span class="dim-text" style="font-weight:400">(likely ${p.projLo}–${p.projHi})</span>` : ""}</span></div>
-            ${p.projIsOurs ? `<div class="prop-row"><span class="prop-key">Expected games</span><span class="prop-val">${p.expGames ?? p.games} of ${p.games}</span></div>
+            <div class="prop-row"><span class="prop-key">Round ${r} projection</span><span class="prop-val">${p.proj}</span></div>
+            ${p.projIsOurs && p.ppgLo !== null ? `<div class="prop-row"><span class="prop-key">Most games</span><span class="prop-val">${p.ppgLo}–${p.ppgHi} <span class="dim-text" style="font-weight:400">a game</span></span></div>` : ""}
+            ${p.projIsOurs ? `<div class="prop-row"><span class="prop-key">Games</span><span class="prop-val ${p.expGames !== null && p.expGames < p.games - 0.05 ? "warn-text" : ""}">${availText(p)}${p.injuryStatus ? ` · ${escapeHtml(String(p.injuryStatus).toLowerCase())}` : ""}</span></div>
             <div class="prop-row"><span class="prop-key">SuperCoach projection</span><span class="prop-val muted-text">${p.scProj}</span></div>` : ""}
             <div class="prop-row"><span class="prop-key">Proj Change</span><span class="prop-val ${p.priceChange > 0 ? "pos-text" : p.priceChange < 0 ? "neg-text" : "muted-text"}">${formatMoney(p.priceChange)}</span></div>
             <div class="prop-row"><span class="prop-key">Est. New Price</span><span class="prop-val">${formatPriceM(p.newPrice)}</span></div>
@@ -4256,10 +4268,10 @@
     syncFromGitHub();
   </script>
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
-  <script src="court.js?v=17"></script>
-  <script src="tradelab.js?v=16"></script>
+  <script src="court.js?v=18"></script>
+  <script src="tradelab.js?v=17"></script>
   <script src="briefing.js?v=5"></script>
-  <script src="captains.js?v=2"></script>
+  <script src="captains.js?v=3"></script>
   <script src="live.js?v=5"></script>
   <script src="notify.js?v=1"></script>
   <script src="importmatch.js?v=1"></script>

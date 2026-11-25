@@ -195,6 +195,147 @@
       @media (max-width: 760px) { .tl-lock { margin: 10px 10px 0; } }
       .tl-adv-list { transition: opacity 160ms ease; }
       .tl-adv-list.is-stale { opacity: 0.55; }
+      /* ===== Trade Advisor (list + plan scoreboard; phones: cards + plan tray) ===== */
+      .ta { max-width: 1900px; padding: 20px 22px 32px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+      .ta-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; }
+      .ta-title { margin: 0; font-size: 21px; font-weight: 650; letter-spacing: -0.015em; color: var(--text-primary); }
+      .ta-sub { margin-top: 4px; font-size: 13px; color: var(--text-secondary); max-width: 72ch; text-wrap: pretty; }
+      .ta-lock { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 13px; border-radius: 999px; background: var(--bg-active); color: var(--text-secondary); font-size: 12px; font-weight: 600; white-space: nowrap; cursor: default; }
+      .ta-lock i { width: 7px; height: 7px; border-radius: 50%; background: var(--text-tertiary); }
+      .ta-lock b { color: var(--text-primary); }
+      .ta-lock.open { background: var(--pos-bg); color: var(--pos-bright); }
+      .ta-lock.open i { background: var(--pos-bright); }
+      .ta-lock.open b { color: var(--pos-bright); }
+      .ta-ctrls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+      .ta-seg { display: inline-grid; grid-auto-flow: column; align-items: center; gap: 2px; padding: 3px; border-radius: 9px; background: var(--bg-input); border: 1px solid var(--border-subtle); }
+      .ta-seg button { height: 30px; padding: 0 13px; border: none; border-radius: 6px; background: transparent; color: var(--text-tertiary); font-size: 12.5px; font-weight: 600; cursor: pointer; transition: color 120ms ease, background-color 120ms ease; }
+      .ta-seg button.on { background: var(--bg-active); color: var(--text-primary); }
+      @media (hover: hover) { .ta-seg button:not(.on):hover { color: var(--text-secondary); } }
+      .ta-seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+      .ta-seg.sm button { min-width: 32px; padding: 0 9px; }
+      .ta-seg-l { padding: 0 6px 0 8px; font-size: 11.5px; color: var(--text-tertiary); }
+      .ta-flash { font-size: 12.5px; color: var(--pos-bright); }
+
+      .ta-grid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 18px; align-items: start; }
+      .ta-list { border: 1px solid var(--border-subtle); border-radius: 14px; background: #111115; overflow: hidden; transition: opacity 160ms ease; min-width: 0; }
+      .ta-list.is-stale { opacity: 0.55; }
+      .ta-list-h, .ta-sug { display: grid; grid-template-columns: minmax(0, 1fr) 64px 100px 150px 132px; gap: 14px; align-items: center; padding: 0 16px; }
+      .ta-list-h { height: 34px; font-size: 11px; color: var(--text-tertiary); background: #0d0d11; border-bottom: 1px solid var(--border-subtle); }
+      .ta-list-h > span:nth-child(2), .ta-list-h > span:nth-child(3) { text-align: right; }
+      .ta-sug { padding-top: 12px; padding-bottom: 12px; border-top: 1px solid rgba(255, 255, 255, 0.05); transition: background-color 120ms ease; }
+      .ta-list-h + .ta-sug { border-top: none; }
+      .ta-sug.inplan { background: linear-gradient(90deg in oklab, rgba(52, 211, 153, 0.08), transparent 55%); box-shadow: inset 3px 0 0 var(--pos-bright); }
+      .ta-swaps { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+      .ta-sw { display: flex; align-items: center; gap: 10px; min-width: 0; }
+      .ta-faces { display: inline-flex; flex-shrink: 0; }
+      .ta-faces .sc-avatar + .sc-avatar { margin-left: -10px; box-shadow: 0 0 0 2px #111115; }
+      .ta-sw-txt { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+      .ta-sw-names { display: flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; min-width: 0; }
+      .ta-out { color: var(--neg-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+      .ta-in { color: var(--pos-bright); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+      .ta-arrow { color: var(--text-tertiary); flex-shrink: 0; }
+      .ta-sw-meta { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+      .ta-stat { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; min-width: 0; }
+      .ta-chance { align-items: flex-start; cursor: default; }
+      .ta-l { display: none; font-size: 10.5px; color: var(--text-tertiary); }
+      .ta-v { font-family: var(--mono); font-size: 17px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap; }
+      .ta-v.sm { font-size: 13.5px; }
+      .ta-conf { font-size: 11px; font-weight: 600; white-space: nowrap; }
+      .ta-conf.strong { color: var(--pos-bright); } .ta-conf.lean { color: #e8c25a; } .ta-conf.flip { color: var(--text-tertiary); }
+      .ta-meter { width: 100%; max-width: 120px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.07); overflow: hidden; }
+      .ta-meter i { display: block; height: 100%; border-radius: 2px; transform-origin: left; background: var(--text-tertiary); }
+      .ta-meter.strong i { background: var(--pos-bright); } .ta-meter.lean i { background: #e8c25a; }
+      .ta-act { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+      .ta-bank { font-size: 10.5px; color: var(--text-tertiary); font-family: var(--mono); white-space: nowrap; }
+      .ta-add { height: 32px; padding: 0 14px; border-radius: 8px; border: 1px solid rgba(110, 123, 242, 0.5); background: var(--accent-soft); color: #C7CCFF; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap;
+        transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease, transform 160ms var(--ease-press); }
+      .ta-add:active { transform: scale(0.97); }
+      @media (hover: hover) { .ta-add:hover { background: var(--accent); color: #fff; border-color: transparent; } .ta-add.done:hover { background: var(--neg-bg); color: var(--neg-soft); } }
+      .ta-add.done { border-color: transparent; background: var(--pos-bg); color: var(--pos-bright); }
+      .ta-add:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+      .ta-add.sm { height: 26px; width: 26px; padding: 0; font-size: 14px; flex-shrink: 0; }
+      .ta-empty { padding: 18px 16px; font-size: 13px; color: var(--text-tertiary); }
+      .ta-foot { padding: 10px 16px 12px; font-size: 11.5px; line-height: 1.5; color: var(--text-tertiary); border-top: 1px solid rgba(255, 255, 255, 0.05); }
+
+      .ta-plan { position: sticky; top: 14px; border-radius: 14px; background: #15151b; box-shadow: 0 0 0 1px rgba(110, 123, 242, 0.35), 0 16px 40px rgba(0, 0, 0, 0.35); min-width: 0; }
+      .ta-plan-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px 10px; }
+      .ta-plan-title { font-size: 14.5px; font-weight: 650; }
+      .ta-tabs { display: flex; align-items: center; gap: 4px; }
+      .ta-tab { height: 26px; min-width: 26px; padding: 0 9px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; border-radius: 7px; border: 1px solid var(--border-subtle);
+        background: transparent; color: var(--text-tertiary); font-size: 12px; font-weight: 600; cursor: pointer; }
+      .ta-tab.on { background: var(--bg-active); color: var(--text-primary); border-color: var(--border-default); }
+      .ta-tab.new { padding: 0; width: 26px; }
+      .ta-tab svg { width: 11px; height: 11px; }
+      .ta-tab-x { display: inline-flex; opacity: 0.5; } .ta-tab-x svg { width: 9px; height: 9px; }
+      .ta-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+      .ta-score { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border-subtle); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); }
+      .ta-score > div { background: #15151b; padding: 12px 16px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+      .ta-score .ta-l { display: block; }
+      .ta-big { font-family: var(--mono); font-size: 26px; font-weight: 700; letter-spacing: -0.02em; color: var(--text-primary); }
+      .ta-note { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .ta-trades { display: flex; flex-direction: column; gap: 8px; padding: 12px; }
+      .ta-plan .tl-trade { grid-template-columns: minmax(0, 1fr) 26px; gap: 6px; padding: 8px; border-radius: 10px; }
+      .ta-plan .tl-num, .ta-plan .tl-arrow { display: none; }
+      .ta-plan .tl-slot.out { grid-column: 1; grid-row: 1; }
+      .ta-plan .tl-slot.in { grid-column: 1; grid-row: 2; }
+      .ta-plan .tl-trade-rm { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+      .ta-plan .tl-trade-deltas { grid-column: 1 / -1; }
+      .ta-plan .tl-slot-btn { min-height: 46px; padding: 6px 8px; }
+      .ta-plan .tl-p-right span:nth-child(2) { display: none; }
+      .ta-own { height: 38px; border-radius: 10px; border: 1px dashed var(--border-default); background: transparent; color: var(--text-secondary); font-size: 12.5px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: color 120ms ease, border-color 120ms ease; }
+      @media (hover: hover) { .ta-own:hover { color: var(--text-primary); border-color: var(--border-strong); } }
+      .ta-own svg { width: 12px; height: 12px; }
+      .ta-bankrow { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-top: 1px solid var(--border-subtle); font-size: 12.5px; color: var(--text-secondary); }
+      .ta-left { margin-left: auto; font-size: 12px; white-space: nowrap; }
+      .ta-left b { font-family: var(--mono); }
+      .ta-warn { margin: 0 16px 10px; padding: 8px 10px; border-radius: 8px; background: var(--neg-bg); font-size: 12px; }
+      .ta-plan-f { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px 16px; border-top: 1px solid var(--border-subtle); }
+      .ta-plan-f .tl-apply { width: 100%; }
+      .ta-sec { display: flex; gap: 8px; } .ta-sec .ghost-btn { flex: 1; justify-content: center; }
+      .ta + .tl-compare, .ta .tl-compare { margin: 4px 0 0; }
+      .ta-tray { display: none; }
+
+      /* Mid-size screens (e.g. 1440): names on top, numbers on a line underneath, button on the right */
+      @media (min-width: 1001px) and (max-width: 1700px) {
+        .ta-list-h { display: none; }
+        .ta-sug { grid-template-columns: auto auto minmax(0, 1fr) auto; grid-template-areas: "sw sw sw act" "pts cash ch act"; gap: 8px 22px; }
+        .ta-swaps { grid-area: sw; } .ta-pts { grid-area: pts; } .ta-chance { grid-area: ch; } .ta-act { grid-area: act; }
+        .ta-cash { grid-area: cash; }
+        .ta-stat { flex-direction: row; align-items: baseline; gap: 6px; }
+        .ta-chance { align-items: center; }
+        .ta-l { display: inline; }
+        .ta-v { font-size: 15px; } .ta-v.sm { font-size: 13px; }
+        .ta-meter { width: 80px; }
+      }
+      /* Phones and narrow screens: suggestion cards, plan below, tray along the bottom */
+      @media (max-width: 1000px) {
+        .ta { padding: 12px 12px 90px; }
+        .ta-grid { grid-template-columns: minmax(0, 1fr); }
+        .ta-list { border: none; background: transparent; overflow: visible; display: flex; flex-direction: column; gap: 10px; }
+        .ta-list-h { display: none; }
+        .ta-sug { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-areas: "sw sw sw" "pts cash ch" "act act act"; gap: 12px 10px; padding: 14px;
+          border: 1px solid var(--border-subtle); border-radius: 14px; background: #121216; }
+        .ta-list-h + .ta-sug, .ta-sug { border-top: 1px solid var(--border-subtle); }
+        .ta-sug.inplan { border-color: rgba(52, 211, 153, 0.4); box-shadow: none; background: linear-gradient(180deg in oklab, rgba(52, 211, 153, 0.07), transparent 60%), #121216; }
+        .ta-swaps { grid-area: sw; }
+        .ta-pts { grid-area: pts; }
+        .ta-stat { align-items: flex-start; padding: 8px 10px; border-radius: 9px; background: #18181e; }
+        .ta-l { display: block; }
+        .ta-chance { grid-area: ch; }
+        .ta-v { font-size: 18px; } .ta-v.sm { font-size: 15px; }
+        .ta-act { grid-area: act; flex-direction: row; align-items: center; justify-content: space-between; }
+        .ta-act .ta-add { height: 40px; padding: 0 18px; font-size: 13.5px; }
+        .ta-plan { position: static; }
+        .ta-tray { position: sticky; bottom: 10px; z-index: 5; display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 14px; border-radius: 14px;
+          background: rgba(28, 28, 36, 0.94); backdrop-filter: blur(12px); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 16px 36px rgba(0, 0, 0, 0.55); }
+        .ta-tray-faces { display: inline-flex; flex-shrink: 0; }
+        .ta-tray-faces .sc-avatar + .sc-avatar { margin-left: -8px; box-shadow: 0 0 0 2px #1c1c24; }
+        .ta-tray-txt { display: flex; flex-direction: column; min-width: 0; flex: 1; font-size: 12px; color: var(--text-secondary); }
+        .ta-tray-txt b { font-size: 13px; color: var(--text-primary); }
+        .ta-tray-txt > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--mono); font-size: 11.5px; }
+        .ta-tray-btn { height: 38px; padding: 0 16px; border-radius: 9px; border: none; background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
+      }
+
       /* Suggestions: cards in a responsive grid */
       .tl-adv-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 10px; padding: 4px 14px 14px; }
       .tl-adv-list > .tl-adv-empty { grid-column: 1 / -1; }
@@ -426,6 +567,21 @@
   }
 
   // Put suggested swaps into the plan you're working on (replacing a swap for the same player going out)
+  // Add these swaps to the current plan, or take them out again if they're all already in it
+  function toggleSwaps(swaps) {
+    const state = window.SCHOOPS.getState();
+    ensureTradeState(state);
+    const plan = state.tradeLab.plans.find((p) => p.id === state.tradeLab.activePlanId) || state.tradeLab.plans[0];
+    const allIn = swaps.every(({ outId, inId }) => plan.trades.some((t) => t.outId === outId && t.inId === inId));
+    if (!allIn) { addSwapsToPlan(swaps); return; }
+    plan.trades = plan.trades.filter((t) => !swaps.some((x) => x.outId === t.outId && x.inId === t.inId));
+    if (!plan.trades.length) plan.trades.push({ outId: "", inId: "" });
+    advisor.flash = `Removed from ${plan.name}.`;
+    clearTimeout(advisor.flashTimer);
+    advisor.flashTimer = setTimeout(() => { advisor.flash = ""; renderTradeLab(); }, 2500);
+    save();
+  }
+
   function addSwapsToPlan(swaps) {
     const state = window.SCHOOPS.getState();
     ensureTradeState(state);
@@ -472,87 +628,75 @@
     </div>`;
   }
 
-  function renderAdvisor(state, squad) {
-    const { escapeHtml, formatMoney } = window.SCHOOPS;
+  // Starts the advisor (in the background) whenever its inputs change
+  function ensureAdvisor(state, squad) {
     const key = advisorKey(state, squad);
-    if (advisor.key !== key && !advisor.busy) {
-      advisor.busy = true;
-      advisor.key = key;
-      setTimeout(async () => {
-        let res;
-        try { res = await runAdvisor(window.SCHOOPS.getState(), window.SCHOOPS.getSquadPlayers()); }
-        catch (err) { res = []; console.error("Trade advisor:", err); }
-        advisor.busy = false;
-        // Settings changed while we were working: run again for the new ones
-        const nowKey = advisorKey(window.SCHOOPS.getState(), window.SCHOOPS.getSquadPlayers());
-        if (nowKey === key) advisor.results = res;
-        else advisor.key = "";
-        renderTradeLab();
-      }, 30);
-    }
-    const chip = (attr, val, label, on) => `<button type="button" class="chip-btn ${on ? "active" : ""}" ${attr}="${val}">${label}</button>`;
-    const conf = (p) => (p >= 0.75 ? ["strong", "Strong"] : p >= 0.6 ? ["lean", "Lean"] : ["flip", "Coin flip"]);
-    const plan = state.tradeLab.plans.find((p) => p.id === state.tradeLab.activePlanId) || state.tradeLab.plans[0];
-    const planName = plan ? plan.name : "your plan";
-    const inPlan = (o, i) => plan && plan.trades.some((t) => t.outId === o.id && t.inId === i.id);
+    if (advisor.key === key || advisor.busy) return;
+    advisor.busy = true;
+    advisor.key = key;
+    setTimeout(async () => {
+      let res;
+      try { res = await runAdvisor(window.SCHOOPS.getState(), window.SCHOOPS.getSquadPlayers()); }
+      catch (err) { res = []; console.error("Trade advisor:", err); }
+      advisor.busy = false;
+      // Settings changed while we were working: run again for the new ones
+      const nowKey = advisorKey(window.SCHOOPS.getState(), window.SCHOOPS.getSquadPlayers());
+      if (nowKey === key) advisor.results = res;
+      else advisor.key = "";
+      renderTradeLab();
+    }, 30);
+  }
+
+  const confOf = (p) => (p >= 0.75 ? ["strong", "Strong"] : p >= 0.6 ? ["lean", "Lean"] : ["flip", "Coin flip"]);
+
+  // Suggestions: a scannable list on computers, cards on phones (same markup, CSS decides)
+  function renderSuggestions(state, plan) {
+    const { escapeHtml, formatMoney, renderAvatar } = window.SCHOOPS;
     const money = (v) => `$${(v / 1e6).toFixed(2)}M`;
-    const rows = !advisor.results
-      ? `<div class="tl-adv-empty">Checking every trade for your squad…</div>`
-      : !advisor.results.length
-        ? `<div class="tl-adv-empty">No affordable trades improve your squad on this goal. Try another goal, or add bank.</div>`
-        : advisor.results.map((r, idx) => {
-          const [cls, label] = conf(r.pBetter);
-          const tip = `<div class="tip-h">${label}: ${Math.round(r.pBetter * 100)}% chance it helps</div><div class="tip-row"><span>Projected gain</span><b class="${r.dPts >= 0 ? "tip-pos" : "tip-neg"}">${r.dPts > 0 ? "+" : ""}${r.dPts} pts</b></div><div class="tip-row"><span>Typical swing either way</span><b>±${Math.round(r.sd)} pts</b></div><div class="tip-dim" style="margin-top:4px">How often a trade like this scores more this round, allowing for how much projections usually miss. Strong is 75%+, Lean 60%+.</div>`;
-          const swaps = r.trades.map(({ o, i }, k) => {
-            const done = inPlan(o, i);
-            return `<div class="tl-sw">
-              <div class="tl-sw-who">
-                <span class="tl-sw-out">${escapeHtml(o.name)}</span>
-                <span class="tl-sw-arrow" aria-hidden="true">→</span>
-                <span class="tl-sw-in">${escapeHtml(i.name)}</span>
-              </div>
-              <div class="tl-sw-meta">${escapeHtml(i.team)} · ${escapeHtml(i.pos)} · ${money(i.price)} · proj ${i.proj} vs ${o.proj}</div>
-              ${r.trades.length > 1 ? `<button type="button" class="tl-sw-add ${done ? "done" : ""}" data-adv-swap="${idx}:${k}" ${done ? "disabled" : ""} aria-label="${done ? `Already in ${escapeHtml(planName)}` : `Add ${escapeHtml(o.name)} to ${escapeHtml(i.name)} to ${escapeHtml(planName)}`}">${done ? "✓ In plan" : "+ Add"}</button>` : ""}
-            </div>`;
-          }).join("");
-          const allIn = r.trades.every(({ o, i }) => inPlan(o, i));
-          return `
-            <article class="tl-sug">
-              <div class="tl-sug-top">
-                <span class="tl-sug-rank">${idx + 1}</span>
-                <span class="tl-sug-pts ${r.dPts > 0 ? "pos-text" : r.dPts < 0 ? "neg-text" : "muted-text"}">${r.dPts > 0 ? "+" : ""}${r.dPts}<small>pts</small></span>
-                <span class="tl-adv-conf ${cls}" data-tip="${escapeHtml(tip)}">${label} · ${Math.round(r.pBetter * 100)}%</span>
-                <span class="tl-sug-cash ${r.dCash > 0 ? "pos-text" : r.dCash < 0 ? "neg-text" : "muted-text"}">${formatMoney(r.dCash)} <span class="dim-text">price change</span></span>
-                <span class="tl-sug-bank dim-text">bank after ${money(r.bankAfter)}</span>
-              </div>
-              <div class="tl-sug-swaps">${swaps}</div>
-              <div class="tl-sug-actions">
-                ${r.trades.length > 1 || !allIn ? `<button type="button" class="primary-btn tl-sug-main" data-adv-addall="${idx}" ${allIn ? "disabled" : ""}>${allIn ? `✓ All in ${escapeHtml(planName)}` : `Add ${r.trades.length > 1 ? `all ${r.trades.length} ` : ""}to ${escapeHtml(planName)}`}</button>` : ""}
-                <button type="button" class="ghost-btn" data-adv-apply="${idx}">Start a new plan with ${r.trades.length > 1 ? "these" : "this"}</button>
-              </div>
-            </article>`;
-        }).join("");
-    const nChips = [1, 2, 3, 4].map((n) => chip("data-adv-n", String(n), String(n), advisor.n === n)).join("");
-    return `
-      <section class="tl-adv" aria-label="Trade advisor">
-        <div class="tl-adv-head">
-          <div>
-            <div class="tl-adv-title">Trade advisor</div>
-            <div class="tl-adv-sub">Best trades for your squad this round, using ${state.projSource === "sc" ? "SuperCoach's" : "SCHOOPS"} projections and your $${(Number(state.tradeLab.bankM) || 0).toFixed(2)}M bank. Mix and match: <strong>+ Add</strong> puts one swap into ${escapeHtml(planName)}.</div>
-          </div>
-          <div class="tl-adv-ctrls">
-            <span class="tl-adv-lbl">Goal</span>
-            ${chip("data-adv-goal", "points", "Most points", advisor.goal === "points")}
-            ${chip("data-adv-goal", "balanced", "Balanced", advisor.goal === "balanced")}
-            ${chip("data-adv-goal", "cash", "Most cash", advisor.goal === "cash")}
-            <span class="tl-adv-lbl" style="margin-left:8px">Trades</span>
-            ${nChips}
-          </div>
+    const inPlan = (o, i) => plan.trades.some((t) => t.outId === o.id && t.inId === i.id);
+    if (!advisor.results) return `<div class="ta-empty">Checking every trade for your squad…</div>`;
+    if (!advisor.results.length) return `<div class="ta-empty">No affordable trades improve your squad on this goal. Try another goal, or add bank.</div>`;
+    return advisor.results.map((r, idx) => {
+      const [cls, label] = confOf(r.pBetter);
+      const pct = Math.round(r.pBetter * 100);
+      const tip = `<div class="tip-h">${label}: ${pct}% chance it helps</div><div class="tip-row"><span>Projected gain</span><b class="${r.dPts >= 0 ? "tip-pos" : "tip-neg"}">${r.dPts > 0 ? "+" : ""}${r.dPts} pts</b></div><div class="tip-row"><span>Typical swing either way</span><b>±${Math.round(r.sd)} pts</b></div><div class="tip-dim" style="margin-top:4px">How often a trade like this scores more this round, allowing for how much projections usually miss. Strong is 75%+, Lean 60%+.</div>`;
+      const multi = r.trades.length > 1;
+      const allIn = r.trades.every(({ o, i }) => inPlan(o, i));
+      const swaps = r.trades.map(({ o, i }, k) => {
+        const done = inPlan(o, i);
+        return `<div class="ta-sw">
+          <span class="ta-faces">${renderAvatar(o, 32)}${renderAvatar(i, 32)}</span>
+          <span class="ta-sw-txt">
+            <span class="ta-sw-names"><span class="ta-out">${escapeHtml(o.name)}</span><span class="ta-arrow" aria-hidden="true">→</span><span class="ta-in">${escapeHtml(i.name)}</span></span>
+            <span class="ta-sw-meta">${escapeHtml(i.team)} · ${escapeHtml(i.pos)} · ${money(i.price)} · proj ${i.proj} vs ${o.proj}</span>
+          </span>
+          ${multi ? `<button type="button" class="ta-add sm ${done ? "done" : ""}" data-adv-swap="${idx}:${k}" aria-label="${done ? `Remove ${escapeHtml(o.name)} to ${escapeHtml(i.name)} from ${escapeHtml(plan.name)}` : `Add ${escapeHtml(o.name)} to ${escapeHtml(i.name)} to ${escapeHtml(plan.name)}`}">${done ? "✓" : "+"}</button>` : ""}
+        </div>`;
+      }).join("");
+      return `<article class="ta-sug ${allIn ? "inplan" : ""}">
+        <div class="ta-swaps">${swaps}</div>
+        <div class="ta-stat ta-pts"><span class="ta-l">Points</span><span class="ta-v ${r.dPts > 0 ? "pos-text" : r.dPts < 0 ? "neg-text" : "muted-text"}">${r.dPts > 0 ? "+" : ""}${r.dPts}</span></div>
+        <div class="ta-stat ta-cash"><span class="ta-l">Price change</span><span class="ta-v sm ${r.dCash > 0 ? "pos-text" : r.dCash < 0 ? "neg-text" : "muted-text"}">${formatMoney(r.dCash)}</span></div>
+        <div class="ta-stat ta-chance" data-tip="${escapeHtml(tip)}"><span class="ta-l">Chance it helps</span><span class="ta-conf ${cls}">${label} · ${pct}%</span><span class="ta-meter ${cls}"><i style="transform:scaleX(${(pct / 100).toFixed(2)})"></i></span></div>
+        <div class="ta-act">
+          <span class="ta-bank">bank after ${money(r.bankAfter)}</span>
+          <button type="button" class="ta-add ${allIn ? "done" : ""}" data-adv-addall="${idx}" ${allIn ? `data-tip="${escapeHtml(`<div>Click to take ${multi ? "these" : "it"} out of ${escapeHtml(plan.name)}.</div>`)}"` : ""}>${allIn ? `✓ In ${escapeHtml(plan.name)}` : `+ Add${multi ? ` all ${r.trades.length}` : ""}`}</button>
         </div>
-        ${advisor.flash ? `<div class="tl-adv-flash" role="status">${escapeHtml(advisor.flash)}</div>` : ""}
-        <div class="tl-adv-list ${advisor.busy && advisor.results ? "is-stale" : ""}" aria-busy="${advisor.busy ? "true" : "false"}">${rows}</div>
-        <div class="tl-adv-foot">"Chance" is how often a trade like this ends up scoring more, given how far projections usually miss. Balanced counts $50K of price rise as 1 point. 3–4 trade ideas are built one swap at a time, so they're strong but not guaranteed to be the very best combination.</div>
-      </section>`;
+      </article>`;
+    }).join("");
+  }
+
+  // Trade window as a compact pill (details in its hover box)
+  function renderLockPill() {
+    const S = window.SCHOOPS;
+    if (!S.tradeWindow) return "";
+    const w = S.tradeWindow();
+    if (!w.lockMs) return "";
+    const when = (ms) => new Date(ms).toLocaleString(undefined, { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+    const tip = w.open
+      ? `<div class="tip-h">Trades are open</div><div>Round ${w.round} locks at the first tip-off: ${when(w.lockMs)}.</div>`
+      : `<div class="tip-h">Trades are closed</div><div>They reopen after this round ends${w.roundEndMs ? ` (around ${when(w.roundEndMs)})` : ""}. Round ${w.round} then locks ${when(w.lockMs)}.</div>`;
+    return `<span class="ta-lock ${w.open ? "open" : ""}" data-tip="${S.escapeHtml(tip)}"><i></i>${w.open ? "Trades open · locks in" : "Trades closed · next lockout in"} <b class="mono" data-countdown="${w.lockMs}">${S.formatCountdown(w.lockMs)}</b></span>`;
   }
 
   // ---------- rendering ----------
@@ -730,7 +874,7 @@
       root.innerHTML = `
         <div class="lc-empty-page">
           <h3>Add your squad first</h3>
-          <p style="margin-bottom:14px;">Trade Lab tests trades against your real squad: score change, price changes and whether you can afford it.</p>
+          <p style="margin-bottom:14px;">The Trade Advisor finds and tests trades against your real squad: score change, price changes and whether you can afford it.</p>
           <button type="button" class="primary-btn" data-go-court="1">Add players in My Squad</button>
         </div>`;
       return;
@@ -787,47 +931,77 @@
         </div>`;
     })() : "";
 
+    ensureAdvisor(state, squad);
+    const chip = (attr, val, label, on) => `<button type="button" class="${on ? "on" : ""}" ${attr}="${val}" aria-pressed="${on}">${label}</button>`;
+    const sign = (v) => (v > 0 ? "+" : "");
+    const filled = plan.trades.filter((t) => t.outId && t.inId);
+    const faces = filled.map((t) => state.computedById[t.inId]).filter(Boolean).slice(0, 4).map((p) => window.SCHOOPS.renderAvatar(p, 28)).join("");
+
     root.innerHTML = `
-      <div class="tl-wrap">
-        ${renderLockout()}
-        <div class="tl-plans" role="tablist" aria-label="Trade plans">
-          ${tabs}
-          <button type="button" class="tl-plan-tab tl-plan-new" id="tlNewPlanBtn" title="Start another plan to compare">${ICON_PLUS} New plan</button>
+      <div class="ta">
+        <div class="ta-top">
+          <div>
+            <h2 class="ta-title">Trade Advisor</h2>
+            <div class="ta-sub">The best trades for your squad this round, using ${state.projSource === "sc" ? "SuperCoach's" : "SCHOOPS"} projections. Add the ones you like; your plan adds them up and checks your bank.</div>
+          </div>
+          ${renderLockPill()}
+        </div>
+        <div class="ta-ctrls">
+          <div class="ta-seg" role="group" aria-label="Goal">
+            ${chip("data-adv-goal", "points", "Most points", advisor.goal === "points")}
+            ${chip("data-adv-goal", "balanced", "Balanced", advisor.goal === "balanced")}
+            ${chip("data-adv-goal", "cash", "Most cash", advisor.goal === "cash")}
+          </div>
+          <div class="ta-seg sm" role="group" aria-label="Number of trades"><span class="ta-seg-l">Trades</span>${[1, 2, 3, 4].map((n) => chip("data-adv-n", String(n), String(n), advisor.n === n)).join("")}</div>
+          ${advisor.flash ? `<span class="ta-flash" role="status">${escapeHtml(advisor.flash)}</span>` : ""}
         </div>
 
-        ${renderAdvisor(state, squad)}
+        <div class="ta-grid">
+          <section class="ta-list ${advisor.busy && advisor.results ? "is-stale" : ""}" aria-label="Suggested trades" aria-busy="${advisor.busy ? "true" : "false"}">
+            <div class="ta-list-h"><span>Suggested trade</span><span>Points</span><span>Price change</span><span>Chance it helps</span><span></span></div>
+            ${renderSuggestions(state, plan)}
+            <div class="ta-foot">"Chance it helps" allows for how far projections usually miss. Balanced counts $50K of price rise as 1 point. 3–4 trade ideas are built one swap at a time: strong, but not guaranteed to be the very best combination.</div>
+          </section>
 
-        <div class="tl-layout">
-          <div>
-            <div class="tl-section-title">Trades <span>Pick who leaves, then a replacement. Up to ${MAX_TRADES}.</span></div>
-            <div class="tl-trades">
+          <aside class="ta-plan" id="taPlan" aria-label="Your plan">
+            <div class="ta-plan-h">
+              <span class="ta-plan-title">Your plan</span>
+              <div class="ta-tabs" role="tablist" aria-label="Plans">
+                ${state.tradeLab.plans.map((pl) => `<span class="ta-tab ${pl.id === plan.id ? "on" : ""}" data-select-plan="${escapeHtml(pl.id)}" role="tab" tabindex="0" aria-selected="${pl.id === plan.id}">${escapeHtml(pl.name.replace("Plan ", ""))}${state.tradeLab.plans.length > 1 ? `<span class="ta-tab-x" data-del-plan="${escapeHtml(pl.id)}" role="button" aria-label="Delete ${escapeHtml(pl.name)}">${ICON_X}</span>` : ""}</span>`).join("")}
+                <button type="button" class="ta-tab new" id="tlNewPlanBtn" aria-label="Start another plan to compare">${ICON_PLUS}</button>
+              </div>
+            </div>
+            <div class="ta-score">
+              <div><span class="ta-l">Round ${state.round} points</span><span class="ta-big ${ev.ptsDelta > 0 ? "pos-text" : ev.ptsDelta < 0 ? "neg-text" : ""}">${ev.validCount ? `${sign(ev.ptsDelta)}${ev.ptsDelta}` : "0"}</span><span class="ta-note">${ev.optScore} total · C ${escapeHtml(ev.captainName)}</span></div>
+              <div><span class="ta-l">Price change</span><span class="ta-big ${ev.cashGenDelta > 0 ? "pos-text" : ev.cashGenDelta < 0 ? "neg-text" : ""}">${ev.validCount ? formatMoney(ev.cashGenDelta) : "$0"}</span><span class="ta-note">squad ${formatMoney(ev.cashGen)} this round</span></div>
+            </div>
+            <div class="ta-trades">
               ${plan.trades.map((_, i) => renderTrade(plan, i, squad, state)).join("")}
-              ${plan.trades.length < MAX_TRADES ? `<button type="button" class="tl-add-trade" id="tlAddTradeBtn">${ICON_PLUS} Add another trade</button>` : ""}
+              ${plan.trades.length < MAX_TRADES ? `<button type="button" class="ta-own" id="tlAddTradeBtn">${ICON_PLUS} Add a trade yourself</button>` : ""}
             </div>
-          </div>
-
-          <aside class="tl-summary" aria-label="Plan impact">
-            <div class="tl-bank">
-              <label for="tlBankInput">Your bank (unspent cash)</label>
+            <div class="ta-bankrow">
+              <label for="tlBankInput">Your bank</label>
               <span class="tl-bank-in"><span>$</span><input type="text" id="tlBankInput" inputmode="decimal" autocomplete="off" aria-label="Your bank in millions of dollars" value="${bankM.toFixed(2)}" /><span>M</span></span>
+              <span class="ta-left">left after <b class="${ev.isLegalCap ? "pos-text" : "neg-text"}">${formatMoney(ev.remainingBank).replace("+", "")}</b></span>
             </div>
-            ${metricBlock(`Round ${state.round} score (best 9 + 2× C)`, ev.validCount ? baseline.optScore : null, ev.optScore,
-              ev.ptsDelta, ev.validCount ? `${ev.ptsDelta > 0 ? "+" : ""}${ev.ptsDelta}` : "", `Captain: ${escapeHtml(ev.captainName)}`)}
-            ${metricBlock("Squad price change this round", ev.validCount ? formatMoney(baseline.cashGen) : null, formatMoney(ev.cashGen),
-              ev.cashGenDelta, ev.validCount ? formatMoney(ev.cashGenDelta) : "", "")}
-            ${metricBlock("Bank after trades", null, `<span class="${ev.isLegalCap ? "" : "tl-cap-bad"}">${formatMoney(ev.remainingBank).replace("+", "")}</span>`, 0, "", bankNote)}
-            ${ev.validCount ? metricBlock("Games over the next 3 rounds", null, `${ev.gamesDelta > 0 ? "+" : ""}${ev.gamesDelta}`, ev.gamesDelta, "", "Compared with your current squad") : ""}
-            <div class="tl-actions">
-              <button type="button" class="tl-apply ${tlUi.confirmApply ? "confirm" : ""}" id="tlApplyPlanBtn" ${canApply ? "" : "disabled"}
-                title="${canApply ? "Swap these players in your saved squad" : (ev.validCount ? "This plan is over your bank" : "Complete a trade first")}">${applyLabel}</button>
-              <div class="tl-secondary">
-                <button type="button" class="ghost-btn" id="tlClonePlanBtn">${ICON_COPY} Duplicate to compare</button>
+            ${!ev.isLegalCap ? `<div class="ta-warn">${bankNote}</div>` : ""}
+            <div class="ta-plan-f">
+              <button type="button" class="tl-apply ${tlUi.confirmApply ? "confirm" : ""}" id="tlApplyPlanBtn" ${canApply ? "" : "disabled"}>${applyLabel}</button>
+              <div class="ta-sec">
+                <button type="button" class="ghost-btn" id="tlClonePlanBtn">${ICON_COPY} Copy to compare</button>
                 <button type="button" class="ghost-btn" id="tlClearPlanBtn">Clear</button>
               </div>
             </div>
           </aside>
         </div>
         ${compareHtml}
+
+        <!-- Phones: the plan as a tray along the bottom; Review jumps to the full plan -->
+        <div class="ta-tray" aria-label="Plan summary">
+          <span class="ta-tray-faces">${faces}</span>
+          <span class="ta-tray-txt"><b>${escapeHtml(plan.name)} · ${ev.validCount} trade${ev.validCount === 1 ? "" : "s"}</b><span><span class="${ev.ptsDelta >= 0 ? "pos-text" : "neg-text"}">${sign(ev.ptsDelta)}${ev.ptsDelta} pts</span> · ${formatMoney(ev.cashGenDelta)} · bank ${formatMoney(ev.remainingBank).replace("+", "")}</span></span>
+          <button type="button" class="ta-tray-btn" data-ta-review>Review</button>
+        </div>
       </div>`;
 
     if (tlUi.openPicker && tlUi.openPicker.side === "in") {
@@ -896,15 +1070,16 @@
     if (swapBtn && advisor.results) {
       const [ri, ti] = swapBtn.dataset.advSwap.split(":").map(Number);
       const t = advisor.results[ri] && advisor.results[ri].trades[ti];
-      if (t) addSwapsToPlan([{ outId: t.o.id, inId: t.i.id }]);
+      if (t) toggleSwaps([{ outId: t.o.id, inId: t.i.id }]);
       return;
     }
     const addAll = e.target.closest("[data-adv-addall]");
     if (addAll && advisor.results) {
       const r = advisor.results[Number(addAll.dataset.advAddall)];
-      if (r) addSwapsToPlan(r.trades.map(({ o, i }) => ({ outId: o.id, inId: i.id })));
+      if (r) toggleSwaps(r.trades.map(({ o, i }) => ({ outId: o.id, inId: i.id })));
       return;
     }
+    if (e.target.closest("[data-ta-review]")) { const pl = document.getElementById("taPlan"); if (pl) pl.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
     const applyAdv = e.target.closest("[data-adv-apply]");
     if (applyAdv && advisor.results) {
       const r = advisor.results[Number(applyAdv.dataset.advApply)];

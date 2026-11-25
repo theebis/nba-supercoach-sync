@@ -76,3 +76,8 @@ Built:
 5. SC feed: your players' plays get an accent wash, ringed photo (when he made the play) and points in an accent pill.
 7. Import made obvious: big "Import your SuperCoach team" banner at the top of the Market until the squad has 15 (slim version when partly filled); My Squad's main button is now "Import team".
 Still to do: 4. Trade Advisor overhaul + rename (examples on request); 6. likely-range approach (discuss).
+
+## Round 8 answers (25 Nov 2026), preview on branch `preview/round7`
+- Bug fixed: My Squad "Projected" button did nothing (its click was wired to the header-buttons handler).
+- **Likely range redone** (owner agreed): range is now per game *if he plays* ("Most games 17–33 a game"), with availability shown separately ("about 1.6 of 3"). Spread blends a league spread by scoring band (0–15 / 15–25 / 25+ a game; low scorers swing far more) with the player's own round-to-round consistency. Held 76% on rounds it wasn't built from (target 80%). Old round-total range kept only for internal maths (trade/captain chances). Stored as `ppg_lo`/`ppg_hi`; params `ppg_sd` in model/projection_params.json.
+- **Trade Lab renamed Trade Advisor and redesigned** (owner picked B, phones A): suggestion list (+ Add toggles in/out of the plan) beside a sticky "Your plan" scoreboard (points, price change, plan tabs, hand-picked trades, bank, apply, copy to compare); mid-size screens put numbers under the names; phones get cards and a bottom plan tray with Review.

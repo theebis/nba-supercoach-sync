@@ -176,7 +176,7 @@
     else if (games < 3 && games > 0) bits.push(`only ${games} game${games === 1 ? "" : "s"}`);
     if (ppg !== null && ppg >= bestPpg - 0.5 && bits.length < 2) bits.push(`best scorer a game lately (${Math.round(ppg)})`);
     else if (ppg !== null && bits.length < 2) bits.push(`${Math.round(ppg)} a game over 3 rounds`);
-    if (bits.length < 2 && p.projIsOurs && p.projLo !== null && (p.projHi - p.projLo) <= p.proj * 0.3) bits.push("steady, tight range");
+    if (bits.length < 2 && p.projIsOurs && p.ppgLo !== null && p.expPpg && (p.ppgHi - p.ppgLo) <= p.expPpg * 0.7) bits.push("very consistent");
     let s = bits.slice(0, 2).join(", ");
     if (rank === "vc" && capPick) {
       const backup = `Backup if ${capPick.name.split(" ").slice(-1)[0]} sits`;
@@ -255,7 +255,7 @@
       ${cards.length ? `<div class="cp-grid">${cards.map((p) => {
         const role = roleOf(p);
         const chance = chances[p.id] || 0;
-        const range = p.projIsOurs && p.projLo !== null ? `likely ${p.projLo}–${p.projHi}` : "SuperCoach proj";
+        const range = p.projIsOurs && p.ppgLo !== null ? `most games ${p.ppgLo}–${p.ppgHi}` : "SuperCoach proj";
         const tag = p.injuryStatus ? `<span class="micro-tag ${isOut(p) ? "out" : "dtd"}">${isOut(p) ? "OUT" : "DTD"}</span>` : "";
         return `
         <button type="button" class="cp-card ${role}" data-cp-player="${escapeHtml(p.id)}" title="${escapeHtml(`${p.name}: projected ${p.proj} (${range}), ${p.games} games. As captain: ${p.proj * 2}. Click for details.`)}">

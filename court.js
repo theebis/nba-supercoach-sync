@@ -1599,8 +1599,6 @@
     if (e.target.closest("#courtOptimiseBtn")) { runOptimise(); return; }
     if (e.target.closest("#courtAddPlayerBtn")) { openAddPlayerPicker(null); return; }
     if (e.target.closest("#courtImportBtn") && window.SchoopsImporter) { window.SchoopsImporter.open(); return; }
-    const modeBtn = e.target.closest("[data-court-mode]");
-    if (modeBtn) { try { localStorage.setItem(MODE_KEY, modeBtn.dataset.courtMode); } catch (err) {} renderCourt(); return; }
     if (e.target.closest("#courtClearLocksBtn")) {
       window.SCHOOPS.getState().court.lockedBenchIds = {};
       window.SCHOOPS.savePrefs();
@@ -1611,6 +1609,8 @@
   }
 
   function handleCourtClick(e) {
+    const modeBtn = e.target.closest("[data-court-mode]");
+    if (modeBtn) { try { localStorage.setItem(MODE_KEY, modeBtn.dataset.courtMode); } catch (err) {} renderCourt(); return; }
     const state = window.SCHOOPS.getState();
 
     // Picker modal interactions
