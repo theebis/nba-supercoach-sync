@@ -197,6 +197,7 @@
       .lv-pts { text-align: right; font-family: var(--mono); white-space: nowrap; border-radius: 6px; padding: 2px 4px; }
       .lv-pts b { display: block; font-size: 16px; font-weight: 600; }
       .lv-pts small { display: block; font-size: 10.5px; color: var(--text-tertiary); }
+      .lv-pts.cap b { color: var(--warn-bright); }
 
       /* Game view: two compact team columns */
       .lv-gv-score { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--border-subtle); }
@@ -605,6 +606,8 @@
       else if (s.total) line = `Done · ${s.played} of ${s.total} game${s.total === 1 ? "" : "s"} played`;
       else line = "No games this round";
       if (p.injuryStatus && !s.now && s.left) line = `${esc(String(p.injuryStatus))} · ${line}`;
+      // Captain (or the VC standing in) shows his doubled score, as it counts in your total
+      const isCapRow = !isBench && cap && p.id === cap.id;
       const prev = live.prevScores[p.id];
       const flash = prev !== undefined && prev !== s.sc ? "lv-flash" : "";
       live.prevScores[p.id] = s.sc;
@@ -613,7 +616,7 @@
         ${window.SCHOOPS.renderAvatar(p, 36)}
         <span style="min-width:0"><span class="lv-name"><span>${esc(p.name)}</span>${pill}${dropPill}</span><span class="lv-line">${line}</span></span>
         <span class="lv-pips" aria-hidden="true">${s.pips.map((c) => `<i class="lv-pip ${c}"></i>`).join("")}</span>
-        <span class="lv-pts ${flash}"><b>${s.sc}</b><small>→ ${s.finish}</small></span>
+        <span class="lv-pts ${flash} ${isCapRow ? "cap" : ""}"><b>${isCapRow ? s.sc * 2 : s.sc}</b><small>→ ${isCapRow ? s.finish * 2 : s.finish}</small></span>
       </button>`;
     };
     const order = (arr) => [...arr].sort((a, b) => (st[b.id].now ? 1 : 0) - (st[a.id].now ? 1 : 0) || st[b.id].sc - st[a.id].sc);

@@ -668,7 +668,7 @@
           <span class="ta-faces">${renderAvatar(o, 32)}${renderAvatar(i, 32)}</span>
           <span class="ta-sw-txt">
             <span class="ta-sw-names"><span class="ta-out">${escapeHtml(o.name)}</span><span class="ta-arrow" aria-hidden="true">→</span><span class="ta-in">${escapeHtml(i.name)}</span></span>
-            <span class="ta-sw-meta">${escapeHtml(i.team)} · ${escapeHtml(i.pos)} · ${money(i.price)} · proj ${i.proj} vs ${o.proj}</span>
+            <span class="ta-sw-meta">${escapeHtml(i.team)} · ${escapeHtml(i.pos)} · ${money(i.price)} · proj ${o.proj} → ${i.proj}</span>
           </span>
           ${multi ? `<button type="button" class="ta-add sm ${done ? "done" : ""}" data-adv-swap="${idx}:${k}" aria-label="${done ? `Remove ${escapeHtml(o.name)} to ${escapeHtml(i.name)} from ${escapeHtml(plan.name)}` : `Add ${escapeHtml(o.name)} to ${escapeHtml(i.name)} to ${escapeHtml(plan.name)}`}">${done ? "✓" : "+"}</button>` : ""}
         </div>`;

@@ -339,6 +339,13 @@
       border: none; border-radius: 6px; background: transparent; color: var(--text-tertiary); cursor: pointer; flex-shrink: 0;
       transition: color 120ms ease, background-color 120ms ease; }
     .sb-about-x svg { width: 12px; height: 12px; }
+    /* Shrunk: one quiet line you can click to open again; the x turns into a plus */
+    .sb-about.mini { padding: 8px 12px; cursor: pointer; background: transparent; }
+    .sb-about.mini .sb-about-head { margin-bottom: 0; }
+    .sb-about.mini .sb-about-title { font-weight: 500; color: var(--text-secondary); font-size: 11.5px; }
+    .sb-about.mini .sb-about-list, .sb-about.mini .sb-about-brag { display: none; }
+    .sb-about.mini .sb-about-x svg { transform: rotate(45deg); }
+    @media (hover: hover) { .sb-about.mini:hover .sb-about-title { color: var(--text-primary); } }
     @media (hover: hover) { .sb-about-x:hover { color: var(--text-primary); background: var(--bg-hover); } }
     .sb-about-x:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
     .sb-about-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
@@ -1989,7 +1996,7 @@
       <section class="sb-about" id="sbAbout" aria-label="About SCHOOPS">
         <div class="sb-about-head">
           <span class="sb-about-title">Free NBA SuperCoach tools</span>
-          <button type="button" class="sb-about-x" id="sbAboutHide" aria-label="Hide this note" title="Hide this note">
+          <button type="button" class="sb-about-x" id="sbAboutHide" aria-label="Shrink this note" aria-expanded="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
@@ -3782,11 +3789,21 @@
     (function initAbout() {
       const box = document.getElementById("sbAbout");
       if (!box) return;
-      const KEY = "schoops_about_hidden";
-      try { if (localStorage.getItem(KEY) === "1") box.hidden = true; } catch (err) {}
-      document.getElementById("sbAboutHide").addEventListener("click", () => {
-        box.hidden = true;
-        try { localStorage.setItem(KEY, "1"); } catch (err) {}
+      // The x shrinks the note to one line (never removes it), and clicking that line opens it again.
+      // New key: anyone who hid it with the old version gets it back once.
+      const KEY = "schoops_about_mini_v2";
+      const setMini = (on) => {
+        box.classList.toggle("mini", on);
+        const t = box.querySelector(".sb-about-title");
+        if (t) t.textContent = on ? "What SCHOOPS does" : "Free NBA SuperCoach tools";
+        const x = document.getElementById("sbAboutHide");
+        if (x) { x.setAttribute("aria-label", on ? "Show this note" : "Shrink this note"); x.setAttribute("aria-expanded", String(!on)); }
+        try { localStorage.setItem(KEY, on ? "1" : "0"); } catch (err) {}
+      };
+      try { if (localStorage.getItem(KEY) === "1") setMini(true); } catch (err) {}
+      box.addEventListener("click", (e) => {
+        if (e.target.closest("#sbAboutHide")) { setMini(!box.classList.contains("mini")); return; }
+        if (box.classList.contains("mini")) setMini(false);
       });
       fetch(`model/projection_params.json?cb=${Date.now()}`).then((r) => (r.ok ? r.json() : null)).then((j) => {
         const t = (j && j.honest_test) || [];
@@ -4269,10 +4286,10 @@
   </script>
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
   <script src="court.js?v=18"></script>
-  <script src="tradelab.js?v=17"></script>
+  <script src="tradelab.js?v=18"></script>
   <script src="briefing.js?v=5"></script>
   <script src="captains.js?v=3"></script>
-  <script src="live.js?v=5"></script>
+  <script src="live.js?v=6"></script>
   <script src="notify.js?v=1"></script>
   <script src="importmatch.js?v=1"></script>
   <script src="importer.js?v=2"></script>
