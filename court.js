@@ -823,14 +823,24 @@
       .lc-picker-flash { font-size: 12px; color: var(--pos-bright); padding: 0 15px 10px; }
       .lc-picker-count { font-family: var(--mono); font-size: 11.5px; color: var(--text-tertiary); margin-left: 8px; font-weight: 500; }
 
+      .lc-hstats { display: contents; }
+      /* Phones: score + Optimise on one line, the five stats as one swipeable row */
       @media (max-width: 760px) {
-        .lc-hero { padding: 12px; gap: 12px 18px; }
-        .lc-hstat { padding-left: 12px; }
-        .lc-hv { font-size: 15px; max-width: 100%; }
-        .lc-hstat { flex: 1 1 140px; }
-        .lc-hstat-cash .lc-hv { font-size: 18px; }
-        .lc-hero-actions { margin-left: 0; width: 100%; }
-        .lc-hero-actions .lc-opt-big { flex: 1; justify-content: center; }
+        .lc-hero { padding: 12px 12px 10px; gap: 10px; flex-wrap: wrap; }
+        .lc-hero-score { order: 1; min-width: 0; }
+        .lc-mode { margin-bottom: 6px; }
+        .lc-hero-big { font-size: 30px; }
+        .lc-hero-actions { order: 2; margin-left: auto; align-self: flex-end; }
+        .lc-hero-actions .lc-opt-big { height: 36px; padding: 0 12px; font-size: 12.5px; }
+        .lc-hero-actions .lc-opt-big .gain { display: none; }
+        .lc-hstats { order: 3; display: flex; width: calc(100% + 24px); margin: 0 -12px; padding: 2px 12px 4px; gap: 0; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding: 0 12px; scrollbar-width: none; }
+        .lc-hstats::-webkit-scrollbar { display: none; }
+        .lc-hstat { flex: 0 0 138px; padding: 0 12px; scroll-snap-align: start; }
+        .lc-hstats .lc-hstat:first-child { padding-left: 0; border-left: none; }
+        .lc-hv { font-size: 15px; max-width: 100%; height: 20px; line-height: 20px; }
+        .lc-hstat-cash .lc-hv { font-size: 17px; }
+        .lc-hsub { font-size: 10.5px; }
+        .lc-hero-msg { order: 4; }
         .lc-grid { padding: 10px; gap: 10px; }
       }
     `;
@@ -1505,7 +1515,7 @@
                 + slot("Starter games", `<span class="mono">${evalRes.starterGames}</span>`, "across your 10 starters")
                 + slot("Not counted", evalRes.droppedPlayer ? escapeHtml(evalRes.droppedPlayer.name) : "—", evalRes.droppedPlayer ? `lowest starter · proj ${Math.round(evalRes.droppedPlayer.proj)}` : "best 9 of 10 count");
             }
-            return cash + mid + squadSlot;
+            return `<div class="lc-hstats">${cash + mid + squadSlot}</div>`;
           })()}
           <div class="lc-hero-actions">${optBtnHtml}</div>
           ${msgHtml ? `<div class="lc-hero-msg">${msgHtml}</div>` : ""}

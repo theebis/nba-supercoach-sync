@@ -951,6 +951,35 @@
     }
 
     /* Whisper-Quiet Context Bar + First-Visit Dismissible Tip */
+    /* Your round (phones only) */
+    .yr { display: none; }
+    @media (max-width: 760px) {
+      .yr:not([hidden]) { display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; margin: 10px 12px 2px; padding: 12px 14px; border-radius: 14px;
+        border: 1px solid var(--border-default); background: linear-gradient(160deg in oklab, rgba(110, 123, 242, 0.12), rgba(110, 123, 242, 0.02) 60%), var(--bg-elevated); }
+      .yr-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+      .yr-title { font-size: 14px; font-weight: 650; display: inline-flex; align-items: center; gap: 8px; }
+      .yr-live { display: inline-flex; align-items: center; gap: 5px; padding: 2px 7px; border-radius: 999px; background: var(--neg-bg); color: #FCA5A5; font-size: 10.5px; font-weight: 700; text-transform: uppercase; }
+      .yr-live i { width: 6px; height: 6px; border-radius: 50%; background: var(--neg); }
+      .yr-lock { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; }
+      .yr-lock b { color: var(--text-secondary); }
+      .yr-lock.open b { color: var(--pos-bright); }
+      .yr-nums { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 10px; align-items: end; }
+      .yr-nums > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+      .yr-l { font-size: 10.5px; color: var(--text-tertiary); }
+      .yr-big { font-family: var(--mono); font-size: 30px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+      .yr-v { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: var(--mono); }
+      .yr-v small { font-size: 11.5px; margin-left: 3px; }
+      .yr-alerts { display: flex; gap: 6px; flex-wrap: wrap; }
+      .yr-alert { height: 28px; padding: 0 10px; border-radius: 8px; border: none; font-size: 11.5px; cursor: pointer; text-align: left; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+      .yr-alert.bad { background: var(--neg-bg); color: #FCA5A5; }
+      .yr-alert.warn { background: rgba(255, 196, 0, 0.1); color: #e8c25a; }
+      .yr-alert b { font-weight: 650; }
+      .yr-go { display: flex; gap: 6px; }
+      .yr-btn { flex: 1; height: 36px; border-radius: 9px; border: 1px solid var(--border-default); background: transparent; color: var(--text-primary); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+      .yr-btn.pri { background: var(--accent); border-color: transparent; color: #fff; }
+      .yr-btn:active, .yr-alert:active { transform: scale(0.98); }
+    }
+
     /* Import-your-team banner (top of the Market until the squad is full) */
     .imp-banner { flex-shrink: 0; display: flex; align-items: center; gap: 14px 18px; flex-wrap: wrap; margin: 14px 18px 4px; padding: 16px 18px;
       border-radius: 12px; border: 1px solid rgba(110, 123, 242, 0.45);
@@ -1894,6 +1923,14 @@
       .inspector.open { width: min(100vw, 360px); }
       .insp-inner { width: min(100vw, 360px); }
     }
+    /* Phones: the profile fills the screen, and while a round is on his live numbers come first */
+    @media (max-width: 560px) {
+      .inspector.open, .insp-inner { width: 100vw; }
+      .insp-inner > .insp-head { order: -5; }
+      .insp-inner > .insp-hero { order: -4; }
+      .insp-inner > .insp-actions { order: -3; }
+      .insp-inner > .insp-live-sec { order: -2; border-bottom: 1px solid var(--border-subtle) !important; }
+    }
 
     @media (hover: none), (pointer: coarse) {
       .market-table tbody tr:hover { background: transparent; }
@@ -2177,6 +2214,8 @@
         <div id="marketViewSection" style="display:flex; flex-direction:column; flex:1; overflow:hidden;">
           <!-- Import your team: shown at the top of the Market until your squad has 15 players -->
           <div class="imp-banner" id="importBanner" hidden></div>
+          <!-- Phones: your round at a glance (computers have the briefing panel instead) -->
+          <section class="yr" id="yourRound" hidden aria-label="Your round"></section>
           <div class="context-strip">
             <div class="ctx-metrics">
               <button type="button" class="ctx-tile" data-ctx="squad" data-tip="&lt;div class=&quot;tip-h&quot;&gt;Squad value&lt;/div&gt;&lt;div class=&quot;tip-dim&quot;&gt;What your 15 players are worth now. Click to list them.&lt;/div&gt;">
@@ -3211,6 +3250,59 @@
       document.getElementById("filterPopBtn").classList.toggle("active", chips.length > 0);
     }
 
+    // "Your round" (phones): live score or projection, captain, injury alerts, lockout, quick links
+    function renderYourRound(squad) {
+      const el = document.getElementById("yourRound");
+      if (!el) return;
+      if (!squad || !squad.length || state.isHistorical || state.round !== state.liveRound) { el.hidden = true; return; }
+      el.hidden = false;
+      const S = window.SCHOOPS;
+      const byId = {}; squad.forEach((p) => { byId[p.id] = p; });
+      let proj = null, cap = null;
+      const solver = window.SCHOOPS_SOLVER;
+      if (solver) {
+        const slots = state.court && state.court.slots || {};
+        const filled = solver.STARTER_SLOTS.filter((x) => slots[x.key] && byId[slots[x.key]]).length;
+        let ev = null;
+        if (filled >= 5) ev = solver.evaluateLineup(slots, byId, state.court.captainId, state.court.viceCaptainId);
+        else { const sol = solver.solveOptimalLineup(squad, {}); if (sol) ev = solver.evaluateLineup(sol.slots, byId, sol.captainId, sol.viceCaptainId); }
+        if (ev) { proj = ev.totalProj; cap = ev.captain; }
+      }
+      const team = window.SchoopsLive && window.SchoopsLive.ready() ? window.SchoopsLive.team() : null;
+      const live = team && team.started;
+      const capLive = live && cap && team.players[cap.id];
+      const out = squad.filter((p) => String(p.injuryStatus || "").toLowerCase().startsWith("out"));
+      const dtd = squad.filter((p) => p.injuryStatus && !String(p.injuryStatus).toLowerCase().startsWith("out"));
+      const w = S.tradeWindow ? S.tradeWindow() : null;
+      const lock = w && w.lockMs ? `<span class="yr-lock ${w.open ? "open" : ""}">${w.open ? "Trades lock in" : "Next lockout in"} <b class="mono" data-countdown="${w.lockMs}">${S.formatCountdown(w.lockMs)}</b></span>` : "";
+      const alerts = [];
+      out.slice(0, 2).forEach((p) => alerts.push(`<button type="button" class="yr-alert bad" data-yr-player="${escapeHtml(p.id)}"><b>${escapeHtml(p.name)}</b> out${p.injuryReturn ? ` until ${escapeHtml(formatReturnDate(p.injuryReturn))}` : ""}</button>`));
+      if (dtd.length) alerts.push(`<button type="button" class="yr-alert warn" data-yr-go="injured">${dtd.length} day-to-day: ${dtd.slice(0, 2).map((p) => escapeHtml(p.name.split(" ").slice(-1)[0])).join(", ")}${dtd.length > 2 ? "…" : ""}</button>`);
+      el.innerHTML = `
+        <div class="yr-top">
+          <span class="yr-title">Round ${state.round}${live ? ` <span class="yr-live"><i></i>Live</span>` : ""}</span>
+          ${lock}
+        </div>
+        <div class="yr-nums">
+          <div><span class="yr-l">${live ? "So far" : "Projected"}</span><span class="yr-big">${live ? team.soFar : (proj ?? "—")}</span></div>
+          <div><span class="yr-l">${live ? "Heading for" : "Captain"}</span><span class="yr-v">${live ? `${team.finish} <small class="${proj !== null && team.finish >= proj ? "pos-text" : "neg-text"}">${proj !== null ? `${team.finish >= proj ? "+" : "−"}${Math.abs(team.finish - proj)}` : ""}</small>` : (cap ? escapeHtml(cap.name.split(" ").slice(-1)[0]) : "—")}</span></div>
+          <div><span class="yr-l">${live ? "Captain" : "Cash gen"}</span><span class="yr-v">${live ? (cap ? `${escapeHtml(cap.name.split(" ").slice(-1)[0])} <small class="warn-text">${capLive ? capLive.sc * 2 : 0}</small>` : "—") : `<span class="${squad.reduce((a, p) => a + p.priceChange, 0) >= 0 ? "pos-text" : "neg-text"}">${formatMoney(squad.reduce((a, p) => a + p.priceChange, 0))}</span>`}</span></div>
+        </div>
+        ${alerts.length ? `<div class="yr-alerts">${alerts.join("")}</div>` : ""}
+        <div class="yr-go">
+          ${live ? `<button type="button" class="yr-btn pri" data-yr-go="live">My team live</button>` : ""}
+          <button type="button" class="yr-btn" data-yr-go="court">My Squad</button>
+          <button type="button" class="yr-btn" data-yr-go="tradelab">Trades</button>
+        </div>`;
+    }
+    document.addEventListener("click", (e) => {
+      const go = e.target.closest("[data-yr-go]");
+      if (go) { const v = go.dataset.yrGo; if (v === "injured") setActiveNav("market", "injured"); else setActiveNav(v); return; }
+      const pl = e.target.closest("[data-yr-player]");
+      if (pl) openInspector(pl.dataset.yrPlayer);
+    });
+    document.addEventListener("schoops:live", () => { if (state.activeNav === "market") renderYourRound(Object.values(state.computedById || {}).filter((p) => p.inSquad)); });
+
     // The squad drives everything personal on the site, so importing it is front and centre until it's full
     let importBannerShown = null;
     function renderImportBanner(n) {
@@ -3261,6 +3353,7 @@
       const watch = allComputed.filter((p) => p.inWatchlist);
       const injured = allComputed.filter((p) => p.injuryStatus);
       renderImportBanner(squad.length);
+      renderYourRound(squad);
       document.getElementById("sbViewInjCount").textContent = String(injured.length);
 
       document.getElementById("sbAllCount").textContent = String(allComputed.filter((p) => !p.isFringeDnp).length);
@@ -3405,7 +3498,7 @@
           </div>
         </div>
 
-        ${isLiveRound ? `<div class="insp-section" style="border-bottom:none;">
+        ${isLiveRound ? `<div class="insp-section insp-live-sec" style="border-bottom:none;">
           <div class="insp-section-title">Round ${r} live${lv ? ` <span class="insp-live-tag ${lv.official && !lv.now ? "off" : ""}">${lv.official && !lv.now ? "official" : "live"}</span>` : ""}</div>
           <div class="sim-box">
             <div class="insp-live-top">
@@ -4355,11 +4448,11 @@
     syncFromGitHub();
   </script>
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
-  <script src="court.js?v=19"></script>
-  <script src="tradelab.js?v=19"></script>
+  <script src="court.js?v=20"></script>
+  <script src="tradelab.js?v=20"></script>
   <script src="briefing.js?v=5"></script>
   <script src="captains.js?v=3"></script>
-  <script src="live.js?v=8"></script>
+  <script src="live.js?v=9"></script>
   <script src="notify.js?v=1"></script>
   <script src="importmatch.js?v=1"></script>
   <script src="importer.js?v=2"></script>

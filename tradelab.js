@@ -240,6 +240,9 @@
       .ta-pri-go { font-size: 11.5px; color: var(--text-tertiary); white-space: nowrap; transition: color 120ms ease; }
       .ta-pri-row.on .ta-pri-go { color: #C7CCFF; font-weight: 600; }
       .ta-pri-empty { padding: 12px 14px 14px; font-size: 12.5px; color: var(--text-tertiary); }
+      .ta-pri-watch { padding: 10px 14px 12px; border-top: 1px solid rgba(255, 255, 255, 0.04); font-size: 11.5px; line-height: 1.55; color: var(--text-secondary); }
+      .ta-pri-watch b { color: #e8c25a; font-weight: 600; }
+      .ta-pri-watch span { color: var(--text-tertiary); }
       .ta-focus { height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(110, 123, 242, 0.5); background: var(--accent-soft); color: #C7CCFF; font-size: 12.5px; font-weight: 600; cursor: pointer; }
       .ta-focus span { margin-left: 4px; }
       .ta-this { font-family: var(--mono); font-size: 10.5px; color: var(--text-tertiary); white-space: nowrap; }
@@ -338,7 +341,15 @@
       }
       /* Phones and narrow screens: suggestion cards, plan below, tray along the bottom */
       @media (max-width: 1000px) {
-        .ta { padding: 12px 12px 90px; }
+        .ta { padding: 12px 12px 90px; gap: 12px; }
+        .ta-title { font-size: 19px; }
+        .ta-sub { display: none; }
+        .ta-top { align-items: center; }
+        .ta-lock { height: 28px; font-size: 11px; padding: 0 10px; }
+        .ta-ctrls { flex-wrap: nowrap; overflow-x: auto; margin: 0 -12px; padding: 0 12px 2px; scrollbar-width: none; }
+        .ta-ctrls::-webkit-scrollbar { display: none; }
+        .ta-seg { flex-shrink: 0; }
+        .ta-seg button { height: 32px; padding: 0 11px; }
         .ta-grid { grid-template-columns: minmax(0, 1fr); }
         .ta-list { border: none; background: transparent; overflow: visible; display: flex; flex-direction: column; gap: 10px; }
         .ta-list-h { display: none; }
@@ -795,6 +806,10 @@
       const st = String(p.injuryStatus || "").toLowerCase();
       const form = lastFormPpg(p);
       let score = 0, tag = "", why = "";
+      // Day-to-day, or out but back within this round: usually a game or two at most. Not a sell, just watch it.
+      if ((st && !st.startsWith("out")) || (st.startsWith("out") && h.roundsOut === 0 && h.ret)) {
+        return { p, score: 0, watch: true, why: st.startsWith("out") ? `back about ${fmtDate(h.ret)}` : `likely ${p.expGames ?? "?"} of ${p.games} games` };
+      }
       if (st.startsWith("out")) {
         score = 1000 + h.roundsOut * 100;
         tag = "Injured";
@@ -804,18 +819,16 @@
         score = 400 + -p.priceChange / 10000;
         tag = "Price falling";
         why = `Projected ${formatMoney(p.priceChange)} this round: needs ${p.be} but projected ${p.proj}`;
-      } else if (st) {
-        score = 300;
-        tag = "Day-to-day";
-        why = `${p.injuryDetail ? "Questionable" : "Day-to-day"}: likely ${p.expGames ?? "?"} of ${p.games} games this round`;
       } else if (form !== null && h.ppg > 0 && form < h.ppg * 0.75) {
         score = 100 + (h.ppg - form);
         tag = "Form down";
         why = `${Math.round(form)} a game last round vs about ${Math.round(h.ppg)} usually`;
       }
       return { p, score, tag, why };
-    }).filter((x) => x.score > 0).sort((a, b) => b.score - a.score).slice(0, 5);
+    });
   }
+  const sellList = (rows) => rows.filter((x) => x.score > 0).sort((a, b) => b.score - a.score).slice(0, 5);
+  const watchList = (rows) => rows.filter((x) => x.watch);
   function buyPriorities(state) {
     const { formatMoney } = window.SCHOOPS;
     return Object.values(state.computedById).filter((p) => !p.inSquad && !p.isInactive && !p.isLikelyDnp && !p.isFringeDnp && !p.injuryStatus && p.games > 0)
@@ -836,7 +849,9 @@
   }
   function renderPriorities(state, squad) {
     const { escapeHtml, renderAvatar } = window.SCHOOPS;
-    const sells = sellPriorities(squad, state);
+    const rows = sellPriorities(squad, state);
+    const sells = sellList(rows);
+    const watch = watchList(rows);
     const buys = buyPriorities(state);
     const row = (x, side) => {
       const on = side === "out" ? advisor.focusOut === x.p.id : advisor.focusIn === x.p.id;
@@ -849,8 +864,9 @@
     };
     return `<div class="ta-pri">
       <section class="ta-pri-col out" aria-label="Sell first">
-        <div class="ta-pri-h"><span>Sell first</span><span class="ta-pri-sub">injuries, then price and form</span></div>
-        ${sells.length ? sells.map((x) => row(x, "out")).join("") : `<div class="ta-pri-empty">Nobody in your squad is injured, falling hard or out of form. Nice.</div>`}
+        <div class="ta-pri-h"><span>Sell first</span><span class="ta-pri-sub">long injuries, then price and form</span></div>
+        ${sells.length ? sells.map((x) => row(x, "out")).join("") : `<div class="ta-pri-empty">Nobody in your squad is injured long-term, falling hard or out of form. Nice.</div>`}
+        ${watch.length ? `<div class="ta-pri-watch"><b>Keep an eye on</b> (no need to sell, check before lockout): ${watch.map((x) => `${escapeHtml(x.p.name)} <span>${escapeHtml(x.why)}</span>`).join(" · ")}</div>` : ""}
       </section>
       <section class="ta-pri-col in" aria-label="Hot buys">
         <div class="ta-pri-h"><span>Hot buys</span><span class="ta-pri-sub">healthy, rising, in form</span></div>

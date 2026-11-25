@@ -644,8 +644,8 @@
       <div class="lv-sum">
         <div><div class="lv-sum-l">Scored so far</div><div class="lv-sum-v">${soFar.sum}</div>
           <div class="lv-prog" data-tip="${tipBox("Starter games played", [["Played", `${doneGames} of ${allGames}`]])}"><i style="transform:scaleX(${(doneGames / allGames).toFixed(3)})"></i></div></div>
-        <div><div class="lv-sum-l">Projected finish</div><div class="lv-sum-v">${finish.sum}<small class="${diff >= 0 ? "pos-text" : "neg-text"}">${diff >= 0 ? "+" : "−"}${Math.abs(diff)}</small></div></div>
-        <div><div class="lv-sum-l">Pre-round projection</div><div class="lv-sum-v" style="color:var(--text-secondary)">${proj}</div></div>
+        <div><div class="lv-sum-l">Heading for</div><div class="lv-sum-v">${finish.sum}<small class="${diff >= 0 ? "pos-text" : "neg-text"}">${diff >= 0 ? "+" : "−"}${Math.abs(diff)}</small></div></div>
+        <div><div class="lv-sum-l">Pre-round</div><div class="lv-sum-v" style="color:var(--text-secondary)">${proj}</div></div>
       </div>
       <div class="lv-sec">Starters <span>so far → projected finish</span></div>
       ${order(ev.starters).map((p) => row(p, false)).join("")}
@@ -897,7 +897,7 @@
 
   // Public: a player's live round (null until this round's games are loaded or if his team has none)
   window.SchoopsLive = {
-    ready: () => live.games.length > 0,
+    ready: () => live.games.length > 0 && !!live.lastFetch, // scoreboard AND box scores loaded
     // Each of a player's games this round: [{eventId, state, detail, sc, dnp, reason, vs}]
     games(id) {
       const state = window.SCHOOPS.getState();
@@ -987,7 +987,7 @@
         bullets: [
           "Live SuperCoach scores for this round, from ESPN box scores, refreshed every 30 seconds while games are on.",
           "<strong>My team</strong> adds up your starting 10 the SuperCoach way: best 9 of 10 count and your captain scores double.",
-          "<strong>Projected finish</strong> = points so far + the rest of tonight's game + his remaining games at his projected points per game.",
+          "<strong>Heading for</strong> = points so far + the rest of tonight's game + his remaining games at his projected points per game.",
           "Tap a game in the strip at the top to open it: both teams' box scores with SuperCoach points, and the <strong>SC feed</strong> of every play that moved a score, by quarter. <strong>My players</strong> filters the feed to your team.",
           "Your players are highlighted everywhere. Live scores can be a point or two off until SuperCoach publishes them; finished games then show SuperCoach's official score."
         ]
