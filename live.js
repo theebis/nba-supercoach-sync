@@ -633,7 +633,9 @@
         <span class="lv-pts ${flash} ${isCapRow ? "cap" : ""}"><b>${isCapRow ? s.sc * 2 : s.sc}</b><small>→ ${isCapRow ? s.finish * 2 : s.finish}</small></span>
       </button>`;
     };
-    const order = (arr) => [...arr].sort((a, b) => (st[b.id].now ? 1 : 0) - (st[a.id].now ? 1 : 0) || st[b.id].sc - st[a.id].sc);
+    // Sort by what each player actually adds: the captain counts double
+    const eff = (p) => st[p.id].sc * (cap && p.id === cap.id ? 2 : 1);
+    const order = (arr) => [...arr].sort((a, b) => (st[b.id].now ? 1 : 0) - (st[a.id].now ? 1 : 0) || eff(b) - eff(a));
     return `<section class="lv-card lv-myteam" aria-label="My team live">
       <div class="lv-card-head"><div><div class="lv-card-title">My team</div>
         <div class="lv-card-sub">${lu.fromCourt ? "Your starting 10 from My Squad" : "Best lineup from your squad (set it in My Squad)"} · best 9 of 10 + captain ×2</div></div>

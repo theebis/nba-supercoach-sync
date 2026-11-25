@@ -216,6 +216,35 @@
       .ta-seg-l { padding: 0 6px 0 8px; font-size: 11.5px; color: var(--text-tertiary); }
       .ta-flash { font-size: 12.5px; color: var(--pos-bright); }
 
+      /* Sell first / Hot buys */
+      .ta-pri { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+      .ta-pri-col { border-radius: 14px; border: 1px solid var(--border-subtle); background: #111115; overflow: hidden; min-width: 0; }
+      .ta-pri-col.out { box-shadow: inset 0 2px 0 rgba(248, 113, 113, 0.55); }
+      .ta-pri-col.in { box-shadow: inset 0 2px 0 rgba(52, 211, 153, 0.55); }
+      .ta-pri-h { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 12px 14px 8px; font-size: 13.5px; font-weight: 650; }
+      .ta-pri-sub { font-size: 11px; font-weight: 400; color: var(--text-tertiary); }
+      .ta-pri-row { width: 100%; display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 9px 14px; border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.04); background: transparent; color: var(--text-primary); text-align: left; cursor: pointer; transition: background-color 100ms ease; }
+      @media (hover: hover) { .ta-pri-row:hover { background: var(--bg-hover); } .ta-pri-row:hover .ta-pri-go { color: var(--text-primary); } }
+      .ta-pri-row.on { background: var(--accent-soft); }
+      .ta-pri-row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+      .ta-pri-txt { display: flex; flex-direction: column; min-width: 0; }
+      .ta-pri-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .ta-pri-why { font-size: 11.5px; color: var(--text-secondary); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .ta-pri-tag { margin-left: 4px; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; vertical-align: 1px; }
+      .ta-pri-tag.out { background: rgba(255, 255, 255, 0.06); color: var(--text-secondary); }
+      .ta-pri-tag.t-injured { background: var(--neg-bg); color: var(--neg-soft); }
+      .ta-pri-tag.t-daytoday { background: rgba(255, 196, 0, 0.12); color: #e8c25a; }
+      .ta-pri-tag.t-pricefalling { background: var(--neg-bg); color: var(--neg-soft); }
+      .ta-pri-tag.in { background: var(--pos-bg); color: var(--pos-bright); }
+      .ta-pri-go { font-size: 11.5px; color: var(--text-tertiary); white-space: nowrap; transition: color 120ms ease; }
+      .ta-pri-row.on .ta-pri-go { color: #C7CCFF; font-weight: 600; }
+      .ta-pri-empty { padding: 12px 14px 14px; font-size: 12.5px; color: var(--text-tertiary); }
+      .ta-focus { height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(110, 123, 242, 0.5); background: var(--accent-soft); color: #C7CCFF; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+      .ta-focus span { margin-left: 4px; }
+      .ta-this { font-family: var(--mono); font-size: 10.5px; color: var(--text-tertiary); white-space: nowrap; }
+      .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+      @media (max-width: 1000px) { .ta-pri { grid-template-columns: minmax(0, 1fr); } .ta-pri-go { display: none; } }
       .ta-grid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 18px; align-items: start; }
       .ta-list { border: 1px solid var(--border-subtle); border-radius: 14px; background: #111115; overflow: hidden; transition: opacity 160ms ease; min-width: 0; }
       .ta-list.is-stale { opacity: 0.55; }
@@ -472,7 +501,7 @@
   // Ranks this round's trades for your squad. Scores use the exact best-9-of-10 + 2x captain solver.
   // "Chance it helps" = P(trade scores more), from how far projections typically miss (likely ranges).
   const CASH_PER_POINT = 50000; // Balanced goal: $50K of projected price rise counts as 1 point
-  const advisor = { goal: "balanced", n: 1, results: null, key: "", busy: false, flash: "", flashTimer: null };
+  const advisor = { goal: "balanced", n: 1, horizon: 3, focusOut: null, focusIn: null, results: null, key: "", busy: false, flash: "", flashTimer: null };
 
   function sigmaOf(p) {
     if (window.SCHOOPS.projSigma) return window.SCHOOPS.projSigma(p);
@@ -498,16 +527,67 @@
     return m;
   }
 
+  // ---------- looking ahead: the next 3 rounds ----------
+  // Points a player is expected to score in this round and the next two, using his per-game projection,
+  // each round's games, and his injury return date (out = 0 until he's back; part of a round if he returns mid-round).
+  const DAY = 864e5;
+  function roundWindow(state, k) {
+    // Rounds run Tuesday to Monday (Sydney). roundEnd = last day of the live round.
+    const end = state.roundEnd ? Date.parse(`${state.roundEnd}T23:59:00+11:00`) : Date.now() + 3 * DAY;
+    return { start: end - 7 * DAY + k * 7 * DAY, end: end + k * 7 * DAY };
+  }
+  function availIn(p, state, k) {
+    if (p.isInactive || p.isLikelyDnp) return 0;
+    const st = String(p.injuryStatus || "").toLowerCase();
+    if (st.startsWith("out")) {
+      const ret = p.injuryReturn ? Date.parse(`${p.injuryReturn}T12:00:00+11:00`) : null;
+      const w = roundWindow(state, k);
+      if (!ret || Number.isNaN(ret)) return k === 0 ? 0 : 0.5; // out with no date: unknown, assume he misses about half
+      if (ret > w.end) return 0;
+      if (ret > w.start) return Math.max(0, (w.end - ret) / (w.end - w.start));
+      return 1;
+    }
+    // Healthy (or day-to-day after this round): his usual share of games played
+    const usual = p.games && p.expGames !== null && p.expGames !== undefined && !st ? Math.min(1, p.expGames / p.games) : 0.92;
+    return Math.max(0.5, usual);
+  }
+  const horizonMemo = new Map();
+  function horizon(p, state) {
+    const key = `${p.id}|${state.round}|${p.proj}|${p.injuryStatus}|${p.injuryReturn}`;
+    if (horizonMemo.has(key)) return horizonMemo.get(key);
+    const ppg = p.expPpg || (p.games ? (p.proj || 0) / Math.max(1, p.expGames || p.games) : 0);
+    const g1 = p.gamesNext ?? 3.3, g2 = p.gamesAfter ?? 3.3;
+    const a1 = availIn(p, state, 1), a2 = availIn(p, state, 2);
+    const r1 = ppg * g1 * a1, r2 = ppg * g2 * a2;
+    // Price moves keep going while he plays; frozen while he's out
+    const cashAhead = (p.priceChange || 0) * (a1 + a2) * 0.6;
+    const ret = p.injuryReturn ? Date.parse(`${p.injuryReturn}T12:00:00+11:00`) : null;
+    const roundsOut = String(p.injuryStatus || "").toLowerCase().startsWith("out")
+      ? [0, 1, 2, 3].filter((k) => availIn(p, state, k) === 0).length : 0;
+    const h = { r0: p.proj || 0, r1, r2, ahead: r1 + r2, cashAhead, roundsOut, ret, ppg };
+    horizonMemo.set(key, h);
+    return h;
+  }
+  // Future rounds aren't solver-exact (lineups change), so count them a little below face value
+  const AHEAD_WEIGHT = 0.85;
+
   function bestSingles(state, squad, bank, used, limit = 60) {
     const base = memoMetrics(squad, state);
     const pool = Object.values(state.computedById).filter((p) => !p.inSquad && !used.has(p.id) && !p.isInactive
       && !p.isLikelyDnp && !p.isFringeDnp && p.games > 0 && !isOut(p) && !squad.some((s) => s.id === p.id));
     const pairs = [];
+    const ahead = advisor.horizon === 3;
     squad.forEach((o) => {
       if (used.has(o.id)) return;
+      if (advisor.focusOut && o.id !== advisor.focusOut && !used.size) return;
+      const ho = horizon(o, state);
       pool.forEach((i) => {
         if (!sharesPosition(i, o) || i.price > bank + o.price) return;
-        pairs.push({ o, i, proxy: goalValue(i.proj - o.proj, i.priceChange - o.priceChange) });
+        if (advisor.focusIn && i.id !== advisor.focusIn && !used.size) return;
+        const hi = horizon(i, state);
+        const pts = (i.proj - o.proj) + (ahead ? (hi.ahead - ho.ahead) * AHEAD_WEIGHT : 0);
+        const cash = (i.priceChange - o.priceChange) + (ahead ? hi.cashAhead - ho.cashAhead : 0);
+        pairs.push({ o, i, proxy: goalValue(pts, cash) });
       });
     });
     pairs.sort((a, b) => b.proxy - a.proxy);
@@ -516,7 +596,14 @@
       const m = memoMetrics(sim, state);
       const dPts = m.optScore - base.optScore;
       const dCash = m.cashGen - base.cashGen;
-      return { trades: [{ o, i }], dPts, dCash, sd: Math.hypot(sigmaOf(i), sigmaOf(o)), bankAfter: bank + o.price - i.price, value: goalValue(dPts, dCash) };
+      const hi = horizon(i, state), ho = horizon(o, state);
+      const dAhead = Math.round((hi.ahead - ho.ahead) * AHEAD_WEIGHT);
+      const dCashAhead = Math.round((hi.cashAhead - ho.cashAhead) / 10000) * 10000;
+      const dPts3 = dPts + dAhead, dCash3 = dCash + dCashAhead;
+      const sd = Math.hypot(sigmaOf(i), sigmaOf(o));
+      const useAhead = advisor.horizon === 3;
+      return { trades: [{ o, i }], dPts, dCash, dPts3, dCash3, sd, sd3: sd * 1.7, bankAfter: bank + o.price - i.price,
+        value: useAhead ? goalValue(dPts3, dCash3) : goalValue(dPts, dCash) };
     }).sort((a, b) => b.value - a.value);
   }
 
@@ -530,7 +617,7 @@
       results = singles.filter((r) => {
         const id = r.trades[0].o.id;
         perOut[id] = (perOut[id] || 0) + 1;
-        return perOut[id] <= 2;
+        return advisor.focusOut || advisor.focusIn || perOut[id] <= 2;
       }).slice(0, 10);
     } else {
       // 2-4 trades: start from each of the best singles, then keep adding the best follow-up
@@ -551,7 +638,8 @@
           combo = {
             trades: combo.trades.concat([t]),
             dPts: combo.dPts + next.dPts, dCash: combo.dCash + next.dCash,
-            sd: Math.hypot(combo.sd, next.sd), bankAfter: next.bankAfter, value: combo.value + next.value
+            dPts3: combo.dPts3 + next.dPts3, dCash3: combo.dCash3 + next.dCash3,
+            sd: Math.hypot(combo.sd, next.sd), sd3: Math.hypot(combo.sd3, next.sd3), bankAfter: next.bankAfter, value: combo.value + next.value
           };
           squadNow = squadNow.filter((p) => p.id !== t.o.id).concat([t.i]);
           used.add(t.o.id); used.add(t.i.id);
@@ -562,7 +650,7 @@
       results.sort((a, b) => b.value - a.value);
       results = results.slice(0, 8);
     }
-    results.forEach((r) => { r.pBetter = normCdf(r.dPts / r.sd); });
+    results.forEach((r) => { r.pBetter = advisor.horizon === 3 ? normCdf(r.dPts3 / r.sd3) : normCdf(r.dPts / r.sd); });
     return results;
   }
 
@@ -606,7 +694,7 @@
   }
 
   function advisorKey(state, squad) {
-    return [state.projSource, state.tradeLab.bankM, squad.map((p) => p.id).sort().join(","), advisor.goal, advisor.n, state.round].join("|");
+    return [state.projSource, state.tradeLab.bankM, squad.map((p) => p.id).sort().join(","), advisor.goal, advisor.n, advisor.horizon, advisor.focusOut, advisor.focusIn, state.round].join("|");
   }
 
   // Trade window banner: open (counting down to lockout) or closed (when it reopens)
@@ -658,7 +746,7 @@
     if (!advisor.results.length) return `<div class="ta-empty">No affordable trades improve your squad on this goal. Try another goal, or add bank.</div>`;
     return advisor.results.map((r, idx) => {
       const [cls, label] = confOf(r.pBetter);
-      const pct = Math.round(r.pBetter * 100);
+      const pct = Math.min(99, Math.round(r.pBetter * 100)); // never claim certainty
       const tip = `<div class="tip-h">${label}: ${pct}% chance it helps</div><div class="tip-row"><span>Projected gain</span><b class="${r.dPts >= 0 ? "tip-pos" : "tip-neg"}">${r.dPts > 0 ? "+" : ""}${r.dPts} pts</b></div><div class="tip-row"><span>Typical swing either way</span><b>±${Math.round(r.sd)} pts</b></div><div class="tip-dim" style="margin-top:4px">How often a trade like this scores more this round, allowing for how much projections usually miss. Strong is 75%+, Lean 60%+.</div>`;
       const multi = r.trades.length > 1;
       const allIn = r.trades.every(({ o, i }) => inPlan(o, i));
@@ -675,8 +763,13 @@
       }).join("");
       return `<article class="ta-sug ${allIn ? "inplan" : ""}">
         <div class="ta-swaps">${swaps}</div>
-        <div class="ta-stat ta-pts"><span class="ta-l">Points</span><span class="ta-v ${r.dPts > 0 ? "pos-text" : r.dPts < 0 ? "neg-text" : "muted-text"}">${r.dPts > 0 ? "+" : ""}${r.dPts}</span></div>
-        <div class="ta-stat ta-cash"><span class="ta-l">Price change</span><span class="ta-v sm ${r.dCash > 0 ? "pos-text" : r.dCash < 0 ? "neg-text" : "muted-text"}">${formatMoney(r.dCash)}</span></div>
+        ${(() => {
+          const three = advisor.horizon === 3;
+          const P = three ? r.dPts3 : r.dPts, C = three ? r.dCash3 : r.dCash;
+          const cls = (v) => (v > 0 ? "pos-text" : v < 0 ? "neg-text" : "muted-text");
+          return `<div class="ta-stat ta-pts"><span class="ta-l">Points${three ? " (3 rds)" : ""}</span><span class="ta-v ${cls(P)}">${P > 0 ? "+" : ""}${P}</span>${three ? `<span class="ta-this">${r.dPts > 0 ? "+" : ""}${r.dPts} this rd</span>` : ""}</div>
+        <div class="ta-stat ta-cash"><span class="ta-l">Price change${three ? " (3 rds)" : ""}</span><span class="ta-v sm ${cls(C)}">${formatMoney(C)}</span>${three ? `<span class="ta-this">${formatMoney(r.dCash)} this rd</span>` : ""}</div>`;
+        })()}
         <div class="ta-stat ta-chance" data-tip="${escapeHtml(tip)}"><span class="ta-l">Chance it helps</span><span class="ta-conf ${cls}">${label} · ${pct}%</span><span class="ta-meter ${cls}"><i style="transform:scaleX(${(pct / 100).toFixed(2)})"></i></span></div>
         <div class="ta-act">
           <span class="ta-bank">bank after ${money(r.bankAfter)}</span>
@@ -684,6 +777,86 @@
         </div>
       </article>`;
     }).join("");
+  }
+
+  // ---------- priorities: who to sell first, who's hot to buy ----------
+  // Injuries first (how long he's out), then price falling, then form dropping. Buys: healthy, rising, in form, games ahead.
+  function lastFormPpg(p) {
+    const t = (p.formHistory || []).filter((r) => r[2] > 0);
+    if (!t.length) return null;
+    const last = t[t.length - 1];
+    return last[1] / last[2];
+  }
+  function sellPriorities(squad, state) {
+    const { formatMoney } = window.SCHOOPS;
+    const fmtDate = (ms) => new Date(ms).toLocaleDateString(undefined, { day: "numeric", month: "short" });
+    return squad.map((p) => {
+      const h = horizon(p, state);
+      const st = String(p.injuryStatus || "").toLowerCase();
+      const form = lastFormPpg(p);
+      let score = 0, tag = "", why = "";
+      if (st.startsWith("out")) {
+        score = 1000 + h.roundsOut * 100;
+        tag = "Injured";
+        why = h.ret ? `Out until about ${fmtDate(h.ret)}: ${h.roundsOut >= 3 ? "3+ rounds" : `${h.roundsOut} round${h.roundsOut === 1 ? "" : "s"}`} of 0 points and a frozen price`
+          : "Out, no return date yet: 0 points and a frozen price";
+      } else if ((p.priceChange || 0) <= -150000) {
+        score = 400 + -p.priceChange / 10000;
+        tag = "Price falling";
+        why = `Projected ${formatMoney(p.priceChange)} this round: needs ${p.be} but projected ${p.proj}`;
+      } else if (st) {
+        score = 300;
+        tag = "Day-to-day";
+        why = `${p.injuryDetail ? "Questionable" : "Day-to-day"}: likely ${p.expGames ?? "?"} of ${p.games} games this round`;
+      } else if (form !== null && h.ppg > 0 && form < h.ppg * 0.75) {
+        score = 100 + (h.ppg - form);
+        tag = "Form down";
+        why = `${Math.round(form)} a game last round vs about ${Math.round(h.ppg)} usually`;
+      }
+      return { p, score, tag, why };
+    }).filter((x) => x.score > 0).sort((a, b) => b.score - a.score).slice(0, 5);
+  }
+  function buyPriorities(state) {
+    const { formatMoney } = window.SCHOOPS;
+    return Object.values(state.computedById).filter((p) => !p.inSquad && !p.isInactive && !p.isLikelyDnp && !p.isFringeDnp && !p.injuryStatus && p.games > 0)
+      .map((p) => {
+        const h = horizon(p, state);
+        const form = lastFormPpg(p);
+        const g3 = (p.games || 0) + (p.gamesNext ?? 3) + (p.gamesAfter ?? 3);
+        const surplus = (p.proj + h.ahead) - (p.price / 712000) * g3 * 0.95; // scoring above what his price implies
+        const score = surplus + (p.priceChange || 0) / 40000 + (form !== null && h.ppg ? (form - h.ppg) : 0);
+        const bits = [];
+        if ((p.priceChange || 0) >= 200000) bits.push(`${formatMoney(p.priceChange)} rise this round`);
+        if (form !== null && h.ppg && form >= h.ppg * 1.15) bits.push(`${Math.round(form)} a game last round`);
+        if ((p.gamesNext ?? 0) >= 4) bits.push(`4 games next round`);
+        else if (p.games >= 4) bits.push(`4 games this round`);
+        if (!bits.length) bits.push(`projected ${p.proj} at ${(p.price / 1e6).toFixed(2)}M`);
+        return { p, score, tag: "Hot", why: bits.slice(0, 2).join(" · ") };
+      }).sort((a, b) => b.score - a.score).slice(0, 5);
+  }
+  function renderPriorities(state, squad) {
+    const { escapeHtml, renderAvatar } = window.SCHOOPS;
+    const sells = sellPriorities(squad, state);
+    const buys = buyPriorities(state);
+    const row = (x, side) => {
+      const on = side === "out" ? advisor.focusOut === x.p.id : advisor.focusIn === x.p.id;
+      return `<button type="button" class="ta-pri-row ${on ? "on" : ""}" data-ta-focus="${side}:${escapeHtml(x.p.id)}" aria-pressed="${on}">
+        ${renderAvatar(x.p, 30)}
+        <span class="ta-pri-txt"><span class="ta-pri-name">${escapeHtml(x.p.name)} <span class="ta-pri-tag ${side} t-${x.tag.toLowerCase().replace(/[^a-z]/g, "")}">${escapeHtml(x.tag)}</span></span>
+        <span class="ta-pri-why">${escapeHtml(x.why)}</span></span>
+        <span class="ta-pri-go">${on ? "Showing" : side === "out" ? "Find replacements" : "Find who to sell"}</span>
+      </button>`;
+    };
+    return `<div class="ta-pri">
+      <section class="ta-pri-col out" aria-label="Sell first">
+        <div class="ta-pri-h"><span>Sell first</span><span class="ta-pri-sub">injuries, then price and form</span></div>
+        ${sells.length ? sells.map((x) => row(x, "out")).join("") : `<div class="ta-pri-empty">Nobody in your squad is injured, falling hard or out of form. Nice.</div>`}
+      </section>
+      <section class="ta-pri-col in" aria-label="Hot buys">
+        <div class="ta-pri-h"><span>Hot buys</span><span class="ta-pri-sub">healthy, rising, in form</span></div>
+        ${buys.map((x) => row(x, "in")).join("")}
+      </section>
+    </div>`;
   }
 
   // Trade window as a compact pill (details in its hover box)
@@ -942,7 +1115,7 @@
         <div class="ta-top">
           <div>
             <h2 class="ta-title">Trade Advisor</h2>
-            <div class="ta-sub">The best trades for your squad this round, using ${state.projSource === "sc" ? "SuperCoach's" : "SCHOOPS"} projections. Add the ones you like; your plan adds them up and checks your bank.</div>
+            <div class="ta-sub">The best trades for your squad, looking ${advisor.horizon === 3 ? "3 rounds ahead (injury return dates and upcoming games included)" : "at this round only"}, using ${state.projSource === "sc" ? "SuperCoach's" : "SCHOOPS"} projections. Add the ones you like; your plan adds them up and checks your bank.</div>
           </div>
           ${renderLockPill()}
         </div>
@@ -953,12 +1126,15 @@
             ${chip("data-adv-goal", "cash", "Most cash", advisor.goal === "cash")}
           </div>
           <div class="ta-seg sm" role="group" aria-label="Number of trades"><span class="ta-seg-l">Trades</span>${[1, 2, 3, 4].map((n) => chip("data-adv-n", String(n), String(n), advisor.n === n)).join("")}</div>
+          <div class="ta-seg" role="group" aria-label="Look ahead">${chip("data-adv-h", "1", "This round", advisor.horizon === 1)}${chip("data-adv-h", "3", "Next 3 rounds", advisor.horizon === 3)}</div>
+          ${advisor.focusOut || advisor.focusIn ? (() => { const fp = state.computedById[advisor.focusOut || advisor.focusIn]; return fp ? `<button type="button" class="ta-focus" data-ta-unfocus>${advisor.focusOut ? "Selling" : "Buying"} ${escapeHtml(fp.name)} <span aria-hidden="true">×</span><span class="sr-only">Show all trades</span></button>` : ""; })() : ""}
           ${advisor.flash ? `<span class="ta-flash" role="status">${escapeHtml(advisor.flash)}</span>` : ""}
         </div>
 
+        ${renderPriorities(state, squad)}
         <div class="ta-grid">
           <section class="ta-list ${advisor.busy && advisor.results ? "is-stale" : ""}" aria-label="Suggested trades" aria-busy="${advisor.busy ? "true" : "false"}">
-            <div class="ta-list-h"><span>Suggested trade</span><span>Points</span><span>Price change</span><span>Chance it helps</span><span></span></div>
+            <div class="ta-list-h"><span>Suggested trade</span><span>Points${advisor.horizon === 3 ? " · 3 rds" : ""}</span><span>Price change</span><span>Chance it helps</span><span></span></div>
             ${renderSuggestions(state, plan)}
             <div class="ta-foot">"Chance it helps" allows for how far projections usually miss. Balanced counts $50K of price rise as 1 point. 3–4 trade ideas are built one swap at a time: strong, but not guaranteed to be the very best combination.</div>
           </section>
@@ -1064,6 +1240,19 @@
     if (e.target.closest("#tlNewPlanBtn")) { createNewPlan(null); return; }
     const goalBtn = e.target.closest("[data-adv-goal]");
     if (goalBtn) { advisor.goal = goalBtn.dataset.advGoal; renderTradeLab(); return; }
+    const hBtn = e.target.closest("[data-adv-h]");
+    if (hBtn) { advisor.horizon = Number(hBtn.dataset.advH); renderTradeLab(); return; }
+    const fBtn = e.target.closest("[data-ta-focus]");
+    if (fBtn) {
+      const [side, id] = fBtn.dataset.taFocus.split(":");
+      const already = side === "out" ? advisor.focusOut === id : advisor.focusIn === id;
+      advisor.focusOut = null; advisor.focusIn = null;
+      if (!already) { if (side === "out") advisor.focusOut = id; else advisor.focusIn = id; }
+      renderTradeLab();
+      const list = document.querySelector(".ta-list"); if (list && !already) list.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    if (e.target.closest("[data-ta-unfocus]")) { advisor.focusOut = null; advisor.focusIn = null; renderTradeLab(); return; }
     const nBtn = e.target.closest("[data-adv-n]");
     if (nBtn) { advisor.n = Number(nBtn.dataset.advN); renderTradeLab(); return; }
     const swapBtn = e.target.closest("[data-adv-swap]");

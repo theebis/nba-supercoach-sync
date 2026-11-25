@@ -8,7 +8,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "05929d6687524b7aa4a3465a3facb806"}'></script><!-- End Cloudflare Web Analytics -->
+  <!-- Cloudflare Web Analytics (no cookies; stats only in the owner's Cloudflare account).
+       Loaded only on the real site, and never in a browser where Settings -> "Don't count my visits" is on. -->
+  <script>
+    (function () {
+      var skip = false;
+      try { skip = localStorage.getItem("schoops_no_count") === "1"; } catch (e) {}
+      if (skip || !/github\.io$/.test(location.hostname)) return;
+      var s = document.createElement("script");
+      s.type = "module"; s.defer = true; s.src = "https://static.cloudflareinsights.com/beacon.min.js";
+      s.setAttribute("data-cf-beacon", '{"token": "05929d6687524b7aa4a3465a3facb806"}');
+      document.head.appendChild(s);
+    })();
+  </script>
   <style>
     :root {
       /* Linear 2026 Warm-Neutral Dark Palette */
@@ -328,6 +340,16 @@
     }
 
     .sb-spacer { flex: 1; }
+    /* Beta pill and feedback button */
+    .beta-pill { margin-left: 7px; padding: 2px 6px; border-radius: 5px; font-size: 9.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      color: #C7CCFF; background: var(--accent-soft); box-shadow: inset 0 0 0 1px rgba(110, 123, 242, 0.4); vertical-align: 2px; cursor: default; }
+    .sb-feedback { margin-left: auto; margin-right: 6px; height: 26px; display: inline-flex; align-items: center; gap: 6px; padding: 0 9px; border-radius: 7px;
+      border: 1px solid var(--border-subtle); background: transparent; color: var(--text-secondary); font-size: 12.5px; font-weight: 500; cursor: pointer;
+      transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease; }
+    .sb-feedback svg { width: 12px; height: 12px; }
+    .sb-feedback span { font-size: 11.5px; }
+    @media (hover: hover) { .sb-feedback:hover { color: var(--text-primary); background: var(--bg-hover); border-color: var(--border-default); } }
+    .sb-feedback:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
     /* About SCHOOPS note under the Views list */
     .sb-about { margin: 14px 6px 0; padding: 11px 12px 12px; border-radius: 10px; border: 1px solid var(--border-subtle);
@@ -1898,7 +1920,7 @@
       <div class="sb-top">
         <div class="brand">
           <span class="brand-mark">S</span>
-          <span>SCHOOPS</span>
+          <span>SCHOOPS</span><span class="beta-pill" title="SCHOOPS is in beta: tell us what breaks">Beta</span>
         </div>
       </div>
 
@@ -2023,6 +2045,10 @@
 
         <div class="sb-meta-row">
           <span class="sb-sync-hint" id="sbSyncHint">Loading...</span>
+          <button type="button" class="sb-feedback" id="feedbackBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span>Feedback</span>
+          </button>
           <button type="button" class="sb-cmd-btn" id="openSettingsBtn" title="Settings, Sync & Squad Code">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           </button>
@@ -2248,6 +2274,15 @@
             <button type="button" class="chip-btn" data-proj-source="sc">SuperCoach</button>
           </div>
           <div class="field-hint">SCHOOPS projects points per game from recent form, price and SuperCoach's projection, then multiplies by the games each player is actually expected to play (injuries, rest). Tested on every finished round, it misses by less than SuperCoach's own projections. Used for projected price changes, the optimiser and the Trade Advisor.</div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Visit counting</div>
+          <div class="seg-2" id="countSeg">
+            <button type="button" class="chip-btn" data-count="on">Count my visits</button>
+            <button type="button" class="chip-btn" data-count="off">Don't count me</button>
+          </div>
+          <div class="field-hint">SCHOOPS counts visits anonymously (no cookies, nothing personal) to see which pages get used. Choose "Don't count me" in each browser you use if you run the site.</div>
         </div>
 
         <div class="field-group">
@@ -2855,6 +2890,7 @@
       state.rangeLevel = Number(pm.rangeLevel) || 0.5;
       state.rangeCoverage = Number(pm.rangeCoverage) || null;
       state.ppgCoverage = Number(pm.ppgRangeCoverage) || null;
+      state.roundEnd = pm.roundEnd || null; // last day (Sydney) of the live round, for injury-return maths
       if (data.fixtures && typeof data.fixtures === "object") { state.fixtures = data.fixtures; state.fixturesRound = roundNum; }
       const scheduleMap = data.team_schedule || data.teamSchedule || {};
       state.teamScheduleMap = (scheduleMap && typeof scheduleMap === "object") ? scheduleMap : {};
@@ -4153,6 +4189,40 @@
     settingsOverlay.addEventListener("click", (e) => { if (e.target === settingsOverlay) settingsOverlay.classList.remove("open"); });
     document.getElementById("syncBtn").addEventListener("click", syncFromGitHub);
 
+    // Feedback: the owner's Tally form as a pop-up (falls back to opening it in a new tab), with the page filled in
+    const FEEDBACK_FORM = "xVJAvG";
+    function openFeedback() {
+      const pages = { market: "Market", court: "My Squad", tradelab: "Trade Advisor", live: "Live" };
+      const page = pages[state.activeNav] || "Other";
+      const fallback = () => window.open(`https://tally.so/r/${FEEDBACK_FORM}?page=${encodeURIComponent(page)}`, "_blank", "noopener");
+      const open = () => {
+        try { window.Tally.openPopup(FEEDBACK_FORM, { layout: "modal", width: 520, hiddenFields: { page }, autoClose: 2500 }); }
+        catch (err) { fallback(); }
+      };
+      if (window.Tally) { open(); return; }
+      const sc = document.createElement("script");
+      sc.src = "https://tally.so/widgets/embed.js";
+      sc.onload = open;
+      sc.onerror = fallback;
+      document.head.appendChild(sc);
+    }
+    document.getElementById("feedbackBtn").addEventListener("click", () => { closeMobileSidebar(); openFeedback(); });
+
+    // "Don't count my visits": the counter isn't even loaded in this browser from the next page load
+    const countSeg = document.getElementById("countSeg");
+    const paintCount = () => {
+      let off = false;
+      try { off = localStorage.getItem("schoops_no_count") === "1"; } catch (err) {}
+      countSeg.querySelectorAll("[data-count]").forEach((b) => b.classList.toggle("active", (b.dataset.count === "off") === off));
+    };
+    paintCount();
+    countSeg.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-count]");
+      if (!b) return;
+      try { b.dataset.count === "off" ? localStorage.setItem("schoops_no_count", "1") : localStorage.removeItem("schoops_no_count"); } catch (err) {}
+      paintCount();
+    });
+
     document.getElementById("projSourceSeg").addEventListener("click", (e) => {
       const b = e.target.closest("[data-proj-source]");
       if (!b) return;
@@ -4286,10 +4356,10 @@
   </script>
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
   <script src="court.js?v=19"></script>
-  <script src="tradelab.js?v=18"></script>
+  <script src="tradelab.js?v=19"></script>
   <script src="briefing.js?v=5"></script>
   <script src="captains.js?v=3"></script>
-  <script src="live.js?v=7"></script>
+  <script src="live.js?v=8"></script>
   <script src="notify.js?v=1"></script>
   <script src="importmatch.js?v=1"></script>
   <script src="importer.js?v=2"></script>
