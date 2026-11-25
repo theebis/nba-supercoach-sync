@@ -685,16 +685,16 @@
       .lc-hero-big.live { color: #fff; text-shadow: 0 0 24px rgba(248, 113, 113, 0.35); }
       .lc-wrap.is-live .lc-hero { background: linear-gradient(180deg in oklab, rgba(248, 113, 113, 0.09), rgba(248, 113, 113, 0)); border-bottom-color: rgba(248, 113, 113, 0.22); }
       .lc-hv-of { font-size: 13px; color: var(--text-tertiary); font-weight: 500; }
-      .lc-hprog { display: block; width: 110px; height: 4px; margin-top: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+      .lc-hprog { display: block; width: 110px; height: 4px; margin-top: 0; border-radius: 2px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
       .lc-hprog i { display: block; height: 100%; background: #FCA5A5; transform-origin: left; }
       .lc-pulse, .lc-now i { display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: var(--neg); vertical-align: 2px; }
       .lc-now i { width: 6px; height: 6px; margin-right: 5px; vertical-align: 1px; }
       @media (prefers-reduced-motion: no-preference) { .lc-pulse, .lc-now i { animation: lcPulse 1.6s ease-in-out infinite; } }
       @keyframes lcPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
-      .lc-pts.live { font-size: 24px; }
+      .lc-pts.live { }
       .lc-pts.live.cap { color: var(--warn-bright); }
       .lc-livepips { display: inline-flex; gap: 3px; margin-right: 7px; vertical-align: 0; }
-      .lc-live-to { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); white-space: nowrap; }
+      .lc-live-to { font-family: var(--mono); font-size: 10.5px; font-weight: 600; color: var(--text-tertiary); white-space: nowrap; }
       .lc-fin-live { display: inline-flex; align-items: center; white-space: nowrap; }
       .lc-livepips i { width: 7px; height: 7px; border-radius: 2px; background: rgba(255, 255, 255, 0.12); }
       .lc-livepips i.done { background: var(--text-secondary); }
@@ -735,8 +735,10 @@
       .lc-hero-big small { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-left: 4px; letter-spacing: 0; }
       .lc-hero-meta { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--text-tertiary); }
       .lc-hero-meta strong { color: var(--text-primary); font-weight: 600; }
-      .lc-hstat { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding-left: 22px; border-left: 1px solid var(--border-subtle); }
-      .lc-hv { font-size: 18px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; line-height: 1.2; }
+      .lc-hstat { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 0 0 172px; padding-left: 22px; border-left: 1px solid var(--border-subtle); }
+      .lc-hstat .lc-hsub { min-height: 15px; display: flex; align-items: center; gap: 4px; }
+      .lc-hero-score { flex: 0 0 auto; min-width: 150px; }
+      .lc-hv { font-size: 18px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; line-height: 23px; height: 23px; }
       .lc-hv.mono { font-family: var(--mono); letter-spacing: -0.01em; }
       .lc-hsub { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; }
       .lc-hstat-cash .lc-hv { font-size: 22px; }
@@ -749,12 +751,11 @@
       .lc-hero-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
       .lc-hero-msg { flex-basis: 100%; display: flex; }
 
-      .lc-drop-strip {
-        margin: -10px -13px 0 -14px; padding: 4px 12px; border-bottom: 1px dashed rgba(229, 160, 50, 0.35);
-        background: rgba(229, 160, 50, 0.08); color: var(--warn-bright); font-size: 11px; font-weight: 500; cursor: help;
-      }
-      body.density-compact .lc-drop-strip { margin: -8px -10px 0 -11px; }
-      .lc-tile.is-drop { opacity: 0.85; border-style: dashed; border-color: rgba(229, 160, 50, 0.35); }
+      /* "Not counted" sits on the card's top edge as a tab, so it never changes the card's height */
+      .lc-drop-strip { position: absolute; top: -9px; left: 12px; z-index: 2; height: 17px; padding: 0 8px; display: inline-flex; align-items: center;
+        border-radius: 5px; border: 1px dashed rgba(229, 160, 50, 0.5); background: #1b1710; color: var(--warn-bright); font-size: 10.5px; font-weight: 600; cursor: help; white-space: nowrap; }
+      .lc-tile.is-drop { opacity: 0.85; border-style: dashed; border-color: rgba(229, 160, 50, 0.35); overflow: visible; }
+      .lc-tile.is-drop::before { border-radius: 8px 0 0 8px; }
       .lc-opt-big {
         height: 40px;
         padding: 0 16px 0 14px;
@@ -825,7 +826,8 @@
       @media (max-width: 760px) {
         .lc-hero { padding: 12px; gap: 12px 18px; }
         .lc-hstat { padding-left: 12px; }
-        .lc-hv { font-size: 15px; max-width: 150px; }
+        .lc-hv { font-size: 15px; max-width: 100%; }
+        .lc-hstat { flex: 1 1 140px; }
         .lc-hstat-cash .lc-hv { font-size: 18px; }
         .lc-hero-actions { margin-left: 0; width: 100%; }
         .lc-hero-actions .lc-opt-big { flex: 1; justify-content: center; }
@@ -1288,7 +1290,7 @@
 
     return `
       <div class="${cls.join(" ")}" data-slot-key="${slotDef.key}" style="--team-accent:${accent};">
-        ${isDrop ? `<div class="lc-drop-strip" title="Your lineup score counts your best 9 of 10 starters. This is the lowest projected starter, so his points don't count this round. If someone on your bench projects higher, Optimise will swap them in.">Not counted · only your best 9 starters score</div>` : ""}
+        ${isDrop ? `<div class="lc-drop-strip" title="Your lineup score counts your best 9 of 10 starters. This is the lowest projected starter, so his points don't count this round. If someone on your bench projects higher, Optimise will swap them in.">Not counted · best 9 score</div>` : ""}
         <div class="lc-top">
           <div class="lc-id">
             ${renderAvatar(player, avSz)}
@@ -1477,49 +1479,34 @@
               <button type="button" class="${liveTeam ? "" : "on"}" data-court-mode="proj" aria-pressed="${!liveTeam}">Projected</button>
               <button type="button" class="${liveTeam ? "on live" : ""}" data-court-mode="live" aria-pressed="${!!liveTeam}"><i></i>Live</button>
             </div>` : ""}
-            ${liveTeam ? `
-            <span class="lc-hero-label">Round ${state.round} so far</span>
-            <span class="lc-hero-big live">${liveTeam.soFar.toLocaleString()}<small>pts</small></span>` : `
-            <span class="lc-hero-label">Round ${state.round} projected</span>
-            <span class="lc-hero-big">${evalRes.totalProj.toLocaleString()}<small>pts</small></span>`}
+            <span class="lc-hero-label">Round ${state.round} ${liveTeam ? "so far" : "projected"}</span>
+            <span class="lc-hero-big ${liveTeam ? "live" : ""}">${(liveTeam ? liveTeam.soFar : evalRes.totalProj).toLocaleString()}<small>pts</small></span>
           </div>
-          ${liveTeam ? `
-          <div class="lc-hstat">
-            <span class="lc-hero-label">Heading for</span>
-            <span class="lc-hv mono">${liveTeam.finish}</span>
-            <span class="lc-hsub ${liveTeam.finish - evalRes.totalProj >= 0 ? "pos-text" : "neg-text"}">${liveTeam.finish - evalRes.totalProj >= 0 ? "+" : "−"}${Math.abs(liveTeam.finish - evalRes.totalProj)} vs projected ${evalRes.totalProj}</span>
-          </div>
-          <div class="lc-hstat">
-            <span class="lc-hero-label">Starter games played</span>
-            <span class="lc-hv mono">${liveTeam.doneGames}<small class="lc-hv-of">/${liveTeam.allGames}</small></span>
-            <span class="lc-hprog"><i style="transform:scaleX(${liveTeam.allGames ? (liveTeam.doneGames / liveTeam.allGames).toFixed(3) : 0})"></i></span>
-          </div>
-          ${liveTeam.onCourt ? `<div class="lc-hstat lc-hstat-now"><span class="lc-hero-label">On court now</span><span class="lc-hv mono"><i class="lc-pulse"></i>${liveTeam.onCourt}</span><span class="lc-hsub">of your starters</span></div>` : ""}` : ""}
-          <div class="lc-hstat lc-hstat-cash ${squadCash > 0 ? "pos" : squadCash < 0 ? "neg" : ""}">
-            <span class="lc-hero-label">Projected cash gen</span>
-            <span class="lc-hv mono">${window.SCHOOPS.formatMoney(squadCash)}</span>
-            <span class="lc-hsub">all 15 players this round</span>
-          </div>
-          ${liveTeam ? "" : `<div class="lc-hstat">
-            <span class="lc-hero-label">Captain</span>
-            <span class="lc-hv">${evalRes.captain ? escapeHtml(evalRes.captain.name) : "—"}</span>
-            <span class="lc-hsub">${evalRes.captain ? `proj ${Math.round(evalRes.captain.proj)} × 2 = ${Math.round(evalRes.captain.proj * 2)}` : "pick one with C"}</span>
-          </div>
-          <div class="lc-hstat">
-            <span class="lc-hero-label">Starter games</span>
-            <span class="lc-hv mono">${evalRes.starterGames}</span>
-            <span class="lc-hsub">across your 10 starters</span>
-          </div>
-          ${evalRes.droppedPlayer ? `<div class="lc-hstat">
-            <span class="lc-hero-label">Not counted</span>
-            <span class="lc-hv">${escapeHtml(evalRes.droppedPlayer.name)}</span>
-            <span class="lc-hsub">lowest starter · proj ${Math.round(evalRes.droppedPlayer.proj)}</span>
-          </div>` : ""}`}
-          <div class="lc-hstat lc-hero-squad">
-            <span class="lc-hero-label">Squad ${squadPlayers.length}/${SQUAD_SIZE}</span>
-            <span class="lc-hv mono">$${(squadValue / 1000000).toFixed(2)}M</span>
-            <span class="lc-pips" aria-label="${squadPlayers.length} of ${SQUAD_SIZE} squad spots filled">${pips}</span>
-          </div>
+          ${(() => {
+            // Five fixed slots in both views: cash gen and squad stay put, the middle three swap meaning
+            const slot = (label, value, sub, extra = "") => `<div class="lc-hstat ${extra}"><span class="lc-hero-label">${label}</span><span class="lc-hv">${value}</span><span class="lc-hsub">${sub}</span></div>`;
+            const cash = `<div class="lc-hstat lc-hstat-cash ${squadCash > 0 ? "pos" : squadCash < 0 ? "neg" : ""}">
+              <span class="lc-hero-label">Projected cash gen</span>
+              <span class="lc-hv mono">${window.SCHOOPS.formatMoney(squadCash)}</span>
+              <span class="lc-hsub">all 15 players this round</span></div>`;
+            const squadSlot = `<div class="lc-hstat lc-hero-squad">
+              <span class="lc-hero-label">Squad ${squadPlayers.length}/${SQUAD_SIZE}</span>
+              <span class="lc-hv mono">$${(squadValue / 1000000).toFixed(2)}M</span>
+              <span class="lc-hsub"><span class="lc-pips" aria-label="${squadPlayers.length} of ${SQUAD_SIZE} squad spots filled">${pips}</span></span></div>`;
+            let mid;
+            if (liveTeam) {
+              const d = liveTeam.finish - evalRes.totalProj;
+              const frac = liveTeam.allGames ? liveTeam.doneGames / liveTeam.allGames : 0;
+              mid = slot("Heading for", `<span class="mono">${liveTeam.finish}</span>`, `<span class="${d >= 0 ? "pos-text" : "neg-text"}">${d >= 0 ? "+" : "−"}${Math.abs(d)}</span> vs projected ${evalRes.totalProj}`)
+                + slot("Starter games played", `<span class="mono">${liveTeam.doneGames}<small class="lc-hv-of">/${liveTeam.allGames}</small></span>`, `<span class="lc-hprog"><i style="transform:scaleX(${frac.toFixed(3)})"></i></span>`)
+                + slot("On court now", `<span class="mono">${liveTeam.onCourt ? `<i class="lc-pulse"></i>` : ""}${liveTeam.onCourt}</span>`, liveTeam.onCourt ? "of your starters" : "none right now", "lc-hstat-now");
+            } else {
+              mid = slot("Captain", evalRes.captain ? escapeHtml(evalRes.captain.name) : "—", evalRes.captain ? `proj ${Math.round(evalRes.captain.proj)} × 2 = ${Math.round(evalRes.captain.proj * 2)}` : "pick one with C")
+                + slot("Starter games", `<span class="mono">${evalRes.starterGames}</span>`, "across your 10 starters")
+                + slot("Not counted", evalRes.droppedPlayer ? escapeHtml(evalRes.droppedPlayer.name) : "—", evalRes.droppedPlayer ? `lowest starter · proj ${Math.round(evalRes.droppedPlayer.proj)}` : "best 9 of 10 count");
+            }
+            return cash + mid + squadSlot;
+          })()}
           <div class="lc-hero-actions">${optBtnHtml}</div>
           ${msgHtml ? `<div class="lc-hero-msg">${msgHtml}</div>` : ""}
         </div>

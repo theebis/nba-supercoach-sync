@@ -138,6 +138,12 @@
       .lv-chip { height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--border-default); background: transparent; color: var(--text-secondary); font-size: 11.5px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease; }
       .lv-chip.on { background: var(--accent-soft); border-color: rgba(110, 123, 242, 0.5); color: #C7CCFF; }
       .lv-seg button:focus-visible, .lv-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+      .lv-qdot { display: inline-block; width: 6px; height: 6px; margin-right: 5px; border-radius: 50%; background: var(--neg); vertical-align: 1px; }
+      .lv-qhead { position: sticky; top: 0; z-index: 1; padding: 6px 14px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--text-secondary); background: #141419; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); }
+      .lv-qlive { margin-left: 6px; padding: 1px 6px; border-radius: 4px; background: var(--neg-bg); color: var(--neg-soft); font-size: 10px; text-transform: uppercase; }
+      .lv-follow { display: flex; align-items: center; gap: 7px; padding: 7px 14px; font-size: 11.5px; color: var(--text-tertiary); border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+      .lv-follow i { width: 6px; height: 6px; border-radius: 50%; background: var(--neg); }
+      @media (prefers-reduced-motion: no-preference) { .lv-follow i, .lv-qdot { animation: lvPulse 1.6s ease-in-out infinite; } }
       .lv-plays { list-style: none; margin: 0; padding: 0; max-height: 560px; overflow-y: auto; overscroll-behavior: contain; }
       .lv-play { display: grid; grid-template-columns: 40px 26px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 7px 14px; border-top: 1px solid rgba(255, 255, 255, 0.035); }
       .lv-play:first-child { border-top: none; }
@@ -547,6 +553,8 @@
     return esc(timeFmt(g.ms));
   };
   const esc = (s) => window.SCHOOPS.escapeHtml(String(s ?? ""));
+  // Hover box: bold heading, label/value rows, optional grey note. Returned already escaped for a data-tip attribute.
+  const tipBox = (head, rows, note) => esc(`<div class="tip-h">${esc(head)}</div>${rows.filter(Boolean).map(([l, v, cls]) => `<div class="tip-row"><span>${esc(l)}</span><b class="${cls || ""}">${esc(v)}</b></div>`).join("")}${note ? `<div class="tip-dim" style="margin-top:4px">${esc(note)}</div>` : ""}`);
 
   /* ---------- Views ---------- */
 
@@ -598,7 +606,7 @@
       const s = st[p.id];
       const pill = cap && p.id === cap.id ? `<span class="lv-pill c">C ×2</span>`
         : (ev.viceCaptain && p.id === ev.viceCaptain.id && !capOut ? `<span class="lv-pill vc">VC</span>` : "");
-      const dropPill = !isBench && finish.drop === p.id && ev.starters.length === 10 ? `<span class="lv-pill drop" title="Your lowest starter doesn't count (best 9 of 10)">lowest</span>` : "";
+      const dropPill = !isBench && finish.drop === p.id && ev.starters.length === 10 ? `<span class="lv-pill drop">lowest</span>` : "";
       let line;
       if (s.now && s.nowLine && !s.nowLine.row.dnp) line = `<span class="live">${esc(s.now.detail)}</span> · ${esc(statLine(s.nowLine.row))}`;
       else if (s.now) line = `<span class="live">${esc(s.now.detail)}</span> · not on court yet`;
@@ -611,8 +619,14 @@
       const prev = live.prevScores[p.id];
       const flash = prev !== undefined && prev !== s.sc ? "lv-flash" : "";
       live.prevScores[p.id] = s.sc;
-      const title = `${p.name}: ${s.sc} so far from ${s.played} game${s.played === 1 ? "" : "s"}${s.official ? " (SuperCoach's official score for finished games)" : " (live, may differ from SuperCoach by a point or two until they update)"}, ${s.left} left. Projected finish ${s.finish} (pre-round projection ${p.proj}).`;
-      return `<button type="button" class="lv-row ${isBench ? "bench" : ""} ${s.now ? "is-live" : ""} ${dropPill ? "dropped" : ""}" data-lv-player="${esc(p.id)}" title="${esc(title)}">
+      const mult = isCapRow ? 2 : 1;
+      const tip = tipBox(`${p.name}${isCapRow ? " (captain ×2)" : ""}`, [
+        ["So far", `${s.sc * mult} · ${s.played} of ${s.total} game${s.total === 1 ? "" : "s"}`],
+        ["Games left", s.now ? `${s.left} + playing now` : String(s.left)],
+        ["Heading for", String(s.finish * mult), "tip-pos"],
+        ["Pre-round projection", String(Math.round(p.proj * mult))]
+      ], s.official ? "Finished games use SuperCoach's official scores." : "Live scores can be a point or two off until SuperCoach publishes them.");
+      return `<button type="button" class="lv-row ${isBench ? "bench" : ""} ${s.now ? "is-live" : ""} ${dropPill ? "dropped" : ""}" data-lv-player="${esc(p.id)}" data-tip="${tip}">
         ${window.SCHOOPS.renderAvatar(p, 36)}
         <span style="min-width:0"><span class="lv-name"><span>${esc(p.name)}</span>${pill}${dropPill}</span><span class="lv-line">${line}</span></span>
         <span class="lv-pips" aria-hidden="true">${s.pips.map((c) => `<i class="lv-pip ${c}"></i>`).join("")}</span>
@@ -627,7 +641,7 @@
       </div>
       <div class="lv-sum">
         <div><div class="lv-sum-l">Scored so far</div><div class="lv-sum-v">${soFar.sum}</div>
-          <div class="lv-prog" title="${doneGames} of ${allGames} starter games played"><i style="transform:scaleX(${(doneGames / allGames).toFixed(3)})"></i></div></div>
+          <div class="lv-prog" data-tip="${tipBox("Starter games played", [["Played", `${doneGames} of ${allGames}`]])}"><i style="transform:scaleX(${(doneGames / allGames).toFixed(3)})"></i></div></div>
         <div><div class="lv-sum-l">Projected finish</div><div class="lv-sum-v">${finish.sum}<small class="${diff >= 0 ? "pos-text" : "neg-text"}">${diff >= 0 ? "+" : "−"}${Math.abs(diff)}</small></div></div>
         <div><div class="lv-sum-l">Pre-round projection</div><div class="lv-sum-v" style="color:var(--text-secondary)">${proj}</div></div>
       </div>
@@ -653,7 +667,7 @@
       const team = (code, logo, score, other) => `<div class="lv-g-team ${g.state === "post" && score < other ? "lose" : ""}">
         ${logo ? `<img src="${esc(logo)}" alt="" loading="lazy" />` : ""}<span>${esc(code)}</span>${hasScore ? `<span class="sc">${score}</span>` : ""}</div>`;
       return `<button type="button" class="lv-game ${live.selected === g.key ? "sel" : ""}" data-lv-game="${esc(g.key)}" aria-pressed="${live.selected === g.key}" ${rows.length ? "" : ""}>
-        <div class="lv-g-status">${gameStatus(g)}${mine ? `<span class="mine" title="Your players in this game">${mine} yours</span>` : ""}</div>
+        <div class="lv-g-status">${gameStatus(g)}${mine ? `<span class="mine">${mine} yours</span>` : ""}</div>
         ${team(g.away, g.awayLogo, as, hs)}${team(g.home, g.homeLogo, hs, as)}
       </button>`;
     };
@@ -730,8 +744,10 @@
     const byId = {};
     rows.forEach((r) => { byId[r.id] = r; });
     const qLabel = (q) => (q > 4 ? (q === 5 ? "OT" : `OT${q - 4}`) : `Q${q}`);
-    const headHtml = (qs, cur) => {
-      const tabs = qs.map((q) => `<button type="button" class="${q === cur ? "on" : ""}" data-lv-q="${q}" aria-pressed="${q === cur}">${qLabel(q)}</button>`).join("");
+    const headHtml = (qs, cur, liveQ) => {
+      const isAll = cur === "all";
+      const tabs = `<button type="button" class="${isAll ? "on" : ""}" data-lv-q="all" aria-pressed="${isAll}">All</button>`
+        + qs.map((q) => `<button type="button" class="${q === cur ? "on" : ""}" data-lv-q="${q}" aria-pressed="${q === cur}">${q === liveQ ? `<i class="lv-qdot" aria-label="live"></i>` : ""}${qLabel(q)}</button>`).join("");
       return `<div class="lv-feed-head">
         <div><div class="lv-card-title">SC feed</div><div class="lv-card-sub">Every play that moved a SuperCoach score</div></div>
         <div class="lv-feed-ctrls">
@@ -739,14 +755,16 @@
           <button type="button" class="lv-chip ${live.feedMine ? "on" : ""}" data-lv-mine aria-pressed="${live.feedMine}">My players</button>
         </div></div>`;
     };
-    if (plays === undefined || live.playsPending[g.eventId]) return `<div class="lv-feed">${headHtml([1, 2, 3, 4], 1)}<div class="lv-pre">Loading plays…</div></div>`;
-    if (!plays || !plays.length) return `<div class="lv-feed">${headHtml([1, 2, 3, 4], 1)}<div class="lv-pre">No play-by-play for this game yet.</div></div>`;
+    if (plays === undefined || live.playsPending[g.eventId]) return `<div class="lv-feed">${headHtml([1, 2, 3, 4], null)}<div class="lv-pre">Loading plays…</div></div>`;
+    if (!plays || !plays.length) return `<div class="lv-feed">${headHtml([1, 2, 3, 4], null)}<div class="lv-pre">No play-by-play for this game yet.</div></div>`;
     const maxQ = Math.max(4, ...plays.map((p) => p.q));
     const qs = Array.from({ length: maxQ }, (_, i) => i + 1);
     const latest = Math.max(...plays.map((p) => p.q));
-    const cur = live.feedQ && live.feedQ <= maxQ ? live.feedQ : latest;
+    // Following (nothing picked) shows the quarter being played and moves on with the game
+    const cur = live.feedQ === "all" ? "all" : (live.feedQ && live.feedQ <= maxQ ? live.feedQ : latest);
+    const liveQ = g.state === "in" ? latest : null;
     const mine = (id) => byId[id] && byId[id].p && byId[id].p.inSquad;
-    let list = plays.filter((p) => p.q === cur);
+    let list = cur === "all" ? plays.slice() : plays.filter((p) => p.q === cur);
     if (live.feedMine) list = list.filter((p) => p.ev.some((e) => mine(e.id)));
     list = [...list].sort((a, b) => b.seq - a.seq);
     const chip = (e) => {
@@ -760,8 +778,16 @@
       const attrs = main.p ? `data-lv-player="${esc(main.p.id)}"` : "";
       return `<li class="lv-play ${isMine ? "mine" : ""} ${mine(main.id) ? "main-mine" : ""}" ${attrs}><span class="lv-play-t">${esc(p.clock)}</span>${face(main, 26)}<span class="lv-play-txt">${esc(p.text)}</span><span class="lv-play-ev">${p.ev.map(chip).join("")}</span></li>`;
     };
-    const empty = live.feedMine ? "None of your players scored in this quarter." : "No scoring plays in this quarter yet.";
-    return `<div class="lv-feed">${headHtml(qs, cur)}${list.length ? `<ol class="lv-plays">${list.map(item).join("")}</ol>` : `<div class="lv-pre">${empty}</div>`}</div>`;
+    const where = cur === "all" ? "this game" : "this quarter";
+    const empty = live.feedMine ? `None of your players scored in ${where}.` : `No scoring plays in ${where} yet.`;
+    // All quarters: newest first with a heading where each quarter starts
+    let body = "", lastQ = null;
+    list.forEach((p) => {
+      if (cur === "all" && p.q !== lastQ) { body += `<li class="lv-qhead">${qLabel(p.q)}${p.q === liveQ ? ` <span class="lv-qlive">live</span>` : ""}</li>`; lastQ = p.q; }
+      body += item(p);
+    });
+    const follow = live.feedQ === null && g.state === "in" ? `<div class="lv-follow"><i></i>Following the game: moves to the next quarter by itself</div>` : "";
+    return `<div class="lv-feed">${headHtml(qs, cur, liveQ)}${follow}${list.length ? `<ol class="lv-plays">${body}</ol>` : `<div class="lv-pre">${empty}</div>`}</div>`;
   }
 
   function renderTop(state, perPlayer) {
@@ -769,7 +795,7 @@
       .sort((a, b) => b.e.sc - a.e.sc).slice(0, 10);
     return `<section class="lv-card lv-top" aria-label="Top scorers">
       <div class="lv-card-head"><div><div class="lv-card-title">Top scorers this round</div><div class="lv-card-sub">Live round totals</div></div></div>
-      ${list.length ? list.map((x, i) => `<button type="button" class="lv-prow ${x.p.inSquad ? "mine" : ""}" data-lv-player="${esc(x.p.id)}" title="${esc(`${x.p.name}: ${x.e.sc} from ${x.e.played} game${x.e.played === 1 ? "" : "s"}${x.e.official ? " (official)" : " (live)"}`)}">
+      ${list.length ? list.map((x, i) => `<button type="button" class="lv-prow ${x.p.inSquad ? "mine" : ""}" data-lv-player="${esc(x.p.id)}" data-tip="${tipBox(x.p.name, [["Round score", String(x.e.sc)], ["Games played", String(x.e.played)], ["Score", x.e.official ? "SuperCoach official" : "live"]])}">
           <span class="lv-rank">${i + 1}</span>${window.SCHOOPS.renderAvatar(x.p, 26)}
           <span class="nm"><span>${esc(x.p.name)}</span>${x.p.inSquad ? `<span class="lv-sq">YOURS</span>` : ""}</span>
           <span><span class="min">${x.e.played}g</span><span class="v">${x.e.sc}</span></span></button>`).join("")
@@ -970,7 +996,14 @@
       if (g) { live.selected = g.dataset.lvGame; live.feedQ = null; render(); return; }
       if (e.target.closest("[data-lv-refresh]")) { refreshAll(false); return; }
       const q = e.target.closest("[data-lv-q]");
-      if (q) { live.feedQ = Number(q.dataset.lvQ); render(); return; }
+      if (q) {
+        const v = q.dataset.lvQ === "all" ? "all" : Number(q.dataset.lvQ);
+        const g2 = live.games.find((x) => x.key === live.selected);
+        const pl = g2 && live.plays[g2.eventId];
+        const liveQ = g2 && g2.state === "in" && pl && pl.length ? Math.max(...pl.map((p) => p.q)) : null;
+        live.feedQ = v === liveQ ? null : v;
+        render(); return;
+      }
       if (e.target.closest("[data-lv-mine]")) { live.feedMine = !live.feedMine; render(); return; }
       if (e.target.closest('[data-lv-go="court"]')) { window.SCHOOPS.setActiveNav("court"); return; }
       const p = e.target.closest("[data-lv-player]");
