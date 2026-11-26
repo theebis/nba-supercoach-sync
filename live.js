@@ -17,6 +17,7 @@
   const POLL_LIVE_MS = 30000;      // box scores of games in progress
   const POLL_BOARD_MS = 60000;     // scoreboard while any game is live (or about to tip off)
   const POLL_IDLE_MS = 10 * 60000; // scoreboard when nothing is on
+  const OFFICIAL_AFTER_TIP_MS = 3.5 * 3600000; // SuperCoach totals only count as final this long after the last tip-off (covers overtime + their update lag)
   // ESPN team codes -> SuperCoach team codes
   const TEAM_FIX = { GS: "GSW", NO: "NOP", NY: "NYK", SA: "SAS", UTAH: "UTA", WSH: "WAS" };
   const teamCode = (abbr) => TEAM_FIX[abbr] || abbr;
@@ -505,14 +506,20 @@
         return { ...r, p };
       });
     });
-    // Finished games: use SuperCoach's official total once our data sync has caught up with them
-    // (same number of finished games), plus our live score for any game in progress.
+    // Finished games: use SuperCoach's official total once our data sync has caught up with them,
+    // plus our live score for any game in progress. "Caught up" means the same number of finished games
+    // AND the data was saved after his last finished game was over. SuperCoach's feed updates during games,
+    // so a sync that runs mid-game saves half-game scores with a matching game count (25 Nov: Lendeborg 15
+    // of 23, Wembanyama, Cissoko, Acuff). Until a later sync, those games keep the ESPN box-score total.
+    const savedMs = Date.parse(state.lastUpdated || "") || 0;
     Object.entries(perPlayer).forEach(([id, e]) => {
       const p = state.computedById[id];
       if (!p || !p.scRoundGames) return;
       const done = e.lines.filter((l) => l.game.state === "post" && !l.row.dnp);
       const inPlay = e.lines.filter((l) => l.game.state !== "post" && !l.row.dnp);
-      if (done.length && p.scRoundGames === done.length) {
+      const lastTip = Math.max(0, ...done.map((l) => l.game.ms || 0));
+      const savedAfterFinal = savedMs > 0 && lastTip > 0 && savedMs >= lastTip + OFFICIAL_AFTER_TIP_MS;
+      if (done.length && p.scRoundGames === done.length && savedAfterFinal) {
         e.ourSc = e.sc;
         e.sc = p.scRoundPoints + inPlay.reduce((s, l) => s + l.row.sc, 0);
         e.official = true;

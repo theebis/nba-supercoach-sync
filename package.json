@@ -9,7 +9,8 @@
     "check:ui": "node scripts/check-ui.mjs",
     "check:data": "python -I scripts/check_data.py",
     "check:import": "node scripts/check-import.mjs",
-    "check:clicks": "node scripts/check-clicks.mjs"
+    "check:clicks": "node scripts/check-clicks.mjs",
+    "check:scores": "node scripts/check-scores.mjs"
   },
   "devDependencies": {
     "playwright": "1.49.1"
