@@ -829,6 +829,56 @@ def attach_projections(live_data, target_round):
     print(f"Added SCHOOPS projections for {len(live_data['players'])} players (round ends {round_end}).")
 
 
+LOCK_FIELDS = {"proj": "proj_v2", "lo": "proj_lo", "hi": "proj_hi", "exp_games": "exp_games", "exp_ppg": "exp_ppg",
+               "ppg_lo": "ppg_lo", "ppg_hi": "ppg_hi", "sc_proj": "proj", "injury": "injury_status"}
+
+
+def first_tips(live_data, round_num):
+    """Each team's first tip-off of the round (UTC datetime), from the saved fixtures."""
+    tips = {}
+    for g in (live_data.get("fixtures") or {}).get(str(round_num), []) or []:
+        try:
+            t = datetime.fromisoformat(str(g["t"]).replace("Z", "+00:00"))
+            t = (t if t.tzinfo else t.replace(tzinfo=timezone.utc)).astimezone(timezone.utc)
+        except Exception:
+            continue
+        for team in (g.get("home"), g.get("away")):
+            if team and (team not in tips or t < tips[team]):
+                tips[team] = t
+    return tips
+
+
+def attach_locks(live_data, existing_data, round_num, now=None):
+    """Freezes each player's projection at his first tip-off of the round as p["lock"].
+    Captain picks use it (odds as they stood before his first game), and it's the pre-game record for accuracy checks.
+    Frozen from the last sync BEFORE tip-off when we have one; later syncs carry it over unchanged."""
+    now = now or datetime.now(timezone.utc)
+    tips = first_tips(live_data, round_num)
+    same_round = int(existing_data.get("round") or 0) == int(round_num)
+    prev_by_id = {str(p.get("id")): p for p in existing_data.get("players", [])} if same_round else {}
+    prev_at = existing_data.get("lastUpdated") if same_round else None
+    try:
+        prev_dt = datetime.fromisoformat(str(prev_at).replace("Z", "+00:00")) if prev_at else None
+    except ValueError:
+        prev_dt = None
+    locked = 0
+    for p in live_data["players"]:
+        tip = tips.get(p.get("team"))
+        if not tip or now < tip:
+            continue
+        prev = prev_by_id.get(str(p.get("id")))
+        if prev and isinstance(prev.get("lock"), dict):
+            p["lock"] = prev["lock"]
+        else:
+            src = prev if prev and prev_dt and prev_dt < tip else p
+            lock = {k: src.get(f) for k, f in LOCK_FIELDS.items()}
+            lock["at"] = (prev_at if src is prev else now.isoformat())
+            lock["tip"] = tip.isoformat()
+            p["lock"] = lock
+        locked += 1
+    print(f"Locked pre-game projections: {locked} players whose first game of Round {round_num} has started.")
+
+
 def main():
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r", encoding="utf-8") as f:
@@ -954,6 +1004,7 @@ def main():
     attach_trends(live_data, available_rounds, target_round)
     attach_snapshot_trends(available_rounds, target_round)
     attach_projections(live_data, target_round)
+    attach_locks(live_data, existing_data, target_round)
     # Keep the live round's snapshot in step with the live file (it now carries our projections too)
     with open(current_snap_path, "w", encoding="utf-8") as f:
         json.dump(live_data, f, indent=2)

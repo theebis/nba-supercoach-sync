@@ -2747,6 +2747,8 @@
         gamesNext: futureGms.gamesNext,
         gamesAfter: futureGms.gamesAfter,
         owned, avg5, officialBe,
+        // Projection frozen at his first tip-off of the round (captain picks use it; see attach_locks in the scraper)
+        lock: (p.lock && typeof p.lock === "object") ? p.lock : null,
         injury: p.injury || p.injury_status || null,
         injuryStatus: p.injury_status || (p.injury ? "Injured" : null),
         injuryDetail: p.injury_detail || null,
@@ -4613,7 +4615,7 @@
   <script src="court.js?v=22"></script>
   <script src="tradelab.js?v=22"></script>
   <script src="briefing.js?v=5"></script>
-  <script src="captains.js?v=3"></script>
+  <script src="captains.js?v=6"></script>
   <script src="live.js?v=11"></script>
   <script src="notify.js?v=1"></script>
   <script src="importmatch.js?v=1"></script>

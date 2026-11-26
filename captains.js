@@ -20,6 +20,7 @@
   let collapsed = store.get(HIDE_KEY) === null ? null : store.get(HIDE_KEY) === "1"; // null = not chosen yet
   let mode = store.get(MODE_KEY) || "team";
   let simCache = { key: "", chances: {} };
+  const LOCK_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>`;
 
   function injectStyles() {
     const style = document.createElement("style");
@@ -63,6 +64,10 @@
       .cp-mid { min-width: 0; }
       .cp-name { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; min-width: 0; }
       .cp-name > span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .cp-lock { display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0; padding: 1px 6px 1px 5px; border-radius: 4px; background: rgba(255, 255, 255, 0.06); color: var(--text-tertiary); font-size: 10px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; }
+      .cp-lock svg { width: 9px; height: 9px; }
+      @media (max-width: 760px) { .cp-lock { padding: 2px 4px; } .cp-lock span { display: none; } }
+      .cp-card.is-locked .cp-num b { color: var(--text-secondary); }
       .cp-why { font-size: 11.5px; line-height: 1.4; color: var(--text-secondary); margin-top: 2px; text-wrap: pretty;
         display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
       .cp-num { text-align: right; font-family: var(--mono); white-space: nowrap; }
@@ -147,13 +152,13 @@
   }
 
   // Which players can be captained in this mode, and a label explaining where they came from
-  function getPool(state, all, mode) {
+  function getPool(state, all, mode, view) {
     if (mode === "team") {
       const squad = all.filter((p) => p.inSquad);
       if (!squad.length) return { players: [], source: "none" };
       const solver = window.SCHOOPS_SOLVER;
       const slots = (state.court && state.court.slots) || {};
-      const starters = solver ? solver.STARTER_SLOTS.map((s) => slots[s.key]).filter(Boolean).map((id) => state.computedById[id]).filter(Boolean) : [];
+      const starters = solver ? solver.STARTER_SLOTS.map((s) => slots[s.key]).filter(Boolean).map((id) => state.computedById[id]).filter(Boolean).map(view) : [];
       if (starters.length >= 5) return { players: starters, source: "starters" };
       return { players: squad, source: "squad" };
     }
@@ -162,12 +167,14 @@
 
   // One-line reason, written from what actually sets this player apart from the other options
   function reasonFor(p, rank, top, chance, capPick) {
+    // Locked players: the same reasons, from his numbers as they stood at tip-off
     const bits = [];
     const games = p.games || 0;
     const fewestOther = Math.min(...top.filter((q) => q.id !== p.id).map((q) => q.games || 0));
     const ppg = recentPpg(p);
     const bestPpg = Math.max(...top.map((q) => recentPpg(q) || 0));
-    if (p.injuryStatus) bits.push(isOut(p) ? "Listed out: only if he's cleared" : "Day-to-day: check he's playing before lockout");
+    if (p.injuryStatus && p.locked) bits.push(isOut(p) ? "Was listed out at tip-off" : "Was day-to-day at tip-off");
+    else if (p.injuryStatus) bits.push(isOut(p) ? "Listed out: only if he's cleared" : "Day-to-day: check he's playing before lockout");
     else if (rank === "c") {
       const next = top.find((q) => q.id !== p.id);
       bits.push(next && p.proj - next.proj >= 5 ? `highest projection by ${p.proj - next.proj} pts` : "highest projection");
@@ -191,9 +198,42 @@
     return hasSquad ? mode : "all";
   }
 
+  // ---------- lockout ----------
+  // Once a player's first game of the round tips off he can't be made captain any more, so his odds are only
+  // worth anything as they stood BEFORE that game. Locked players use the projection frozen at tip-off
+  // (p.lock, saved by the data sync); later news or scores never move them.
+  function firstTips(state) {
+    const tips = {};
+    ((state.fixtures || {})[String(state.round)] || []).forEach((g) => {
+      const ms = Date.parse(g.t);
+      if (Number.isNaN(ms)) return;
+      [g.home, g.away].forEach((t) => { if (t && (!tips[t] || ms < tips[t])) tips[t] = ms; });
+    });
+    return tips;
+  }
+  function asAtLockout(p, state, tips) {
+    const tip = tips[p.team];
+    if (!tip || Date.now() < tip) return p;
+    const L = p.lock;
+    // No sync since his tip-off yet: today's numbers are still the pre-game ones
+    if (!L) return { ...p, locked: true, lockTip: tip };
+    const ours = state.projSource !== "sc" && L.proj !== null && L.proj !== undefined;
+    return {
+      ...p, locked: true, lockTip: tip,
+      proj: ours ? L.proj : (L.sc_proj ?? p.proj),
+      projIsOurs: ours && p.projIsOurs,
+      projLo: ours ? (L.lo ?? null) : null, projHi: ours ? (L.hi ?? null) : null,
+      ppgLo: L.ppg_lo ?? p.ppgLo, ppgHi: L.ppg_hi ?? p.ppgHi, expPpg: L.exp_ppg ?? p.expPpg,
+      expGames: L.exp_games ?? p.expGames, injuryStatus: L.injury || null
+    };
+  }
+
   function pickCaptains(state, mode) {
-    const all = Object.values(state.computedById || {}).filter((p) => !p.isInactive && !p.isLikelyDnp && (p.proj || 0) > 0);
-    const pool = getPool(state, all, mode);
+    const tips = firstTips(state);
+    const view = (p) => asAtLockout(p, state, tips);
+    const all = Object.values(state.computedById || {}).map(view)
+      .filter((p) => !p.isInactive && !p.isLikelyDnp && (p.proj || 0) > 0);
+    const pool = getPool(state, all, mode, view);
     if (!pool.players.length) return { pool, top: [] };
     const ranked = [...pool.players].filter((p) => (p.proj || 0) > 0).sort((a, b) => (b.proj - a.proj) || (b.games - a.games));
     const simPool = ranked.slice(0, mode === "team" ? 15 : 25);
@@ -237,12 +277,14 @@
 
     // "Use these" sets C/VC in My Court; only offered when the picks are your starters and differ from what's set
     const court = state.court || {};
-    const canApply = mode === "team" && pool.source === "starters" && cap;
+    // Locked players can't be made C / VC any more, so don't offer to set them
+    const canApply = mode === "team" && pool.source === "starters" && cap && !cap.locked && !(vc && vc.locked);
+    const anyLocked = cards.some((p) => p.locked);
     const alreadySet = canApply && court.captainId === cap.id && (!vc || court.viceCaptainId === vc.id);
 
     el.innerHTML = `
       <div class="cp-head">
-        <div class="cp-title"><b>Round ${state.round} captain picks</b><span>Captain scores double · ${where} · % = chance he's the top scorer</span></div>
+        <div class="cp-title"><b>Round ${state.round} captain picks</b><span>Captain scores double · ${where} · % = chance he's the top scorer${anyLocked ? " · locked players keep their pre-game odds" : ""}</span></div>
         <div class="cp-ctrls">
           ${hasSquad ? `<div class="cp-seg" role="group" aria-label="Pick from">
             <button type="button" class="${mode === "team" ? "on" : ""}" data-cp-mode="team" aria-pressed="${mode === "team"}">My team</button>
@@ -256,9 +298,11 @@
         const role = roleOf(p);
         const chance = chances[p.id] || 0;
         const range = p.projIsOurs && p.ppgLo !== null ? `most games ${p.ppgLo}–${p.ppgHi}` : "SuperCoach proj";
-        const tag = p.injuryStatus ? `<span class="micro-tag ${isOut(p) ? "out" : "dtd"}">${isOut(p) ? "OUT" : "DTD"}</span>` : "";
+        const tag = p.locked
+          ? `<span class="cp-lock" title="His first game started ${escapeHtml(new Date(p.lockTip).toLocaleString(undefined, { weekday: "long", hour: "numeric", minute: "2-digit" }))}, so he can't be made captain now. His odds are frozen as they stood before that game.">${LOCK_ICON}<span>Locked ${escapeHtml(new Date(p.lockTip).toLocaleDateString(undefined, { weekday: "short" }))}</span></span>`
+          : p.injuryStatus ? `<span class="micro-tag ${isOut(p) ? "out" : "dtd"}">${isOut(p) ? "OUT" : "DTD"}</span>` : "";
         return `
-        <button type="button" class="cp-card ${role}" data-cp-player="${escapeHtml(p.id)}" title="${escapeHtml(`${p.name}: projected ${p.proj} (${range}), ${p.games} games. As captain: ${p.proj * 2}. Click for details.`)}">
+        <button type="button" class="cp-card ${role} ${p.locked ? "is-locked" : ""}" data-cp-player="${escapeHtml(p.id)}" title="${escapeHtml(`${p.name}: projected ${p.proj} (${range}), ${p.games} games. As captain: ${p.proj * 2}. Click for details.`)}">
           <span class="cp-role">${role ? role.toUpperCase() : "3rd"}</span>
           ${renderAvatar(p, 32)}
           <span class="cp-mid">
