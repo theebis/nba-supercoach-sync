@@ -125,6 +125,7 @@
       .lv-bt tr.mine td.pl { box-shadow: inset 2px 0 0 var(--accent); }
       .lv-bt tr.dnp td { color: var(--text-tertiary); }
       .lv-bt td.why { text-align: left; font-family: var(--sans); font-size: 11px; }
+      .lv-bt td.why .lv-wait { color: var(--text-tertiary); opacity: 0.85; }
       .lv-bt tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
       /* SC feed */
@@ -270,6 +271,17 @@
 
   const madeAtt = (s) => { const m = String(s || "0-0").split("-"); return [Number(m[0]) || 0, Number(m[1]) || 0]; };
 
+  // What to say for a player with no stats. ESPN fills in "DNP · Coach's decision" for every bench player
+  // from tip-off, so mid-game that only means he hasn't come on yet. Real absences (injury, illness,
+  // suspension, not with team, rest) are known before the game, so those keep their reason.
+  const ABSENT_RE = /injur|illness|sick|suspen|not with team|personal|rest|health|protocol|g league|two-way|inactive/i;
+  function notPlayedText(r, gameState) {
+    if (gameState === "post") return `DNP${r.reason ? ` · ${esc(r.reason)}` : ""}`;
+    if (r.reason && ABSENT_RE.test(r.reason)) return `Out · ${esc(r.reason)}`;
+    if (!r.espnDnp) return `<span class="lv-wait">No stats yet</span>`; // checked in, under a minute played
+    return `<span class="lv-wait">Yet to check in</span>`;
+  }
+
   // One ESPN box-score team group -> compact rows
   function parseSummary(summary) {
     const rows = [];
@@ -285,11 +297,14 @@
           const n = (k) => { const v = parseInt(rec[k], 10); return Number.isNaN(v) ? 0 : v; };
           const [fgm, fga] = madeAtt(rec.FG);
           const [ftm, fta] = madeAtt(rec.FT);
-          const dnp = !!a.didNotPlay || !stats.length || n("MIN") === 0 && fga === 0 && n("PTS") === 0 && n("REB") === 0;
+          // ESPN flags real no-shows with didNotPlay. An all-zero line only counts as "didn't play" for a bench
+          // player ESPN doesn't list as active: at tip-off the starters are on court with nothing yet.
+          const zeroLine = n("MIN") === 0 && fga === 0 && n("PTS") === 0 && n("REB") === 0;
+          const dnp = !!a.didNotPlay || !stats.length || (zeroLine && !a.starter && !a.active);
           const s = { pts: n("PTS"), reb: n("REB"), ast: n("AST"), stl: n("STL"), blk: n("BLK"), to: n("TO") };
           const sc = s.pts + s.reb + s.ast + 2 * s.stl + 2 * s.blk - s.to - (fga - fgm) - (fta - ftm);
           rows.push({ id: String(ath.id || ""), name: ath.displayName || ath.shortName || "", short: ath.shortName || ath.displayName || "",
-            team: abbr, min: n("MIN"), dnp, sc: dnp ? 0 : sc, ...s, reason: a.reason || "",
+            team: abbr, min: n("MIN"), dnp, espnDnp: !!a.didNotPlay, sc: dnp ? 0 : sc, ...s, reason: a.reason || "",
             fg: `${fgm}-${fga}`, ft: `${ftm}-${fta}`, tp: String(rec["3PT"] || "0-0"), pf: n("PF"), starter: !!a.starter });
         });
       });
@@ -722,7 +737,7 @@
         const mine = r.p && r.p.inSquad;
         const attrs = r.p ? `data-lv-player="${esc(r.p.id)}" tabindex="0" role="button"` : "";
         const who = `<td class="pl">${face(r, 22)}<span class="nm">${esc(r.name)}</span>${mine ? `<span class="lv-sq">YOURS</span>` : ""}</td>`;
-        if (r.dnp) return `<tr class="dnp" ${attrs}>${who}<td class="scv">—</td><td colspan="9" class="why">DNP${r.reason ? ` · ${esc(r.reason)}` : ""}</td></tr>`;
+        if (r.dnp) return `<tr class="dnp" ${attrs}>${who}<td class="scv">—</td><td colspan="9" class="why">${notPlayedText(r, g.state)}</td></tr>`;
         return `<tr class="${mine ? "mine" : ""}" ${attrs}>${who}<td class="scv ${r.sc < 0 ? "neg" : ""}">${r.sc}</td><td>${r.min}</td><td>${r.pts}</td><td>${r.reb}</td><td>${r.ast}</td><td>${r.stl}</td><td>${r.blk}</td><td>${r.to}</td><td class="sh">${esc(r.fg || "")}</td><td class="sh">${esc(r.ft || "")}</td></tr>`;
       };
       const img = logo ? `<img src="${esc(logo)}" alt="" />` : "";
