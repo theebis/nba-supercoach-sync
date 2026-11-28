@@ -708,6 +708,13 @@
       .lc-fin-live b { color: var(--text-primary); font-weight: 600; }
       .lc-now { color: #FCA5A5; font-weight: 600; }
       .lc-tile.is-now { box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.55), 0 0 18px rgba(248, 113, 113, 0.18); }
+      /* On the floor right now: green, so it reads differently from "his game is on" (red) */
+      .lc-tile.is-oncourt { box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.6), 0 0 18px rgba(52, 211, 153, 0.2); }
+      .lc-now.oc { color: var(--pos-bright); }
+      .lc-now.oc i { background: var(--pos-bright); }
+      .lc-now.bench { color: var(--text-tertiary); }
+      .lc-now.bench i { display: none; }
+      .lc-hstat-now .lc-pulse { background: var(--pos-bright); }
       .lc-import-btn { height: 32px; padding: 0 14px; display: inline-flex; align-items: center; gap: 7px; border-radius: 8px; border: none;
         background: var(--accent); color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
         box-shadow: 0 1px 0 rgba(255, 255, 255, 0.18) inset, 0 4px 12px rgba(110, 123, 242, 0.3);
@@ -1294,7 +1301,8 @@
     if (isSel) cls.push("selected");
     if (isTarget) cls.push("valid-target");
     if (ui.movedIds.has(player.id)) cls.push("just-moved");
-    if (lv && lv.now) cls.push("is-now");
+    if (lv && lv.onCourt) cls.push("is-oncourt");
+    else if (lv && lv.now && !lv.onBench) cls.push("is-now");
 
     const gCls = player.games >= 4 ? "g4" : (player.games === 0 ? "g0" : (player.games <= 2 ? "g2" : ""));
     const displayPts = isCap ? Math.round(player.proj * 2) : Math.round(player.proj);
@@ -1341,7 +1349,7 @@
               <button type="button" class="lc-act-btn rem-btn" data-remove-squad="${escapeHtml(player.id)}" data-remove-slot="${slotDef.key}" title="Remove from Squad">${ICON_REMOVE}</button>
             </div>
           </div>
-          ${lv ? `<div class="lc-fin lc-fin-live"><span class="lc-livepips" aria-label="${lv.total - lv.left} of ${lv.total} games">${lv.pips.map((c) => `<i class="${c}"></i>`).join("")}</span>${lv.now ? `<span class="lc-now"><i></i>${escapeHtml(lv.now)}</span>` : (lv.left ? `${lv.left} to play` : "done")}</div>`
+          ${lv ? `<div class="lc-fin lc-fin-live"><span class="lc-livepips" aria-label="${lv.total - lv.left} of ${lv.total} games">${lv.pips.map((c) => `<i class="${c}"></i>`).join("")}</span>${lv.now ? (lv.onCourt ? `<span class="lc-now oc"><i></i>On court</span>` : `<span class="lc-now ${lv.onBench ? "bench" : ""}"><i></i>${lv.onBench ? "Bench · " : ""}${escapeHtml(lv.now)}</span>`) : (lv.left ? `${lv.left} to play` : "done")}</div>`
           : `<div class="lc-fin">BE ${player.be === null ? "—" : player.be} · <span class="${player.priceChange >= 0 ? "pos-text" : "neg-text"}">${formatMoney(player.priceChange)}</span></div>`}
         </div>
       </div>
@@ -1514,7 +1522,7 @@
               const frac = liveTeam.allGames ? liveTeam.doneGames / liveTeam.allGames : 0;
               mid = slot("Heading for", `<span class="mono">${liveTeam.finish}</span>`, `<span class="${d >= 0 ? "pos-text" : "neg-text"}">${d >= 0 ? "+" : "−"}${Math.abs(d)}</span> vs projected ${evalRes.totalProj}`)
                 + slot("Starter games played", `<span class="mono">${liveTeam.doneGames}<small class="lc-hv-of">/${liveTeam.allGames}</small></span>`, `<span class="lc-hprog"><i style="transform:scaleX(${frac.toFixed(3)})"></i></span>`)
-                + slot("On court now", `<span class="mono">${liveTeam.onCourt ? `<i class="lc-pulse"></i>` : ""}${liveTeam.onCourt}</span>`, liveTeam.onCourt ? "of your starters" : "none right now", "lc-hstat-now");
+                + slot("On court now", `<span class="mono">${liveTeam.onCourt ? `<i class="lc-pulse"></i>` : ""}${liveTeam.onCourt}</span>`, liveTeam.onCourt ? `of your starters${liveTeam.playing > liveTeam.onCourt ? ` · ${liveTeam.playing - liveTeam.onCourt} on the bench` : ""}` : (liveTeam.playing ? `${liveTeam.playing} playing, none on the floor` : "none right now"), "lc-hstat-now");
             } else {
               mid = slot("Captain", evalRes.captain ? escapeHtml(evalRes.captain.name) : "—", evalRes.captain ? `proj ${Math.round(evalRes.captain.proj)} × 2 = ${Math.round(evalRes.captain.proj * 2)}` : "pick one with C")
                 + slot("Starter games", `<span class="mono">${evalRes.starterGames}</span>`, "across your 10 starters")

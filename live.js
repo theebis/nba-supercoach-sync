@@ -183,7 +183,7 @@
 
       .lv-sec { padding: 8px 14px 4px; font-size: 11px; font-weight: 600; color: var(--text-tertiary); display: flex; justify-content: space-between; }
       .lv-sec span { font-weight: 400; }
-      .lv-row { width: 100%; display: grid; grid-template-columns: 36px minmax(0, 1fr) auto 58px; gap: 10px; align-items: center; padding: 8px 14px;
+      .lv-row { width: 100%; display: grid; grid-template-columns: 36px minmax(0, 1fr) auto auto 58px; gap: 10px; align-items: center; padding: 8px 14px;
         border: none; border-top: 1px solid rgba(255, 255, 255, 0.035); background: transparent; color: var(--text-primary); text-align: left; cursor: pointer;
         transition: background-color 100ms ease; }
       @media (hover: hover) { .lv-row:hover { background: var(--bg-hover); } }
@@ -195,7 +195,7 @@
       .lv-pill.c { background: var(--accent); color: #fff; }
       .lv-pill.vc { background: var(--accent-soft); color: #A5AEFF; }
       .lv-pill.drop { background: rgba(255, 255, 255, 0.06); color: var(--text-tertiary); font-weight: 500; }
-      .lv-line { font-size: 11.5px; color: var(--text-secondary); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .lv-line { display: block; font-size: 11.5px; color: var(--text-secondary); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .lv-line .live { color: var(--neg-soft); }
       .lv-pips { display: flex; gap: 3px; }
       .lv-pip { width: 8px; height: 8px; border-radius: 2px; background: rgba(255, 255, 255, 0.1); }
@@ -206,6 +206,22 @@
       .lv-pts b { display: block; font-size: 16px; font-weight: 600; }
       .lv-pts small { display: block; font-size: 10.5px; color: var(--text-tertiary); }
       .lv-pts.cap b { color: var(--warn-bright); }
+      /* This game's score (beside the round total) and who's on the floor */
+      .lv-gsc { display: inline-flex; flex-direction: column; align-items: center; min-width: 40px; padding: 3px 6px 2px; border-radius: 6px;
+        background: rgba(248, 113, 113, 0.1); box-shadow: inset 0 0 0 1px rgba(248, 113, 113, 0.22); font-family: var(--mono); line-height: 1.1; }
+      .lv-gsc b { font-size: 13px; font-weight: 600; color: #FCA5A5; }
+      .lv-gsc small { font-family: var(--sans); font-size: 8.5px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: rgba(252, 165, 165, 0.7); }
+      .lv-gsc.on { background: rgba(52, 211, 153, 0.1); box-shadow: inset 0 0 0 1px rgba(52, 211, 153, 0.3); }
+      .lv-gsc.on b { color: var(--pos-bright); }
+      .lv-gsc.on small { color: rgba(110, 231, 183, 0.75); }
+      .lv-oc { display: inline-flex; align-items: center; gap: 4px; color: var(--pos-bright); font-weight: 600; }
+      .lv-oc i, .lv-oc-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pos-bright); display: inline-block; flex-shrink: 0; }
+      .lv-ob { color: var(--text-tertiary); font-weight: 600; }
+      .lv-row.is-oncourt { box-shadow: inset 2px 0 0 var(--pos-bright); }
+      .lv-nowcount { display: inline-flex; align-items: center; gap: 6px; color: var(--pos-bright); white-space: nowrap; }
+      .lv-bt td.pl .lv-oc-dot { margin-left: 6px; vertical-align: 1px; }
+      .lv-bt tr.oc td.pl { box-shadow: inset 2px 0 0 var(--pos-bright); }
+      @media (prefers-reduced-motion: no-preference) { .lv-oc i, .lv-oc-dot.pulse { animation: lvPulse 1.6s ease-in-out infinite; } }
 
       /* Game view: two compact team columns */
       .lv-gv-score { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--border-subtle); }
@@ -254,7 +270,7 @@
         .lv-game { width: 136px; }
         .lv-sum-v { font-size: 18px; }
         .lv-sum > div { padding: 10px 10px; }
-        .lv-row { grid-template-columns: 30px minmax(0, 1fr) 52px; padding: 8px 12px; }
+        .lv-row { grid-template-columns: 30px minmax(0, 1fr) auto 52px; padding: 8px 12px; }
         .lv-row .lv-pips { display: none; }
         .lv-prow { padding: 5px 10px; font-size: 12px; }
         .lv-prow .min { display: none; }
@@ -306,7 +322,9 @@
           const sc = s.pts + s.reb + s.ast + 2 * s.stl + 2 * s.blk - s.to - (fga - fgm) - (fta - ftm);
           rows.push({ id: String(ath.id || ""), name: ath.displayName || ath.shortName || "", short: ath.shortName || ath.displayName || "",
             team: abbr, min: n("MIN"), dnp, espnDnp: !!a.didNotPlay, sc: dnp ? 0 : sc, ...s, reason: a.reason || "",
-            fg: `${fgm}-${fga}`, ft: `${ftm}-${fta}`, tp: String(rec["3PT"] || "0-0"), pf: n("PF"), starter: !!a.starter });
+            fg: `${fgm}-${fga}`, ft: `${ftm}-${fta}`, tp: String(rec["3PT"] || "0-0"), pf: n("PF"), starter: !!a.starter,
+            // ESPN's "active" = on the floor right now (always exactly 5 per team during a game; checked 28 Nov)
+            onCourt: !!a.active && !a.didNotPlay });
         });
       });
     });
@@ -549,8 +567,15 @@
       if (g.state === "post") return l && !l.row.dnp ? "done" : "dnp";
       return "";
     });
-    return { sc: e.sc, official: !!e.official, played: e.played, total: tg.length, left: left.length, now, nowLine, next: left[0] || null, finish: Math.round(e.sc + rest), pips, lines: e.lines };
+    // This game's score, and whether he's on the floor right now (not shown during breaks: nobody is "on" then)
+    const liveRow = now && nowLine && !nowLine.row.dnp ? nowLine.row : null;
+    const gameSc = liveRow ? liveRow.sc : null;
+    const onCourt = !!(now && nowLine && nowLine.row.onCourt && !atBreak(now));
+    return { sc: e.sc, official: !!e.official, played: e.played, total: tg.length, left: left.length, now, nowLine, next: left[0] || null,
+      finish: Math.round(e.sc + rest), pips, lines: e.lines, gameSc, onCourt, onBench: !!(now && !atBreak(now) && !onCourt) };
   }
+
+  const atBreak = (g) => /halftime|end of|end \d|delay/i.test(String((g && g.detail) || ""));
 
   function clockMins(c) {
     const m = /^(\d+):(\d+)/.exec(String(c || ""));
@@ -623,6 +648,7 @@
     const doneGames = ev.starters.reduce((s, p) => s + (st[p.id].total - st[p.id].left - (st[p.id].now ? 1 : 0)), 0);
     const allGames = ev.starters.reduce((s, p) => s + st[p.id].total, 0) || 1;
     const liveNow = ev.starters.filter((p) => st[p.id].now).length;
+    const onCourtNow = ev.starters.filter((p) => st[p.id].onCourt).length;
 
     const row = (p, isBench) => {
       const s = st[p.id];
@@ -630,8 +656,9 @@
         : (ev.viceCaptain && p.id === ev.viceCaptain.id && !capOut ? `<span class="lv-pill vc">VC</span>` : "");
       const dropPill = !isBench && finish.drop === p.id && ev.starters.length === 10 ? `<span class="lv-pill drop">lowest</span>` : "";
       let line;
-      if (s.now && s.nowLine && !s.nowLine.row.dnp) line = `<span class="live">${esc(s.now.detail)}</span> · ${esc(statLine(s.nowLine.row))}`;
-      else if (s.now) line = `<span class="live">${esc(s.now.detail)}</span> · not on court yet`;
+      const courtTag = s.onCourt ? `<span class="lv-oc"><i></i>On court</span> ` : s.onBench ? `<span class="lv-ob">Bench</span> ` : "";
+      if (s.now && s.nowLine && !s.nowLine.row.dnp) line = `${courtTag}<span class="live">${esc(s.now.detail)}</span> · ${esc(statLine(s.nowLine.row))}`;
+      else if (s.now) line = `${courtTag}<span class="live">${esc(s.now.detail)}</span> · yet to check in`;
       else if (s.next) line = `Next: ${esc(dayFmt(s.next.ms).split(",")[0])} ${esc(timeFmt(s.next.ms))} ${s.next.home === p.team ? "vs" : "@"} ${esc(s.next.home === p.team ? s.next.away : s.next.home)}`;
       else if (s.total) line = `Done · ${s.played} of ${s.total} game${s.total === 1 ? "" : "s"} played`;
       else line = "No games this round";
@@ -648,20 +675,27 @@
         ["Heading for", String(s.finish * mult), "tip-pos"],
         ["Pre-round projection", String(Math.round(p.proj * mult))]
       ], s.official ? "Finished games use SuperCoach's official scores." : "Live scores can be a point or two off until SuperCoach publishes them.");
-      return `<button type="button" class="lv-row ${isBench ? "bench" : ""} ${s.now ? "is-live" : ""} ${dropPill ? "dropped" : ""}" data-lv-player="${esc(p.id)}" data-tip="${tip}">
+      // This game's score sits beside the round total, in the live colour, labelled so the two can't be mixed up
+      const gamePill = s.gameSc !== null && s.gameSc !== undefined
+        ? `<span class="lv-gsc ${s.onCourt ? "on" : ""}" title="${esc(`Scored in this game${isCapRow ? " (×2 as captain)" : ""}. The big number is his round total so far.`)}"><b>${s.gameSc * mult}</b><small>this game</small></span>`
+        : "";
+      return `<button type="button" class="lv-row ${isBench ? "bench" : ""} ${s.now ? "is-live" : ""} ${s.onCourt ? "is-oncourt" : ""} ${dropPill ? "dropped" : ""}" data-lv-player="${esc(p.id)}" data-tip="${tip}">
         ${window.SCHOOPS.renderAvatar(p, 36)}
         <span style="min-width:0"><span class="lv-name"><span>${esc(p.name)}</span>${pill}${dropPill}</span><span class="lv-line">${line}</span></span>
         <span class="lv-pips" aria-hidden="true">${s.pips.map((c) => `<i class="lv-pip ${c}"></i>`).join("")}</span>
+        ${gamePill || `<span aria-hidden="true"></span>`}
         <span class="lv-pts ${flash} ${isCapRow ? "cap" : ""}"><b>${isCapRow ? s.sc * 2 : s.sc}</b><small>→ ${isCapRow ? s.finish * 2 : s.finish}</small></span>
       </button>`;
     };
     // Sort by what each player actually adds: the captain counts double
     const eff = (p) => st[p.id].sc * (cap && p.id === cap.id ? 2 : 1);
-    const order = (arr) => [...arr].sort((a, b) => (st[b.id].now ? 1 : 0) - (st[a.id].now ? 1 : 0) || eff(b) - eff(a));
+    // On the floor first, then playing tonight, then by points
+    const rank = (p) => (st[p.id].onCourt ? 2 : st[p.id].now ? 1 : 0);
+    const order = (arr) => [...arr].sort((a, b) => rank(b) - rank(a) || eff(b) - eff(a));
     return `<section class="lv-card lv-myteam" aria-label="My team live">
       <div class="lv-card-head"><div><div class="lv-card-title">My team</div>
         <div class="lv-card-sub">${lu.fromCourt ? "Your starting 10 from My Squad" : "Best lineup from your squad (set it in My Squad)"} · best 9 of 10 + captain ×2</div></div>
-        ${liveNow ? `<span class="lv-card-sub" style="display:inline-flex;align-items:center;gap:6px;color:var(--neg-soft)"><span class="lv-dot pulse"></span>${liveNow} on court</span>` : ""}
+        ${liveNow ? `<span class="lv-card-sub lv-nowcount"><span class="lv-oc-dot ${onCourtNow ? "pulse" : ""}"></span>${onCourtNow} on court${liveNow > onCourtNow ? `<span class="dim-text"> · ${liveNow - onCourtNow} on the bench</span>` : ""}</span>` : ""}
       </div>
       <div class="lv-sum">
         <div><div class="lv-sum-l">Scored so far</div><div class="lv-sum-v">${soFar.sum}</div>
@@ -739,13 +773,16 @@
 
     // Box score: one table per team, SC first, then the stats that make it up
     const table = (code, logo) => {
+      // During play, the five on the floor are marked (not at breaks, when nobody is "on")
+      const showCourt = g.state === "in" && !atBreak(g);
       const list = [...rows.filter((r) => r.team === code)].sort((a, b) => (a.dnp - b.dnp) || (b.sc - a.sc));
       const tr = (r) => {
         const mine = r.p && r.p.inSquad;
+        const oc = showCourt && r.onCourt && !r.dnp;
         const attrs = r.p ? `data-lv-player="${esc(r.p.id)}" tabindex="0" role="button"` : "";
-        const who = `<td class="pl">${face(r, 22)}<span class="nm">${esc(r.name)}</span>${mine ? `<span class="lv-sq">YOURS</span>` : ""}</td>`;
+        const who = `<td class="pl">${face(r, 22)}<span class="nm">${esc(r.name)}</span>${oc ? `<span class="lv-oc-dot" title="On the court now" aria-label="On the court now"></span>` : ""}${mine ? `<span class="lv-sq">YOURS</span>` : ""}</td>`;
         if (r.dnp) return `<tr class="dnp" ${attrs}>${who}<td class="scv">—</td><td colspan="9" class="why">${notPlayedText(r, g.state)}</td></tr>`;
-        return `<tr class="${mine ? "mine" : ""}" ${attrs}>${who}<td class="scv ${r.sc < 0 ? "neg" : ""}">${r.sc}</td><td>${r.min}</td><td>${r.pts}</td><td>${r.reb}</td><td>${r.ast}</td><td>${r.stl}</td><td>${r.blk}</td><td>${r.to}</td><td class="sh">${esc(r.fg || "")}</td><td class="sh">${esc(r.ft || "")}</td></tr>`;
+        return `<tr class="${mine ? "mine" : ""} ${oc ? "oc" : ""}" ${attrs}>${who}<td class="scv ${r.sc < 0 ? "neg" : ""}">${r.sc}</td><td>${r.min}</td><td>${r.pts}</td><td>${r.reb}</td><td>${r.ast}</td><td>${r.stl}</td><td>${r.blk}</td><td>${r.to}</td><td class="sh">${esc(r.fg || "")}</td><td class="sh">${esc(r.ft || "")}</td></tr>`;
       };
       const img = logo ? `<img src="${esc(logo)}" alt="" />` : "";
       return `<div class="lv-box">
@@ -950,7 +987,8 @@
       [...ev.starters, ...ev.bench].forEach((p) => {
         const s = playerStatus(p, perPlayer);
         players[p.id] = { sc: s.sc, finish: s.finish, official: s.official, played: s.played, total: s.total, left: s.left,
-          now: s.now ? s.now.detail : null, nowLine: s.nowLine && !s.nowLine.row.dnp ? statLine(s.nowLine.row) : null, pips: s.pips };
+          now: s.now ? s.now.detail : null, nowLine: s.nowLine && !s.nowLine.row.dnp ? statLine(s.nowLine.row) : null, pips: s.pips,
+          onCourt: s.onCourt, onBench: s.onBench, gameSc: s.gameSc };
       });
       let cap = ev.captain;
       const c = cap && players[cap.id];
@@ -966,7 +1004,7 @@
       const doneGames = ev.starters.reduce((s, p) => s + (players[p.id].total - players[p.id].left - (players[p.id].now ? 1 : 0)), 0);
       const allGames = ev.starters.reduce((s, p) => s + players[p.id].total, 0);
       return { soFar: soFar.sum, finish: finish.sum, drop: finish.drop, capId: cap ? cap.id : null, players,
-        doneGames, allGames, onCourt: ev.starters.filter((p) => players[p.id].now).length, started: doneGames > 0 || ev.starters.some((p) => players[p.id].now) };
+        doneGames, allGames, onCourt: ev.starters.filter((p) => players[p.id].onCourt).length, playing: ev.starters.filter((p) => players[p.id].now).length, started: doneGames > 0 || ev.starters.some((p) => players[p.id].now) };
     },
     // Open the Live page on one game (from the player profile)
     openGame(key) {
@@ -984,7 +1022,7 @@
       if (!s.total) return null;
       return { sc: s.sc, official: s.official, played: s.played, total: s.total, left: s.left, finish: s.finish,
         now: s.now ? s.now.detail : null, nowLine: s.nowLine && !s.nowLine.row.dnp ? statLine(s.nowLine.row) : null,
-        done: s.total - s.left - (s.now ? 1 : 0) };
+        done: s.total - s.left - (s.now ? 1 : 0), onCourt: s.onCourt, onBench: s.onBench, gameSc: s.gameSc };
     }
   };
 

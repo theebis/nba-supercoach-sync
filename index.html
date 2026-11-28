@@ -3578,7 +3578,7 @@
       const liveCash = liveNewPrice - p.price;
       let liveStatus;
       if (!lv) liveStatus = isLiveRound ? "Live scores appear here once his games tip off. Until then these use his projection." : "";
-      else if (lv.now) liveStatus = `<span class="insp-live-dot"></span>${escapeHtml(lv.now)}${lv.nowLine ? ` · ${escapeHtml(lv.nowLine)}` : " · not on court yet"}`;
+      else if (lv.now) liveStatus = `<span class="insp-live-dot"></span>${lv.onCourt ? `<b class="pos-text">On court</b> · ` : lv.onBench ? "Bench · " : ""}${escapeHtml(lv.now)}${lv.nowLine ? ` · ${escapeHtml(lv.nowLine)}${lv.gameSc !== null && lv.gameSc !== undefined ? ` · <b>${lv.gameSc} SC this game</b>` : ""}` : " · yet to check in"}`;
       else liveStatus = "";
       const r = state.round;
 
@@ -4612,11 +4612,11 @@
     syncFromGitHub();
   </script>
   <!-- Modular Phase 2 (Court + Shared Exact Solver) & Phase 3 (Trade Lab) -->
-  <script src="court.js?v=22"></script>
+  <script src="court.js?v=24"></script>
   <script src="tradelab.js?v=22"></script>
   <script src="briefing.js?v=5"></script>
   <script src="captains.js?v=6"></script>
-  <script src="live.js?v=11"></script>
+  <script src="live.js?v=14"></script>
   <script src="notify.js?v=1"></script>
   <script src="importmatch.js?v=1"></script>
   <script src="importer.js?v=2"></script>
